@@ -1,0 +1,23 @@
+{
+  "name": "allai-app",
+  "version": "1.0.0",
+  "description": "All AI Application",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mtsdnz/AllAi-App.git"
+  },
+  "author": "Matheus Diniz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mtsdnz/AllAi-App/issues"
+  },
+  "homepage": "https://github.com/mtsdnz/AllAi-App#readme",
+  "devDependencies": {
+    "electron": "^25.0.1"
+  }
+}
