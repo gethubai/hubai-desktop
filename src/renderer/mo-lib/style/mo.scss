@@ -1,0 +1,68 @@
+@import 'src/renderer/mo-lib/style/common';
+@import 'src/renderer/mo-lib/style/animation';
+
+// ============= The Workbench parts =============
+@import 'src/renderer/mo-lib/components/actionBar/style';
+@import 'src/renderer/mo-lib/components/breadcrumb/style';
+@import 'src/renderer/mo-lib/components/button/style';
+@import 'src/renderer/mo-lib/components/checkbox/style';
+@import 'src/renderer/mo-lib/components/collapse/style';
+@import 'src/renderer/mo-lib/components/contextView/style';
+@import 'src/renderer/mo-lib/components/dialog/style';
+@import 'src/renderer/mo-lib/components/dropdown/style';
+@import 'src/renderer/mo-lib/components/input/style';
+@import 'src/renderer/mo-lib/components/list/style';
+@import 'src/renderer/mo-lib/components/menu/style';
+@import 'src/renderer/mo-lib/components/scrollBar/style';
+@import 'src/renderer/mo-lib/components/select/style';
+@import 'src/renderer/mo-lib/components/tabs/style';
+@import 'src/renderer/mo-lib/components/toolbar/style';
+@import 'src/renderer/mo-lib/components/tree/style';
+@import 'src/renderer/mo-lib/components/search/style';
+@import 'src/renderer/mo-lib/components/tooltip/style';
+@import 'src/renderer/mo-lib/components/split/style';
+
+// ============= The Workbench core component =============
+@import 'src/renderer/mo-lib/workbench/style';
+@import 'src/renderer/mo-lib/workbench/activityBar/style';
+@import 'src/renderer/mo-lib/workbench/editor/style';
+@import 'src/renderer/mo-lib/workbench/editor/welcome/style';
+@import 'src/renderer/mo-lib/workbench/menuBar/style';
+@import 'src/renderer/mo-lib/workbench/panel/style';
+@import 'src/renderer/mo-lib/workbench/settings/style';
+@import 'src/renderer/mo-lib/workbench/sidebar/style';
+@import 'src/renderer/mo-lib/workbench/statusBar/style';
+@import 'src/renderer/mo-lib/workbench/notification/style';
+@import 'src/renderer/mo-lib/workbench/sidebar/explore/style';
+@import 'src/renderer/mo-lib/workbench/problems/style';
+@import 'src/renderer/mo-lib/workbench/notification/statusBarView/style';
+@import 'src/renderer/mo-lib/workbench/auxiliaryBar/style';
+
+.#{$prefix} {
+    bottom: 0;
+    box-sizing: border-box;
+    font-size: 13px;
+    height: 100%;
+    left: 0;
+    margin: 0;
+    outline: 0;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    user-select: none;
+    width: 100%;
+}
+
+.mac {
+    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+.center {
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}

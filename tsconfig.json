@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "incremental": true,
+    "target": "es2021",
+    "module": "commonjs",
+    "lib": ["dom", "es2021"],
+    "jsx": "react-jsx",
+    "strict": true,
+    "sourceMap": true,
+    "baseUrl": "./src",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "paths": {
+      "mo": ["renderer/mo-lib/index.ts"],
+      "mo/*": ["renderer/mo-lib/*"],
+      "@test/*": ["./test/*"],
+      "monaco-editor/*": ["node_modules/monaco-editor/*"],
+      "monaco-editor": ["node_modules/monaco-editor"]
+    },
+    "typeRoots": ["node", "node_modules/@types", "./src/renderer/mo-lib/typings", "node_modules/monaco-editor"],
+    "outDir": ".erb/dll"
+  },
+  "exclude": ["test", "release/build", "release/app/dist", ".erb/dll"]
+}
