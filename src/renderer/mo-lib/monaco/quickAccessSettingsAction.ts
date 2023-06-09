@@ -11,32 +11,34 @@ import { constants } from 'mo/services/builtinService/const';
 import { ISettingsService, SettingsService } from 'mo/services';
 
 export class QuickAccessSettings extends Action2 {
-    static readonly ID = constants.ACTION_QUICK_ACCESS_SETTINGS;
-    static readonly LABEL = localize(
-        'quickAccessSettings.label',
-        'Open Settings (JSON)'
-    );
-    private readonly settingsService: ISettingsService;
+  static readonly ID = constants.ACTION_QUICK_ACCESS_SETTINGS;
 
-    constructor() {
-        super({
-            id: QuickAccessSettings.ID,
-            label: QuickAccessSettings.LABEL,
-            title: QuickAccessSettings.LABEL,
-            alias: 'Open Settings (JSON)',
-            precondition: undefined,
-            f1: true,
-            keybinding: {
-                when: undefined,
-                weight: KeybindingWeight.WorkbenchContrib,
-                // eslint-disable-next-line new-cap
-                primary: KeyChord(KeyMod.CtrlCmd | KeyCode.Comma),
-            },
-        });
-        this.settingsService = container.resolve(SettingsService);
-    }
+  static readonly LABEL = localize(
+    'quickAccessSettings.label',
+    'Open Settings (JSON)'
+  );
 
-    run(accessor: ServicesAccessor) {
-        this.settingsService.openSettingsInEditor();
-    }
+  private readonly settingsService: ISettingsService;
+
+  constructor() {
+    super({
+      id: QuickAccessSettings.ID,
+      label: QuickAccessSettings.LABEL,
+      title: QuickAccessSettings.LABEL,
+      alias: 'Open Settings (JSON)',
+      precondition: undefined,
+      f1: true,
+      keybinding: {
+        when: undefined,
+        weight: KeybindingWeight.WorkbenchContrib,
+        // eslint-disable-next-line new-cap
+        primary: KeyChord(KeyMod.CtrlCmd | KeyCode.Comma),
+      },
+    });
+    this.settingsService = container.resolve(SettingsService);
+  }
+
+  run(accessor: ServicesAccessor) {
+    this.settingsService.openSettingsInEditor();
+  }
 }

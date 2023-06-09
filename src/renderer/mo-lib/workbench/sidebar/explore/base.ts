@@ -1,21 +1,21 @@
 import {
-    getBEMElement,
-    getBEMModifier,
-    prefixClaName,
+  getBEMElement,
+  getBEMModifier,
+  prefixClaName,
 } from 'mo/common/className';
 import {
-    ID_ACTIVITY_BAR,
-    ID_SIDE_BAR,
-    ID_EXPLORER,
-    ID_FOLDER_TREE,
-    ID_EDITOR_TREE,
+  ID_ACTIVITY_BAR,
+  ID_SIDE_BAR,
+  ID_EXPLORER,
+  ID_FOLDER_TREE,
+  ID_EDITOR_TREE,
 } from 'mo/common/id';
 
 const defaultClassName = prefixClaName(ID_SIDE_BAR);
 const defaultExplorerClassName = prefixClaName(ID_EXPLORER, defaultClassName);
 const activityBarItemFloatClassName = getBEMModifier(
-    getBEMElement(defaultExplorerClassName, ID_ACTIVITY_BAR),
-    'float'
+  getBEMElement(defaultExplorerClassName, ID_ACTIVITY_BAR),
+  'float'
 );
 
 const folderTreeClassName = prefixClaName(ID_FOLDER_TREE);
@@ -26,35 +26,35 @@ const editorTreeClassName = prefixClaName(ID_EDITOR_TREE);
 const editorTreeItemClassName = getBEMElement(editorTreeClassName, 'item');
 const editorTreeGroupClassName = getBEMElement(editorTreeClassName, 'group');
 const editorTreeFileNameClassName = getBEMElement(
-    editorTreeItemClassName,
-    'fileName'
+  editorTreeItemClassName,
+  'fileName'
 );
 const editorTreeFilePathClassName = getBEMElement(
-    editorTreeItemClassName,
-    'filePath'
+  editorTreeItemClassName,
+  'filePath'
 );
 const editorTreeActiveItemClassName = getBEMModifier(
-    editorTreeItemClassName,
-    'active'
+  editorTreeItemClassName,
+  'active'
 );
 const editorTreeCloseIconClassName = getBEMElement(
-    editorTreeClassName,
-    'close'
+  editorTreeClassName,
+  'close'
 );
 const editorTreeFileIconClassName = getBEMElement(editorTreeClassName, 'file');
 
 export {
-    defaultExplorerClassName,
-    activityBarItemFloatClassName,
-    folderTreeClassName,
-    folderTreeInputClassName,
-    folderTreeEditClassName,
-    editorTreeClassName,
-    editorTreeItemClassName,
-    editorTreeGroupClassName,
-    editorTreeFileNameClassName,
-    editorTreeFilePathClassName,
-    editorTreeActiveItemClassName,
-    editorTreeCloseIconClassName,
-    editorTreeFileIconClassName,
+  defaultExplorerClassName,
+  activityBarItemFloatClassName,
+  folderTreeClassName,
+  folderTreeInputClassName,
+  folderTreeEditClassName,
+  editorTreeClassName,
+  editorTreeItemClassName,
+  editorTreeGroupClassName,
+  editorTreeFileNameClassName,
+  editorTreeFilePathClassName,
+  editorTreeActiveItemClassName,
+  editorTreeCloseIconClassName,
+  editorTreeFileIconClassName,
 };

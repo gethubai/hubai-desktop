@@ -9,32 +9,32 @@ import { APP_PREFIX } from 'mo/common/const';
  * @param prefix The prefix of class name you want to append
  */
 export function prefixClaName(name: string, prefix: string = APP_PREFIX) {
-    return name ? `${prefix}-${name}` : '';
+  return name ? `${prefix}-${name}` : '';
 }
 
 export function classNames(...args) {
-    if (isEmpty(args)) return;
-    const classList: string[] = [];
-    for (const arg of args) {
-        if (!arg) continue;
-        const argType = typeof arg;
-        if (argType === 'string' || argType === 'number') {
-            classList.push(`${arg}`);
-            continue;
-        }
-        if (argType === 'object') {
-            if (arg.toString !== Object.prototype.toString) {
-                classList.push(arg.toString());
-                continue;
-            }
-            for (const key in arg) {
-                if (Object.hasOwnProperty.call(arg, key) && arg[key]) {
-                    classList.push(key);
-                }
-            }
-        }
+  if (isEmpty(args)) return;
+  const classList: string[] = [];
+  for (const arg of args) {
+    if (!arg) continue;
+    const argType = typeof arg;
+    if (argType === 'string' || argType === 'number') {
+      classList.push(`${arg}`);
+      continue;
     }
-    return classList.join(' ');
+    if (argType === 'object') {
+      if (arg.toString !== Object.prototype.toString) {
+        classList.push(arg.toString());
+        continue;
+      }
+      for (const key in arg) {
+        if (Object.hasOwnProperty.call(arg, key) && arg[key]) {
+          classList.push(key);
+        }
+      }
+    }
+  }
+  return classList.join(' ');
 }
 /**
  * Element names may consist of Latin letters, digits, dashes and underscores.
@@ -43,7 +43,7 @@ export function classNames(...args) {
  * @param element
  */
 export function getBEMElement(block: string, element: string) {
-    return `${block}__${element}`;
+  return `${block}__${element}`;
 }
 
 /**
@@ -54,7 +54,7 @@ export function getBEMElement(block: string, element: string) {
  * @param modifier
  */
 export function getBEMModifier(blockOrElement: string, modifier: string) {
-    return `${blockOrElement}--${modifier}`;
+  return `${blockOrElement}--${modifier}`;
 }
 
 /**
@@ -62,5 +62,5 @@ export function getBEMModifier(blockOrElement: string, modifier: string) {
  * @returns
  */
 export function getFontInMac() {
-    return Utils.isMacOs() ? 'mac' : '';
+  return Utils.isMacOs() ? 'mac' : '';
 }

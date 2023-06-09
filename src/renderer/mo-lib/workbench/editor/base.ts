@@ -1,38 +1,38 @@
 import {
-    getBEMElement,
-    getBEMModifier,
-    prefixClaName,
+  getBEMElement,
+  getBEMModifier,
+  prefixClaName,
 } from 'mo/common/className';
 
 export const defaultEditorClassName = prefixClaName('editor');
 export const groupClassName = getBEMElement(defaultEditorClassName, 'group');
 export const groupContainerClassName = getBEMElement(
-    defaultEditorClassName,
-    'group-container'
+  defaultEditorClassName,
+  'group-container'
 );
 export const groupHeaderClassName = getBEMElement(
-    defaultEditorClassName,
-    'group-header'
+  defaultEditorClassName,
+  'group-header'
 );
 export const groupTabsClassName = getBEMElement(
-    defaultEditorClassName,
-    'group-tabs'
+  defaultEditorClassName,
+  'group-tabs'
 );
 export const groupActionsClassName = getBEMElement(
-    defaultEditorClassName,
-    'group-actions'
+  defaultEditorClassName,
+  'group-actions'
 );
 export const groupActionsItemClassName = getBEMElement(
-    defaultEditorClassName,
-    'group-actions-item'
+  defaultEditorClassName,
+  'group-actions-item'
 );
 
 export const groupActionItemDisabledClassName = getBEMModifier(
-    groupActionsItemClassName,
-    'disabled'
+  groupActionsItemClassName,
+  'disabled'
 );
 
 export const groupBreadcrumbClassName = getBEMElement(
-    defaultEditorClassName,
-    'group-breadcrumb'
+  defaultEditorClassName,
+  'group-breadcrumb'
 );

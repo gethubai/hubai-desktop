@@ -1,7 +1,7 @@
 import {
-    prefixClaName,
-    getBEMElement,
-    getBEMModifier,
+  prefixClaName,
+  getBEMElement,
+  getBEMModifier,
 } from 'mo/common/className';
 
 export const contextViewClass = prefixClaName('context-view');

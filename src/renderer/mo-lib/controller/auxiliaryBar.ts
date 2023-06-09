@@ -6,26 +6,27 @@ import { AuxiliaryEventKind } from 'mo/model';
 import type { UniqueId } from 'mo/common/types';
 
 export interface IAuxiliaryController {
-    onClick?: (key: UniqueId) => void;
+  onClick?: (key: UniqueId) => void;
 }
 
 @singleton()
 export class AuxiliaryController
-    extends Controller
-    implements IAuxiliaryController
+  extends Controller
+  implements IAuxiliaryController
 {
-    private readonly auxiliaryService: IAuxiliaryBarService;
-    constructor() {
-        super();
-        this.auxiliaryService = container.resolve(AuxiliaryBarService);
-    }
+  private readonly auxiliaryService: IAuxiliaryBarService;
 
-    public initView = () => {};
+  constructor() {
+    super();
+    this.auxiliaryService = container.resolve(AuxiliaryBarService);
+  }
 
-    public onClick = (key: UniqueId) => {
-        this.auxiliaryService.setActive(
-            this.auxiliaryService.getState().current === key ? undefined : key
-        );
-        this.emit(AuxiliaryEventKind.onTabClick, key);
-    };
+  public initView = () => {};
+
+  public onClick = (key: UniqueId) => {
+    this.auxiliaryService.setActive(
+      this.auxiliaryService.getState().current === key ? undefined : key
+    );
+    this.emit(AuxiliaryEventKind.onTabClick, key);
+  };
 }

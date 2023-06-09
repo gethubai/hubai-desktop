@@ -12,9 +12,9 @@ const auxiliaryController = container.resolve(AuxiliaryController);
 const AuxiliaryBar = connect(auxiliaryService, AuxiliaryBarView);
 
 const AuxiliaryBarTab = connect(
-    auxiliaryService,
-    AuxiliaryBarTabView,
-    auxiliaryController
+  auxiliaryService,
+  AuxiliaryBarTabView,
+  auxiliaryController
 );
 
 export { AuxiliaryBar, AuxiliaryBarTab };

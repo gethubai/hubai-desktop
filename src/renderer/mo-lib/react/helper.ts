@@ -6,13 +6,13 @@ import { Children, cloneElement, isValidElement } from 'react';
  * @param props Parent props
  */
 export function cloneReactChildren<P>(
-    children: React.ReactNode,
-    props: P
+  children: React.ReactNode,
+  props: P
 ): React.ReactNode {
-    return Children.map(children, (child) => {
-        if (isValidElement(child)) {
-            return cloneElement(child, props);
-        }
-        return child;
-    });
+  return Children.map(children, (child) => {
+    if (isValidElement(child)) {
+      return cloneElement(child, props);
+    }
+    return child;
+  });
 }

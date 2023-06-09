@@ -5,8 +5,8 @@ import '@testing-library/jest-dom';
 import Output from '../output';
 
 describe('Test Output Component', () => {
-    test('Match the Output snapshot', () => {
-        const component = renderer.create(<Output id="output" />);
-        expect(component.toJSON()).toMatchSnapshot();
-    });
+  test('Match the Output snapshot', () => {
+    const component = renderer.create(<Output id="output" />);
+    expect(component.toJSON()).toMatchSnapshot();
+  });
 });

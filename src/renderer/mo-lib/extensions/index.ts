@@ -16,16 +16,16 @@ import { ExtendsEditor } from './editor';
  * Default extensions
  */
 export const defaultExtensions = [
-    ExtendsPanel,
-    ExtendsEditor,
-    ExtendsActivityBar,
-    ExtendsExplorer,
-    //ExtendsEditorTree,
-    ExtendsLocales,
-    defaultColorThemeExtension,
-    monokaiColorThemeExtension,
-    paleNightColorThemeExtension,
-    webStormIntelliJExtension,
+  ExtendsPanel,
+  ExtendsEditor,
+  ExtendsActivityBar,
+  ExtendsExplorer,
+  // ExtendsEditorTree,
+  ExtendsLocales,
+  defaultColorThemeExtension,
+  monokaiColorThemeExtension,
+  paleNightColorThemeExtension,
+  webStormIntelliJExtension,
   //  githubPlusExtension,
-    //ExtendsFolderTree,
+  // ExtendsFolderTree,
 ];

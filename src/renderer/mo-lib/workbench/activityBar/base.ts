@@ -1,7 +1,7 @@
 import {
-    getBEMElement,
-    getBEMModifier,
-    prefixClaName,
+  getBEMElement,
+  getBEMModifier,
+  prefixClaName,
 } from 'mo/common/className';
 import { ID_ACTIVITY_BAR } from 'mo/common/id';
 

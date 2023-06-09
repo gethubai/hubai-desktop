@@ -4,43 +4,43 @@ import { Header, Content } from 'mo/workbench/sidebar';
 import { IExplorer } from 'mo/model/workbench/explorer/explorer';
 import { IExplorerController } from 'mo/controller/explorer/explorer';
 import { Toolbar } from 'mo/components/toolbar';
-import { defaultExplorerClassName } from './base';
 import { localize } from 'mo/i18n/localize';
+import { defaultExplorerClassName } from './base';
 
 type IExplorerProps = IExplorer & IExplorerController;
 
 export const Explorer: React.FunctionComponent<IExplorerProps> = (
-    props: IExplorerProps
+  props: IExplorerProps
 ) => {
-    const {
-        activePanelKeys,
-        data = [],
-        headerToolBar,
-        onClick,
-        onActionsContextMenuClick,
-        onCollapseChange,
-        onToolbarClick,
-    } = props;
-    return (
-        <div className={defaultExplorerClassName}>
-            <Header
-                title={localize('sidebar.explore.title', 'Explorer')}
-                toolbar={
-                    <Toolbar
-                        data={[headerToolBar!]}
-                        onClick={onClick}
-                        onContextMenuClick={onActionsContextMenuClick}
-                    />
-                }
-            />
-            <Content>
-                <Collapse
-                    data={data}
-                    activePanelKeys={activePanelKeys}
-                    onCollapseChange={onCollapseChange}
-                    onToolbarClick={onToolbarClick}
-                />
-            </Content>
-        </div>
-    );
+  const {
+    activePanelKeys,
+    data = [],
+    headerToolBar,
+    onClick,
+    onActionsContextMenuClick,
+    onCollapseChange,
+    onToolbarClick,
+  } = props;
+  return (
+    <div className={defaultExplorerClassName}>
+      <Header
+        title={localize('sidebar.explore.title', 'Explorer')}
+        toolbar={
+          <Toolbar
+            data={[headerToolBar!]}
+            onClick={onClick}
+            onContextMenuClick={onActionsContextMenuClick}
+          />
+        }
+      />
+      <Content>
+        <Collapse
+          data={data}
+          activePanelKeys={activePanelKeys}
+          onCollapseChange={onCollapseChange}
+          onToolbarClick={onToolbarClick}
+        />
+      </Content>
+    </div>
+  );
 };

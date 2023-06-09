@@ -1,19 +1,18 @@
-import React from 'react';
-import { memo } from 'react';
-import { groupBreadcrumbClassName } from './base';
+import React, { memo } from 'react';
 import { Breadcrumb, IBreadcrumbItemProps } from 'mo/components/breadcrumb';
+import { groupBreadcrumbClassName } from './base';
 
 export interface IEditorBreadcrumbProps {
-    breadcrumbs?: IBreadcrumbItemProps[];
+  breadcrumbs?: IBreadcrumbItemProps[];
 }
 
 function EditorBreadcrumb(props: IEditorBreadcrumbProps) {
-    const { breadcrumbs = [] } = props;
-    return (
-        <div className={groupBreadcrumbClassName}>
-            <Breadcrumb role="breadcrumb" routes={breadcrumbs} />
-        </div>
-    );
+  const { breadcrumbs = [] } = props;
+  return (
+    <div className={groupBreadcrumbClassName}>
+      <Breadcrumb role="breadcrumb" routes={breadcrumbs} />
+    </div>
+  );
 }
 
 export default memo(EditorBreadcrumb);

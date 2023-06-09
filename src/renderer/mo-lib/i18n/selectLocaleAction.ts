@@ -6,15 +6,16 @@ import {
 } from 'monaco-editor/esm/vs/platform/quickinput/common/quickInput';
 import { ServicesAccessor } from 'monaco-editor/esm/vs/platform/instantiation/common/instantiation';
 
-import { localize } from './localize';
-import { ILocaleService, LocaleService } from './localeService';
-import { ILocale } from './localization';
 import { Action2 } from 'mo/monaco/action';
 import { KeyCode, KeyMod } from 'mo/monaco';
 import { constants } from 'mo/services/builtinService/const';
+import { localize } from './localize';
+import { ILocaleService, LocaleService } from './localeService';
+import { ILocale } from './localization';
 
 export class SelectLocaleAction extends Action2 {
   static readonly ID = constants.ACTION_SELECT_LOCALE;
+
   static readonly LABEL = localize('select.locale', 'Select Display Language');
 
   private get localeService(): ILocaleService {

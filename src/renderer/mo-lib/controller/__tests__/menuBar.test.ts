@@ -4,8 +4,8 @@ import { MenuBarService, BuiltinService, LayoutService } from 'mo/services';
 import { constants, modules } from 'mo/services/builtinService/const';
 import 'reflect-metadata';
 import { container } from 'tsyringe';
-import { MenuBarController } from '../menuBar';
 import { MenuBarMode } from 'mo/model/workbench/layout';
+import { MenuBarController } from '../menuBar';
 
 const menuBarController = container.resolve(MenuBarController);
 const menuBarService = container.resolve(MenuBarService);
@@ -16,199 +16,191 @@ const layoutService = container.resolve(LayoutService);
 const mockEle = document.createElement('div');
 
 describe('The menuBar controller', () => {
-    test('Should support to inject the default value', () => {
-        menuBarController.initView();
-        const mode = layoutService.getMenuBarMode();
-        const menuBarData = menuBarController.getMenuBarDataByMode(
-            mode,
-            modules.builtInMenuBarData()
-        );
+  test('Should support to inject the default value', () => {
+    menuBarController.initView();
+    const mode = layoutService.getMenuBarMode();
+    const menuBarData = menuBarController.getMenuBarDataByMode(
+      mode,
+      modules.builtInMenuBarData()
+    );
 
-        expect(menuBarService.getState().data).toEqual(menuBarData);
-        menuBarService.reset();
-    });
+    expect(menuBarService.getState().data).toEqual(menuBarData);
+    menuBarService.reset();
+  });
 
-    test('Should support to controll the default value', () => {
-        builtinService.inactiveModule('builtInMenuBarData');
-        menuBarController.initView();
+  test('Should support to controll the default value', () => {
+    builtinService.inactiveModule('builtInMenuBarData');
+    menuBarController.initView();
 
-        expect(menuBarService.getState().data).toEqual([]);
+    expect(menuBarService.getState().data).toEqual([]);
 
-        builtinService.reset();
-        menuBarController.initView();
-    });
+    builtinService.reset();
+    menuBarController.initView();
+  });
 
-    test('Should support to update the focusin element', () => {
-        menuBarController.updateFocusinEle(mockEle);
+  test('Should support to update the focusin element', () => {
+    menuBarController.updateFocusinEle(mockEle);
 
-        expect((menuBarController as any)._focusinEle).toBe(mockEle);
-    });
+    expect((menuBarController as any)._focusinEle).toBe(mockEle);
+  });
 
-    test('Should support to execute the onClick method', () => {
-        // create file
-        const mockEvent = {} as any;
-        const mockItem = { id: constants.ACTION_QUICK_CREATE_FILE };
-        const mockFn = jest.fn();
-        const original = monacoService.commandService.executeCommand;
-        const mockExecute = jest.fn();
-        monacoService.commandService.executeCommand = mockExecute;
-        menuBarService.onSelect(mockFn);
+  test('Should support to execute the onClick method', () => {
+    // create file
+    const mockEvent = {} as any;
+    const mockItem = { id: constants.ACTION_QUICK_CREATE_FILE };
+    const mockFn = jest.fn();
+    const original = monacoService.commandService.executeCommand;
+    const mockExecute = jest.fn();
+    monacoService.commandService.executeCommand = mockExecute;
+    menuBarService.onSelect(mockFn);
 
-        menuBarController.onClick(mockEvent, mockItem);
+    menuBarController.onClick(mockEvent, mockItem);
 
-        expect(mockFn).toBeCalled();
-        expect(mockFn.mock.calls[0][0]).toBe(mockItem.id);
-        expect(mockExecute).toBeCalled();
-        expect(mockExecute.mock.calls[0][0]).toBe(
-            constants.ACTION_QUICK_CREATE_FILE
-        );
-        mockFn.mockClear();
-        mockExecute.mockClear();
+    expect(mockFn).toHaveBeenCalled();
+    expect(mockFn.mock.calls[0][0]).toBe(mockItem.id);
+    expect(mockExecute).toHaveBeenCalled();
+    expect(mockExecute.mock.calls[0][0]).toBe(
+      constants.ACTION_QUICK_CREATE_FILE
+    );
+    mockFn.mockClear();
+    mockExecute.mockClear();
 
-        // undo
-        mockItem.id = constants.ACTION_QUICK_UNDO;
-        menuBarController.onClick(mockEvent, mockItem);
-        expect(mockExecute).toBeCalled();
-        expect(mockExecute.mock.calls[0][0]).toBe(constants.ACTION_QUICK_UNDO);
-        expect(mockExecute.mock.calls[0][1]).toBe(mockEle);
-        mockExecute.mockClear();
+    // undo
+    mockItem.id = constants.ACTION_QUICK_UNDO;
+    menuBarController.onClick(mockEvent, mockItem);
+    expect(mockExecute).toHaveBeenCalled();
+    expect(mockExecute.mock.calls[0][0]).toBe(constants.ACTION_QUICK_UNDO);
+    expect(mockExecute.mock.calls[0][1]).toBe(mockEle);
+    mockExecute.mockClear();
 
-        // redo
-        mockItem.id = constants.ACTION_QUICK_REDO;
-        menuBarController.onClick(mockEvent, mockItem);
-        expect(mockExecute).toBeCalled();
-        expect(mockExecute.mock.calls[0][0]).toBe(constants.ACTION_QUICK_REDO);
-        expect(mockExecute.mock.calls[0][1]).toBe(mockEle);
-        mockExecute.mockClear();
+    // redo
+    mockItem.id = constants.ACTION_QUICK_REDO;
+    menuBarController.onClick(mockEvent, mockItem);
+    expect(mockExecute).toHaveBeenCalled();
+    expect(mockExecute.mock.calls[0][0]).toBe(constants.ACTION_QUICK_REDO);
+    expect(mockExecute.mock.calls[0][1]).toBe(mockEle);
+    mockExecute.mockClear();
 
-        // select all
-        mockItem.id = constants.ACTION_QUICK_SELECT_ALL;
-        menuBarController.onClick(mockEvent, mockItem);
-        expect(mockExecute).toBeCalled();
-        expect(mockExecute.mock.calls[0][0]).toBe(
-            constants.ACTION_QUICK_SELECT_ALL
-        );
-        expect(mockExecute.mock.calls[0][1]).toBe(mockEle);
-        mockExecute.mockClear();
+    // select all
+    mockItem.id = constants.ACTION_QUICK_SELECT_ALL;
+    menuBarController.onClick(mockEvent, mockItem);
+    expect(mockExecute).toHaveBeenCalled();
+    expect(mockExecute.mock.calls[0][0]).toBe(
+      constants.ACTION_QUICK_SELECT_ALL
+    );
+    expect(mockExecute.mock.calls[0][1]).toBe(mockEle);
+    mockExecute.mockClear();
 
-        // copy line up
-        mockItem.id = constants.ACTION_QUICK_COPY_LINE_UP;
-        menuBarController.onClick(mockEvent, mockItem);
-        expect(mockExecute).toBeCalled();
-        expect(mockExecute.mock.calls[0][0]).toBe(
-            constants.ACTION_QUICK_COPY_LINE_UP
-        );
-        mockExecute.mockClear();
+    // copy line up
+    mockItem.id = constants.ACTION_QUICK_COPY_LINE_UP;
+    menuBarController.onClick(mockEvent, mockItem);
+    expect(mockExecute).toHaveBeenCalled();
+    expect(mockExecute.mock.calls[0][0]).toBe(
+      constants.ACTION_QUICK_COPY_LINE_UP
+    );
+    mockExecute.mockClear();
 
-        // go to quick command
-        mockItem.id = constants.MENU_QUICK_COMMAND;
-        menuBarController.onClick(mockEvent, mockItem);
-        expect(mockExecute).toBeCalled();
-        expect(mockExecute.mock.calls[0][0]).toBe(
-            constants.ACTION_QUICK_COMMAND
-        );
-        mockExecute.mockClear();
+    // go to quick command
+    mockItem.id = constants.MENU_QUICK_COMMAND;
+    menuBarController.onClick(mockEvent, mockItem);
+    expect(mockExecute).toHaveBeenCalled();
+    expect(mockExecute.mock.calls[0][0]).toBe(constants.ACTION_QUICK_COMMAND);
+    mockExecute.mockClear();
 
-        // update side bar
-        mockItem.id = ID_SIDE_BAR;
-        menuBarController.onClick(mockEvent, mockItem);
-        expect(mockExecute).toBeCalled();
-        expect(mockExecute.mock.calls[0][0]).toBe(ID_SIDE_BAR);
-        mockExecute.mockClear();
+    // update side bar
+    mockItem.id = ID_SIDE_BAR;
+    menuBarController.onClick(mockEvent, mockItem);
+    expect(mockExecute).toHaveBeenCalled();
+    expect(mockExecute.mock.calls[0][0]).toBe(ID_SIDE_BAR);
+    mockExecute.mockClear();
 
-        // update side bar
-        mockItem.id = constants.MENU_VIEW_PANEL;
-        menuBarController.onClick(mockEvent, mockItem);
-        expect(mockExecute).toBeCalled();
-        expect(mockExecute.mock.calls[0][0]).toBe(constants.MENU_VIEW_PANEL);
-        mockExecute.mockClear();
-        monacoService.commandService.executeCommand = original;
+    // update side bar
+    mockItem.id = constants.MENU_VIEW_PANEL;
+    menuBarController.onClick(mockEvent, mockItem);
+    expect(mockExecute).toHaveBeenCalled();
+    expect(mockExecute.mock.calls[0][0]).toBe(constants.MENU_VIEW_PANEL);
+    mockExecute.mockClear();
+    monacoService.commandService.executeCommand = original;
 
-        const originalUpdate = menuBarService.update;
-        menuBarService.update = mockExecute;
+    const originalUpdate = menuBarService.update;
+    menuBarService.update = mockExecute;
 
-        // update activity bar
-        mockItem.id = constants.MENU_VIEW_ACTIVITYBAR;
-        menuBarController.onClick(mockEvent, mockItem);
-        expect(mockExecute).toBeCalled();
-        expect(mockExecute.mock.calls[0][0]).toBe(
-            constants.MENU_VIEW_ACTIVITYBAR
-        );
-        expect(mockExecute.mock.calls[0][1]).toEqual({ icon: '' });
+    // update activity bar
+    mockItem.id = constants.MENU_VIEW_ACTIVITYBAR;
+    menuBarController.onClick(mockEvent, mockItem);
+    expect(mockExecute).toHaveBeenCalled();
+    expect(mockExecute.mock.calls[0][0]).toBe(constants.MENU_VIEW_ACTIVITYBAR);
+    expect(mockExecute.mock.calls[0][1]).toEqual({ icon: '' });
 
-        menuBarController.onClick(mockEvent, mockItem);
-        expect(mockExecute.mock.calls[1][1]).toEqual({ icon: 'check' });
-        mockExecute.mockClear();
+    menuBarController.onClick(mockEvent, mockItem);
+    expect(mockExecute.mock.calls[1][1]).toEqual({ icon: 'check' });
+    mockExecute.mockClear();
 
-        // update auxiliary bar
-        mockItem.id = constants.MENU_VIEW_AUXILIARY;
-        menuBarController.onClick(mockEvent, mockItem);
-        expect(mockExecute).toBeCalled();
-        expect(mockExecute.mock.calls[0][0]).toBe(
-            constants.MENU_VIEW_AUXILIARY
-        );
-        expect(mockExecute.mock.calls[0][1]).toEqual({ icon: 'check' });
+    // update auxiliary bar
+    mockItem.id = constants.MENU_VIEW_AUXILIARY;
+    menuBarController.onClick(mockEvent, mockItem);
+    expect(mockExecute).toHaveBeenCalled();
+    expect(mockExecute.mock.calls[0][0]).toBe(constants.MENU_VIEW_AUXILIARY);
+    expect(mockExecute.mock.calls[0][1]).toEqual({ icon: 'check' });
 
-        menuBarController.onClick(mockEvent, mockItem);
-        expect(mockExecute.mock.calls[1][1]).toEqual({ icon: '' });
-        mockExecute.mockClear();
+    menuBarController.onClick(mockEvent, mockItem);
+    expect(mockExecute.mock.calls[1][1]).toEqual({ icon: '' });
+    mockExecute.mockClear();
 
-        // update menu bar
-        mockItem.id = constants.MENU_VIEW_MENUBAR;
-        menuBarController.onClick(mockEvent, mockItem);
-        expect(mockExecute).toBeCalled();
-        expect(mockExecute.mock.calls[0][0]).toBe(constants.MENU_VIEW_MENUBAR);
-        expect(mockExecute.mock.calls[0][1]).toEqual({ icon: '' });
+    // update menu bar
+    mockItem.id = constants.MENU_VIEW_MENUBAR;
+    menuBarController.onClick(mockEvent, mockItem);
+    expect(mockExecute).toHaveBeenCalled();
+    expect(mockExecute.mock.calls[0][0]).toBe(constants.MENU_VIEW_MENUBAR);
+    expect(mockExecute.mock.calls[0][1]).toEqual({ icon: '' });
 
-        menuBarController.onClick(mockEvent, mockItem);
-        expect(mockExecute.mock.calls[1][1]).toEqual({ icon: 'check' });
-        mockExecute.mockClear();
+    menuBarController.onClick(mockEvent, mockItem);
+    expect(mockExecute.mock.calls[1][1]).toEqual({ icon: 'check' });
+    mockExecute.mockClear();
 
-        // update status bar
-        mockItem.id = constants.MENU_VIEW_STATUSBAR;
-        menuBarController.onClick(mockEvent, mockItem);
-        expect(mockExecute).toBeCalled();
-        expect(mockExecute.mock.calls[0][0]).toBe(
-            constants.MENU_VIEW_STATUSBAR
-        );
-        expect(mockExecute.mock.calls[0][1]).toEqual({ icon: '' });
+    // update status bar
+    mockItem.id = constants.MENU_VIEW_STATUSBAR;
+    menuBarController.onClick(mockEvent, mockItem);
+    expect(mockExecute).toHaveBeenCalled();
+    expect(mockExecute.mock.calls[0][0]).toBe(constants.MENU_VIEW_STATUSBAR);
+    expect(mockExecute.mock.calls[0][1]).toEqual({ icon: '' });
 
-        menuBarController.onClick(mockEvent, mockItem);
-        expect(mockExecute.mock.calls[1][1]).toEqual({ icon: 'check' });
-        mockExecute.mockClear();
-        menuBarService.update = originalUpdate;
-    });
+    menuBarController.onClick(mockEvent, mockItem);
+    expect(mockExecute.mock.calls[1][1]).toEqual({ icon: 'check' });
+    mockExecute.mockClear();
+    menuBarService.update = originalUpdate;
+  });
 
-    test('Should support to change the layout mode', () => {
-        const mockEvent = {} as any;
-        const mockItem = { id: constants.MENUBAR_MODE_HORIZONTAL };
+  test('Should support to change the layout mode', () => {
+    const mockEvent = {} as any;
+    const mockItem = { id: constants.MENUBAR_MODE_HORIZONTAL };
 
-        // change default mode
-        const defaultMode = layoutService.getMenuBarMode();
-        const anotherMode =
-            defaultMode === MenuBarMode.horizontal
-                ? MenuBarMode.vertical
-                : MenuBarMode.horizontal;
-        layoutService.setMenuBarMode(anotherMode);
-        menuBarController.initView();
-        expect(layoutService.getMenuBarMode()).toBe(anotherMode);
+    // change default mode
+    const defaultMode = layoutService.getMenuBarMode();
+    const anotherMode =
+      defaultMode === MenuBarMode.horizontal
+        ? MenuBarMode.vertical
+        : MenuBarMode.horizontal;
+    layoutService.setMenuBarMode(anotherMode);
+    menuBarController.initView();
+    expect(layoutService.getMenuBarMode()).toBe(anotherMode);
 
-        // update to horizontal mode
-        layoutService.setMenuBarMode(MenuBarMode.vertical);
-        menuBarController.onClick(mockEvent, mockItem);
-        expect(
-            menuBarService.getMenuById(constants.MENUBAR_MODE_VERTICAL)
-        ).toBeTruthy();
+    // update to horizontal mode
+    layoutService.setMenuBarMode(MenuBarMode.vertical);
+    menuBarController.onClick(mockEvent, mockItem);
+    expect(
+      menuBarService.getMenuById(constants.MENUBAR_MODE_VERTICAL)
+    ).toBeTruthy();
 
-        // update to vertical mode
-        mockItem.id = constants.MENUBAR_MODE_VERTICAL;
-        layoutService.setMenuBarMode(MenuBarMode.horizontal);
-        menuBarController.onClick(mockEvent, mockItem);
-        expect(
-            menuBarService.getMenuById(constants.MENUBAR_MODE_HORIZONTAL)
-        ).toBeTruthy();
+    // update to vertical mode
+    mockItem.id = constants.MENUBAR_MODE_VERTICAL;
+    layoutService.setMenuBarMode(MenuBarMode.horizontal);
+    menuBarController.onClick(mockEvent, mockItem);
+    expect(
+      menuBarService.getMenuById(constants.MENUBAR_MODE_HORIZONTAL)
+    ).toBeTruthy();
 
-        layoutService.reset();
-        menuBarService.reset();
-    });
+    layoutService.reset();
+    menuBarService.reset();
+  });
 });

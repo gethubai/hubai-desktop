@@ -4,8 +4,8 @@ import React from 'react';
 import { LocaleService } from './localeService';
 
 export interface ILocalizeProps {
-    sourceKey: string;
-    defaultValue?: string;
+  sourceKey: string;
+  defaultValue?: string;
 }
 
 /**
@@ -22,50 +22,51 @@ export interface ILocalizeProps {
  * @returns
  */
 export function localize(
-    sourceKey: string,
-    defaultValue: string,
-    ...args: string[]
+  sourceKey: string,
+  defaultValue: string,
+  ...args: string[]
 ): any {
-    return container
-        .resolve(LocaleService)
-        .localize(sourceKey, defaultValue, ...args);
+  return container
+    .resolve(LocaleService)
+    .localize(sourceKey, defaultValue, ...args);
 }
 
 /**
  * @Deprecated Localize by react component not work correct currently.
  */
 export class Localize extends React.PureComponent<ILocalizeProps> {
-    state = { localeId: '' };
-    constructor(props: ILocalizeProps) {
-        super(props);
-    }
+  state = { localeId: '' };
 
-    componentDidMount() {
-        this.update(this.localeService.getCurrentLocale()?.id);
-        this.localeService.onChange((perv, next) => {
-            this.update(next.id);
-        });
-    }
+  constructor(props: ILocalizeProps) {
+    super(props);
+  }
 
-    private update(localeId?: string) {
-        this.setState({
-            localeId: localeId,
-        });
-    }
+  componentDidMount() {
+    this.update(this.localeService.getCurrentLocale()?.id);
+    this.localeService.onChange((perv, next) => {
+      this.update(next.id);
+    });
+  }
 
-    private get localeService() {
-        return container.resolve(LocaleService);
-    }
+  private update(localeId?: string) {
+    this.setState({
+      localeId,
+    });
+  }
 
-    getValue = () => {
-        const { sourceKey, defaultValue = '' } = this.props;
-        return this.localeService
-            ? this.localeService.localize(sourceKey, defaultValue)
-            : defaultValue;
-    };
+  private get localeService() {
+    return container.resolve(LocaleService);
+  }
 
-    public render() {
-        const localizedValue = this.getValue();
-        return localizedValue;
-    }
+  getValue = () => {
+    const { sourceKey, defaultValue = '' } = this.props;
+    return this.localeService
+      ? this.localeService.localize(sourceKey, defaultValue)
+      : defaultValue;
+  };
+
+  public render() {
+    const localizedValue = this.getValue();
+    return localizedValue;
+  }
 }

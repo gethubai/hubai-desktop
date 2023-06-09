@@ -2,9 +2,9 @@ import 'reflect-metadata';
 import { Controller } from 'mo/react/controller';
 import { container, singleton } from 'tsyringe';
 import {
-    BuiltinService,
-    IBuiltinService,
-    IExtensionService,
+  BuiltinService,
+  IBuiltinService,
+  IExtensionService,
 } from 'mo/services';
 import { ExtensionService } from 'mo/services/extensionService';
 import { CommandQuickAccessViewAction } from 'mo/monaco/quickAccessViewAction';
@@ -25,48 +25,50 @@ export interface IExtensionController extends Partial<Controller> {}
 
 @singleton()
 export class ExtensionController
-    extends Controller
-    implements IExtensionController
+  extends Controller
+  implements IExtensionController
 {
-    private readonly extensionService: IExtensionService;
-    private readonly builtinService: IBuiltinService;
-    constructor() {
-        super();
-        this.extensionService = container.resolve(ExtensionService);
-        this.builtinService = container.resolve(BuiltinService);
-    }
+  private readonly extensionService: IExtensionService;
 
-    public initView() {
-        const {
-            quickAcessViewAction,
-            quickSelectColorThemeAction,
-            quickAccessSettingsAction,
-            quickSelectLocaleAction,
-            quickTogglePanelAction,
-            quickSelectAllAction,
-            quickCopyLineUpAction,
-            quickUndoAction,
-            quickRedoAction,
-            quickCreateFileAction,
-        } = this.builtinService.getModules();
-        (
-            [
-                [quickAcessViewAction, CommandQuickAccessViewAction],
-                [quickSelectColorThemeAction, SelectColorThemeAction],
-                [quickAccessSettingsAction, QuickAccessSettings],
-                [quickSelectLocaleAction, SelectLocaleAction],
-                [ID_SIDE_BAR, CommandQuickSideBarViewAction],
-                [quickTogglePanelAction, QuickTogglePanelAction],
-                [quickSelectAllAction, QuickSelectAllAction],
-                [quickCopyLineUpAction, QuickCopyLineUp],
-                [quickUndoAction, QuickUndo],
-                [quickRedoAction, QuickRedo],
-                [quickCreateFileAction, QuickCreateFile],
-            ] as [any, new () => Action2][]
-        ).forEach(([key, action]) => {
-            if (key) {
-                this.extensionService.registerAction(action);
-            }
-        });
-    }
+  private readonly builtinService: IBuiltinService;
+
+  constructor() {
+    super();
+    this.extensionService = container.resolve(ExtensionService);
+    this.builtinService = container.resolve(BuiltinService);
+  }
+
+  public initView() {
+    const {
+      quickAcessViewAction,
+      quickSelectColorThemeAction,
+      quickAccessSettingsAction,
+      quickSelectLocaleAction,
+      quickTogglePanelAction,
+      quickSelectAllAction,
+      quickCopyLineUpAction,
+      quickUndoAction,
+      quickRedoAction,
+      quickCreateFileAction,
+    } = this.builtinService.getModules();
+    (
+      [
+        [quickAcessViewAction, CommandQuickAccessViewAction],
+        [quickSelectColorThemeAction, SelectColorThemeAction],
+        [quickAccessSettingsAction, QuickAccessSettings],
+        [quickSelectLocaleAction, SelectLocaleAction],
+        [ID_SIDE_BAR, CommandQuickSideBarViewAction],
+        [quickTogglePanelAction, QuickTogglePanelAction],
+        [quickSelectAllAction, QuickSelectAllAction],
+        [quickCopyLineUpAction, QuickCopyLineUp],
+        [quickUndoAction, QuickUndo],
+        [quickRedoAction, QuickRedo],
+        [quickCreateFileAction, QuickCreateFile],
+      ] as [any, new () => Action2][]
+    ).forEach(([key, action]) => {
+      if (key) {
+        this.extensionService.registerAction(action);
+      }
+    });
+  }
 }

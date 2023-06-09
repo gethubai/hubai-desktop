@@ -1,7 +1,7 @@
 import {
-    getBEMElement,
-    getBEMModifier,
-    prefixClaName,
+  getBEMElement,
+  getBEMModifier,
+  prefixClaName,
 } from 'mo/common/className';
 
 export const defaultClassName = prefixClaName('auxiliaryBar');

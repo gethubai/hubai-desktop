@@ -39,9 +39,13 @@ export class ActivityBarController
   implements IActivityBarController
 {
   private readonly activityBarService: IActivityBarService;
+
   private readonly settingsService: ISettingsService;
+
   private readonly monacoService: IMonacoService;
+
   private readonly menuBarController: IMenuBarController;
+
   private readonly builtinService: IBuiltinService;
 
   constructor() {

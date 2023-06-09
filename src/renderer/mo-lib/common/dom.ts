@@ -8,42 +8,42 @@ export const select = document.querySelector.bind(document);
 export const selectAll = document.querySelectorAll.bind(document);
 
 export interface IPosition {
-    x: number;
-    y: number;
+  x: number;
+  y: number;
 }
 
 /**
  * Get Document Rectangle info
  */
 export function getDocumentRect() {
-    const body = document.body;
-    const html = document.documentElement;
+  const { body } = document;
+  const html = document.documentElement;
 
-    const clientWidth = html.clientWidth;
-    const clientHeight = html.clientHeight;
+  const { clientWidth } = html;
+  const { clientHeight } = html;
 
-    const height = Math.max(
-        body.scrollHeight,
-        body.offsetHeight,
-        clientHeight,
-        html.scrollHeight,
-        html.offsetHeight
-    );
+  const height = Math.max(
+    body.scrollHeight,
+    body.offsetHeight,
+    clientHeight,
+    html.scrollHeight,
+    html.offsetHeight
+  );
 
-    const width = Math.max(
-        body.scrollWidth,
-        body.offsetWidth,
-        clientWidth,
-        html.scrollWidth,
-        html.offsetWidth
-    );
+  const width = Math.max(
+    body.scrollWidth,
+    body.offsetWidth,
+    clientWidth,
+    html.scrollWidth,
+    html.offsetWidth
+  );
 
-    return {
-        height,
-        width,
-        clientWidth,
-        clientHeight,
-    };
+  return {
+    height,
+    width,
+    clientWidth,
+    clientHeight,
+  };
 }
 
 /**
@@ -52,65 +52,65 @@ export function getDocumentRect() {
  * @param relativePos the relative element position
  */
 export function getRelativePosition(
-    element: HTMLElement,
-    relativePos: IPosition
+  element: HTMLElement,
+  relativePos: IPosition
 ) {
-    const { clientWidth, clientHeight } = getDocumentRect();
-    const anchorX = relativePos.x;
-    const anchorY = relativePos.y;
+  const { clientWidth, clientHeight } = getDocumentRect();
+  const anchorX = relativePos.x;
+  const anchorY = relativePos.y;
 
-    const marginRight = clientWidth - anchorX;
-    const marginBottom = clientHeight - anchorY;
+  const marginRight = clientWidth - anchorX;
+  const marginBottom = clientHeight - anchorY;
 
-    const viewHeight = element.offsetHeight;
-    const viewWidth = element.offsetWidth;
+  const viewHeight = element.offsetHeight;
+  const viewWidth = element.offsetWidth;
 
-    const x = marginRight < viewWidth ? anchorX - viewWidth : anchorX;
-    const y = marginBottom < viewHeight ? anchorY - viewHeight : anchorY;
+  const x = marginRight < viewWidth ? anchorX - viewWidth : anchorX;
+  const y = marginBottom < viewHeight ? anchorY - viewHeight : anchorY;
 
-    return {
-        x,
-        y,
-    };
+  return {
+    x,
+    y,
+  };
 }
 
 export function getEventPosition(e: React.MouseEvent) {
-    return {
-        x: e.clientX,
-        y: e.clientY,
-    };
+  return {
+    x: e.clientX,
+    y: e.clientY,
+  };
 }
 
 export function findParentByClassName<T>(element, className): T | null {
-    try {
-        while (element && element) {
-            const classes = element.getAttribute('class');
-            if (classes && classes.indexOf(className) > -1) {
-                return element;
-            }
-            element = element.parentElement;
-        }
-    } catch (e) {
-        throw new Error(`findParentByClassName error: ${e}`);
+  try {
+    while (element && element) {
+      const classes = element.getAttribute('class');
+      if (classes && classes.indexOf(className) > -1) {
+        return element;
+      }
+      element = element.parentElement;
     }
-    return null;
+  } catch (e) {
+    throw new Error(`findParentByClassName error: ${e}`);
+  }
+  return null;
 }
 
 export function triggerEvent(trigger: TriggerEvent) {
-    switch (trigger) {
-        case 'click': {
-            return 'onClick';
-        }
-        case 'hover': {
-            return 'onMouseOver';
-        }
-        case 'contextmenu': {
-            return 'onContextMenu';
-        }
-        default: {
-            return trigger;
-        }
+  switch (trigger) {
+    case 'click': {
+      return 'onClick';
     }
+    case 'hover': {
+      return 'onMouseOver';
+    }
+    case 'contextmenu': {
+      return 'onContextMenu';
+    }
+    default: {
+      return trigger;
+    }
+  }
 }
 
 /**
@@ -119,29 +119,29 @@ export function triggerEvent(trigger: TriggerEvent) {
  * @param domRect Dom rect info, normally get it from getBoundingClientRect function
  */
 export function getPositionByPlacement(
-    placement: PlacementType,
-    domRect: DOMRect
+  placement: PlacementType,
+  domRect: DOMRect
 ): IPosition {
-    let x = domRect.x; // Initial placement is top
-    let y = domRect.y;
+  let { x } = domRect; // Initial placement is top
+  let { y } = domRect;
 
-    if (placement === 'top') {
-        y = domRect.y - domRect.height;
-    } else if (placement === 'right') {
-        x = domRect.x + domRect.width;
-    } else if (placement === 'bottom') {
-        y = domRect.y + domRect.height;
-    } else if (placement === 'left') {
-        x = domRect.x - domRect.width;
-    } else if (placement === 'rightBottom') {
-        x = domRect.x + domRect.width;
-        y = domRect.y + domRect.height;
-    }
-    return { x, y };
+  if (placement === 'top') {
+    y = domRect.y - domRect.height;
+  } else if (placement === 'right') {
+    x = domRect.x + domRect.width;
+  } else if (placement === 'bottom') {
+    y = domRect.y + domRect.height;
+  } else if (placement === 'left') {
+    x = domRect.x - domRect.width;
+  } else if (placement === 'rightBottom') {
+    x = domRect.x + domRect.width;
+    y = domRect.y + domRect.height;
+  }
+  return { x, y };
 }
 
 export function getAttr(domElement: HTMLElement, attr) {
-    return domElement.getAttribute(attr) || '';
+  return domElement.getAttribute(attr) || '';
 }
 
 /**
@@ -150,11 +150,11 @@ export function getAttr(domElement: HTMLElement, attr) {
  * @returns
  */
 export function getElementClientCenter(element: HTMLElement) {
-    const { left, top, width, height } = element.getBoundingClientRect();
-    return {
-        x: left + width / 2,
-        y: top + height / 2,
-    };
+  const { left, top, width, height } = element.getBoundingClientRect();
+  return {
+    x: left + width / 2,
+    y: top + height / 2,
+  };
 }
 
 /**
@@ -163,12 +163,12 @@ export function getElementClientCenter(element: HTMLElement) {
  * @returns
  */
 export function getDataAttributionsFromProps(
-    props: Record<string, any>
+  props: Record<string, any>
 ): Record<string, any> {
-    return Object.keys(props).reduce((pre, cur) => {
-        if (cur.startsWith('data-')) {
-            pre[cur] = props[cur];
-        }
-        return pre;
-    }, {});
+  return Object.keys(props).reduce((pre, cur) => {
+    if (cur.startsWith('data-')) {
+      pre[cur] = props[cur];
+    }
+    return pre;
+  }, {});
 }

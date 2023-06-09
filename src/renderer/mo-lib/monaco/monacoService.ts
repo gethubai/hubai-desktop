@@ -53,8 +53,10 @@ export interface IMonacoService {
 @singleton()
 export class MonacoService implements IMonacoService {
   private _services: ServiceCollection;
+
   private simpleEditorModelResolverService: SimpleEditorModelResolverService | null =
     null;
+
   private _container!: HTMLElement | null;
 
   constructor() {}
@@ -78,7 +80,7 @@ export class MonacoService implements IMonacoService {
 
   private mergeEditorServices(overrides?: IEditorOverrideServices) {
     if (overrides) {
-      const services = this.services;
+      const { services } = this;
       for (const serviceId in overrides) {
         if (serviceId) {
           const service = services.get(serviceId);
@@ -95,7 +97,7 @@ export class MonacoService implements IMonacoService {
     options?: IStandaloneEditorConstructionOptions,
     overrides?: IEditorOverrideServices
   ): MonacoEditor.IStandaloneCodeEditor {
-    const services = this.services;
+    const { services } = this;
 
     this.mergeEditorServices(overrides);
     if (!services.has(ITextModelService)) {

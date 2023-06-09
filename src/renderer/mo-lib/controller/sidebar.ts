@@ -7,19 +7,19 @@ export interface ISideBarController extends Partial<Controller> {}
 
 @singleton()
 export class SidebarController
-    extends Controller
-    implements ISideBarController
+  extends Controller
+  implements ISideBarController
 {
-    private readonly sidebarService: ISidebarService;
+  private readonly sidebarService: ISidebarService;
 
-    constructor() {
-        super();
-        this.sidebarService = container.resolve(SidebarService);
-    }
+  constructor() {
+    super();
+    this.sidebarService = container.resolve(SidebarService);
+  }
 
-    public initView() {}
+  public initView() {}
 
-    public readonly onClick = (event: React.MouseEvent) => {
-        console.log('onClick:', this.sidebarService);
-    };
+  public readonly onClick = (event: React.MouseEvent) => {
+    console.log('onClick:', this.sidebarService);
+  };
 }

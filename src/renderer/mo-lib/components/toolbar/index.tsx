@@ -8,11 +8,11 @@ const rootClassName = 'tool-bar';
 export const toolbarClassName = prefixClaName(rootClassName);
 
 export function Toolbar<T = any>(props: IToolbarProps<T>) {
-    const { className, ...custom } = props;
+  const { className, ...custom } = props;
 
-    return (
-        <div className={classNames(toolbarClassName, className)}>
-            <ActionBar {...custom} />
-        </div>
-    );
+  return (
+    <div className={classNames(toolbarClassName, className)}>
+      <ActionBar {...custom} />
+    </div>
+  );
 }

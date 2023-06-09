@@ -17,7 +17,9 @@ import { ColorThemeService, IColorThemeService } from 'mo/services';
 
 export class SelectColorThemeAction extends Action2 {
   static readonly ID = constants.ACTION_SELECT_THEME;
+
   static readonly LABEL = localize('selectTheme.label', 'Color Theme');
+
   private readonly colorThemeService: IColorThemeService;
 
   constructor() {

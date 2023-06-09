@@ -1,46 +1,46 @@
 import {
-    getBEMElement,
-    getBEMModifier,
-    prefixClaName,
+  getBEMElement,
+  getBEMModifier,
+  prefixClaName,
 } from 'mo/common/className';
 
 export const baseClassName = prefixClaName('scrollBar');
 
 export const scrollBarClassName = getBEMElement(baseClassName, 'wrapper');
 export const scrollBarContainerClassName = getBEMElement(
-    baseClassName,
-    'container'
+  baseClassName,
+  'container'
 );
 export const scrollBarShadowClassName = getBEMElement(baseClassName, 'shadow');
 export const scrollBarTrackClassName = getBEMElement(baseClassName, 'track');
 export const scrollBarThumbClassName = getBEMElement(baseClassName, 'thumb');
 
 export const scrollBarContainerHorizontalClassName = getBEMModifier(
-    scrollBarContainerClassName,
-    'horizontal'
+  scrollBarContainerClassName,
+  'horizontal'
 );
 
 export const scrollBarContainerVerticalClassName = getBEMModifier(
-    scrollBarContainerClassName,
-    'vertical'
+  scrollBarContainerClassName,
+  'vertical'
 );
 
 export const scrollBarTrackHiddenClassName = getBEMModifier(
-    scrollBarTrackClassName,
-    'hidden'
+  scrollBarTrackClassName,
+  'hidden'
 );
 
 export const scrollBarTrackVerticalClassName = getBEMModifier(
-    scrollBarTrackClassName,
-    'vertical'
+  scrollBarTrackClassName,
+  'vertical'
 );
 
 export const scrollBarTrackHorizontalClassName = getBEMModifier(
-    scrollBarTrackClassName,
-    'horizontal'
+  scrollBarTrackClassName,
+  'horizontal'
 );
 
 export const scrollBarShadowHiddenClassName = getBEMModifier(
-    scrollBarShadowClassName,
-    'hidden'
+  scrollBarShadowClassName,
+  'hidden'
 );

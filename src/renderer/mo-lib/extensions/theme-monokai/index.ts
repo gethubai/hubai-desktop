@@ -10,6 +10,6 @@ const themes = monokaiColorThemeExtension.contributes?.themes || [];
 
 const themeOne = themes[0];
 
-themes[0] = Object.assign({}, themeOne, themeOneColors);
+themes[0] = { ...themeOne, ...themeOneColors };
 
 export { monokaiColorThemeExtension };

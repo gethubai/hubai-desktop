@@ -1,19 +1,19 @@
 export default {
-    info(...args) {
-        // The blow codes just for development
-        /*if (__DEVELOPMENT__) {
+  info(...args) {
+    // The blow codes just for development
+    /* if (__DEVELOPMENT__) {
             console.group(`Logger.info:`, ...args);
             console.groupEnd();
-        }*/
-        console.group(`Logger.info:`, ...args);
-        console.groupEnd();
-    },
+        } */
+    console.group(`Logger.info:`, ...args);
+    console.groupEnd();
+  },
 
-    error(...args) {
-        console.error(...args);
-    },
+  error(...args) {
+    console.error(...args);
+  },
 
-    warn(...args) {
-        console.warn(...args);
-    },
+  warn(...args) {
+    console.warn(...args);
+  },
 };

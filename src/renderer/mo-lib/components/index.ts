@@ -1,9 +1,9 @@
 export { ActionBar } from 'mo/components/actionBar';
 
 export type {
-    ActionBarItem,
-    IActionBarProps,
-    IActionBarItemProps,
+  ActionBarItem,
+  IActionBarProps,
+  IActionBarItemProps,
 } from 'mo/components/actionBar';
 
 export { Breadcrumb } from './breadcrumb';

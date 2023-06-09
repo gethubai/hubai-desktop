@@ -1,45 +1,45 @@
 import React, { useRef } from 'react';
 import { ITreeNodeItemProps } from '.';
 import {
-    indentClassName,
-    indentGuideClassName,
-    treeNodeTitleClassName,
+  indentClassName,
+  indentGuideClassName,
+  treeNodeTitleClassName,
 } from './base';
 
 interface ITreeNodeProps {
-    data: ITreeNodeItemProps;
-    indent: number;
-    name?: string;
-    className?: string;
-    draggable?: boolean;
-    renderIcon: () => JSX.Element | null;
-    renderTitle: () => React.ReactNode;
-    onContextMenu?: React.MouseEventHandler<HTMLDivElement>;
-    onClick?: React.MouseEventHandler<HTMLDivElement>;
-    onNodeDragStart?: (
-        e: React.DragEvent<HTMLDivElement>,
-        node: ITreeNodeItemProps
-    ) => void;
-    onNodeDragEnter?: (
-        e: React.DragEvent<HTMLDivElement>,
-        node: ITreeNodeItemProps
-    ) => void;
-    onNodeDragOver?: (
-        e: React.DragEvent<HTMLDivElement>,
-        node: ITreeNodeItemProps
-    ) => void;
-    onNodeDragEnd?: (
-        e: React.DragEvent<HTMLDivElement>,
-        node: ITreeNodeItemProps
-    ) => void;
-    onNodeDrop?: (
-        e: React.DragEvent<HTMLDivElement>,
-        node: ITreeNodeItemProps
-    ) => void;
+  data: ITreeNodeItemProps;
+  indent: number;
+  name?: string;
+  className?: string;
+  draggable?: boolean;
+  renderIcon: () => JSX.Element | null;
+  renderTitle: () => React.ReactNode;
+  onContextMenu?: React.MouseEventHandler<HTMLDivElement>;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
+  onNodeDragStart?: (
+    e: React.DragEvent<HTMLDivElement>,
+    node: ITreeNodeItemProps
+  ) => void;
+  onNodeDragEnter?: (
+    e: React.DragEvent<HTMLDivElement>,
+    node: ITreeNodeItemProps
+  ) => void;
+  onNodeDragOver?: (
+    e: React.DragEvent<HTMLDivElement>,
+    node: ITreeNodeItemProps
+  ) => void;
+  onNodeDragEnd?: (
+    e: React.DragEvent<HTMLDivElement>,
+    node: ITreeNodeItemProps
+  ) => void;
+  onNodeDrop?: (
+    e: React.DragEvent<HTMLDivElement>,
+    node: ITreeNodeItemProps
+  ) => void;
 }
 const INDENT = 8;
 
-export default ({
+export default function({
     data,
     indent,
     className,
@@ -54,7 +54,7 @@ export default ({
     onNodeDragOver,
     onNodeDrop,
     onNodeDragEnd,
-}: ITreeNodeProps) => {
+}: ITreeNodeProps) {
     const uuid = data.id;
     const ref = useRef<HTMLDivElement>(null);
 
@@ -105,7 +105,7 @@ export default ({
             data-key={uuid}
             data-id={`mo_treeNode_${nodeKey}`}
             className={className}
-            title={name}
+            title=
             draggable={draggable}
             onContextMenu={onContextMenu}
             onClick={onClick}

@@ -1,8 +1,8 @@
 export interface IObservable {
-    /**
-     * The onChange of observed object
-     */
-    subscribe: (onChange: (target, property, value) => void) => void;
+  /**
+   * The onChange of observed object
+   */
+  subscribe: (onChange: (target, property, value) => void) => void;
 }
 
 /**
@@ -11,48 +11,46 @@ export interface IObservable {
  * @param callback callback when target observed
  */
 export function observableWrapper<T = any>(object, callback?): IObservable & T {
-    Object.setPrototypeOf(object, {
-        handlers: [],
-        subscribe: function (onChange: Function) {
-            object.handlers.push(onChange);
-        },
-    });
+  Object.setPrototypeOf(object, {
+    handlers: [],
+    subscribe(onChange: Function) {
+      object.handlers.push(onChange);
+    },
+  });
 
-    const handler = {
-        get(target, property, receiver) {
-            if (target.hasOwnProperty(property)) {
-                try {
-                    return new Proxy(target[property], handler);
-                } catch (err) {
-                    return Reflect.get(target, property, receiver);
-                }
-            }
-            return Reflect.get(target, property, receiver);
-        },
-        set: function (target, property, value, receiver) {
-            let nextTarget = target;
-            if (target.hasOwnProperty(property)) {
-                try {
-                    Reflect.set(target, property, value, receiver);
-                    nextTarget = new Proxy(target[property], handler);
-                } catch (err) {
-                    nextTarget = Reflect.set(target, property, value, receiver);
-                }
-            } else {
-                nextTarget = Reflect.set(target, property, value, receiver);
-            }
-            if (callback) {
-                callback(target, property, value);
-            }
-            if (object.handlers) {
-                object.handlers.forEach((hand) =>
-                    hand(target, property, value)
-                );
-            }
-            return nextTarget;
-        },
-    };
-    return new Proxy(object, handler);
+  const handler = {
+    get(target, property, receiver) {
+      if (target.hasOwnProperty(property)) {
+        try {
+          return new Proxy(target[property], handler);
+        } catch (err) {
+          return Reflect.get(target, property, receiver);
+        }
+      }
+      return Reflect.get(target, property, receiver);
+    },
+    set(target, property, value, receiver) {
+      let nextTarget = target;
+      if (target.hasOwnProperty(property)) {
+        try {
+          Reflect.set(target, property, value, receiver);
+          nextTarget = new Proxy(target[property], handler);
+        } catch (err) {
+          nextTarget = Reflect.set(target, property, value, receiver);
+        }
+      } else {
+        nextTarget = Reflect.set(target, property, value, receiver);
+      }
+      if (callback) {
+        callback(target, property, value);
+      }
+      if (object.handlers) {
+        object.handlers.forEach((hand) => hand(target, property, value));
+      }
+      return nextTarget;
+    },
+  };
+  return new Proxy(object, handler);
 }
 
 /**
@@ -62,25 +60,25 @@ export function observableWrapper<T = any>(object, callback?): IObservable & T {
  * @param descriptor
  */
 export function observable(): any {
-    return function (target, property: string, descriptor: PropertyDescriptor) {
-        try {
-            const Original = target;
+  return function (target, property: string, descriptor: PropertyDescriptor) {
+    try {
+      const Original = target;
 
-            const decoratedConstructor = function (...args: any[]): void {
-                const Obj: any = function () {
-                    return new Original(args);
-                };
+      const decoratedConstructor = function (...args: any[]): void {
+        const Obj: any = function () {
+          return new Original(args);
+        };
 
-                Obj.prototype = Original.prototype;
-                const result = new Obj();
+        Obj.prototype = Original.prototype;
+        const result = new Obj();
 
-                return observableWrapper(result);
-            };
+        return observableWrapper(result);
+      };
 
-            decoratedConstructor.prototype = Original.prototype;
-            return decoratedConstructor;
-        } catch (e) {
-            return target;
-        }
-    };
+      decoratedConstructor.prototype = Original.prototype;
+      return decoratedConstructor;
+    } catch (e) {
+      return target;
+    }
+  };
 }

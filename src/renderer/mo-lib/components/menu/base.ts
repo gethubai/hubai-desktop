@@ -1,48 +1,48 @@
 import {
-    getBEMElement,
-    getBEMModifier,
-    prefixClaName,
+  getBEMElement,
+  getBEMModifier,
+  prefixClaName,
 } from 'mo/common/className';
 
 export const defaultMenuClassName = prefixClaName('menu');
 export const defaultSubMenuClassName = prefixClaName('sub-menu');
 
 export const verticalMenuClassName = getBEMModifier(
-    defaultMenuClassName,
-    'vertical'
+  defaultMenuClassName,
+  'vertical'
 );
 export const horizontalMenuClassName = getBEMModifier(
-    defaultMenuClassName,
-    'horizontal'
+  defaultMenuClassName,
+  'horizontal'
 );
 
 export const defaultMenuItemClassName = getBEMElement(
-    defaultMenuClassName,
-    'item'
+  defaultMenuClassName,
+  'item'
 );
 export const defaultDividerClassName = getBEMElement(
-    defaultMenuClassName,
-    'divider'
+  defaultMenuClassName,
+  'divider'
 );
 export const checkClassName = getBEMElement(defaultMenuClassName, 'check');
 export const disabledClassName = getBEMModifier(
-    defaultMenuItemClassName,
-    'disabled'
+  defaultMenuItemClassName,
+  'disabled'
 );
 export const activeClassName = getBEMModifier(
-    defaultMenuItemClassName,
-    'active'
+  defaultMenuItemClassName,
+  'active'
 );
 export const labelClassName = getBEMElement(defaultMenuClassName, 'label');
 export const menuContentClassName = getBEMElement(
-    defaultMenuClassName,
-    'content'
+  defaultMenuClassName,
+  'content'
 );
 export const keybindingClassName = getBEMElement(
-    defaultMenuClassName,
-    'keybinding'
+  defaultMenuClassName,
+  'keybinding'
 );
 export const indicatorClassName = getBEMElement(
-    defaultMenuClassName,
-    'indicator'
+  defaultMenuClassName,
+  'indicator'
 );

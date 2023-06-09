@@ -12,9 +12,9 @@ export * from './explorer/editorTree';
 export * from './search';
 export * from './panel';
 export interface IWorkbench {
-    panel: IPanel;
-    activityBar: IActivityBar;
-    menuBar: IMenuBar;
-    statusBar: IStatusBar;
-    sidebar: ISidebar;
+  panel: IPanel;
+  activityBar: IActivityBar;
+  menuBar: IMenuBar;
+  statusBar: IStatusBar;
+  sidebar: ISidebar;
 }

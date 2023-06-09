@@ -3,51 +3,51 @@ import { getBEMElement, prefixClaName } from 'mo/common/className';
 export const defaultSearchClassName = prefixClaName('search');
 
 export const baseInputClassName = getBEMElement(
-    defaultSearchClassName,
-    'input'
+  defaultSearchClassName,
+  'input'
 );
 
 export const inputGroupClassName = getBEMElement(
-    defaultSearchClassName,
-    'group'
+  defaultSearchClassName,
+  'group'
 );
 
 export const searchToolBarClassName = getBEMElement(
-    defaultSearchClassName,
-    'toolbar'
+  defaultSearchClassName,
+  'toolbar'
 );
 
 export const replaceContainerClassName = getBEMElement(
-    defaultSearchClassName,
-    'replace'
+  defaultSearchClassName,
+  'replace'
 );
 
 export const searchTargetContainerClassName = getBEMElement(
-    defaultSearchClassName,
-    'target'
+  defaultSearchClassName,
+  'target'
 );
 
 export const replaceBtnClassName = getBEMElement(
-    replaceContainerClassName,
-    'button'
+  replaceContainerClassName,
+  'button'
 );
 
 export const validationBaseInputClassName = getBEMElement(
-    defaultSearchClassName,
-    'base'
+  defaultSearchClassName,
+  'base'
 );
 
 export const validationInfoInputClassName = getBEMElement(
-    defaultSearchClassName,
-    'info'
+  defaultSearchClassName,
+  'info'
 );
 
 export const validationWarningInputClassName = getBEMElement(
-    defaultSearchClassName,
-    'warning'
+  defaultSearchClassName,
+  'warning'
 );
 
 export const validationErrorInputClassName = getBEMElement(
-    defaultSearchClassName,
-    'error'
+  defaultSearchClassName,
+  'error'
 );

@@ -6,21 +6,21 @@ import { EventBus } from './eventBus';
  * @param name Event name
  */
 export function emit(name: string) {
-    return function (target, property: string, descriptor: PropertyDescriptor) {
-        const original = descriptor.value;
-        if (typeof original === 'function') {
-            descriptor.value = function (...args) {
-                try {
-                    const result = original.apply(this, args);
-                    EventBus.emit(name, args);
-                    return result;
-                } catch (e) {
-                    throw e;
-                }
-            };
+  return function (target, property: string, descriptor: PropertyDescriptor) {
+    const original = descriptor.value;
+    if (typeof original === 'function') {
+      descriptor.value = function (...args) {
+        try {
+          const result = original.apply(this, args);
+          EventBus.emit(name, args);
+          return result;
+        } catch (e) {
+          throw e;
         }
-        return descriptor;
-    };
+      };
+    }
+    return descriptor;
+  };
 }
 
 /**
@@ -28,11 +28,11 @@ export function emit(name: string) {
  * @param name Event name
  */
 export function subscribe(name: string | string[]) {
-    return function (target, property: string, descriptor: PropertyDescriptor) {
-        const original = descriptor.value;
-        if (typeof original === 'function') {
-            EventBus.subscribe(name, original);
-        }
-        return descriptor;
-    };
+  return function (target, property: string, descriptor: PropertyDescriptor) {
+    const original = descriptor.value;
+    if (typeof original === 'function') {
+      EventBus.subscribe(name, original);
+    }
+    return descriptor;
+  };
 }
