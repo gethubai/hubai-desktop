@@ -10,10 +10,16 @@ export default class OpenAiBrainSettings implements IBrainSettings {
 
   apiKey: string;
 
+  textModel: string;
+
+  audioTranscriberModel: string;
+
   constructor(apiKey: string) {
     this.apiKey = apiKey;
     this.id = 'internal__openai';
     this.name = 'OpenAI';
     this.supportedPromptTypes = [PromptType.text, PromptType.audio];
+    this.textModel = 'gpt-3.5-turbo';
+    this.audioTranscriberModel = 'whisper-1';
   }
 }
