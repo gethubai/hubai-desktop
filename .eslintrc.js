@@ -13,6 +13,11 @@ module.exports = {
     '@typescript-eslint/no-shadow': 'error',
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'error',
+    'import/no-named-as-default': 'off',
+    'class-methods-use-this': 'off',
+    'no-useless-constructor': 'off',
+    'promise/always-return': 'off',
+    'react/state-in-constructor': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,
