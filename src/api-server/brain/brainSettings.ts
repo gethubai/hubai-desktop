@@ -1,5 +1,3 @@
-import type { UniqueId } from 'mo/common/types';
-
 export enum PromptType {
   text = 'text',
   image = 'image',
@@ -7,7 +5,7 @@ export enum PromptType {
 }
 
 export interface IBrainSettings {
-  id: UniqueId;
+  id: string;
   name: string;
   supportedPromptTypes: PromptType[];
 }

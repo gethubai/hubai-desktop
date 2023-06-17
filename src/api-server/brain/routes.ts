@@ -11,7 +11,6 @@ import OpenAiBrainService from './openai/openaiBrain';
 const openAiBrain = new OpenAiBrainService(
   new OpenAiBrainSettings('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')
 );
-
 const brains: IBrainService[] = [openAiBrain];
 
 const router: Router = express.Router();
