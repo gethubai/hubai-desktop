@@ -6,6 +6,9 @@ export type BrainPromptResponse = {
 
 export interface IBrainService {
   getSettings(): IBrainSettings;
+
+  setUserSettings(settings: any): void;
+  getUserSettings(): any;
 }
 
 export type TextBrainPrompt = {

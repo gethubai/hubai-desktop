@@ -5,13 +5,8 @@ import {
   type IBrainService,
 } from './brainService';
 import { ITextBrainService } from './brainService';
-import OpenAiBrainSettings from './openai/settings';
-import OpenAiBrainService from './openai/openaiBrain';
 
-const openAiBrain = new OpenAiBrainService(
-  new OpenAiBrainSettings('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')
-);
-const brains: IBrainService[] = [openAiBrain];
+const brains: IBrainService[] = [];
 
 const router: Router = express.Router();
 

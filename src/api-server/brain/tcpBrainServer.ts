@@ -5,7 +5,7 @@ import {
   SendChatMessageModel,
 } from 'api-server/chat/domain/models/chatMessage';
 import { IBrainServer } from './brainServer';
-import { IBrainService } from './brainService';
+import { IBrainService, ITextBrainService } from './brainService';
 import { IBrainSettings } from './brainSettings';
 
 export default class TcpBrainServer implements IBrainServer {
@@ -35,23 +35,52 @@ export default class TcpBrainServer implements IBrainServer {
   ) {
     console.log('messages received from chat server', message);
 
-    const reply = new SendChatMessageModel(
+    callback();
+
+    await this.replyWithTextPrompt(message);
+  }
+
+  private async replyWithTextPrompt(message: ChatMessageModel) {
+    const reply = this.getMessageReply(message);
+
+    const textService = this.brainService as ITextBrainService;
+
+    if (textService) {
+      // const result = await brain.sendTextPrompt(prompts);
+      // res.send({ brainId: brain.getSettings().id, result: result.result });
+      return textService
+        .sendTextPrompt([{ role: 'user', message: message.text?.body }])
+        .then((promptResult) => {
+          reply.setText({
+            body: promptResult.result,
+          });
+        })
+        .catch((err) => {
+          console.error(err, 'error sending text prompt');
+
+          reply.setText({
+            body: `An error occurred while sending text prompt:\n ${err.message}`,
+          });
+        })
+        .finally(() => {
+          this.sendMessage(reply);
+        });
+    }
+
+    reply.setText({ body: 'This brain does not support text prompts' });
+    this.sendMessage(reply);
+
+    return Promise.resolve();
+  }
+
+  private getMessageReply(message: ChatMessageModel): SendChatMessageModel {
+    return new SendChatMessageModel(
       message.chat,
       this.getSettings().name,
       this.getSettings().id,
       'brain',
       message.senderId
     );
-
-    reply.setText({
-      body: `Sorry i'm too dumb to answer that: ${new Date().toLocaleString()}`,
-    });
-
-    setTimeout(() => {
-      this.sendMessage(reply);
-    }, 1000);
-
-    callback();
   }
 
   private async sendMessageReceivedAck(messages: ChatMessageModel[]) {
