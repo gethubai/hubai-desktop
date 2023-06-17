@@ -1,6 +1,6 @@
 import { type IExtension } from 'mo/model';
-import { ChatExtension } from './chat';
+// import ChatExtension from './chat';
 
-const extensions: IExtension[] = [new ChatExtension()];
+const extensions: IExtension[] = [];
 
 export default extensions;
