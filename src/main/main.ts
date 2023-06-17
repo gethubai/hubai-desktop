@@ -12,6 +12,8 @@ import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import { exposeIpcMainRxStorage } from 'rxdb/plugins/electron';
+import getStorage from '../data/storage';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
@@ -128,7 +130,13 @@ app.on('window-all-closed', () => {
 
 app
   .whenReady()
-  .then(() => {
+  .then(async () => {
+    exposeIpcMainRxStorage({
+      key: 'main-storage',
+      storage: getStorage(),
+      ipcMain,
+    });
+
     createWindow();
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the

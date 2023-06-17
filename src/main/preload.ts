@@ -1,6 +1,7 @@
-// Disable no-unused-vars, broken for spread args
-/* eslint no-unused-vars: off */
+// In the app, if window.isElectron is defined and true, we know we're running in Electron
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
+
+Object.defineProperty(window, 'isRenderer', { get: () => true });
 
 export type Channels = 'ipc-example';
 
