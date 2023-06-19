@@ -9,10 +9,11 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import path from 'path';
-import { app, BrowserWindow, shell, ipcMain } from 'electron';
+import { app, BrowserWindow, shell, ipcMain, protocol } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import { exposeIpcMainRxStorage } from 'rxdb/plugins/electron';
+import { getMessageStoragePath } from 'utils/pathUtils';
 import getStorage from '../data/storage';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
@@ -135,6 +136,18 @@ app
       key: 'main-storage',
       storage: getStorage(),
       ipcMain,
+    });
+
+    protocol.registerFileProtocol('msg', (request, callback) => {
+      const url = request.url.substr(6); /* all urls start with 'msg://' */
+      const filePath = getMessageStoragePath(url);
+      try {
+        const decodedUrl = decodeURI(filePath); // Decodes the url if it is encoded
+        return callback(decodedUrl);
+      } catch (error) {
+        // Handle the error as needed
+        console.error('ERROR on msg protocol: ', error);
+      }
     });
 
     createWindow();
