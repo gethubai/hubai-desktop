@@ -81,6 +81,14 @@ export default class ChatWindowController
     return { name: 'Matheus Diniz', id: '1' };
   }
 
-    this.chatWindowService.sendMessage(model);
-  };
+  private getBrain(messageType: ChatMessageType): ChatBrain {
+    const brainChat = this.chat.brains.find(
+      (brain) => brain.handleMessageType === messageType
+    );
+
+    if (!brainChat)
+      throw new Error(`No brain found for message type ${messageType}`);
+
+    return brainChat;
+  }
 }

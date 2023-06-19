@@ -1,10 +1,11 @@
+import { ChatBrain } from 'api-server/chat/domain/models/chat';
 import { ChatMessageModel } from 'api-server/chat/domain/models/chatMessage';
 
 export type ChatWindowMessage = ChatMessageModel & {};
 
 export interface IChatWindowState {
   messages: ChatWindowMessage[];
-
+  brains: ChatBrain[];
   addMessage(message: ChatWindowMessage): void;
   updateMessage(message: ChatMessageModel): void;
 }
@@ -12,8 +13,11 @@ export interface IChatWindowState {
 export class ChatWindowStateModel implements IChatWindowState {
   messages: ChatWindowMessage[];
 
-  constructor(messages: ChatWindowMessage[] = []) {
+  brains: ChatBrain[];
+
+  constructor(messages: ChatWindowMessage[] = [], brains: ChatBrain[] = []) {
     this.messages = messages;
+    this.brains = brains;
   }
 
   addMessage(message: ChatWindowMessage) {

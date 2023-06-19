@@ -22,6 +22,21 @@ export const ChatSchemaLiteral = {
       maxLength: 50,
       final: true,
     },
+    brains: {
+      type: 'array',
+      uniqueItems: true,
+      items: {
+        type: 'object',
+        properties: {
+          id: {
+            type: 'string',
+          },
+          handleMessageType: {
+            type: 'string',
+          },
+        },
+      },
+    },
     createdDate: {
       type: 'string',
       format: 'date-time',

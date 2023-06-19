@@ -30,7 +30,7 @@ export class ChatWindowService
 
   constructor(private readonly chat: ChatModel) {
     super();
-    this.state = new ChatWindowStateModel();
+    this.state = new ChatWindowStateModel([], chat.brains);
     this.chatService = container.resolve(ChatService);
     this.initServer();
   }

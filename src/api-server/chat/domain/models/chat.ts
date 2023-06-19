@@ -1,4 +1,9 @@
-import { ChatMessageModel } from './chatMessage';
+import { ChatMessageModel, ChatMessageType } from './chatMessage';
+
+export type ChatBrain = {
+  id: string;
+  handleMessageType: ChatMessageType;
+};
 
 export type ChatModel = {
   id: string;
@@ -6,4 +11,5 @@ export type ChatModel = {
   initiator: string;
   createdDate: Date | string;
   messages?: ChatMessageModel[];
+  brains: ChatBrain[];
 };

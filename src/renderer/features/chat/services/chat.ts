@@ -120,6 +120,7 @@ export class ChatService extends Component<IChatState> implements IChatService {
         id: chat.id,
         name: chat.name,
         createdDate: chat.createdDate,
+        brains: chat.brains,
       } as IChatItem;
 
       if (group) {
@@ -169,6 +170,7 @@ export class ChatService extends Component<IChatState> implements IChatService {
       );
     });
   }
+
   getChat(id: string): Promise<ChatModel> {
     return new Promise((resolve, reject) => {
       this.socket?.emit('getChat', id, (response: ChatModel) => {
