@@ -13,25 +13,29 @@ import {
   SendChatMessageModel,
 } from 'api-server/chat/domain/models/chatMessage';
 import { ChatMessagesContext } from 'api-server/chat/domain/models/chatContext';
+import { CreateChat } from 'api-server/chat/domain/usecases/createChat';
 import {
   ChatStateModel,
-  CreateChatOptions,
   IChatGroup,
   IChatItem,
   IChatState,
 } from '../models/chat';
 
 export interface IChatService extends Component<IChatState> {
-  createChat(options: CreateChatOptions): Promise<ChatModel | undefined>;
+  createChat(options: CreateChat.Params): Promise<ChatModel | undefined>;
   sendChatMessage(options: SendChatMessageModel): Promise<ChatMessageModel>;
-
   getServer(): Socket<any, any> | undefined;
+  getChatCount(): number;
+  getChat(id: string): Promise<ChatModel>;
 }
 
 export interface IChatMessageSubscriber {
   onMessageSent(message: ChatMessageModel): void;
   onMessagesLoaded(chat: ChatMessagesContext): void;
-  onMessageUpdated(message: ChatMessageModel): void;
+  onMessageUpdated(
+    prevMessage: ChatMessageModel,
+    message: ChatMessageModel
+  ): void;
   onMessageReceived(message: ChatMessageModel): void;
 }
 
@@ -70,9 +74,9 @@ export class ChatService extends Component<IChatState> implements IChatService {
       }
     });
 
-    this.socket?.on('messageUpdated', (message: ChatMessageModel) => {
+    this.socket?.on('messageUpdated', ({ prevMessage, message }) => {
       if (this.subscribers[message.chat]) {
-        this.subscribers[message.chat].onMessageUpdated(message);
+        this.subscribers[message.chat].onMessageUpdated(prevMessage, message);
       }
     });
 
@@ -133,7 +137,12 @@ export class ChatService extends Component<IChatState> implements IChatService {
     this.setState({ groups });
   }
 
-  async createChat(options: CreateChatOptions): Promise<ChatModel | undefined> {
+  getChatCount(): number {
+    const { groups } = this.state;
+    return groups?.reduce((p, c) => p + c.items.length, 0) || 0;
+  }
+
+  async createChat(options: CreateChat.Params): Promise<ChatModel | undefined> {
     return new Promise((resolve, reject) => {
       this.socket?.emit('createChat', options, (response: ChatModel) => {
         if (!response) {
@@ -158,6 +167,17 @@ export class ChatService extends Component<IChatState> implements IChatService {
           }
         }
       );
+    });
+  }
+  getChat(id: string): Promise<ChatModel> {
+    return new Promise((resolve, reject) => {
+      this.socket?.emit('getChat', id, (response: ChatModel) => {
+        if (!response) {
+          reject(new Error('Chat could not be found'));
+        } else {
+          resolve(response);
+        }
+      });
     });
   }
 }

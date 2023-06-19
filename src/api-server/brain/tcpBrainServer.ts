@@ -5,7 +5,11 @@ import {
   SendChatMessageModel,
 } from 'api-server/chat/domain/models/chatMessage';
 import { IBrainServer } from './brainServer';
-import { IBrainService, ITextBrainService } from './brainService';
+import {
+  IAudioTranscriberBrainService,
+  IBrainService,
+  ITextBrainService,
+} from './brainService';
 import { IBrainSettings } from './brainSettings';
 
 export default class TcpBrainServer implements IBrainServer {
@@ -26,6 +30,11 @@ export default class TcpBrainServer implements IBrainServer {
     });
 
     this.socket.on('messageReceived', this.onMessageReceived.bind(this));
+
+    this.socket.on(
+      'onMessageTranscribed',
+      this.onMessageTranscribed.bind(this)
+    );
     return Promise.resolve();
   }
 
@@ -37,7 +46,51 @@ export default class TcpBrainServer implements IBrainServer {
 
     callback();
 
+    if (message.messageType === 'text') {
+      await this.replyWithTextPrompt(message);
+    } else if (message.messageType === 'voice') {
+      await this.transcribeMessage(message);
+    }
+  }
+
+  private async onMessageTranscribed(message: ChatMessageModel) {
     await this.replyWithTextPrompt(message);
+  }
+
+  private async transcribeMessage(message: ChatMessageModel) {
+    const reply = this.getMessageReply(message);
+
+    const transcriberService = this
+      .brainService as IAudioTranscriberBrainService;
+
+    if (!message.voice?.file) {
+      throw new Error('No voice file found in message');
+    }
+
+    if (transcriberService) {
+      return transcriberService
+        .transcribeAudio({
+          audioFilePath: message.voice.file,
+          language: 'en', // TODO: Allow support for other languages
+        })
+        .then((promptResult) => {
+          this.sendMessageTranscription(message, promptResult.result);
+        })
+        .catch((err) => {
+          console.error(err, 'error transcribing voice message');
+
+          reply.setText({
+            body: `An error occurred while transcribing message:\n ${err.message}`,
+          });
+
+          this.sendMessage(reply);
+        });
+    }
+
+    reply.setText({ body: 'This brain does not support audio transcriptions' });
+    this.sendMessage(reply);
+
+    return Promise.resolve();
   }
 
   private async replyWithTextPrompt(message: ChatMessageModel) {
@@ -89,8 +142,14 @@ export default class TcpBrainServer implements IBrainServer {
     });
   }
 
+  public sendMessageTranscription(message: ChatMessageModel, text: string) {
+    this.socket?.emit('transcribeVoiceMessage', {
+      message,
+      transcription: text,
+    });
+  }
+
   public sendMessage(message: SendChatMessageModel) {
-    console.log('sending message:', message);
     this.socket?.emit('sendMessage', message);
   }
 

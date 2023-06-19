@@ -1,5 +1,4 @@
 import { Server, Socket } from 'socket.io';
-import { CreateChatOptions } from 'renderer/features/chat/models/chat';
 import makeChatDatabase from './factories/databaseFactory';
 import {
   ChatMessageModel,
@@ -11,10 +10,17 @@ import makeLoadMessagesForRecipient from './factories/usecases/loadMessagesForRe
 import makeUpdateMessageStatus from './factories/usecases/updateMessageStatusFactory';
 import { ChatMessagesContext } from './domain/models/chatContext';
 import makeCreateChat from './factories/usecases/createChatFactory';
-import { ChatModel } from './domain/models/chat';
+import { ChatBrain, ChatModel } from './domain/models/chat';
+import makeSetVoiceMessageTranscription from './factories/usecases/setVoiceMessageTranscriptionFactory';
+import { CreateChat } from './domain/usecases/createChat';
 
 type MessagesReceivedAckEvent = {
   messages: ChatMessageModel[];
+};
+
+type TranscribeVoiceMessageEvent = {
+  message: ChatMessageModel;
+  transcription: string;
 };
 
 class ChatServer {
@@ -43,6 +49,9 @@ class ChatServer {
   private onChatClientConnected(socket: Socket): void {
     console.log(`new client connected: ${socket.id}`);
     socket.on('join', async ({ chatId }, callback) => {
+      const chatRoom = this.getChatRoom(chatId);
+      socket.join(chatRoom);
+
       const messages = await this.getChatMessages(chatId);
       callback(messages);
     });
@@ -67,10 +76,40 @@ class ChatServer {
 
     socket.on('messagesReceivedAck', this.onMessagesReceivedAck.bind(this));
 
-    socket.on('createChat', async (options: CreateChatOptions, callback) => {
+    socket.on('createChat', async (options: CreateChat.Params, callback) => {
       const createChat = await makeCreateChat();
       const chat = await createChat.create(options);
       socket.emit('chatCreated', chat);
+      callback(chat);
+    });
+
+    socket.on(
+      'transcribeVoiceMessage',
+      async (event: TranscribeVoiceMessageEvent, callback) => {
+        const setMessageTranscription =
+          await makeSetVoiceMessageTranscription();
+        const result = await setMessageTranscription.setTranscription({
+          messageId: event.message.id,
+          transcription: event.transcription,
+        });
+        this.notifyMessageUpdate(event.message, result);
+
+        const chat = await this.getChat(event.message.chat);
+
+        this.sendToChatParticipants(
+          chat.id,
+          'onMessageTranscribed',
+          result,
+          undefined,
+          (brain) => brain.handleMessageType === 'text' // We notify the text brains about the transcription
+        );
+
+        callback?.();
+      }
+    );
+
+    socket.on('getChat', async (chatId: string, callback) => {
+      const chat = await this.getChat(chatId);
       callback(chat);
     });
 
@@ -93,9 +132,19 @@ class ChatServer {
         status: ChatMessageStatus.DELIVERED,
       };
 
-      this.sendToClient(message.senderId, 'messageUpdated', updatedMessage);
+      this.notifyMessageUpdate(message, updatedMessage);
     });
   };
+
+  private notifyMessageUpdate(
+    prevMessage: ChatMessageModel,
+    message: ChatMessageModel
+  ): void {
+    this.sendToChatParticipants(message.chat, 'messageUpdated', {
+      prevMessage,
+      message,
+    });
+  }
 
   private async updateMessageStatus(
     messageIds: string[],
@@ -119,6 +168,31 @@ class ChatServer {
     this.sendToClient(id, 'messageSent', message);
   }
 
+  public async sendToChatParticipants(
+    chatId: string,
+    event: string,
+    data: any,
+    callback = undefined,
+    brainFilter: (brain: ChatBrain) => boolean = () => true
+  ): Promise<void> {
+    const chat = await this.getChat(chatId);
+
+    if (!chat) {
+      console.error(
+        `Could not send message ${event} to chat ${chatId} because it does not exist`
+      );
+      return;
+    }
+
+    const brainIds = chat.brains
+      .filter(brainFilter)
+      .map((brain) => this.getClientRoom(brain.id));
+
+    this.server
+      ?.to([this.getChatRoom(chatId), ...brainIds])
+      .emit(event, data, callback);
+  }
+
   public sendToClient(
     id: string,
     event: string,
@@ -132,6 +206,10 @@ class ChatServer {
     return `chatClient:${id}`;
   }
 
+  private getChatRoom(id: string): string {
+    return `chat:${id}`;
+  }
+
   private async getClientMessages(id: string): Promise<ChatMessagesContext[]> {
     const messagesLoader = await makeLoadMessagesForRecipient();
     const messages = await messagesLoader.loadMessages({ recipientId: id });
@@ -142,7 +220,7 @@ class ChatServer {
   private async getChatMessages(id: string): Promise<ChatMessagesContext> {
     // TODO: Refactor this and use useCase
     const db = await makeChatDatabase();
-    const chat = await db.chat.findOne(id).exec();
+    const chat = await this.getChat(id);
     const messages = await db.messages
       .find({
         selector: {
@@ -153,7 +231,14 @@ class ChatServer {
       })
       .sort({ sendDate: 1 })
       .exec();
-    return new ChatMessagesContext(chat._data as ChatModel, messages);
+    return new ChatMessagesContext(chat, messages);
+  }
+
+  private async getChat(id: string): Promise<ChatModel> {
+    // TODO: Do this using a useCase
+    const db = await makeChatDatabase();
+    const chat = await db.chat.findOne(id).exec();
+    return chat?._data as ChatModel;
   }
 }
 

@@ -55,8 +55,12 @@ export class ChatWindowService
     this.setState(state);
   }
 
-  onMessageUpdated(message: ChatMessageModel): void {
+  onMessageUpdated(
+    prevMessage: ChatMessageModel,
+    message: ChatMessageModel
+  ): void {
     const { state } = this;
+
     state.updateMessage(message);
     this.setState(state);
   }

@@ -6,11 +6,6 @@ export enum ChatEvent {
   onMessageReceived = 'chat.onMessageReceived',
 }
 
-export type CreateChatOptions = {
-  name: string;
-  initiator: string;
-};
-
 export type SendChatMessageOptions = {
   chatId: string;
   message: string;

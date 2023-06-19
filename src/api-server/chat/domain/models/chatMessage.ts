@@ -1,6 +1,7 @@
 /* eslint-disable max-classes-per-file */
 export type ChatMessageSenderType = 'user' | 'brain';
 export type ChatMessageType = 'text' | 'image' | 'voice';
+
 export enum ChatMessageStatus {
   WAITING = 'waiting',
   SENT = 'sent',
@@ -25,6 +26,11 @@ export type ImageMessage = {
 
 export type VoiceMessage = {
   file: string;
+  mimeType?: string;
+};
+
+export type RawVoiceMessage = {
+  data: Uint8Array;
   mimeType?: string;
 };
 
@@ -58,7 +64,7 @@ export class SendChatMessageModel {
 
   image?: ImageMessage;
 
-  voice?: VoiceMessage;
+  voice?: RawVoiceMessage;
 
   messageType: ChatMessageType;
 
@@ -90,7 +96,7 @@ export class SendChatMessageModel {
     this.messageType = 'image';
   }
 
-  setVoice(voice: VoiceMessage) {
+  setVoice(voice: RawVoiceMessage) {
     this.voice = voice;
     this.messageType = 'voice';
   }

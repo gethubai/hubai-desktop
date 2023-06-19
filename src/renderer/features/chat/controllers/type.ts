@@ -6,5 +6,6 @@ export interface IChatController extends Partial<Controller> {
 }
 
 export interface IChatWindowController extends Partial<Controller> {
-  onSendMessage?: (message: string) => void;
+  onSendTextMessage?: (message: string) => void;
+  onSendVoiceMessage?: (audioBlob: Blob) => void;
 }
