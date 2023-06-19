@@ -25,6 +25,6 @@ export type LocalAudioPrompt = {
   language: string;
 };
 
-export interface ILocalAudioTranscriberBrainService extends IBrainService {
+export interface IAudioTranscriberBrainService extends IBrainService {
   transcribeAudio(audioPath: LocalAudioPrompt): Promise<BrainPromptResponse>;
 }

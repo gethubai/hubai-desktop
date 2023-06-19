@@ -1,7 +1,7 @@
 import express, { Request, Response, Router } from 'express';
 
 import {
-  ILocalAudioTranscriberBrainService,
+  IAudioTranscriberBrainService,
   type IBrainService,
 } from './brainService';
 import { ITextBrainService } from './brainService';
@@ -37,7 +37,7 @@ router.post(
 
     const brain = brains.find(
       (b) => b.getSettings().id === brainId
-    ) as ILocalAudioTranscriberBrainService;
+    ) as IAudioTranscriberBrainService;
 
     if (brain == null) {
       res
