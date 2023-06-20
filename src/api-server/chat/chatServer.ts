@@ -13,6 +13,8 @@ import makeCreateChat from './factories/usecases/createChatFactory';
 import { ChatBrain, ChatModel } from './domain/models/chat';
 import makeSetVoiceMessageTranscription from './factories/usecases/setVoiceMessageTranscriptionFactory';
 import { CreateChat } from './domain/usecases/createChat';
+import makeUpdateChatBrains from './factories/usecases/updateChatBrainsFactory';
+import { UpdateChatBrains } from './domain/usecases/updateChatBrains';
 
 type MessagesReceivedAckEvent = {
   messages: ChatMessageModel[];
@@ -112,6 +114,15 @@ class ChatServer {
       const chat = await this.getChat(chatId);
       callback(chat);
     });
+
+    socket.on(
+      'updateChatBrains',
+      async (event: UpdateChatBrains.Params, callback) => {
+        const updateChatBrains = await makeUpdateChatBrains();
+        const chat = await updateChatBrains.update(event);
+        callback(chat);
+      }
+    );
 
     socket.on('disconnect', (reason) => {
       console.log(`client disconnected: ${socket.id}`);

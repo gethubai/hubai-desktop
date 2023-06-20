@@ -28,6 +28,7 @@ import {
   StatusBarController,
 } from 'mo/controller';
 import ChatController from 'renderer/features/chat/controllers/chat';
+import BrainController from 'renderer/features/brain/controllers/brain';
 
 interface IInstanceServiceProps {
   getConfig: () => IConfigProps;
@@ -112,6 +113,7 @@ export default class InstanceService
         SidebarController,
         StatusBarController,
         ChatController,
+        BrainController,
       ];
 
       // resolve all controllers, and call `initView` to inject initial values into services
