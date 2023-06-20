@@ -1,7 +1,7 @@
-import { ChatDatabase } from 'data/db';
+import { ChatDatabase } from 'data/chat/db';
 import isRenderer from '../../../utils/isRenderer';
 // import { getChatDatabase as getChatDatabaseRenderer } from '../../../data/db-renderer';
-import { getChatDatabase as getChatDatabaseMain } from '../../../data/db-main';
+import { getChatDatabase as getChatDatabaseMain } from '../../../data/chat/db-main';
 
 let dbPromise: Promise<ChatDatabase>;
 

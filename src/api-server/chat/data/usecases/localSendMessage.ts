@@ -6,7 +6,7 @@ import {
   SendChatMessage,
   SendMessage,
 } from 'api-server/chat/domain/usecases/sendChatMessage';
-import { ChatDatabase } from 'data/db';
+import { ChatDatabase } from 'data/chat/db';
 import generateUniqueId from 'renderer/common/uniqueIdGenerator';
 import { getMessageAudioStoragePath } from 'utils/pathUtils';
 import fs from 'fs';

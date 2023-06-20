@@ -1,4 +1,4 @@
-import { ChatDatabase } from '../../../../data/db';
+import { ChatDatabase } from '../../../../data/chat/db';
 import { ChatMessageModel } from '../../domain/models/chatMessage';
 import { UpdateMessageStatus } from '../../domain/usecases/updateMessagesStatus';
 

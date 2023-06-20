@@ -1,7 +1,7 @@
 import { getRxStorageIpcRenderer } from 'rxdb/plugins/electron';
 import { ipcRenderer } from 'electron';
 import { ChatDatabase, internalGetChatDatabase } from './db';
-import getStorage from './storage';
+import getStorage from '../storage';
 
 const getStorageRendererStorage = () => {
   return getRxStorageIpcRenderer({

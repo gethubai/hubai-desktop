@@ -1,5 +1,5 @@
 import { SetVoiceMessageTranscription } from 'api-server/chat/domain/usecases/setVoiceMessageTranscription';
-import { ChatDatabase } from 'data/db';
+import { ChatDatabase } from 'data/chat/db';
 
 export default class LocalSetVoiceMessageTranscription
   implements SetVoiceMessageTranscription

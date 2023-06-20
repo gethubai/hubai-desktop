@@ -1,5 +1,5 @@
 import { CreateChat } from 'api-server/chat/domain/usecases/createChat';
-import { ChatDatabase } from 'data/db';
+import { ChatDatabase } from 'data/chat/db';
 import generateUniqueId from 'renderer/common/uniqueIdGenerator';
 
 export default class LocalCreateChat implements CreateChat {

@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 import { ChatMessagesContext } from 'api-server/chat/domain/models/chatContext';
-import { ChatDatabase } from '../../../../data/db';
+import { ChatDatabase } from '../../../../data/chat/db';
 import { LoadMessageForRecipient } from '../../domain/usecases/loadMessagesForRecipient';
 
 export default class LocalLoadMessagesForRecipient

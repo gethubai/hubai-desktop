@@ -1,5 +1,5 @@
 import { UpdateChatBrains } from 'api-server/chat/domain/usecases/updateChatBrains';
-import { ChatDatabase } from 'data/db';
+import { ChatDatabase } from 'data/chat/db';
 
 export default class LocalUpdateChatBrains implements UpdateChatBrains {
   constructor(private readonly database: ChatDatabase) {}
