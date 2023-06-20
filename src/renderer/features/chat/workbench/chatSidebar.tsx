@@ -57,7 +57,10 @@ function ChatSidebar({
         toolbar={<Toolbar data={headerToolBar || []} />}
       />
       <Content>
-        <Collapse data={renderCollapse()} />
+        <Collapse
+          data={renderCollapse()}
+          activePanelKeys={['ChatGroupsList']}
+        />
       </Content>
     </div>
   );

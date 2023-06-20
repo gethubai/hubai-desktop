@@ -19,12 +19,13 @@ import {
 } from 'api-server/chat/domain/models/chatMessage';
 import { IChatWindowController } from '../controllers/type';
 import { IChatWindowState } from '../models/chatWindow';
+import BrainSelector from './components/brainSelector';
+
 type MessageType = MessageModel & {
   id: string;
   status: ChatMessageStatus;
   messageType: ChatMessageType;
 };
-
 
 export interface IChatWindowProps
   extends IChatWindowController,
@@ -32,8 +33,11 @@ export interface IChatWindowProps
 
 function ChatWindow({
   messages: newMessages,
+  availableBrains,
+  selectedBrains,
   onSendTextMessage,
   onSendVoiceMessage,
+  onCapabilityBrainChanged,
 }: IChatWindowProps) {
   const inputRef = useRef();
   const [msgInputValue, setMsgInputValue] = useState('');
@@ -56,16 +60,21 @@ function ChatWindow({
     return {
       message: content,
       messageType: message.messageType,
-    sentTime: message.sendDate,
-    sender: message.sender,
-    direction: message.senderType === 'user' ? 'outgoing' : 'incoming',
-    id: message.id,
-    status: message.status,
+      sentTime: message.sendDate,
+      sender: message.sender,
+      direction: message.senderType === 'user' ? 'outgoing' : 'incoming',
+      id: message.id,
+      status: message.status,
     } as MessageType;
   });
 
   return (
     <div style={{ position: 'relative', height: '500px' }}>
+      <BrainSelector
+        availableBrains={availableBrains}
+        selectedBrains={selectedBrains}
+        onCapabilityBrainChanged={onCapabilityBrainChanged}
+      />
       <MainContainer>
         <ChatContainer>
           <MessageList>
@@ -98,14 +107,14 @@ function ChatWindow({
               borderTop: '1px dashed #d1dbe4',
             }}
           >
-          <MessageInput
+            <MessageInput
               ref={inputRef}
               onChange={(msg) => setMsgInputValue(msg)}
               value={msgInputValue}
               sendButton={false}
               attachButton={false}
               onSend={handleSendMessage}
-            placeholder="Type message here"
+              placeholder="Type message here"
               style={{
                 flexGrow: 1,
                 borderTop: 0,
@@ -134,7 +143,7 @@ function ChatWindow({
             <AudioRecorder
               onRecordingComplete={(blob) => addAudioElement(blob)}
               recorderControls={recorderControls}
-          />
+            />
           </div>
         </ChatContainer>
       </MainContainer>

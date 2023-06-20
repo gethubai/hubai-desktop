@@ -4,8 +4,13 @@ import {
   ChatMessageType,
   SendChatMessageModel,
 } from 'api-server/chat/domain/models/chatMessage';
+import {
+  BrainCapability,
+  BrainModel,
+} from 'api-server/brain/domain/models/brain';
 import { IChatWindowController } from './type';
 import { IChatWindowService } from '../services/chatWindowService';
+import { getTextMessageTypeForBrainCapability } from '../utils/messageUtils';
 
 function blobToByteArray(blob: Blob): Promise<Uint8Array> {
   return new Promise<Uint8Array>((resolve, reject) => {
@@ -60,6 +65,31 @@ export default class ChatWindowController
       });
   };
 
+  public onCapabilityBrainChanged = (
+    brain: BrainModel,
+    capability: BrainCapability
+  ) => {
+    const { selectedBrains } = this.chatWindowService.getState();
+    const chatMessageType = getTextMessageTypeForBrainCapability(capability);
+    const chatBrain = {
+      id: brain.id,
+      handleMessageType: chatMessageType,
+    } as ChatBrain;
+
+    const newSelectedBrains = [...selectedBrains];
+    const brainIndex = newSelectedBrains.findIndex(
+      (b) => b.handleMessageType === chatMessageType
+    );
+
+    if (brainIndex === -1) {
+      newSelectedBrains.push(chatBrain);
+    } else {
+      newSelectedBrains[brainIndex] = chatBrain;
+    }
+
+    this.chatWindowService.updateChatBrains(newSelectedBrains);
+  };
+
   private createMessageToSend(
     messageType: ChatMessageType
   ): SendChatMessageModel {
@@ -82,9 +112,9 @@ export default class ChatWindowController
   }
 
   private getBrain(messageType: ChatMessageType): ChatBrain {
-    const brainChat = this.chat.brains.find(
-      (brain) => brain.handleMessageType === messageType
-    );
+    const brainChat = this.chatWindowService
+      .getState()
+      .selectedBrains.find((brain) => brain.handleMessageType === messageType);
 
     if (!brainChat)
       throw new Error(`No brain found for message type ${messageType}`);

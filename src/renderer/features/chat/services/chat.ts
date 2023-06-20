@@ -14,6 +14,7 @@ import {
 } from 'api-server/chat/domain/models/chatMessage';
 import { ChatMessagesContext } from 'api-server/chat/domain/models/chatContext';
 import { CreateChat } from 'api-server/chat/domain/usecases/createChat';
+import { UpdateChatBrains } from 'api-server/chat/domain/usecases/updateChatBrains';
 import {
   ChatStateModel,
   IChatGroup,
@@ -23,6 +24,9 @@ import {
 
 export interface IChatService extends Component<IChatState> {
   createChat(options: CreateChat.Params): Promise<ChatModel | undefined>;
+  updateChatBrains(
+    options: UpdateChatBrains.Params
+  ): Promise<ChatModel | undefined>;
   sendChatMessage(options: SendChatMessageModel): Promise<ChatMessageModel>;
   getServer(): Socket<any, any> | undefined;
   getChatCount(): number;
@@ -168,6 +172,18 @@ export class ChatService extends Component<IChatState> implements IChatService {
           }
         }
       );
+    });
+  }
+
+  updateChatBrains(options: UpdateChatBrains.Params): Promise<ChatModel> {
+    return new Promise((resolve, reject) => {
+      this.socket?.emit('updateChatBrains', options, (response: ChatModel) => {
+        if (!response) {
+          reject(new Error('Chat brains could not be updated'));
+        } else {
+          resolve(response);
+        }
+      });
     });
   }
 

@@ -14,15 +14,18 @@ import {
 import { container, singleton } from 'tsyringe';
 import { IActivityBarItem } from 'mo/model';
 import { ChatModel } from 'api-server/chat/domain/models/chat';
+import { CreateChat } from 'api-server/chat/domain/usecases/createChat';
+import {
+  BrainService,
+  IBrainService,
+} from 'renderer/features/brain/services/brain';
 import { ChatService, IChatService } from '../services/chat';
 import ChatSidebar from '../workbench/chatSidebar';
 import { IChatController } from './type';
-import { CreateChatOptions, IChatItem } from '../models/chat';
+import { IChatItem } from '../models/chat';
 import ChatView from '../workbench/chatView';
 import { ChatWindowService } from '../services/chatWindowService';
 import ChatWindowController from './chatWindowController';
-
-let indexTest = 0;
 
 @singleton()
 export default class ChatController
@@ -39,6 +42,8 @@ export default class ChatController
 
   private readonly editorService: IEditorService;
 
+  private readonly brainService: IBrainService;
+
   constructor() {
     super();
 
@@ -47,6 +52,7 @@ export default class ChatController
     this.chatService = container.resolve(ChatService);
     this.builtinService = container.resolve(BuiltinService);
     this.editorService = container.resolve(EditorService);
+    this.brainService = container.resolve(BrainService);
   }
 
   public initView(): void {
@@ -80,16 +86,21 @@ export default class ChatController
 
     this.chatService.setState({
       headerToolBar: chatSideBarHeaderToolbar,
+      availableBrains: this.brainService.getBrains(),
     });
     this.sideBarService.add(chatGroupSideBar);
     this.activityBarService.add(activityBar);
   }
 
   private async openNewChatWindow(): Promise<void> {
-    indexTest += 1;
-    const createOptions: CreateChatOptions = {
-      name: `This is my chat${indexTest}`,
+    const index = this.chatService.getChatCount() + 1;
+    const createOptions: CreateChat.Params = {
+      name: `New chat ${index}`,
       initiator: `Fake Extensions`,
+      brains: [
+        { id: 'brainIdTest', handleMessageType: 'text' },
+        { id: 'brainIdTest', handleMessageType: 'voice' },
+      ],
     };
 
     const result = await this.chatService.createChat(createOptions);
@@ -101,10 +112,11 @@ export default class ChatController
     }
   }
 
-  private selectOrOpenChatWindow(chat: ChatModel): void {
+  private async selectOrOpenChatWindow(chat: ChatModel): Promise<void> {
     let renderPane;
     if (!this.editorService.isOpened(chat.id)) {
-      const ChatViewWindow = this.createChatWindow(chat);
+      const chatInstance = await this.chatService.getChat(chat.id);
+      const ChatViewWindow = this.createChatWindow(chatInstance);
       renderPane = () => <ChatViewWindow />;
     }
     this.editorService.open({
