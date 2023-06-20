@@ -1,35 +1,28 @@
 {
-  "description": "A foundation for scalable desktop apps",
+  "description": "The central place for all AIs",
   "keywords": [
-    "electron",
-    "boilerplate",
-    "react",
-    "typescript",
-    "ts",
-    "sass",
-    "webpack",
-    "hot",
-    "reload"
+    "AI",
+    "AllAI"
   ],
-  "homepage": "https://github.com/electron-react-boilerplate/electron-react-boilerplate#readme",
+  "homepage": "https://github.com/mtsdnz/allai-app",
   "bugs": {
-    "url": "https://github.com/electron-react-boilerplate/electron-react-boilerplate/issues"
+    "url": "https://github.com/mtsdnz/allai-app/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/electron-react-boilerplate/electron-react-boilerplate.git"
+    "url": "git+https://github.com/mtsdnz/allai-app.git"
   },
   "license": "MIT",
   "author": {
-    "name": "Electron React Boilerplate Maintainers",
-    "email": "electronreactboilerplate@gmail.com",
-    "url": "https://electron-react-boilerplate.js.org"
+    "name": "Matheus Diniz",
+    "email": "mtsdnz@hotmail.com",
+    "url": "https://allai.app"
   },
   "contributors": [
     {
-      "name": "Amila Welihinda",
-      "email": "amilajack@gmail.com",
-      "url": "https://github.com/amilajack"
+      "name": "Matheus Diniz",
+      "email": "mtsdnz@hotmail.com",
+      "url": "https://github.com/mtsdnz"
     }
   ],
   "main": "./src/main/main.ts",
@@ -198,8 +191,8 @@
     "webpack-merge": "^5.9.0"
   },
   "build": {
-    "productName": "ElectronReact",
-    "appId": "org.erb.ElectronReact",
+    "productName": "AllAiApp",
+    "appId": "org.erb.AllaiChat",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
     "files": [
@@ -257,12 +250,12 @@
     ],
     "publish": {
       "provider": "github",
-      "owner": "electron-react-boilerplate",
-      "repo": "electron-react-boilerplate"
+      "owner": "mtsdnz",
+      "repo": "allai-app"
     }
   },
   "collective": {
-    "url": "https://opencollective.com/electron-react-boilerplate-594"
+    "url": "https://opencollective.com/allai-app"
   },
   "devEngines": {
     "node": ">=14.x",
