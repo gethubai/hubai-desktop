@@ -1,12 +1,12 @@
 /* eslint-disable react/no-unused-class-component-methods */
 /* eslint-disable react/destructuring-assignment */
 import { Component } from 'mo/react';
-import { BrainModel } from 'api-server/brain/domain/models/brain';
+import { LocalBrainModel } from 'api-server/brain/domain/models/localBrain';
 import { container, singleton } from 'tsyringe';
 import { BrainStateModel, IBrainState } from '../models/brain';
 
 export interface IBrainManagementService extends Component<IBrainState> {
-  getBrains(): BrainModel[];
+  getBrains(): LocalBrainModel[];
 }
 
 @singleton()
@@ -21,7 +21,7 @@ export class BrainManagementService
     this.state = container.resolve(BrainStateModel);
   }
 
-  getBrains(): BrainModel[] {
+  getBrains(): LocalBrainModel[] {
     return this.state.brains;
   }
 }

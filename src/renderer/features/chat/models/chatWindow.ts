@@ -1,4 +1,4 @@
-import { BrainModel } from 'api-server/brain/domain/models/brain';
+import { LocalBrainModel } from 'api-server/brain/domain/models/localBrain';
 import { ChatBrain } from 'api-server/chat/domain/models/chat';
 import { ChatMessageModel } from 'api-server/chat/domain/models/chatMessage';
 
@@ -6,7 +6,7 @@ export type ChatWindowMessage = ChatMessageModel & {};
 
 export interface IChatWindowState {
   messages: ChatWindowMessage[];
-  availableBrains: BrainModel[];
+  availableBrains: LocalBrainModel[];
   selectedBrains: ChatBrain[];
   addMessage(message: ChatWindowMessage): void;
   updateMessage(message: ChatMessageModel): void;
@@ -15,13 +15,13 @@ export interface IChatWindowState {
 export class ChatWindowStateModel implements IChatWindowState {
   messages: ChatWindowMessage[];
 
-  availableBrains: BrainModel[];
+  availableBrains: LocalBrainModel[];
 
   selectedBrains: ChatBrain[] = [];
 
   constructor(
     messages: ChatWindowMessage[] = [],
-    availableBrains: BrainModel[] = [],
+    availableBrains: LocalBrainModel[] = [],
     selectedBrains: ChatBrain[] = []
   ) {
     this.messages = messages;

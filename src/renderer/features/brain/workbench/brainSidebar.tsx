@@ -3,7 +3,7 @@ import { Toolbar, Collapse } from 'mo/components';
 import { ICollapseItem } from 'mo/components/collapse';
 import Tree from 'mo/components/tree';
 import { IBrainController } from '../controllers/type';
-import { BrainViewModel, IBrainState } from '../models/brain';
+import { LocalBrainViewModel, IBrainState } from '../models/brain';
 
 export interface IBrainSidebarProps extends IBrainController, IBrainState {}
 
@@ -39,7 +39,7 @@ function BrainSidebar({
                   id: node.id,
                   name: node.name,
                   capabilities: node.capabilities,
-                } as BrainViewModel);
+                } as LocalBrainViewModel);
               }}
             />
           );

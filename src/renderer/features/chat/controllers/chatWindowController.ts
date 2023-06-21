@@ -6,8 +6,8 @@ import {
 } from 'api-server/chat/domain/models/chatMessage';
 import {
   BrainCapability,
-  BrainModel,
-} from 'api-server/brain/domain/models/brain';
+  LocalBrainModel,
+} from 'api-server/brain/domain/models/localBrain';
 import { IChatWindowController } from './type';
 import { IChatWindowService } from '../services/chatWindowService';
 import { getTextMessageTypeForBrainCapability } from '../utils/messageUtils';
@@ -66,7 +66,7 @@ export default class ChatWindowController
   };
 
   public onCapabilityBrainChanged = (
-    brain: BrainModel,
+    brain: LocalBrainModel,
     capability: BrainCapability
   ) => {
     const { selectedBrains } = this.chatWindowService.getState();

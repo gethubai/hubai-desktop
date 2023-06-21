@@ -1,8 +1,8 @@
 import { container } from 'tsyringe';
 import {
   BrainCapability,
-  BrainModel,
-} from 'api-server/brain/domain/models/brain';
+  LocalBrainModel,
+} from 'api-server/brain/domain/models/localBrain';
 import { ChatStateModel, IChatState } from './features/chat/models/chat';
 import { BrainStateModel, IBrainState } from './features/brain/models/brain';
 
@@ -10,7 +10,7 @@ container.register<IChatState>(ChatStateModel, {
   useValue: new ChatStateModel(),
 });
 
-const mockBrains: BrainModel[] = [
+const mockBrains: LocalBrainModel[] = [
   {
     id: 'brainIdTest',
     name: 'OpenAI',

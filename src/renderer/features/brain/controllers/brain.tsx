@@ -12,7 +12,7 @@ import { IActivityBarItem } from 'mo/model';
 import { IBrainController } from './type';
 import { BrainManagementService } from '../services/brainManagement';
 import BrainSidebar from '../workbench/brainSidebar';
-import { BrainViewModel } from '../models/brain';
+import { LocalBrainViewModel } from '../models/brain';
 
 @singleton()
 export default class BrainController
@@ -72,7 +72,7 @@ export default class BrainController
     this.activityBarService.add(activityBar);
   }
 
-  public onBrainClick = (brain: BrainViewModel) => {
+  public onBrainClick = (brain: LocalBrainViewModel) => {
     console.log('clicked on brain', brain);
   };
 }

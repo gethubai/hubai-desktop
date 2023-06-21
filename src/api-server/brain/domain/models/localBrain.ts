@@ -4,7 +4,7 @@ export enum BrainCapability {
   IMAGE_RECOGNITION = 'image_recognition',
 }
 
-export type BrainModel = {
+export type LocalBrainModel = {
   id: string;
   name: string;
   capabilities: BrainCapability[];

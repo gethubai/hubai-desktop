@@ -1,8 +1,8 @@
 import { Controller } from 'mo/react/controller';
 import {
   BrainCapability,
-  BrainModel,
-} from 'api-server/brain/domain/models/brain';
+  LocalBrainModel,
+} from 'api-server/brain/domain/models/localBrain';
 import { IChatItem } from '../models/chat';
 
 export interface IChatController extends Partial<Controller> {
@@ -13,7 +13,7 @@ export interface IChatWindowController extends Partial<Controller> {
   onSendTextMessage?: (message: string) => void;
   onSendVoiceMessage?: (audioBlob: Blob) => void;
   onCapabilityBrainChanged?: (
-    brain: BrainModel,
+    brain: LocalBrainModel,
     capability: BrainCapability
   ) => void;
 }

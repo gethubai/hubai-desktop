@@ -1,4 +1,4 @@
-import { BrainCapability } from 'api-server/brain/domain/models/brain';
+import { BrainCapability } from 'api-server/brain/domain/models/localBrain';
 
 export const getTextMessageTypeForBrainCapability = (
   brainCapability: BrainCapability

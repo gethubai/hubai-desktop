@@ -1,6 +1,6 @@
 import { Controller } from 'mo/react/controller';
-import { BrainViewModel } from '../models/brain';
+import { LocalBrainViewModel } from '../models/brain';
 
 export interface IBrainController extends Partial<Controller> {
-  onBrainClick?: (item: BrainViewModel) => void;
+  onBrainClick?: (item: LocalBrainViewModel) => void;
 }

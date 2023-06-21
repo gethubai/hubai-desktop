@@ -1,20 +1,20 @@
-import { BrainModel } from 'api-server/brain/domain/models/brain';
+import { LocalBrainModel } from 'api-server/brain/domain/models/localBrain';
 import { IActionBarItemProps } from 'mo/components';
 
-export type BrainViewModel = BrainModel & {};
+export type LocalBrainViewModel = LocalBrainModel & {};
 
 export interface IBrainState {
-  brains: BrainViewModel[];
+  brains: LocalBrainViewModel[];
   headerToolBar?: IActionBarItemProps[];
 }
 
 export class BrainStateModel implements IBrainState {
-  brains: BrainViewModel[];
+  brains: LocalBrainViewModel[];
 
   headerToolBar?: IActionBarItemProps[];
 
   constructor(
-    brains: BrainViewModel[] = [],
+    brains: LocalBrainViewModel[] = [],
     headerToolBar: IActionBarItemProps<any>[] = []
   ) {
     this.brains = brains;

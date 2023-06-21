@@ -3,16 +3,16 @@ import React from 'react';
 
 import {
   BrainCapability,
-  BrainModel,
-} from 'api-server/brain/domain/models/brain';
+  LocalBrainModel,
+} from 'api-server/brain/domain/models/localBrain';
 import { ChatBrain } from 'api-server/chat/domain/models/chat';
 import { getTextMessageTypeForBrainCapability } from '../../utils/messageUtils';
 
 type BrainSelectorProps = {
-  availableBrains: BrainModel[];
+  availableBrains: LocalBrainModel[];
   selectedBrains: ChatBrain[];
   onCapabilityBrainChanged: (
-    brain: BrainModel,
+    brain: LocalBrainModel,
     capability: BrainCapability
   ) => void;
 };
@@ -32,7 +32,7 @@ const BrainSelector: React.FC<BrainSelectorProps> = ({
   };
 
   // group the brains by type
-  const brainsByType: Record<string, BrainModel[]> = {};
+  const brainsByType: Record<string, LocalBrainModel[]> = {};
 
   Object.values(BrainCapability).forEach((capability) => {
     brainsByType[capability] = availableBrains.filter((brain) =>
