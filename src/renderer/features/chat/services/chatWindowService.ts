@@ -10,9 +10,9 @@ import {
 import { container } from 'tsyringe';
 import { ChatMessagesContext } from 'api-server/chat/domain/models/chatContext';
 import {
-  BrainService,
-  IBrainService,
-} from 'renderer/features/brain/services/brain';
+  BrainManagementService,
+  IBrainManagementService,
+} from 'renderer/features/brain/services/brainManagement';
 import {
   ChatWindowMessage,
   ChatWindowStateModel,
@@ -34,11 +34,11 @@ export class ChatWindowService
 
   private chatService: ChatService;
 
-  private brainService: IBrainService;
+  private brainService: IBrainManagementService;
 
   constructor(private readonly chat: ChatModel) {
     super();
-    this.brainService = container.resolve(BrainService);
+    this.brainService = container.resolve(BrainManagementService);
     this.state = new ChatWindowStateModel(
       [],
       this.brainService.getBrains(),

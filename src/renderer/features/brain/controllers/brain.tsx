@@ -10,7 +10,7 @@ import {
 } from 'mo/services';
 import { IActivityBarItem } from 'mo/model';
 import { IBrainController } from './type';
-import { BrainService } from '../services/brain';
+import { BrainManagementService } from '../services/brainManagement';
 import BrainSidebar from '../workbench/brainSidebar';
 import { BrainViewModel } from '../models/brain';
 
@@ -25,7 +25,7 @@ export default class BrainController
 
   private readonly editorService: IEditorService;
 
-  private readonly brainService: BrainService;
+  private readonly brainService: BrainManagementService;
 
   constructor() {
     super();
@@ -33,7 +33,7 @@ export default class BrainController
     this.sideBarService = container.resolve(SidebarService);
     this.activityBarService = container.resolve(ActivityBarService);
     this.editorService = container.resolve(EditorService);
-    this.brainService = container.resolve(BrainService);
+    this.brainService = container.resolve(BrainManagementService);
   }
 
   public initView(): void {

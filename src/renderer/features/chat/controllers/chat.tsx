@@ -16,9 +16,9 @@ import { IActivityBarItem } from 'mo/model';
 import { ChatModel } from 'api-server/chat/domain/models/chat';
 import { CreateChat } from 'api-server/chat/domain/usecases/createChat';
 import {
-  BrainService,
-  IBrainService,
-} from 'renderer/features/brain/services/brain';
+  BrainManagementService,
+  IBrainManagementService,
+} from 'renderer/features/brain/services/brainManagement';
 import { ChatService, IChatService } from '../services/chat';
 import ChatSidebar from '../workbench/chatSidebar';
 import { IChatController } from './type';
@@ -42,7 +42,7 @@ export default class ChatController
 
   private readonly editorService: IEditorService;
 
-  private readonly brainService: IBrainService;
+  private readonly brainService: IBrainManagementService;
 
   constructor() {
     super();
@@ -52,7 +52,7 @@ export default class ChatController
     this.chatService = container.resolve(ChatService);
     this.builtinService = container.resolve(BuiltinService);
     this.editorService = container.resolve(EditorService);
-    this.brainService = container.resolve(BrainService);
+    this.brainService = container.resolve(BrainManagementService);
   }
 
   public initView(): void {

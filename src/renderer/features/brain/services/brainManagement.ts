@@ -5,14 +5,14 @@ import { BrainModel } from 'api-server/brain/domain/models/brain';
 import { container, singleton } from 'tsyringe';
 import { BrainStateModel, IBrainState } from '../models/brain';
 
-export interface IBrainService extends Component<IBrainState> {
+export interface IBrainManagementService extends Component<IBrainState> {
   getBrains(): BrainModel[];
 }
 
 @singleton()
-export class BrainService
+export class BrainManagementService
   extends Component<IBrainState>
-  implements IBrainService
+  implements IBrainManagementService
 {
   protected state: IBrainState;
 
