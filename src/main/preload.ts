@@ -23,6 +23,22 @@ const electronHandler = {
       ipcRenderer.once(channel, (_event, ...args) => func(...args));
     },
   },
+  userSettings: {
+    // TODO: I think this might be a security issue, we shouldn't be able to get and set the settings like that because this might be used by attackers
+    get(key: string) {
+      return ipcRenderer.sendSync('user-settings-get', key);
+    },
+    getAll() {
+      return ipcRenderer.sendSync('user-settings-getAll');
+    },
+    setSetting(property: string, val: any) {
+      ipcRenderer.send('user-settings-setSetting', property, val);
+    },
+    set(newSettings: any) {
+      ipcRenderer.send('user-settings-set', newSettings);
+    },
+    // Other method you want to add like has(), reset(), etc.
+  },
   brain: {
     updateSettings(brainId: string, newSettings: any) {
       return ipcRenderer.sendSync(

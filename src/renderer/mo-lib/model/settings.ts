@@ -8,6 +8,7 @@ export enum SettingsEvent {
    * The settings content changed
    */
   OnChange = 'settings.onchange',
+  OnSave = 'settings.onsave',
 }
 
 export interface ISettings {

@@ -84,6 +84,10 @@ export interface ISettingsService {
    * Get the default Settings Tab object
    */
   getDefaultSettingsTab(): BuiltInSettingsTabType;
+
+  saveSettings(): void;
+
+  onSettingsSaved(callback: (settings: ISettings) => void): void;
 }
 
 @singleton()
@@ -105,6 +109,14 @@ export class SettingsService extends GlobalEvent implements ISettingsService {
     this.colorThemeService = container.resolve(ColorThemeService);
     this.builtinService = container.resolve(BuiltinService);
     this.settings = this.getBuiltInSettings();
+  }
+
+  saveSettings(): void {
+    this.emit(SettingsEvent.OnSave, this.getSettings());
+  }
+
+  onSettingsSaved(callback: (settings: ISettings) => void): void {
+    this.subscribe(SettingsEvent.OnSave, callback);
   }
 
   private getBuiltInSettings(): ISettings {

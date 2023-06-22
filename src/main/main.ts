@@ -15,6 +15,7 @@ import log from 'electron-log';
 import { exposeIpcMainRxStorage } from 'rxdb/plugins/electron';
 import { getMessageStoragePath } from 'utils/pathUtils';
 import brainServerManager from 'api-server/brain/brainServerManager';
+import userSettingsStorage from 'data/user/mainStorage';
 import getStorage from '../data/storage';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
@@ -35,6 +36,20 @@ ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
   console.log(msgTemplate(arg));
   event.reply('ipc-example', msgTemplate('pong'));
+});
+
+ipcMain.on('user-settings-get', async (event, val) => {
+  event.returnValue = userSettingsStorage.get(val);
+});
+ipcMain.on('user-settings-getAll', async (event) => {
+  event.returnValue = userSettingsStorage.getAll();
+});
+ipcMain.on('user-settings-setSetting', async (event, key, val) => {
+  userSettingsStorage.setSetting(key, val);
+});
+
+ipcMain.on('user-settings-set', async (event, val) => {
+  userSettingsStorage.set(val);
 });
 ipcMain.on(
   'update-brain-settings',
