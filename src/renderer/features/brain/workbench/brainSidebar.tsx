@@ -16,11 +16,11 @@ function BrainSidebar({
     (brain) =>
       ({
         id: brain.id,
-        name: brain.name,
+        name: brain.title,
         fileType: 'File',
         icon: 'bold',
         isLeaf: true,
-        capabilities: brain.capabilities,
+        brain,
       } as ICollapseItem)
   );
 
@@ -35,11 +35,7 @@ function BrainSidebar({
               data={collapseItems}
               onSelect={(node) => {
                 if (!node.isLeaf) return;
-                onBrainClick?.({
-                  id: node.id,
-                  name: node.name,
-                  capabilities: node.capabilities,
-                } as LocalBrainViewModel);
+                onBrainClick?.(node.brain as LocalBrainViewModel);
               }}
             />
           );

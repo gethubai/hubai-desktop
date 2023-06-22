@@ -9,6 +9,9 @@ import brainRoutes from './brain/routes';
 import chatServer from './chat/chatServer';
 import { IBrainServer } from './brain/brainServer';
 import TcpBrainServer from './brain/tcpBrainServer';
+import makeLoadLocalBrains from './brain/factories/usecases/loadLocalBrainsFactory';
+import { getSupportedPromptTypesFromCapabilities } from './brain/brainSettings';
+import brainServerManager from './brain/brainServerManager';
 
 const bodyParser = require('body-parser');
 
@@ -35,20 +38,33 @@ app.get('/', (req, res) => {
   res.send('AllAi server is running!');
 });
 
-const brainsServers: IBrainServer[] = [];
 httpServer.listen(port, async () => {
   console.log(`API server listening on port ${port}`);
 
-  const brains = ['openai-brain', 'fake-brain', 'chatgpt-brain'];
+  // TODO: Create a brainLoader class to load brains from the file system and do this logic there
+  const getBrainsUseCase = await makeLoadLocalBrains();
+  const brains = await getBrainsUseCase.getBrains();
 
   for (const brain of brains) {
+    // TODO: CHANGE THE PATH!
     const brainService = await import(
-      `/Users/macbook/brains/${brain}/build/src/main.js`
+      `/Users/macbook/brains/builds/${brain.name}/main.js`
     );
-    const brainServer: IBrainServer = new TcpBrainServer(brainService.default);
-    brainServer.start('http://localhost:4114');
-    brainsServers.push(brainServer);
 
-    console.log(`Brain ${brain} has been loaded`);
+    const settings = {
+      id: brain.id,
+      name: brain.name,
+      nameAlias: brain.title,
+      supportedPromptTypes: getSupportedPromptTypesFromCapabilities(
+        brain.capabilities
+      ),
+    };
+
+    const brainServer: IBrainServer = new TcpBrainServer(
+      brainService.default,
+      settings
+    );
+
+    brainServerManager.addClient(brainServer);
   }
 });

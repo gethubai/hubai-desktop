@@ -23,6 +23,15 @@ const electronHandler = {
       ipcRenderer.once(channel, (_event, ...args) => func(...args));
     },
   },
+  brain: {
+    updateSettings(brainId: string, newSettings: any) {
+      return ipcRenderer.sendSync(
+        'update-brain-settings',
+        brainId,
+        newSettings
+      );
+    },
+  },
 };
 
 contextBridge.exposeInMainWorld('electron', electronHandler);

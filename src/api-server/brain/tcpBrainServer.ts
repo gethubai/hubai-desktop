@@ -9,19 +9,23 @@ import {
   IAudioTranscriberBrainService,
   IBrainService,
   ITextBrainService,
+  SetUserSettingsResult,
 } from './brainService';
 import { IBrainSettings } from './brainSettings';
 
 export default class TcpBrainServer implements IBrainServer {
   private socket!: Socket;
 
-  constructor(private readonly brainService: IBrainService) {}
+  constructor(
+    private readonly brainService: IBrainService,
+    private readonly defaultBrainSettings: IBrainSettings
+  ) {}
 
   start(hostUrl: string): Promise<void> {
     this.socket = io(hostUrl, {
       query: {
         type: 'brainClient',
-        id: this.getSettings().id,
+        id: this.getClientId(),
       },
     });
 
@@ -35,6 +39,20 @@ export default class TcpBrainServer implements IBrainServer {
       'onMessageTranscribed',
       this.onMessageTranscribed.bind(this)
     );
+
+    return Promise.resolve();
+  }
+
+  getClientId(): string {
+    return this.getSettings().id;
+  }
+
+  getService(): IBrainService {
+    return this.brainService;
+  }
+
+  disconnect(): Promise<void> {
+    this.socket.disconnect();
     return Promise.resolve();
   }
 
@@ -71,7 +89,7 @@ export default class TcpBrainServer implements IBrainServer {
       return transcriberService
         .transcribeAudio({
           audioFilePath: message.voice.file,
-          language: 'en', // TODO: Allow support for other languages
+          language: '', // TODO: Allow support for other languages
         })
         .then((promptResult) => {
           this.sendMessageTranscription(message, promptResult.result);
@@ -127,10 +145,12 @@ export default class TcpBrainServer implements IBrainServer {
   }
 
   private getMessageReply(message: ChatMessageModel): SendChatMessageModel {
+    const { id, nameAlias } = this.getSettings();
+
     return new SendChatMessageModel(
       message.chat,
-      this.getSettings().name,
-      this.getSettings().id,
+      nameAlias,
+      id,
       'brain',
       message.senderId
     );
@@ -154,6 +174,6 @@ export default class TcpBrainServer implements IBrainServer {
   }
 
   public getSettings(): IBrainSettings {
-    return this.brainService.getSettings();
+    return this.defaultBrainSettings;
   }
 }

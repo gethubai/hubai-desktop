@@ -14,6 +14,7 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import { exposeIpcMainRxStorage } from 'rxdb/plugins/electron';
 import { getMessageStoragePath } from 'utils/pathUtils';
+import brainServerManager from 'api-server/brain/brainServerManager';
 import getStorage from '../data/storage';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
@@ -35,6 +36,15 @@ ipcMain.on('ipc-example', async (event, arg) => {
   console.log(msgTemplate(arg));
   event.reply('ipc-example', msgTemplate('pong'));
 });
+ipcMain.on(
+  'update-brain-settings',
+  async (event, brainId: string, newSettings: any) => {
+    event.returnValue = brainServerManager.updateClientSettings(
+      brainId,
+      newSettings
+    );
+  }
+);
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');

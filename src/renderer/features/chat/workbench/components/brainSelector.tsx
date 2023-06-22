@@ -83,7 +83,7 @@ const BrainSelector: React.FC<BrainSelectorProps> = ({
                   key={`option-${capability}-${brain.id}`}
                   value={brain.id}
                 >
-                  {brain.name}
+                  {brain.title}
                 </option>
               ))}
             </select>

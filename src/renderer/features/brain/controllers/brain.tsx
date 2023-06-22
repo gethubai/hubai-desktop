@@ -1,3 +1,4 @@
+import React from 'react';
 import { Controller, connect } from 'mo/react';
 import { container, singleton } from 'tsyringe';
 import {
@@ -5,14 +6,17 @@ import {
   EditorService,
   IActivityBarService,
   IEditorService,
+  ISettingsService,
   ISidebarService,
+  SettingsService,
   SidebarService,
 } from 'mo/services';
 import { IActivityBarItem } from 'mo/model';
 import { IBrainController } from './type';
 import { BrainManagementService } from '../services/brainManagement';
 import BrainSidebar from '../workbench/brainSidebar';
-import { LocalBrainViewModel } from '../models/brain';
+import { BrainEvent, LocalBrainViewModel } from '../models/brain';
+import LocalBrainWindow from '../workbench/localBrainWindow';
 
 @singleton()
 export default class BrainController
@@ -73,6 +77,48 @@ export default class BrainController
   }
 
   public onBrainClick = (brain: LocalBrainViewModel) => {
-    console.log('clicked on brain', brain);
+    this.selectOrOpenBrainWindow(brain);
   };
+
+  public onSaveSettings = (brain: LocalBrainViewModel, settings: any) => {
+    this.emit(BrainEvent.onBrainSettingsUpdated, brain, settings);
+  };
+
+  private async selectOrOpenBrainWindow(
+    brain: LocalBrainViewModel
+  ): Promise<void> {
+    let renderPane;
+    const windowId = `BRAIN_${brain.id}`;
+    if (!this.editorService.isOpened(windowId)) {
+      const ViewWindow = this.createBrainWindow(brain);
+      renderPane = () => <ViewWindow />;
+    }
+    this.editorService.open({
+      id: windowId,
+      name: `${brain.title} Brain`,
+      icon: 'octoface',
+      renderPane,
+    });
+  }
+
+  private createBrainWindow(
+    brain: LocalBrainViewModel
+  ): React.ComponentType<any> {
+    // const currentSettings = this.brainService.getBrainSettings(brain.name);
+
+    return connect(
+      this.brainService,
+      // eslint-disable-next-line react/jsx-props-no-spreading
+      (props) => (
+        <LocalBrainWindow
+          brain={brain}
+          getCurrentSettings={() =>
+            this.brainService.getBrainSettings(brain.name)
+          }
+          {...props}
+        />
+      ),
+      this
+    );
+  }
 }
