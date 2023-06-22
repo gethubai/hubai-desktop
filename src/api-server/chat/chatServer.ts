@@ -37,8 +37,13 @@ class ChatServer {
   private async onClientConnected(socket: Socket): Promise<void> {
     const { id } = socket.handshake.query;
 
+    if (!id) {
+      console.warn('client connected without a valid id');
+      return;
+    }
+
     const roomId = this.getClientRoom(id as string);
-    socket.join(roomId);
+    await socket.join(roomId);
 
     console.log(`client ${socket.id} joined room ${roomId}`);
 
