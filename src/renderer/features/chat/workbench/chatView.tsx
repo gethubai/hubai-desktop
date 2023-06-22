@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import {
   MainContainer,
@@ -40,6 +40,7 @@ function ChatWindow({
   onCapabilityBrainChanged,
 }: IChatWindowProps) {
   const inputRef = useRef();
+  const [micStatus, setMicStatus] = useState('idle');
   const [msgInputValue, setMsgInputValue] = useState('');
 
   const recorderControls = useAudioRecorder();
@@ -67,6 +68,28 @@ function ChatWindow({
       status: message.status,
     } as MessageType;
   });
+
+  useEffect(() => {
+    window.electron.mediaAccess
+      .getMicrophoneAccessStatus()
+      .then((status) => {
+        setMicStatus(status);
+
+        if (status !== 'granted') {
+          window.electron.mediaAccess
+            .askForMicrophoneAccess()
+            .then((requestAccessStatus) => {
+              setMicStatus(`${status}, granted: ${requestAccessStatus}`);
+            })
+            .catch((err) => {
+              console.error('err on askForMicrophoneAccess', err);
+            });
+        }
+      })
+      .catch((err) => {
+        console.log('err on getting micAccessStatus', err);
+      });
+  }, []);
 
   return (
     <div style={{ position: 'relative', height: '500px' }}>
@@ -147,6 +170,7 @@ function ChatWindow({
           </div>
         </ChatContainer>
       </MainContainer>
+      MicStatus: {micStatus}
     </div>
   );
 }

@@ -48,6 +48,15 @@ const electronHandler = {
       );
     },
   },
+  mediaAccess: {
+    async getMicrophoneAccessStatus() {
+      return ipcRenderer.sendSync('get-media-access-status', 'microphone');
+    },
+
+    async askForMicrophoneAccess() {
+      return ipcRenderer.sendSync('ask-for-media-access', 'microphone');
+    },
+  },
 };
 
 contextBridge.exposeInMainWorld('electron', electronHandler);

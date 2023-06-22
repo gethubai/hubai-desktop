@@ -9,7 +9,14 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import path from 'path';
-import { app, BrowserWindow, shell, ipcMain, protocol } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  shell,
+  ipcMain,
+  protocol,
+  systemPreferences,
+} from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import { exposeIpcMainRxStorage } from 'rxdb/plugins/electron';
@@ -51,6 +58,7 @@ ipcMain.on('user-settings-setSetting', async (event, key, val) => {
 ipcMain.on('user-settings-set', async (event, val) => {
   userSettingsStorage.set(val);
 });
+
 ipcMain.on(
   'update-brain-settings',
   async (event, brainId: string, newSettings: any) => {
@@ -58,6 +66,22 @@ ipcMain.on(
       brainId,
       newSettings
     );
+  }
+);
+
+ipcMain.on(
+  'get-media-access-status',
+  async (event, mediaType: 'microphone' | 'camera' | 'screen') => {
+    // return value: "not-determined" | "granted" | "denied" | "restricted" | "unknown"
+    event.returnValue = systemPreferences.getMediaAccessStatus(mediaType);
+  }
+);
+
+ipcMain.on(
+  'ask-for-media-access',
+  async (event, mediaType: 'microphone' | 'camera') => {
+    // return value: A promise that resolves with true if consent was granted and false if it was denied. If an invalid mediaType is passed, the promise will be rejected.
+    event.returnValue = await systemPreferences.askForMediaAccess(mediaType);
   }
 );
 
@@ -152,6 +176,16 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
+});
+
+console.log('path:', {
+  appData: app.getPath('appData'),
+  userData: app.getPath('userData'),
+  music: app.getPath('music'),
+  temp: app.getPath('temp'),
+  module: app.getPath('module'),
+  app: app.getAppPath(),
+  sessionData: app.getPath('sessionData'),
 });
 
 app
