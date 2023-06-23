@@ -88,8 +88,8 @@ export default class ChatController
       headerToolBar: chatSideBarHeaderToolbar,
       availableBrains: this.brainService.getBrains(),
     });
-    this.sideBarService.add(chatGroupSideBar);
-    this.activityBarService.add(activityBar);
+    this.sideBarService.add(chatGroupSideBar, true);
+    this.activityBarService.add(activityBar, true);
   }
 
   private async openNewChatWindow(): Promise<void> {

@@ -95,16 +95,14 @@ export const constants = {
 };
 
 export const modules = {
-  builtInExplorerActivityItem: () =>
-    ({
+  builtInExplorerActivityItem: () => null,
+  /* ({
       id: constants.EXPLORER_ACTIVITY_ITEM,
       name: localize(constants.EXPLORER_ACTIVITY_ITEM, 'Explore'),
       icon: 'files',
       title: localize(constants.EXPLORER_ACTIVITY_ITEM, 'Explore'),
       sortIndex: 1,
-    } as IActivityBarItem),
-
-  builtInExplorerFolderPanel: () =>
+    } as IActivityBarItem) */ builtInExplorerFolderPanel: () =>
     ({
       id: constants.SAMPLE_FOLDER_PANEL_ID,
       sortIndex: 8,
