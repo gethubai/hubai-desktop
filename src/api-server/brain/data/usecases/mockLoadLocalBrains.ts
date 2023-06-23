@@ -9,6 +9,17 @@ export default class MockLoadLocalBrains implements LoadLocalBrains {
   getBrains = async (): Promise<LocalBrainModel[]> => {
     const mockBrains: LocalBrainModel[] = [
       {
+        id: 'fakeBrainId',
+        name: 'fakeBrain',
+        title: 'Test Brain',
+        createdDate: new Date(),
+        capabilities: [
+          BrainCapability.CONVERSATION,
+          BrainCapability.VOICE_TRANSCRIPTION,
+        ],
+        description: 'This is a test brain',
+      },
+      {
         id: 'openai-id',
         name: 'openaiapi',
         title: 'OpenAI API',
@@ -63,7 +74,7 @@ export default class MockLoadLocalBrains implements LoadLocalBrains {
             true,
             '',
             [],
-            'You can get an access token from logging in to https://chatgpt.com/ and going to https://chatgpt.com/dashboard/settings'
+            'You can get an access token from logging in to https://chatgpt.com/ and going to https://chat.openai.com/api/auth/session'
           ),
           new LocalBrainSettingMap(
             'apiReverseProxyUrl',

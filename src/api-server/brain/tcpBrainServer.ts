@@ -9,7 +9,6 @@ import {
   IAudioTranscriberBrainService,
   IBrainService,
   ITextBrainService,
-  SetUserSettingsResult,
 } from './brainService';
 import { IBrainSettings } from './brainSettings';
 
