@@ -5,6 +5,11 @@
 import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
+import { app as electronApp } from 'electron';
+import path from 'path';
+import url from 'url';
+import IsDevelopment from 'utils/isDevelopment';
+import { getAppDataStoragePath } from 'utils/pathUtils';
 import brainRoutes from './brain/routes';
 import chatServer from './chat/chatServer';
 import { IBrainServer } from './brain/brainServer';
@@ -46,25 +51,33 @@ httpServer.listen(port, async () => {
   const brains = await getBrainsUseCase.getBrains();
 
   for (const brain of brains) {
-    // TODO: CHANGE THE PATH!
-    const brainService = await import(
-      `/Users/macbook/brains/builds/${brain.name}/main.js`
-    );
+    try {
+      const brainsBasePath = IsDevelopment()
+        ? path.join(electronApp.getPath('home'), 'brains', 'builds')
+        : getAppDataStoragePath('brains');
 
-    const settings = {
-      id: brain.id,
-      name: brain.name,
-      nameAlias: brain.title,
-      supportedPromptTypes: getSupportedPromptTypesFromCapabilities(
-        brain.capabilities
-      ),
-    };
+      const brainPath = path.join(brainsBasePath, brain.name, 'main.js');
+      const brainURL = url.pathToFileURL(brainPath).toString();
 
-    const brainServer: IBrainServer = new TcpBrainServer(
-      brainService.default,
-      settings
-    );
+      const brainService = await import(/* webpackIgnore: true */ brainURL);
 
-    brainServerManager.addClient(brainServer);
+      const settings = {
+        id: brain.id,
+        name: brain.name,
+        nameAlias: brain.title,
+        supportedPromptTypes: getSupportedPromptTypesFromCapabilities(
+          brain.capabilities
+        ),
+      };
+
+      const brainServer: IBrainServer = new TcpBrainServer(
+        brainService.default.default,
+        settings
+      );
+
+      brainServerManager.addClient(brainServer);
+    } catch (e) {
+      console.error('Error on loading brain module: ', e);
+    }
   }
 });
