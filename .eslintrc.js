@@ -18,6 +18,7 @@ module.exports = {
     'no-useless-constructor': 'off',
     'promise/always-return': 'off',
     'react/state-in-constructor': 'off',
+    'no-empty-function': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,
