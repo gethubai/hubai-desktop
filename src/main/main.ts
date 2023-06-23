@@ -20,7 +20,11 @@ import {
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import { exposeIpcMainRxStorage } from 'rxdb/plugins/electron';
-import { getMessageStoragePath } from 'utils/pathUtils';
+import {
+  createDirectoryIfNotExists,
+  getMessageAudioStoragePath,
+  getMessageStoragePath,
+} from 'utils/pathUtils';
 import brainServerManager from 'api-server/brain/brainServerManager';
 import userSettingsStorage from 'data/user/mainStorage';
 import getStorage from '../data/storage';
@@ -193,6 +197,8 @@ console.log('path:', {
 app
   .whenReady()
   .then(async () => {
+    createDirectoryIfNotExists(getMessageStoragePath(''));
+    createDirectoryIfNotExists(getMessageAudioStoragePath(''));
     exposeIpcMainRxStorage({
       key: 'main-storage',
       storage: getStorage(),
