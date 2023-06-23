@@ -174,9 +174,9 @@ export function WorkbenchView(props: IWorkbench & ILayout & ILayoutController) {
           <AuxiliaryBarTab />
         </div>
       </div>
-      <Display visible={!statusBar.hidden}>
+      {/* <Display visible={false}>
         <StatusBarView />
-      </Display>
+  </Display> */}
     </div>
   );
 }
