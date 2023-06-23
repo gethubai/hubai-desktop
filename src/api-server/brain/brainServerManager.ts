@@ -31,7 +31,14 @@ class BrainClientManager {
 
     const brainSetting = brainsSettings[settings.name];
     if (brainSetting) {
-      brain.setUserSettings(brainSetting);
+      try {
+        brain.setUserSettings(brainSetting);
+      } catch (e) {
+        console.error('Error on setting brain user settings: ', {
+          brainSetting,
+          error: e,
+        });
+      }
     }
   }
 
