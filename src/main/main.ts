@@ -26,6 +26,8 @@ import userSettingsStorage from 'data/user/mainStorage';
 import getStorage from '../data/storage';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+console.log = log.log;
+Object.assign(console, log.functions);
 
 const sv = require('../api-server/server');
 

@@ -6,9 +6,7 @@ import {
   EditorService,
   IActivityBarService,
   IEditorService,
-  ISettingsService,
   ISidebarService,
-  SettingsService,
   SidebarService,
 } from 'mo/services';
 import { IActivityBarItem } from 'mo/model';
