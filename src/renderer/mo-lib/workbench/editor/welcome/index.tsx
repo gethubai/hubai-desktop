@@ -8,8 +8,8 @@ export default function Welcome() {
 
   return (
     <div className={prefixClaName('welcome')}>
-      <Logo className="logo" />
-      <h1 className="title">Molecule</h1>
+      {/* <Logo className="logo" /> */}
+      <h1 className="title">All AI</h1>
       <div className="keybindings">
         <ul>
           {keys.map((item) => {
