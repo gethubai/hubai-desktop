@@ -3,6 +3,7 @@ import { createRxDatabase, addRxPlugin, RxStorage, RxDatabase } from 'rxdb';
 import { RxDBQueryBuilderPlugin } from 'rxdb/plugins/query-builder';
 import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode';
 import { RxDBUpdatePlugin } from 'rxdb/plugins/update';
+import IsDevelopment from 'utils/isDevelopment';
 import {
   ChatDatabaseCollections,
   ChatMessageSchema,
@@ -10,8 +11,8 @@ import {
 } from './schemas';
 
 addRxPlugin(RxDBQueryBuilderPlugin);
-// TODO: Do not add on production!
-addRxPlugin(RxDBDevModePlugin);
+
+if (IsDevelopment()) addRxPlugin(RxDBDevModePlugin);
 addRxPlugin(RxDBUpdatePlugin);
 
 export type ChatDatabase = RxDatabase<ChatDatabaseCollections>;
