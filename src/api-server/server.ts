@@ -57,7 +57,9 @@ httpServer.listen(port, async () => {
         : getAppDataStoragePath('brains');
 
       const brainPath = path.join(brainsBasePath, brain.name, 'main.js');
-      const brainURL = url.pathToFileURL(brainPath).toString();
+      const brainURL = IsDevelopment()
+        ? brainPath
+        : url.pathToFileURL(brainPath).toString();
 
       const brainService = await import(/* webpackIgnore: true */ brainURL);
 
@@ -71,7 +73,7 @@ httpServer.listen(port, async () => {
       };
 
       const brainServer: IBrainServer = new TcpBrainServer(
-        brainService.default.default,
+        brainService.default,
         settings
       );
 

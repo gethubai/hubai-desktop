@@ -35,6 +35,7 @@ class BrainClientManager {
         brain.setUserSettings(brainSetting);
       } catch (e) {
         console.error('Error on setting brain user settings: ', {
+          brain,
           brainSetting,
           error: e,
         });
