@@ -31,8 +31,8 @@ import { IEditorService } from '@allai/core';
 import { constants } from '@allai/core/esm/services/builtinService/const';
 import { Action2 } from '@allai/core/esm/monaco/action';
 import { KeybindingWeight } from '@allai/core/esm/monaco/common';
-import { DIService } from '@allai/core/esm/DIService';
 import { type IMonacoService } from '@allai/core/esm/monaco/monacoService';
+import { container } from 'tsyringe';
 import { registerQuickAccessProvider } from './quickAccessProvider';
 
 export class CommandQuickAccessProvider extends AbstractEditorCommandsQuickAccessProvider {
@@ -45,7 +45,7 @@ export class CommandQuickAccessProvider extends AbstractEditorCommandsQuickAcces
   }
 
   protected static get services() {
-    return DIService.get<IMonacoService>('IMonacoService').services;
+    return container.resolve<IMonacoService>('IMonacoService').services;
   }
 
   private readonly editorService?: IEditorService;
@@ -65,7 +65,7 @@ export class CommandQuickAccessProvider extends AbstractEditorCommandsQuickAcces
       CommandQuickAccessProvider.services.get(ITelemetryService),
       CommandQuickAccessProvider.services.get(INotificationService)
     );
-    this.editorService = DIService.get<IEditorService>('IEditorService');
+    this.editorService = container.resolve<IEditorService>('IEditorService');
   }
 
   protected async getCommandPicks(

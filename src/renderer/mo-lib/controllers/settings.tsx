@@ -1,5 +1,5 @@
 import React from 'react';
-import { container, inject, injectable } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 import { debounce } from 'lodash';
 
 import {
@@ -10,7 +10,7 @@ import {
   SettingsEvent,
   Controller,
 } from '@allai/core';
-import { ILocale, ILocaleService, LocaleService } from '@allai/core/esm/i18n';
+import { ILocale, type ILocaleService } from '@allai/core/esm/i18n';
 import { LocaleNotification } from '@allai/core/esm/workbench/notification/notificationPane/localeNotification';
 
 export interface ISettingsController extends Partial<Controller> {}
@@ -20,17 +20,15 @@ export class SettingsController
   extends Controller
   implements ISettingsController
 {
-  private readonly localeService: ILocaleService;
-
   constructor(
     @inject('IEditorService') private editorService: IEditorService,
     @inject('ISettingsService') private settingsService: ISettingsService,
     @inject('IBuiltinService') private builtinService: IBuiltinService,
     @inject('INotificationService')
-    private notificationService: INotificationService
+    private notificationService: INotificationService,
+    @inject('ILocaleService') private localeService: ILocaleService
   ) {
     super();
-    this.localeService = container.resolve(LocaleService);
   }
 
   /**

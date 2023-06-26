@@ -8,23 +8,21 @@ import { KeybindingWeight } from '@allai/core/esm/monaco/common';
 import { Action2 } from '@allai/core/esm/monaco/action';
 import { constants } from '@allai/core/esm/services/builtinService/const';
 import { ISettingsService } from '@allai/core/esm/services';
-import { DIService } from '@allai/core/esm/DIService';
+import { container } from 'tsyringe';
 
 export class QuickAccessSettings extends Action2 {
   static readonly ID = constants.ACTION_QUICK_ACCESS_SETTINGS;
 
-  static readonly LABEL = localize(
-    'quickAccessSettings.label',
-    'Open Settings (JSON)'
-  );
+  static readonly LABEL = () =>
+    localize('quickAccessSettings.label', 'Open Settings (JSON)');
 
   private readonly settingsService: ISettingsService;
 
   constructor() {
     super({
       id: QuickAccessSettings.ID,
-      label: QuickAccessSettings.LABEL,
-      title: QuickAccessSettings.LABEL,
+      label: QuickAccessSettings.LABEL(),
+      title: QuickAccessSettings.LABEL(),
       alias: 'Open Settings (JSON)',
       precondition: undefined,
       f1: true,
@@ -35,7 +33,8 @@ export class QuickAccessSettings extends Action2 {
         primary: KeyChord(KeyMod.CtrlCmd | KeyCode.Comma),
       },
     });
-    this.settingsService = DIService.get<ISettingsService>('ISettingsService');
+    this.settingsService =
+      container.resolve<ISettingsService>('ISettingsService');
   }
 
   run(accessor: ServicesAccessor) {

@@ -10,12 +10,12 @@ import { IEditorService } from '@allai/core/esm/services';
 import { KeybindingWeight } from '@allai/core/esm/monaco/common';
 import { Action2 } from '@allai/core/esm/monaco/action';
 import { constants } from '@allai/core/esm/services/builtinService/const';
-import { DIService } from '@allai/core/esm/DIService';
+import { container } from 'tsyringe';
 
 export class QuickRedo extends Action2 {
   static readonly ID = constants.ACTION_QUICK_REDO;
 
-  static readonly LABEL = localize('menu.redo', 'Redo');
+  static readonly LABEL = () => localize('menu.redo', 'Redo');
 
   static readonly DESC = 'Redo';
 
@@ -25,10 +25,10 @@ export class QuickRedo extends Action2 {
     super({
       id: QuickRedo.ID,
       title: {
-        value: QuickRedo.LABEL,
+        value: QuickRedo.LABEL(),
         original: QuickRedo.DESC,
       },
-      label: QuickRedo.LABEL,
+      label: QuickRedo.LABEL(),
       alias: QuickRedo.DESC,
       f1: true,
       keybinding: {
@@ -38,7 +38,7 @@ export class QuickRedo extends Action2 {
         primary: KeyMod.CtrlCmd | KeyMod.Shift | KeyCode.KeyZ,
       },
     });
-    this.editorService = DIService.get<IEditorService>('IEditorService');
+    this.editorService = container.resolve<IEditorService>('IEditorService');
   }
 
   isTextdom(ele: Element): ele is HTMLInputElement {

@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { container, inject, injectable } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 import { cloneDeep, isEqual } from 'lodash';
 import {
   ISettings,
@@ -18,21 +18,19 @@ import {
   normalizeFlattedObject,
 } from '@allai/core/esm/common/utils';
 import { GlobalEvent } from '@allai/core/esm/common/event';
-import { ILocaleService, LocaleService } from '@allai/core/esm/i18n';
+import { type ILocaleService } from '@allai/core/esm/i18n';
 
 @injectable()
 class SettingsService extends GlobalEvent implements ISettingsService {
   protected settings: ISettings;
 
-  private readonly localeService: ILocaleService;
-
   constructor(
     @inject('IEditorService') private editorService: IEditorService,
     @inject('IBuiltinService') private builtinService: IBuiltinService,
-    @inject('IColorThemeService') private colorThemeService: IColorThemeService
+    @inject('IColorThemeService') private colorThemeService: IColorThemeService,
+    @inject('ILocaleService') private localeService: ILocaleService
   ) {
     super();
-    this.localeService = container.resolve(LocaleService);
     this.settings = this.getBuiltInSettings();
   }
 

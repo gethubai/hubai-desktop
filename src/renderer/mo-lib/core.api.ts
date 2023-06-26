@@ -19,7 +19,6 @@ import {
   type IExtensionService,
   type IAuxiliaryBarService,
   type ILocaleService,
-  LocaleService,
   type ISidebarService,
   IBuiltinService,
 } from '@allai/core';
@@ -29,7 +28,7 @@ import { type IMonacoService } from '@allai/core/esm/monaco/monacoService';
 /**
  * The locale service
  */
-export const i18n = container.resolve<ILocaleService>(LocaleService);
+export const i18n = container.resolve<ILocaleService>('ILocaleService');
 
 /**
  * The layout service

@@ -5,14 +5,14 @@ import { constants } from '@allai/core/esm/services/builtinService/const';
 import { KeyMod, KeyCode } from '@allai/core/esm/monaco';
 import { KeybindingWeight } from '@allai/core/esm/monaco/common';
 import { Action2 } from '@allai/core/esm/monaco/action';
-import { DIService } from '@allai/core/esm/DIService';
+import { container } from 'tsyringe';
 
 export class QuickSelectAllAction extends Action2 {
   static readonly ID = constants.ACTION_QUICK_SELECT_ALL;
 
   static readonly DESC = 'Select All';
 
-  static readonly LABEL = localize('menu.selectAll', 'Select All');
+  static readonly LABEL = () => localize('menu.selectAll', 'Select All');
 
   private readonly editorService: IEditorService;
 
@@ -21,18 +21,18 @@ export class QuickSelectAllAction extends Action2 {
       id: QuickSelectAllAction.ID,
       alias: QuickSelectAllAction.DESC,
       title: {
-        value: QuickSelectAllAction.LABEL,
+        value: QuickSelectAllAction.LABEL(),
         original: QuickSelectAllAction.DESC,
       },
       f1: true,
-      label: QuickSelectAllAction.LABEL,
+      label: QuickSelectAllAction.LABEL(),
       keybinding: {
         weight: KeybindingWeight.BuiltinExtension,
         when: undefined,
         primary: KeyMod.CtrlCmd | KeyCode.KeyA,
       },
     });
-    this.editorService = DIService.get<IEditorService>('IEditorService');
+    this.editorService = container.resolve<IEditorService>('IEditorService');
   }
 
   selectEditorAll() {

@@ -6,12 +6,12 @@ import { IEditorService } from '@allai/core';
 import { constants } from '@allai/core/esm/services/builtinService/const';
 import { KeybindingWeight } from '@allai/core/esm/monaco/common';
 import { Action2 } from '@allai/core/esm/monaco/action';
-import { DIService } from '@allai/core/esm/DIService';
+import { container } from 'tsyringe';
 
 export class QuickCopyLineUp extends Action2 {
   static readonly ID = constants.ACTION_QUICK_COPY_LINE_UP;
 
-  static readonly LABEL = localize('menu.copyLineUp', 'Copy Line Up');
+  static readonly LABEL = () => localize('menu.copyLineUp', 'Copy Line Up');
 
   static readonly DESC = 'Copy Line Up';
 
@@ -21,10 +21,10 @@ export class QuickCopyLineUp extends Action2 {
     super({
       id: QuickCopyLineUp.ID,
       title: {
-        value: QuickCopyLineUp.LABEL,
+        value: QuickCopyLineUp.LABEL(),
         original: QuickCopyLineUp.DESC,
       },
-      label: QuickCopyLineUp.LABEL,
+      label: QuickCopyLineUp.LABEL(),
       alias: QuickCopyLineUp.DESC,
       f1: true,
       keybinding: {
@@ -34,7 +34,7 @@ export class QuickCopyLineUp extends Action2 {
         primary: KeyMod.Alt | KeyMod.Shift | KeyCode.PageUp,
       },
     });
-    this.editorService = DIService.get<IEditorService>('IEditorService');
+    this.editorService = container.resolve<IEditorService>('IEditorService');
   }
 
   run() {

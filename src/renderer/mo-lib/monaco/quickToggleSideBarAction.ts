@@ -14,15 +14,13 @@ import { ID_SIDE_BAR } from '@allai/core/esm/common/id';
 import type { UniqueId } from '@allai/core/esm/common/types';
 import { Action2 } from '@allai/core/esm/monaco/action';
 import { CATEGORIES, KeybindingWeight } from '@allai/core/esm/monaco/common';
-import { DIService } from '@allai/core/esm/DIService';
+import { container } from 'tsyringe';
 
 export class CommandQuickSideBarViewAction extends Action2 {
   static readonly ID = ID_SIDE_BAR;
 
-  static readonly LABEL = localize(
-    'menu.showSideBar.label',
-    'Toggle Side Bar Visibility'
-  );
+  static readonly LABEL = () =>
+    localize('menu.showSideBar.label', 'Toggle Side Bar Visibility');
 
   private readonly sideBarService: ISidebarService;
 
@@ -37,8 +35,8 @@ export class CommandQuickSideBarViewAction extends Action2 {
   constructor() {
     super({
       id: CommandQuickSideBarViewAction.ID,
-      label: CommandQuickSideBarViewAction.LABEL,
-      title: CommandQuickSideBarViewAction.LABEL,
+      label: CommandQuickSideBarViewAction.LABEL(),
+      title: CommandQuickSideBarViewAction.LABEL(),
       category: CATEGORIES.View,
       alias: 'Toggle Side Bar',
       precondition: undefined,
@@ -50,12 +48,12 @@ export class CommandQuickSideBarViewAction extends Action2 {
         primary: KeyChord(KeyMod.CtrlCmd | KeyCode.KeyB),
       },
     });
-    this.layoutService = DIService.get<ILayoutService>('ILayoutService');
-    this.menuBarService = DIService.get<IMenuBarService>('IMenuBarService');
-    this.activityBarService = DIService.get<IActivityBarService>(
+    this.layoutService = container.resolve<ILayoutService>('ILayoutService');
+    this.menuBarService = container.resolve<IMenuBarService>('IMenuBarService');
+    this.activityBarService = container.resolve<IActivityBarService>(
       'IActivityBarService'
     );
-    this.sideBarService = DIService.get<ISidebarService>('ISidebarService');
+    this.sideBarService = container.resolve<ISidebarService>('ISidebarService');
   }
 
   run(accessor: ServicesAccessor, ...args) {

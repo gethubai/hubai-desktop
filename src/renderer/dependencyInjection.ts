@@ -1,4 +1,5 @@
 import { container } from 'tsyringe';
+
 import './mo-lib/monaco/index';
 import {
   type IEditorService,
@@ -19,6 +20,7 @@ import {
   INotificationService,
   IExtensionService,
   IColorThemeService,
+  ILocaleService,
 } from '@allai/core';
 
 import SidebarService from 'mo/services/workbench/sidebarService';
@@ -77,7 +79,6 @@ import ExtensionService from 'mo/services/extensionService';
 import ColorThemeService from 'mo/services/theme/colorThemeService';
 import { IMonacoService } from '@allai/core/esm/monaco/monacoService';
 import MonacoService from 'mo/monaco/monacoService';
-import { DIService } from '@allai/core/esm/DIService';
 import StatusBarController from 'mo/controllers/statusBar';
 import { ChatStateModel, IChatState } from './features/chat/models/chat';
 import { BrainStateModel, IBrainState } from './features/brain/models/brain';
@@ -87,6 +88,7 @@ import { IChatController } from './features/chat/controllers/type';
 import ChatController from './features/chat/controllers/chat';
 import { IBrainController } from './features/brain/controllers/type';
 import BrainController from './features/brain/controllers/brain';
+import { LocaleService } from './i18n/localeService';
 
 container.registerSingleton<ISideBarController>(
   'ISidebarController',
@@ -239,6 +241,8 @@ container.registerSingleton<IExtensionService>(
   ExtensionService
 );
 
+container.registerSingleton<ILocaleService>('ILocaleService', LocaleService);
+
 container.registerSingleton<IMonacoService>('IMonacoService', MonacoService);
 
 container.register<IChatState>(ChatStateModel, {
@@ -248,7 +252,5 @@ container.register<IChatState>(ChatStateModel, {
 container.register<IBrainState>(BrainStateModel, {
   useValue: new BrainStateModel(),
 });
-
-DIService.setContainer(container);
 
 console.log('Services have been registered');

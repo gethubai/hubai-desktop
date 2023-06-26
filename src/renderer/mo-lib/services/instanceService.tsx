@@ -4,8 +4,8 @@ import molecule from 'mo';
 import { ILocale, IExtension } from '@allai/core';
 import type { Controller } from '@allai/core/esm/react';
 import { GlobalEvent } from '@allai/core/esm/common/event';
-import { STORE_KEY } from '@allai/core/esm/i18n/localeService';
 import { IConfigProps } from 'mo/provider/create';
+import { STORE_KEY } from 'renderer/i18n/localeService';
 import { defaultExtensions } from '../extensions';
 
 interface IInstanceServiceProps {

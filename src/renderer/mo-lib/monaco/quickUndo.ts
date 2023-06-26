@@ -10,12 +10,12 @@ import {
   Uri,
   editor as MonacoEditor,
 } from '@allai/core/esm/monaco';
-import { DIService } from '@allai/core/esm/DIService';
+import { container } from 'tsyringe';
 
 export class QuickUndo extends Action2 {
   static readonly ID = constants.ACTION_QUICK_UNDO;
 
-  static readonly LABEL = localize('menu.undo', 'Undo');
+  static readonly LABEL = () => localize('menu.undo', 'Undo');
 
   static readonly DESC = 'Undo';
 
@@ -25,10 +25,10 @@ export class QuickUndo extends Action2 {
     super({
       id: QuickUndo.ID,
       title: {
-        value: QuickUndo.LABEL,
+        value: QuickUndo.LABEL(),
         original: QuickUndo.DESC,
       },
-      label: QuickUndo.LABEL,
+      label: QuickUndo.LABEL(),
       alias: QuickUndo.DESC,
       f1: true,
       keybinding: {
@@ -38,7 +38,7 @@ export class QuickUndo extends Action2 {
         primary: KeyMod.CtrlCmd | KeyCode.KeyZ,
       },
     });
-    this.editorService = DIService.get<IEditorService>('IEditorService');
+    this.editorService = container.resolve<IEditorService>('IEditorService');
   }
 
   isTextdom(ele: Element): ele is HTMLInputElement {

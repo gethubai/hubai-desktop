@@ -7,7 +7,7 @@ import {
   type IExtensionService,
 } from '@allai/core';
 import { IColorTheme } from '@allai/core/esm/model/colorTheme';
-import { ILocaleService, LocaleService, ILocale } from '@allai/core/esm/i18n';
+import { type ILocaleService, ILocale } from '@allai/core/esm/i18n';
 import logger from '@allai/core/esm/common/logger';
 import { IDisposable } from '@allai/core/esm/monaco/common';
 import { type IMonacoService } from '@allai/core/esm/monaco/monacoService';
@@ -24,8 +24,6 @@ class ExtensionService implements IExtensionService {
 
   private _inactive: Function | undefined;
 
-  private readonly localeService: ILocaleService;
-
   /**
    * TODO: This property is used for marking the extensions were loaded
    * we are going to refactor this logic after redesign the Molecule lifecycle.
@@ -34,10 +32,9 @@ class ExtensionService implements IExtensionService {
 
   constructor(
     @inject('IColorThemeService') private colorThemeService: IColorThemeService,
-    @inject('IMonacoService') private monacoService: IMonacoService
-  ) {
-    this.localeService = container.resolve(LocaleService);
-  }
+    @inject('IMonacoService') private monacoService: IMonacoService,
+    @inject('ILocaleService') private localeService: ILocaleService
+  ) {}
 
   public setLoaded(flag?: boolean): void {
     this._isLoaded = flag !== undefined ? flag : true;

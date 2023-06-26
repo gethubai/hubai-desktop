@@ -12,21 +12,21 @@ import { KeybindingWeight } from '@allai/core/esm/monaco/common';
 import { IColorTheme } from '@allai/core/esm/model/colorTheme';
 import { constants } from '@allai/core/esm/services/builtinService/const';
 import { IColorThemeService } from '@allai/core/esm/services';
-import { DIService } from '@allai/core/esm/DIService';
+import { container } from 'tsyringe';
 
 // eslint-disable-next-line import/prefer-default-export
 export class SelectColorThemeAction extends Action2 {
   static readonly ID = constants.ACTION_SELECT_THEME;
 
-  static readonly LABEL = localize('selectTheme.label', 'Color Theme');
+  static readonly LABEL = () => localize('selectTheme.label', 'Color Theme');
 
   private readonly colorThemeService: IColorThemeService;
 
   constructor() {
     super({
       id: SelectColorThemeAction.ID,
-      label: SelectColorThemeAction.LABEL,
-      title: SelectColorThemeAction.LABEL,
+      label: SelectColorThemeAction.LABEL(),
+      title: SelectColorThemeAction.LABEL(),
       alias: 'Color Theme',
       precondition: undefined,
       f1: true,
@@ -39,7 +39,7 @@ export class SelectColorThemeAction extends Action2 {
     });
 
     this.colorThemeService =
-      DIService.get<IColorThemeService>('IColorThemeService');
+      container.resolve<IColorThemeService>('IColorThemeService');
   }
 
   run(accessor: ServicesAccessor): Promise<void> {

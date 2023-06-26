@@ -12,12 +12,13 @@ import { KeyMod, KeyCode } from '@allai/core/esm/monaco';
 import { constants } from '@allai/core/esm/services/builtinService/const';
 import { Action2 } from '@allai/core/esm/monaco/action';
 import { CATEGORIES, KeybindingWeight } from '@allai/core/esm/monaco/common';
-import { DIService } from '@allai/core/esm/DIService';
+import { container } from 'tsyringe';
 
 export class QuickTogglePanelAction extends Action2 {
   static readonly ID = constants.MENU_VIEW_PANEL;
 
-  static readonly LABEL = localize('menu.showPanel.title', 'Toggle Panel');
+  static readonly LABEL = () =>
+    localize('menu.showPanel.title', 'Toggle Panel');
 
   private readonly layoutService: ILayoutService;
 
@@ -26,8 +27,8 @@ export class QuickTogglePanelAction extends Action2 {
   constructor() {
     super({
       id: QuickTogglePanelAction.ID,
-      label: QuickTogglePanelAction.LABEL,
-      title: QuickTogglePanelAction.LABEL,
+      label: QuickTogglePanelAction.LABEL(),
+      title: QuickTogglePanelAction.LABEL(),
       category: CATEGORIES.View,
       alias: 'Toggle Panel',
       precondition: undefined,
@@ -39,8 +40,8 @@ export class QuickTogglePanelAction extends Action2 {
         primary: KeyChord(KeyMod.CtrlCmd | KeyCode.KeyJ),
       },
     });
-    this.layoutService = DIService.get<ILayoutService>('ILayoutService');
-    this.menuBarService = DIService.get<IMenuBarService>('IMenuBarService');
+    this.layoutService = container.resolve<ILayoutService>('ILayoutService');
+    this.menuBarService = container.resolve<IMenuBarService>('IMenuBarService');
   }
 
   run(accessor: ServicesAccessor) {

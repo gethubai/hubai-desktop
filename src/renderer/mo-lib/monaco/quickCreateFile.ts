@@ -6,12 +6,12 @@ import { Action2 } from '@allai/core/esm/monaco/action';
 import { localize } from '@allai/core/esm/i18n/localize';
 import { KeyMod, KeyCode } from '@allai/core/esm/monaco';
 import { FileTypes } from '@allai/core/esm/model';
-import { DIService } from '@allai/core/esm/DIService';
+import { container } from 'tsyringe';
 
 export class QuickCreateFile extends Action2 {
   static readonly ID = constants.ACTION_QUICK_CREATE_FILE;
 
-  static readonly LABEL = localize('menu.newFile', 'New File');
+  static readonly LABEL = () => localize('menu.newFile', 'New File');
 
   static readonly DESC = 'New File';
 
@@ -21,10 +21,10 @@ export class QuickCreateFile extends Action2 {
     super({
       id: QuickCreateFile.ID,
       title: {
-        value: QuickCreateFile.LABEL,
+        value: QuickCreateFile.LABEL(),
         original: QuickCreateFile.DESC,
       },
-      label: QuickCreateFile.LABEL,
+      label: QuickCreateFile.LABEL(),
       alias: QuickCreateFile.DESC,
       f1: true,
       keybinding: {
@@ -34,7 +34,7 @@ export class QuickCreateFile extends Action2 {
         primary: KeyMod.CtrlCmd | KeyCode.KeyN,
       },
     });
-    this.folderTreeController = DIService.get<IFolderTreeController>(
+    this.folderTreeController = container.resolve<IFolderTreeController>(
       'IFolderTreeController'
     );
   }
