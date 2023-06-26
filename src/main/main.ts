@@ -30,6 +30,7 @@ import userSettingsStorage from 'data/user/mainStorage';
 import getStorage from '../data/storage';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+
 console.log = log.log;
 Object.assign(console, log.functions);
 
@@ -192,6 +193,8 @@ console.log('path:', {
   module: app.getPath('module'),
   app: app.getAppPath(),
   sessionData: app.getPath('sessionData'),
+  home: app.getPath('home'),
+  exe: app.getPath('exe'),
 });
 
 app
@@ -214,6 +217,20 @@ app
       } catch (error) {
         // Handle the error as needed
         console.error('ERROR on msg protocol: ', error);
+      }
+    });
+
+    protocol.registerFileProtocol('plugins', (request, callback) => {
+      const url = request.url.substr(10); /* all urls start with 'plugins://' */
+      const filePath = path.normalize(
+        `/Users/macbook/Documents/Work/allai/extensions/org/dist/apps/plugins/${url}`
+      );
+      try {
+        const decodedUrl = decodeURI(filePath); // Decodes the url if it is encoded
+        return callback(decodedUrl);
+      } catch (error) {
+        // Handle the error as needed
+        console.error('ERROR on plugins protocol: ', error);
       }
     });
 

@@ -7,6 +7,7 @@ import chalk from 'chalk';
 import { merge } from 'webpack-merge';
 import { execSync, spawn } from 'child_process';
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
+import ModuleFederationPlugin from 'webpack/lib/container/ModuleFederationPlugin';
 import baseConfig from './webpack.config.base';
 import webpackPaths from './webpack.paths';
 import checkNodeEnv from '../scripts/check-node-env';
@@ -161,6 +162,23 @@ const configuration: webpack.Configuration = {
       env: process.env.NODE_ENV,
       isDevelopment: process.env.NODE_ENV !== 'production',
       nodeModules: webpackPaths.appNodeModulesPath,
+    }),
+    new ModuleFederationPlugin({
+      name: 'allaiapp',
+      // library: { type: 'module' },
+      shared: {
+        'react-router-dom': {
+          singleton: true,
+          strictVersion: true,
+          requiredVersion: '6.11.2',
+        },
+        react: {
+          eager: true,
+          singleton: true,
+          strictVersion: true,
+          requiredVersion: '18.2.0',
+        },
+      },
     }),
   ],
 
