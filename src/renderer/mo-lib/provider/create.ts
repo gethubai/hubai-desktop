@@ -1,4 +1,4 @@
-import { IExtension } from 'mo/model';
+import { IExtension } from '@allai/core';
 import InstanceService from 'mo/services/instanceService';
 
 export interface IConfigProps {

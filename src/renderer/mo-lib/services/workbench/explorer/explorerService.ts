@@ -1,97 +1,21 @@
-import 'reflect-metadata';
-import { singleton, container } from 'tsyringe';
-import { Component } from 'mo/react/component';
+import { container, injectable } from 'tsyringe';
+import cloneDeep from 'lodash/cloneDeep';
+import { Component } from '@allai/core/esm/react/component';
+import { IMenuItemProps } from '@allai/core/esm/components/menu';
+import { searchById } from '@allai/core/esm/common/utils';
+import { IActionBarItemProps } from '@allai/core/esm/components';
+import logger from '@allai/core/esm/common/logger';
+import type { UniqueId } from '@allai/core/esm/common/types';
 import {
+  IExplorerService,
   IExplorerPanelItem,
   IExplorer,
   IExplorerModel,
   ExplorerEvent,
-} from 'mo/model/workbench/explorer/explorer';
-import cloneDeep from 'lodash/cloneDeep';
-import { IMenuItemProps } from 'mo/components/menu';
-import { searchById } from 'mo/common/utils';
-import { IActionBarItemProps } from 'mo/components';
-import logger from 'mo/common/logger';
-import type { UniqueId } from 'mo/common/types';
+} from '@allai/core';
 
-export interface IExplorerService extends Component<IExplorer> {
-  /**
-   * Add a new panel, as well as add a new data for toolbar data
-   */
-  addPanel(panel: IExplorerPanelItem | IExplorerPanelItem[]): void;
-  /**
-   * Update the panels data, as well as modify toolbar data
-   */
-  updatePanel(data: Partial<IExplorerPanelItem>): void;
-  /**
-   *
-   * Set expanded Panels of Explore
-   */
-  setExpandedPanels(activePanelKeys: UniqueId[]): void;
-  /**
-   * Remove a panel via id, as well as remove the corresponding action bar
-   */
-  removePanel(id: UniqueId): void;
-  /**
-   * Toggle panel hidden, as well as toggle the toolbar status
-   */
-  togglePanel(id: UniqueId): void;
-  /**
-   * Only toggle the toolbar status
-   */
-  toggleHeaderBar(id: UniqueId): void;
-  /**
-   * Only add an action in toolbar actions
-   */
-  addAction(action: IMenuItemProps): void;
-  /**
-   * Get the specific action in toolbar actions
-   * @param id
-   */
-  getAction(id: UniqueId): IMenuItemProps | undefined;
-  /**
-   * Update the action in toolbar actions
-   * @param action
-   */
-  updateAction(action: Partial<IMenuItemProps>): void;
-  /**
-   * Remove the specific header toolbar action
-   * @param id action id
-   */
-  removeAction(id: UniqueId): void;
-  /**
-   * Reset the ExplorerService state, it's mainly for customizing the Explorer
-   */
-  reset(): void;
-  /**
-   * Listen to the Explorer header toolbar click event
-   * @param callback
-   */
-  onClick(callback: (e: MouseEvent, item: IActionBarItemProps) => void);
-  /**
-   * Listen to the Explorer panel remove event
-   * @param callback
-   */
-  onRemovePanel(callback: (panel: IExplorerPanelItem) => void): void;
-  /**
-   * Listen to the FolderTree Panel collapse all folders event
-   * @param callback
-   */
-  onCollapseAllFolders(callback: () => void): void;
-  /**
-   * Listen to the Explorer panel toolbar click event
-   * @param callback
-   */
-  onPanelToolbarClick(
-    callback: (panel: IExplorerPanelItem, toolbarId: string) => void
-  ): void;
-}
-
-@singleton()
-export class ExplorerService
-  extends Component<IExplorer>
-  implements IExplorerService
-{
+@injectable()
+class ExplorerService extends Component<IExplorer> implements IExplorerService {
   protected state: IExplorer;
 
   constructor() {
@@ -334,3 +258,5 @@ export class ExplorerService
     this.subscribe(ExplorerEvent.onPanelToolbarClick, callback);
   }
 }
+
+export default ExplorerService;

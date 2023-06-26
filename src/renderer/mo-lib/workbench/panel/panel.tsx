@@ -1,9 +1,9 @@
 import React from 'react';
-import { getBEMElement, prefixClaName } from 'mo/common/className';
-import { IPanel, IPanelItem } from 'mo/model/workbench/panel';
-import { IPanelController } from 'mo/controller/panel';
-import { Tabs } from 'mo/components/tabs';
-import { ActionBar } from 'mo/components/actionBar';
+import { getBEMElement, prefixClaName } from '@allai/core/esm/common/className';
+import { IPanel, IPanelItem } from '@allai/core/esm/model/workbench/panel';
+import { Tabs } from '@allai/core/esm/components/tabs';
+import { ActionBar } from '@allai/core/esm/components/actionBar';
+import { IPanelController } from 'mo/controllers';
 
 const defaultClassName = prefixClaName('panel');
 const panelHeaderClassName = getBEMElement(defaultClassName, 'header');

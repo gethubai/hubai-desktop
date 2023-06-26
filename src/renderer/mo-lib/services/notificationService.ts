@@ -1,49 +1,18 @@
-import 'reflect-metadata';
+import { container } from 'tsyringe';
+import { cloneDeep } from 'lodash';
 import {
   INotification,
   INotificationItem,
   NotificationModel,
   NotificationStatus,
-} from 'mo/model/notification';
-import { Component } from 'mo/react';
-import { singleton, container } from 'tsyringe';
-import { randomId, searchById } from 'mo/common/utils';
-import logger from 'mo/common/logger';
-import { cloneDeep } from 'lodash';
-import type { UniqueId } from 'mo/common/types';
+  INotificationService,
+} from '@allai/core';
+import { Component } from '@allai/core/esm/react';
+import { randomId, searchById } from '@allai/core/esm/common/utils';
+import logger from '@allai/core/esm/common/logger';
+import type { UniqueId } from '@allai/core/esm/common/types';
 
-export interface INotificationService extends Component<INotification> {
-  /**
-   * Add new notification items
-   * @param items
-   */
-  add<T>(items: INotificationItem<T>[]): null | INotificationItem<T>[];
-  /**
-   * Remove the specific notification item by id
-   * @param id
-   */
-  remove(id: UniqueId): void;
-  /**
-   * Update the specific notification item
-   * @param item notification item, the id field is required
-   */
-  update<T>(item: INotificationItem<T>): null | INotificationItem<T>;
-  /**
-   * Toggle the Notification view between display or hidden
-   */
-  toggleNotification(): void;
-  /**
-   * Clear the notifications
-   */
-  clear(): void;
-  /**
-   * Reset notifications, this will clear the pending notifications
-   */
-  reset(): void;
-}
-
-@singleton()
-export class NotificationService
+class NotificationService
   extends Component<INotification>
   implements INotificationService
 {
@@ -133,3 +102,5 @@ export class NotificationService
     });
   }
 }
+
+export default NotificationService;

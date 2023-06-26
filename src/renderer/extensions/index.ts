@@ -1,5 +1,6 @@
-import { type IExtension } from 'mo/model';
 // import ChatExtension from './chat';
+
+import { IExtension } from '@allai/core';
 
 const extensions: IExtension[] = [];
 

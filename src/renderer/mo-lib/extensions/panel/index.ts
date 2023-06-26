@@ -1,8 +1,7 @@
-import { IExtension } from 'mo/model/extension';
-import { IExtensionService } from 'mo/services';
+import { IExtension, IExtensionService } from '@allai/core';
 import molecule from 'mo';
 
-export const ExtendsPanel: IExtension = {
+const ExtendsPanel: IExtension = {
   id: 'ExtendsPanel',
   name: 'Extends Panel',
   activate(extensionCtx: IExtensionService) {
@@ -22,3 +21,5 @@ export const ExtendsPanel: IExtension = {
   },
   dispose() {},
 };
+
+export default ExtendsPanel;

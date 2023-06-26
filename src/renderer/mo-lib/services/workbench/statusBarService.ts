@@ -1,52 +1,17 @@
-import 'reflect-metadata';
+import cloneDeep from 'lodash/cloneDeep';
+import { container, injectable } from 'tsyringe';
 import {
   Float,
   IStatusBar,
   IStatusBarItem,
+  IStatusBarService,
   StatusBarEvent,
   StatusBarModel,
-} from 'mo/model/workbench/statusBar';
-import cloneDeep from 'lodash/cloneDeep';
-import { Component } from 'mo/react';
-import { container, singleton } from 'tsyringe';
-import { searchById } from 'mo/common/utils';
-import logger from 'mo/common/logger';
-import type { UniqueId } from 'mo/common/types';
-
-export interface IStatusBarService extends Component<IStatusBar> {
-  /**
-   * Add a new StatusBar item into right or left status
-   * @param item
-   * @param float position the item to left or right
-   */
-  add(item: IStatusBarItem, float: Float): void;
-  /**
-   * Remove the specific StatusBar item
-   * @param id
-   * @param float if provided, it'll remove the item in spcific position
-   */
-  remove(id: UniqueId, float?: Float): void;
-  /**
-   * Update the specific StatusBar item, it'll update the item found in left
-   * @param item the id field is required
-   * @param float if provided, it'll update the item in specific position
-   */
-  update(item: IStatusBarItem, float?: Float): void;
-  /**
-   * Get the specific StatusBar item
-   * @param id
-   */
-  getStatusBarItem(id: UniqueId, float?: Float): IStatusBarItem | null;
-  /**
-   * Reset the contextMenu data and the StatusBar data , including right and left
-   */
-  reset(): void;
-  /**
-   * Listen to the StatusBar click event
-   * @param callback
-   */
-  onClick(callback: (e: MouseEvent, item: IStatusBarItem) => void);
-}
+} from '@allai/core';
+import { Component } from '@allai/core/esm/react';
+import { searchById } from '@allai/core/esm/common/utils';
+import logger from '@allai/core/esm/common/logger';
+import type { UniqueId } from '@allai/core/esm/common/types';
 
 type StatusBarItemInfos =
   | {
@@ -60,8 +25,8 @@ type StatusBarItemInfos =
       source: null;
     };
 
-@singleton()
-export class StatusBarService
+@injectable()
+class StatusBarService
   extends Component<IStatusBar>
   implements IStatusBarService
 {
@@ -73,7 +38,7 @@ export class StatusBarService
   }
 
   /**
-   * Get the item informations in right position or left position
+   * Get the item informations in right position or left position abc
    * @param item
    * @returns
    */
@@ -184,3 +149,5 @@ export class StatusBarService
     this.subscribe(StatusBarEvent.onClick, callback);
   }
 }
+
+export default StatusBarService;

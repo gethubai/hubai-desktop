@@ -8,15 +8,6 @@ const QuickAccessRegistry = Registry.as<IQuickAccessRegistry>(
   Extensions.Quickaccess
 );
 
-/**
- * Register a quickAccessProvider, if it's exist, remove it first and register.
- * @param providerDescriptor
- */
-export function registerQuickAccessProvider(providerDescriptor) {
-  removeQuickAccessProvider(providerDescriptor.prefix);
-  QuickAccessRegistry.registerQuickAccessProvider(providerDescriptor);
-}
-
 export function removeQuickAccessProvider(prefix) {
   const index = QuickAccessRegistry.providers.findIndex(
     (item) => item.prefix === prefix
@@ -24,4 +15,13 @@ export function removeQuickAccessProvider(prefix) {
   if (index > -1) {
     QuickAccessRegistry.providers.splice(index, 1);
   }
+}
+
+/**
+ * Register a quickAccessProvider, if it's exist, remove it first and register.
+ * @param providerDescriptor
+ */
+export function registerQuickAccessProvider(providerDescriptor) {
+  removeQuickAccessProvider(providerDescriptor.prefix);
+  QuickAccessRegistry.registerQuickAccessProvider(providerDescriptor);
 }

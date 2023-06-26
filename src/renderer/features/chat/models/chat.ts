@@ -1,5 +1,5 @@
-import { UniqueId } from 'mo/common/types';
-import { IActionBarItemProps } from 'mo/components';
+import { UniqueId } from '@allai/core';
+import { IActionBarItemProps } from '@allai/core/esm/components';
 
 export enum ChatEvent {
   onListUpdated = 'chat.onListUpdated',
@@ -48,5 +48,3 @@ export class ChatStateModel implements IChatState {
     this.activeGroup = activeGroup;
   }
 }
-// CONTROLLER BASICAMENTE SÓ INICIA A UI
-// SERVICE QUE CONTROLA STATE, ETC

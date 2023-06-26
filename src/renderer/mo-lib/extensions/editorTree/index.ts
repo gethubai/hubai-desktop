@@ -1,7 +1,7 @@
+import { IExtension } from '@allai/core';
 import molecule from 'mo';
-import { IExtension } from 'mo/model/extension';
 
-export const ExtendsEditorTree: IExtension = {
+const ExtendsEditorTree: IExtension = {
   id: 'ExtendsEditorTree',
   name: 'Extends Editor Tree',
   dispose() {},
@@ -30,3 +30,4 @@ export const ExtendsEditorTree: IExtension = {
     });
   },
 };
+export default ExtendsEditorTree;

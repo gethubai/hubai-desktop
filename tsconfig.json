@@ -22,7 +22,7 @@
       "monaco-editor/*": ["node_modules/monaco-editor/*"],
       "monaco-editor": ["node_modules/monaco-editor"]
     },
-    "typeRoots": ["node", "node_modules/@types", "./src/renderer/mo-lib/typings", "node_modules/monaco-editor", "src/renderer"],
+    "typeRoots": ["node", "node_modules/@types", "node_modules/@allai/core/esm", "node_modules/monaco-editor", "src/renderer"],
     "outDir": ".erb/dll"
   },
   "exclude": ["test", "release/build", "release/app/dist", ".erb/dll"]

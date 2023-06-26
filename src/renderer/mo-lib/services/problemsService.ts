@@ -1,4 +1,4 @@
-import 'reflect-metadata';
+import { container, inject, injectable } from 'tsyringe';
 import {
   IProblems,
   IProblemsItem,
@@ -6,67 +6,26 @@ import {
   MarkerSeverity,
   IProblemsTreeNode,
   ProblemsEvent,
-} from 'mo/model/problems';
-import { IStatusBarItem } from 'mo/model/workbench/statusBar';
-import {
-  StatusBarService,
-  IStatusBarService,
-  IBuiltinService,
-  BuiltinService,
-} from 'mo/services';
-import { Component } from 'mo/react';
-import { singleton, container } from 'tsyringe';
-import { searchById } from 'mo/common/utils';
-import logger from 'mo/common/logger';
-import type { UniqueId } from 'mo/common/types';
+  IStatusBarItem,
+  type IStatusBarService,
+  type IBuiltinService,
+  IProblemsService,
+} from '@allai/core';
+import { Component } from '@allai/core/esm/react';
+import { searchById } from '@allai/core/esm/common/utils';
+import logger from '@allai/core/esm/common/logger';
+import type { UniqueId } from '@allai/core/esm/common/types';
 
-export interface IProblemsService extends Component<IProblems> {
-  /**
-   * Add single or multiple items data
-   * @param data
-   */
-  add(data: IProblemsItem | IProblemsItem[]): void;
-  /**
-   * Remove the specific problem items
-   * @param id single or multiple ids
-   */
-  remove(id: UniqueId | UniqueId[]): void;
-  /**
-   * Reset the ProblemsService state data
-   */
-  reset(): void;
-  /**
-   * Update the specific data
-   * @param data single or multiple problems
-   */
-  update<T>(data: IProblemsItem<T> | IProblemsItem<T>[]): void;
-  /**
-   * Toggle the Problems view between display or hidden
-   */
-  toggleProblems(): void;
-  /**
-   * Listen to select a problem tree node
-   * @param callback
-   */
-  onSelect(callback: (node: IProblemsTreeNode) => void): void;
-}
-
-@singleton()
-export class ProblemsService
-  extends Component<IProblems>
-  implements IProblemsService
-{
+@injectable()
+class ProblemsService extends Component<IProblems> implements IProblemsService {
   protected state: IProblems;
 
-  private readonly statusBarService: IStatusBarService;
-
-  private readonly builtinService: IBuiltinService;
-
-  constructor() {
+  constructor(
+    @inject('IStatusBarService') private statusBarService: IStatusBarService,
+    @inject('IBuiltinService') private builtinService: IBuiltinService
+  ) {
     super();
     this.state = container.resolve(ProblemsModel);
-    this.statusBarService = container.resolve(StatusBarService);
-    this.builtinService = container.resolve(BuiltinService);
   }
 
   public toggleProblems(): void {
@@ -215,3 +174,5 @@ export class ProblemsService
     };
   };
 }
+
+export default ProblemsService;

@@ -1,54 +1,19 @@
 import 'reflect-metadata';
-import { Component } from 'mo/react';
-import cloneDeep from 'lodash/cloneDeep';
-import { singleton, container } from 'tsyringe';
+import { cloneDeep } from 'lodash';
+import { container, injectable } from 'tsyringe';
 import {
-  ISidebar,
-  ISidebarPane,
+  type ISidebar,
+  type ISidebarPane,
   SidebarModel,
-} from 'mo/model/workbench/sidebar';
-import { searchById } from 'mo/common/utils';
-import logger from 'mo/common/logger';
-import type { UniqueId } from 'mo/common/types';
+} from '@allai/core/esm/model/workbench/sidebar';
+import { searchById } from '@allai/core/esm/common/utils';
+import type { UniqueId } from '@allai/core/esm/common/types';
+import { Component } from '@allai/core/esm/react/component';
+import { ISidebarService } from '@allai/core';
+import logger from '@allai/core/esm/common/logger';
 
-export interface ISidebarService extends Component<ISidebar> {
-  /**
-   * Get a specific pane via id
-   * @param id
-   */
-  get(id: UniqueId): ISidebarPane | undefined;
-  /**
-   * Add a new Sidebar pane
-   * @param pane
-   * @param isActive Whether to activate the current pane
-   */
-  add(pane: ISidebarPane, isActive?: boolean): void;
-  /**
-   * Update a specific pane
-   * @param pane
-   */
-  update(pane: ISidebarPane): void;
-  /**
-   * Remove a pane
-   * @param id
-   */
-  remove(id: UniqueId): void;
-  /**
-   * Set the specific pane as active
-   * @param id
-   */
-  setActive(id?: UniqueId): void;
-  /**
-   * Reset the sidebar data
-   */
-  reset(): void;
-}
-
-@singleton()
-export class SidebarService
-  extends Component<ISidebar>
-  implements ISidebarService
-{
+@injectable()
+class SidebarService extends Component<ISidebar> implements ISidebarService {
   protected state: ISidebar;
 
   constructor() {
@@ -146,3 +111,5 @@ export class SidebarService
     });
   }
 }
+
+export default SidebarService;

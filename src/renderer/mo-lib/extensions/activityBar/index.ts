@@ -1,5 +1,5 @@
-import { IExtension } from 'mo/model/extension';
-import { IExtensionService } from 'mo/services';
+/* eslint-disable import/prefer-default-export */
+import { IExtension, IExtensionService } from '@allai/core';
 import molecule from 'mo';
 import { CommandQuickSideBarViewAction } from 'mo/monaco/quickToggleSideBarAction';
 

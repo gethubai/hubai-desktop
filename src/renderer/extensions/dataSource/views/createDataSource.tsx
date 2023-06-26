@@ -2,13 +2,10 @@ import React from 'react';
 import molecule from 'mo';
 import styled from 'styled-components';
 import { container } from 'tsyringe';
-
-import { NotificationController } from 'mo/controller';
+import { Button } from '@allai/core/esm/components';
 import API from '../api';
 import { FormItem } from '../../../components/formItem';
 import { existCreateDataSourceView } from '../base';
-
-const { Button } = molecule.component;
 
 const CreateDataSource = styled.div`
   width: 50%;
@@ -59,7 +56,9 @@ export class CreateDataSourceView extends React.Component {
             },
           },
         ]);
-        container.resolve(NotificationController).toggleNotifications();
+        container
+          .resolve<INotificationController>('INotificationController')
+          .toggleNotifications();
         // molecule.notification.toggleNotification(); // Invalid
       }
     });

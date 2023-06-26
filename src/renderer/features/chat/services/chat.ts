@@ -1,7 +1,6 @@
 /* eslint-disable react/sort-comp */
 /* eslint-disable react/no-unused-class-component-methods */
-import { singleton, container } from 'tsyringe';
-import { Component } from 'mo/react';
+import { container } from 'tsyringe';
 
 import generateUniqueId from 'renderer/common/uniqueIdGenerator';
 import { ChatModel } from 'api-server/chat/domain/models/chat';
@@ -15,23 +14,14 @@ import {
 import { ChatMessagesContext } from 'api-server/chat/domain/models/chatContext';
 import { CreateChat } from 'api-server/chat/domain/usecases/createChat';
 import { UpdateChatBrains } from 'api-server/chat/domain/usecases/updateChatBrains';
+import { Component } from '@allai/core/esm/react';
 import {
   ChatStateModel,
   IChatGroup,
   IChatItem,
   IChatState,
 } from '../models/chat';
-
-export interface IChatService extends Component<IChatState> {
-  createChat(options: CreateChat.Params): Promise<ChatModel | undefined>;
-  updateChatBrains(
-    options: UpdateChatBrains.Params
-  ): Promise<ChatModel | undefined>;
-  sendChatMessage(options: SendChatMessageModel): Promise<ChatMessageModel>;
-  getServer(): Socket<any, any> | undefined;
-  getChatCount(): number;
-  getChat(id: string): Promise<ChatModel>;
-}
+import { IChatService } from './types';
 
 export interface IChatMessageSubscriber {
   onMessageSent(message: ChatMessageModel): void;
@@ -43,7 +33,6 @@ export interface IChatMessageSubscriber {
   onMessageReceived(message: ChatMessageModel): void;
 }
 
-@singleton()
 export class ChatService extends Component<IChatState> implements IChatService {
   protected state: IChatState;
 
@@ -128,8 +117,8 @@ export class ChatService extends Component<IChatState> implements IChatService {
       } as IChatItem;
 
       if (group) {
-        // use a guid on the id
-        group.items.push(chatListItem);
+        if (group.items.findIndex((i) => i.id === chat.id) === -1)
+          group.items.push(chatListItem);
       } else {
         groups.push({
           id: generateUniqueId(),

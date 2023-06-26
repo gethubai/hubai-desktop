@@ -7,9 +7,6 @@ export default class LocalLoadChatList implements LoadChatList {
 
   loadChats = async (): Promise<ChatModel[]> => {
     const chats = await this.database.chat.find().exec();
-
-    console.log({ chats });
-
     return chats as ChatModel[];
   };
 }

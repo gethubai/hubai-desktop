@@ -1,5 +1,3 @@
-import 'reflect-metadata';
-import { container } from 'tsyringe';
 import { localize } from 'monaco-editor/esm/vs/nls';
 import {
   IQuickInputService,
@@ -8,13 +6,15 @@ import {
 import { KeyChord } from 'monaco-editor/esm/vs/base/common/keyCodes';
 import { ServicesAccessor } from 'monaco-editor/esm/vs/platform/instantiation/common/instantiation';
 
-import { KeyMod, KeyCode } from 'mo/monaco';
-import { Action2 } from 'mo/monaco/action';
-import { KeybindingWeight } from 'mo/monaco/common';
-import { IColorTheme } from 'mo/model/colorTheme';
-import { constants } from 'mo/services/builtinService/const';
-import { ColorThemeService, IColorThemeService } from 'mo/services';
+import { KeyMod, KeyCode } from '@allai/core/esm/monaco';
+import { Action2 } from '@allai/core/esm/monaco/action';
+import { KeybindingWeight } from '@allai/core/esm/monaco/common';
+import { IColorTheme } from '@allai/core/esm/model/colorTheme';
+import { constants } from '@allai/core/esm/services/builtinService/const';
+import { IColorThemeService } from '@allai/core/esm/services';
+import { DIService } from '@allai/core/esm/DIService';
 
+// eslint-disable-next-line import/prefer-default-export
 export class SelectColorThemeAction extends Action2 {
   static readonly ID = constants.ACTION_SELECT_THEME;
 
@@ -37,7 +37,9 @@ export class SelectColorThemeAction extends Action2 {
         primary: KeyChord(KeyMod.CtrlCmd | KeyCode.KeyK),
       },
     });
-    this.colorThemeService = container.resolve(ColorThemeService);
+
+    this.colorThemeService =
+      DIService.get<IColorThemeService>('IColorThemeService');
   }
 
   run(accessor: ServicesAccessor): Promise<void> {

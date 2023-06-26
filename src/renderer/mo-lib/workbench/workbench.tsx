@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import React, { useEffect } from 'react';
 import { container } from 'tsyringe';
 
@@ -8,27 +7,19 @@ import {
   prefixClaName,
   getBEMModifier,
   getBEMElement,
-} from 'mo/common/className';
-
-import { EditorView } from 'mo/workbench/editor';
-import { SidebarView } from 'mo/workbench/sidebar';
-import { MenuBarView } from 'mo/workbench/menuBar';
-import { ActivityBarView } from 'mo/workbench/activityBar';
-import { StatusBarView } from 'mo/workbench/statusBar';
-import { PanelView } from 'mo/workbench/panel';
-import { ID_APP } from 'mo/common/id';
-import { APP_PREFIX } from 'mo/common/const';
-
-import { connect } from 'mo/react';
-
-import { type ILayoutController, LayoutController } from 'mo/controller/layout';
-import { LayoutService } from 'mo/services';
-import { type ILayout, MenuBarMode } from 'mo/model/workbench/layout';
-
-import { type IWorkbench } from 'mo/model';
-import SplitPane from 'mo/components/split/SplitPane';
-import { Pane } from 'mo/components/split';
-import { Display } from 'mo/components';
+} from '@allai/core/esm/common/className';
+import { APP_PREFIX } from '@allai/core/esm/common/const';
+import { ID_APP } from '@allai/core/esm/common/id';
+import { type ILayoutService, type IWorkbench } from '@allai/core';
+import { ILayout, MenuBarMode } from '@allai/core/esm/model/workbench/layout';
+import { Display, Pane, SplitPane } from '@allai/core/esm/components';
+import { Controller, connect } from '@allai/core/esm/react';
+import { type ILayoutController } from 'mo/controllers';
+import SidebarView from './sidebar/sidebarView';
+import ActivityBarView from './activityBar/activityBarView';
+import { MenuBarView } from './menuBar/menuBarView';
+import { EditorView } from './editor/editorView';
+import { PanelView } from './panel/panelView';
 import { AuxiliaryBar, AuxiliaryBarTab } from './auxiliaryBar';
 
 const mainBenchClassName = prefixClaName('mainBench');
@@ -48,8 +39,9 @@ const displayActivityBarClassName = getBEMElement(
   'display-activityBar'
 );
 
-const layoutController = container.resolve(LayoutController);
-const layoutService = container.resolve(LayoutService);
+const layoutController =
+  container.resolve<ILayoutController>('ILayoutController');
+const layoutService: ILayoutService = container.resolve('ILayoutService');
 
 export function WorkbenchView(props: IWorkbench & ILayout & ILayoutController) {
   const {
@@ -184,5 +176,5 @@ export function WorkbenchView(props: IWorkbench & ILayout & ILayoutController) {
 export const Workbench = connect(
   layoutService,
   WorkbenchView,
-  layoutController
+  layoutController as Controller
 );

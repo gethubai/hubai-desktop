@@ -1,8 +1,8 @@
 import React from 'react';
-import { Toolbar } from 'mo/components/toolbar';
-import { Content, Header } from 'mo/workbench/sidebar';
-import { Collapse, ICollapseItem } from 'mo/components/collapse';
-import Tree from 'mo/components/tree';
+import { Collapse, ICollapseItem } from '@allai/core/esm/components/collapse';
+import Tree from '@allai/core/esm/components/tree';
+import { Content, Header } from '@allai/core/esm/workbench/sidebar';
+import { Toolbar } from '@allai/core/esm/components';
 import { IChatController } from '../controllers/type';
 import { IChatItem, IChatState } from '../models/chat';
 

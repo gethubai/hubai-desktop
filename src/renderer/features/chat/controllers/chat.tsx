@@ -1,57 +1,46 @@
 import React from 'react';
-import { Controller } from 'mo/react/controller';
-import { connect } from 'mo/react';
 import {
-  ActivityBarService,
-  BuiltinService,
-  EditorService,
-  IActivityBarService,
-  IBuiltinService,
-  IEditorService,
-  ISidebarService,
-  SidebarService,
-} from 'mo/services';
-import { container, singleton } from 'tsyringe';
-import { IActivityBarItem } from 'mo/model';
+  type IActivityBarService,
+  type IBuiltinService,
+  type IEditorService,
+  type ISidebarService,
+  react,
+  IActivityBarItem,
+} from '@allai/core';
+
+import { container, injectable, inject } from 'tsyringe';
 import { ChatModel } from 'api-server/chat/domain/models/chat';
 import { CreateChat } from 'api-server/chat/domain/usecases/createChat';
 import {
   BrainManagementService,
   IBrainManagementService,
 } from 'renderer/features/brain/services/brainManagement';
-import { ChatService, IChatService } from '../services/chat';
 import ChatSidebar from '../workbench/chatSidebar';
 import { IChatController } from './type';
 import { IChatItem } from '../models/chat';
 import ChatView from '../workbench/chatView';
 import { ChatWindowService } from '../services/chatWindowService';
 import ChatWindowController from './chatWindowController';
+import type { IChatService } from '../services/types';
 
-@singleton()
+const { connect, Controller } = react;
+
+@injectable()
 export default class ChatController
   extends Controller
   implements IChatController
 {
-  private readonly sideBarService: ISidebarService;
-
-  private readonly activityBarService: IActivityBarService;
-
-  private readonly chatService: IChatService;
-
-  private readonly builtinService: IBuiltinService;
-
-  private readonly editorService: IEditorService;
-
   private readonly brainService: IBrainManagementService;
 
-  constructor() {
+  constructor(
+    @inject('IChatService') private chatService: IChatService,
+    @inject('ISidebarService') private sideBarService: ISidebarService,
+    @inject('IActivityBarService')
+    private activityBarService: IActivityBarService,
+    @inject('IEditorService') private editorService: IEditorService,
+    @inject('IBuiltinService') private builtinService: IBuiltinService
+  ) {
     super();
-
-    this.sideBarService = container.resolve(SidebarService);
-    this.activityBarService = container.resolve(ActivityBarService);
-    this.chatService = container.resolve(ChatService);
-    this.builtinService = container.resolve(BuiltinService);
-    this.editorService = container.resolve(EditorService);
     this.brainService = container.resolve(BrainManagementService);
   }
 

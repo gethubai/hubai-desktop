@@ -1,0 +1,120 @@
+import React from 'react';
+import { inject, injectable } from 'tsyringe';
+import { IActivityBarController } from '@allai/core/esm/controller';
+import { IMenuItemProps } from '@allai/core/esm/components/menu';
+import {
+  ActivityBarEvent,
+  IActivityBarItem,
+  Controller,
+  type IActivityBarService,
+  type IBuiltinService,
+  type ISettingsService,
+} from '@allai/core';
+import { type IMonacoService } from '@allai/core/esm/monaco/monacoService';
+import type { UniqueId } from '@allai/core/esm/common/types';
+import { CommandQuickAccessViewAction } from 'mo/monaco/quickAccessViewAction';
+import { SelectColorThemeAction } from 'mo/monaco/selectColorThemeAction';
+import { type IMenuBarController } from './menuBar';
+
+@injectable()
+class ActivityBarController
+  extends Controller
+  implements IActivityBarController
+{
+  constructor(
+    @inject('IActivityBarService')
+    private activityBarService: IActivityBarService,
+    @inject('ISettingsService') private settingsService: ISettingsService,
+    @inject('IBuiltinService') private builtinService: IBuiltinService,
+    @inject('IMenuBarController') private menuBarController: IMenuBarController,
+    @inject('IMonacoService') private monacoService: IMonacoService
+  ) {
+    super();
+  }
+
+  public initView() {
+    const { activityBarData, contextMenuData } =
+      this.builtinService.getModules();
+    if (activityBarData) {
+      this.activityBarService.add(activityBarData);
+    }
+    if (contextMenuData) {
+      this.activityBarService.addContextMenu(contextMenuData);
+    }
+  }
+
+  public readonly onClick = (
+    selectedKey: UniqueId,
+    selctedNode: IActivityBarItem
+  ) => {
+    this.emit(ActivityBarEvent.OnClick, selectedKey, selctedNode);
+  };
+
+  public readonly onChange = (
+    prevSelected?: UniqueId,
+    nextSelected?: UniqueId
+  ) => {
+    this.emit(ActivityBarEvent.OnChange, prevSelected, nextSelected);
+  };
+
+  private gotoQuickCommand() {
+    this.monacoService.commandService.executeCommand(
+      CommandQuickAccessViewAction.ID
+    );
+  }
+
+  private onSelectColorTheme = () => {
+    this.monacoService.commandService.executeCommand(SelectColorThemeAction.ID);
+  };
+
+  public readonly onContextMenuClick = (
+    e: React.MouseEvent,
+    item: IMenuItemProps | undefined
+  ) => {
+    const contextMenuId = item?.id;
+    const {
+      ACTION_QUICK_COMMAND = '',
+      ACTION_QUICK_ACCESS_SETTINGS = '',
+      ACTION_SELECT_THEME = '',
+      CONTEXT_MENU_MENU = '',
+      CONTEXT_MENU_EXPLORER = '',
+      CONTEXT_MENU_SEARCH = '',
+      CONTEXT_MENU_HIDE,
+    } = this.builtinService.getConstants();
+    switch (contextMenuId) {
+      // activityBar contextMenu
+      case CONTEXT_MENU_MENU: {
+        this.menuBarController.updateMenuBar!();
+        this.activityBarService.toggleContextMenuChecked(contextMenuId);
+        break;
+      }
+      case CONTEXT_MENU_EXPLORER:
+      case CONTEXT_MENU_SEARCH: {
+        this.activityBarService.toggleBar(contextMenuId);
+        this.activityBarService.toggleContextMenuChecked(contextMenuId);
+        break;
+      }
+      case CONTEXT_MENU_HIDE: {
+        this.menuBarController.updateActivityBar!();
+        break;
+      }
+      // manage button contextMenu
+      case ACTION_QUICK_COMMAND: {
+        this.gotoQuickCommand();
+        break;
+      }
+      case ACTION_QUICK_ACCESS_SETTINGS: {
+        this.settingsService.openSettingsInEditor();
+        break;
+      }
+      case ACTION_SELECT_THEME: {
+        this.onSelectColorTheme();
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+  };
+}
+export default ActivityBarController;

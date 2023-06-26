@@ -1,16 +1,12 @@
-import 'reflect-metadata';
-import { container } from 'tsyringe';
-
-import {
-  IFolderTreeController,
-  FolderTreeController,
-} from 'mo/controller/explorer/folderTree';
-import { KeybindingWeight } from 'mo/monaco/common';
-import { constants } from 'mo/services/builtinService/const';
-import { Action2 } from 'mo/monaco/action';
-import { localize } from 'mo/i18n/localize';
-import { KeyMod, KeyCode } from 'mo/monaco';
-import { FileTypes } from 'mo/model';
+/* eslint-disable import/prefer-default-export */
+import { IFolderTreeController } from '@allai/core/esm/controller/explorer/folderTree';
+import { KeybindingWeight } from '@allai/core/esm/monaco/common';
+import { constants } from '@allai/core/esm/services/builtinService/const';
+import { Action2 } from '@allai/core/esm/monaco/action';
+import { localize } from '@allai/core/esm/i18n/localize';
+import { KeyMod, KeyCode } from '@allai/core/esm/monaco';
+import { FileTypes } from '@allai/core/esm/model';
+import { DIService } from '@allai/core/esm/DIService';
 
 export class QuickCreateFile extends Action2 {
   static readonly ID = constants.ACTION_QUICK_CREATE_FILE;
@@ -38,7 +34,9 @@ export class QuickCreateFile extends Action2 {
         primary: KeyMod.CtrlCmd | KeyCode.KeyN,
       },
     });
-    this.folderTreeController = container.resolve(FolderTreeController);
+    this.folderTreeController = DIService.get<IFolderTreeController>(
+      'IFolderTreeController'
+    );
   }
 
   run() {

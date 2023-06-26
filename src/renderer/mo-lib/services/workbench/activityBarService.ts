@@ -1,84 +1,31 @@
 import 'reflect-metadata';
-import { singleton, container } from 'tsyringe';
-import { Component } from 'mo/react/component';
+import { container, inject, injectable } from 'tsyringe';
+import { Component } from '@allai/core/esm/react/component';
+import { searchById } from '@allai/core/esm/common/utils';
+import logger from '@allai/core/esm/common/logger';
+import type { UniqueId } from '@allai/core/esm/common/types';
 import {
+  IActivityBarService,
+  type ISidebarService,
+  IActivityMenuItemProps,
   ActivityBarModel,
   ActivityBarEvent,
   IActivityBar,
   IActivityBarItem,
-} from 'mo/model/workbench/activityBar';
-import { searchById } from 'mo/common/utils';
-import { IActivityMenuItemProps } from 'mo/model';
-import logger from 'mo/common/logger';
-import type { UniqueId } from 'mo/common/types';
-import { ISidebarService, SidebarService } from './sidebarService';
+} from '@allai/core';
 
-export interface IActivityBarService extends Component<IActivityBar> {
-  /**
-   * Reset the activityBar state data,
-   * if you want to whole customize the activityBar, you can reset it first,
-   * and then using the activityBar.add() method to fill the data you need.
-   */
-  reset(): void;
-  /**
-   * Add IActivityBarItem data
-   * @param isActive If provide, Activity Bar will set data active automatically. Only works in one data
-   */
-  add(data: IActivityBarItem | IActivityBarItem[], isActive?: boolean): void;
-  /**
-   * Set active bar
-   */
-  setActive(id?: UniqueId): void;
-  /**
-   * Remove the specific activity bar by id
-   * @param id
-   */
-  remove(id: UniqueId | UniqueId[]): void;
-  /**
-   * Toggle the specific activity bar between show or hide
-   * @param id activity bar id
-   */
-  toggleBar(id: UniqueId): void;
-  /**
-   * Toggle the contextMenu between checked or unchecked
-   * @param id contextmenu id
-   */
-  toggleContextMenuChecked(id: UniqueId): void;
-  /**
-   * Add new contextMenus for the activityBar
-   */
-  addContextMenu(data: IActivityMenuItemProps | IActivityMenuItemProps[]): void;
-  /**
-   * Remove the specific contextMenu item by id
-   * @param id contextmenu id
-   */
-  removeContextMenu(id: UniqueId | UniqueId[]): void;
-  /**
-   * Add click event listener
-   * @param callback
-   */
-  onClick(callback: (selectedKey: UniqueId, item: IActivityBarItem) => void);
-  /**
-   * Called when activity bar item which is not global is changed
-   */
-  onChange(
-    callback: (prevSelectedKey?: UniqueId, nextSelectedKey?: UniqueId) => void
-  );
-}
-
-@singleton()
-export class ActivityBarService
+@injectable()
+class ActivityBarService
   extends Component<IActivityBar>
   implements IActivityBarService
 {
   protected state: IActivityBar;
 
-  private sidebarService: ISidebarService;
-
-  constructor() {
+  constructor(
+    @inject('ISidebarService') private sidebarService: ISidebarService
+  ) {
     super();
     this.state = container.resolve(ActivityBarModel);
-    this.sidebarService = container.resolve(SidebarService);
   }
 
   public setActive(id?: UniqueId) {
@@ -87,12 +34,17 @@ export class ActivityBarService
     });
   }
 
-  public reset() {
-    this.setState({
-      data: [],
-      selected: '',
-      contextMenu: [],
-    });
+  private getRemoveList<T extends IActivityBarItem | IActivityMenuItemProps>(
+    id: UniqueId | UniqueId[],
+    data: T[]
+  ) {
+    return data.reduce((total: number[], item: T, key: number) => {
+      const strItem = item.id.toString();
+      if ((Array.isArray(id) && id.includes(strItem)) || id === strItem) {
+        return total.concat(key);
+      }
+      return total;
+    }, []);
   }
 
   public add(data: IActivityBarItem | IActivityBarItem[], isActive = false) {
@@ -118,17 +70,12 @@ export class ActivityBarService
     });
   }
 
-  private getRemoveList<T extends IActivityBarItem | IActivityMenuItemProps>(
-    id: UniqueId | UniqueId[],
-    data: T[]
-  ) {
-    return data.reduce((total: number[], item: T, key: number) => {
-      const strItem = item.id.toString();
-      if ((Array.isArray(id) && id.includes(strItem)) || id === strItem) {
-        return total.concat(key);
-      }
-      return total;
-    }, []);
+  public reset() {
+    this.setState({
+      data: [],
+      selected: '',
+      contextMenu: [],
+    });
   }
 
   public remove(id: UniqueId | UniqueId[]) {
@@ -236,3 +183,5 @@ export class ActivityBarService
     this.subscribe(ActivityBarEvent.OnChange, callback);
   }
 }
+
+export default ActivityBarService;

@@ -1,7 +1,7 @@
-import { Content, Header } from 'mo/workbench/sidebar';
-import { Toolbar, Collapse } from 'mo/components';
-import { ICollapseItem } from 'mo/components/collapse';
-import Tree from 'mo/components/tree';
+import { ICollapseItem } from '@allai/core/esm/components/collapse';
+import Tree from '@allai/core/esm/components/tree';
+import { Content, Header } from '@allai/core/esm/workbench/sidebar';
+import { Toolbar, Collapse } from '@allai/core/esm/components';
 import { IBrainController } from '../controllers/type';
 import { LocalBrainViewModel, IBrainState } from '../models/brain';
 

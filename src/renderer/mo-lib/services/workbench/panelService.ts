@@ -1,122 +1,37 @@
-import 'reflect-metadata';
-import { singleton, container } from 'tsyringe';
-import { editor as MonacoEditor } from 'monaco-editor';
+import React from 'react';
+import { container, inject, injectable } from 'tsyringe';
 import { StandaloneEditor } from 'monaco-editor/esm/vs/editor/standalone/browser/standaloneCodeEditor';
 import { cloneDeepWith, cloneDeep } from 'lodash';
 import pickBy from 'lodash/pickBy';
-import { Component } from 'mo/react';
+import { Component } from '@allai/core/esm/react';
 import {
   IOutput,
   IPanel,
   IPanelItem,
   PanelEvent,
   PanelModel,
-} from 'mo/model/workbench/panel';
+} from '@allai/core/esm/model/workbench/panel';
 
-import { searchById } from 'mo/common/utils';
-import { IActionBarItemProps } from 'mo/components/actionBar';
-import { BuiltinService, IBuiltinService, LayoutService } from 'mo/services';
-import logger from 'mo/common/logger';
-import type { UniqueId } from 'mo/common/types';
+import { searchById } from '@allai/core/esm/common/utils';
+import { IActionBarItemProps } from '@allai/core/esm/components/actionBar';
+import {
+  type IBuiltinService,
+  IPanelService,
+  type ILayoutService,
+} from '@allai/core';
+import logger from '@allai/core/esm/common/logger';
+import type { UniqueId } from '@allai/core/esm/common/types';
 
-export interface IPanelService extends Component<IPanel> {
-  /**
-   * The editorInstance of Output
-   */
-  readonly outputEditorInstance: MonacoEditor.IStandaloneCodeEditor | undefined;
-  /**
-   * Set the current active panel
-   *
-   * This method will log error when couldn't find target panel in state data.
-   * So if you want to add a panel and meanwhile active it, please use the `open` method
-   * @param id target panel id
-   */
-  setActive(id: UniqueId): void;
-  /**
-   * Open a new or existing panel item as the active in Panel view
-   * @param panel
-   */
-  open(panel: IPanelItem): void;
-  /**
-   * Get the specific panel
-   * @param id
-   */
-  getPanel(id: UniqueId): IPanelItem | undefined;
-  /**
-   * Add new Panel items
-   * @param data
-   */
-  add(data: IPanelItem | IPanelItem[]): void;
-  /**
-   * Update the specific panel
-   * @param panel the id field is required
-   */
-  update(panel: IPanelItem): IPanelItem | undefined;
-  /**
-   * Update the Output panel, except the value
-   *
-   * If you want to update the value of this panel, please use the `appendOutput` method
-   * @param panel
-   */
-  updateOutput(panel: IPanelItem): IPanelItem | undefined;
-  /**
-   * Remove the specific panel
-   * @param id
-   */
-  remove(id: UniqueId): IPanelItem | undefined;
-  /**
-   * Toggle the panel between maximized or normal
-   */
-  toggleMaximize(): void;
-  /**
-   * Listen to the Panel tabs onChange event
-   * @param callback
-   */
-  onTabChange(callback: (panelId: UniqueId) => void): void;
-  /**
-   * Listen to the Panel toolbar click event
-   * @param callback
-   */
-  onToolbarClick(
-    callback: (e: React.MouseEvent, item: IActionBarItemProps) => void
-  ): void;
-  /**
-   * Listen to the Panel tabs close event
-   * @param callback
-   */
-  onTabClose(callback: (panelId: UniqueId) => void): void;
-  /**
-   * Get the value of Output Panel
-   */
-  getOutputValue(): string;
-  /**
-   * Append the content into Output panel
-   * @param content
-   */
-  appendOutput(content: string): void;
-  /**
-   * Clean the Output content
-   */
-  cleanOutput(): void;
-  /**
-   * Reset data in state
-   */
-  reset(): void;
-}
-
-@singleton()
-export class PanelService extends Component<IPanel> implements IPanelService {
+@injectable()
+class PanelService extends Component<IPanel> implements IPanelService {
   protected state: IPanel;
 
-  private readonly layoutService: LayoutService;
-
-  private readonly builtinService: IBuiltinService;
-
-  constructor() {
+  constructor(
+    @inject('ILayoutService') private layoutService: ILayoutService,
+    @inject('IBuiltinService') private builtinService: IBuiltinService
+  ) {
     super();
     this.state = container.resolve(PanelModel);
-    this.layoutService = container.resolve(LayoutService);
-    this.builtinService = container.resolve(BuiltinService);
   }
 
   private updateOutputProperty(
@@ -124,7 +39,12 @@ export class PanelService extends Component<IPanel> implements IPanelService {
   ): IPanelItem | undefined {
     const { PANEL_OUTPUT } = this.builtinService.getConstants();
     const truthData = pickBy(data, (item) => item !== undefined);
-    return this.update(Object.assign(this.getPanel(PANEL_OUTPUT!), truthData));
+    const panel = this.getPanel(PANEL_OUTPUT!);
+    if (panel) {
+      const updatedPanel = { ...panel, ...truthData };
+      return this.update(updatedPanel);
+    }
+    return undefined;
   }
 
   public get outputEditorInstance() {
@@ -297,3 +217,5 @@ export class PanelService extends Component<IPanel> implements IPanelService {
     this.subscribe(PanelEvent.onTabClose, callback);
   }
 }
+
+export default PanelService;

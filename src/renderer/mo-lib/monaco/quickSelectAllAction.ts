@@ -1,12 +1,11 @@
-import 'reflect-metadata';
-import { container } from 'tsyringe';
-
-import { localize } from 'mo/i18n/localize';
-import { EditorService, IEditorService } from 'mo/services';
-import { constants } from 'mo/services/builtinService/const';
-import { KeyMod, KeyCode } from 'mo/monaco';
-import { KeybindingWeight } from 'mo/monaco/common';
-import { Action2 } from 'mo/monaco/action';
+/* eslint-disable import/prefer-default-export */
+import { localize } from '@allai/core/esm/i18n/localize';
+import { IEditorService } from '@allai/core/esm/services';
+import { constants } from '@allai/core/esm/services/builtinService/const';
+import { KeyMod, KeyCode } from '@allai/core/esm/monaco';
+import { KeybindingWeight } from '@allai/core/esm/monaco/common';
+import { Action2 } from '@allai/core/esm/monaco/action';
+import { DIService } from '@allai/core/esm/DIService';
 
 export class QuickSelectAllAction extends Action2 {
   static readonly ID = constants.ACTION_QUICK_SELECT_ALL;
@@ -33,7 +32,7 @@ export class QuickSelectAllAction extends Action2 {
         primary: KeyMod.CtrlCmd | KeyCode.KeyA,
       },
     });
-    this.editorService = container.resolve(EditorService);
+    this.editorService = DIService.get<IEditorService>('IEditorService');
   }
 
   selectEditorAll() {

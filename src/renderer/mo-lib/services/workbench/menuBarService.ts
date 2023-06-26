@@ -1,59 +1,19 @@
 import 'reflect-metadata';
 import { cloneDeep } from 'lodash';
-import type { UniqueId } from 'mo/common/types';
+import { container, injectable } from 'tsyringe';
+import type { UniqueId } from '@allai/core/esm/common/types';
 import {
   IMenuBar,
   IMenuBarItem,
   MenuBarModel,
   MenuBarEvent,
-} from 'mo/model/workbench/menuBar';
-import { Component } from 'mo/react';
-import { singleton, container } from 'tsyringe';
-import logger from 'mo/common/logger';
+} from '@allai/core/esm/model/workbench/menuBar';
+import { Component } from '@allai/core/esm/react';
+import logger from '@allai/core/esm/common/logger';
+import { IMenuBarService } from '@allai/core';
 
-export interface IMenuBarService extends Component<IMenuBar> {
-  /**
-   * Set the menus data
-   * @param data
-   */
-  setMenus(data: IMenuBarItem[]): void;
-  /**
-   * Append a new menu into the specific menu found by `parentId`
-   * @param menuItem the new menu
-   * @param parentId
-   */
-  append(menuItem: IMenuBarItem, parentId: UniqueId): void;
-  /**
-   * Remove the specific menu item
-   * @param menuId
-   */
-  remove(menuId: UniqueId): void;
-  /**
-   * Get the specific menu item
-   * @param menuId
-   */
-  getMenuById(menuId: UniqueId): IMenuBarItem | undefined;
-  /**
-   * Update the specific menu item data
-   * @param menuId
-   * @param menuItem
-   */
-  update(menuId: UniqueId, menuItem: IMenuBarItem): void;
-  /**
-   * Reset menu bar data;
-   */
-  reset(): void;
-  /**
-   * listen to the onSelect event in menu
-   * @param menuId
-   */
-  onSelect(callback: (menuId: UniqueId) => void): void;
-}
-@singleton()
-export class MenuBarService
-  extends Component<IMenuBar>
-  implements IMenuBarService
-{
+@injectable()
+class MenuBarService extends Component<IMenuBar> implements IMenuBarService {
   protected state: IMenuBar;
 
   private sperator = '-';
@@ -170,3 +130,4 @@ export class MenuBarService
     this.subscribe(MenuBarEvent.onSelect, callback);
   };
 }
+export default MenuBarService;

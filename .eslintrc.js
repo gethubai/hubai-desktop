@@ -19,6 +19,13 @@ module.exports = {
     'promise/always-return': 'off',
     'react/state-in-constructor': 'off',
     'no-empty-function': 'off',
+    'react/no-unused-class-component-methods': 'off',
+    'react/no-access-state-in-setstate': 'off',
+    'react/sort-comp': 'off',
+    'react/no-unused-state': 'off',
+    'react/destructuring-assignment': 'off',
+    'react/jsx-props-no-spreading': 'off',
+    'import/prefer-default-export ': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

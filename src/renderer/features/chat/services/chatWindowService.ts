@@ -1,7 +1,6 @@
 /* eslint-disable react/no-unused-state */
 /* eslint-disable react/sort-comp */
 /* eslint-disable react/no-unused-class-component-methods */
-import { Component } from 'mo/react';
 import { ChatBrain, ChatModel } from 'api-server/chat/domain/models/chat';
 import {
   ChatMessageModel,
@@ -13,6 +12,7 @@ import {
   BrainManagementService,
   IBrainManagementService,
 } from 'renderer/features/brain/services/brainManagement';
+import { Component } from '@allai/core/esm/react';
 import {
   ChatWindowMessage,
   ChatWindowStateModel,

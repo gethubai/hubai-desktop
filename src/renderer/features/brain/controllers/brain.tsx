@@ -1,40 +1,35 @@
 import React from 'react';
-import { Controller, connect } from 'mo/react';
-import { container, singleton } from 'tsyringe';
 import {
-  ActivityBarService,
-  EditorService,
-  IActivityBarService,
-  IEditorService,
-  ISidebarService,
-  SidebarService,
-} from 'mo/services';
-import { IActivityBarItem } from 'mo/model';
+  react,
+  Controller,
+  type IActivityBarService,
+  type IEditorService,
+  type ISidebarService,
+  IActivityBarItem,
+} from '@allai/core';
+import { container, inject, injectable } from 'tsyringe';
 import { IBrainController } from './type';
 import { BrainManagementService } from '../services/brainManagement';
 import BrainSidebar from '../workbench/brainSidebar';
 import { BrainEvent, LocalBrainViewModel } from '../models/brain';
 import LocalBrainWindow from '../workbench/localBrainWindow';
 
-@singleton()
+const { connect } = react;
+
+@injectable()
 export default class BrainController
   extends Controller
   implements IBrainController
 {
-  private readonly sideBarService: ISidebarService;
-
-  private readonly activityBarService: IActivityBarService;
-
-  private readonly editorService: IEditorService;
-
   private readonly brainService: BrainManagementService;
 
-  constructor() {
+  constructor(
+    @inject('ISidebarService') private sideBarService: ISidebarService,
+    @inject('IActivityBarService')
+    private activityBarService: IActivityBarService,
+    @inject('IEditorService') private editorService: IEditorService
+  ) {
     super();
-
-    this.sideBarService = container.resolve(SidebarService);
-    this.activityBarService = container.resolve(ActivityBarService);
-    this.editorService = container.resolve(EditorService);
     this.brainService = container.resolve(BrainManagementService);
   }
 

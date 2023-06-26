@@ -1,20 +1,18 @@
-import 'reflect-metadata';
-import { container } from 'tsyringe';
+/* eslint-disable import/prefer-default-export */
 import { ServicesAccessor } from 'monaco-editor/esm/vs/platform/instantiation/common/instantiation';
 import { KeyChord } from 'monaco-editor/esm/vs/base/common/keyCodes';
 
-import { localize } from 'mo/i18n/localize';
+import { localize } from '@allai/core/esm/i18n/localize';
 import {
-  ILayoutService,
-  IMenuBarService,
-  LayoutService,
-  MenuBarService,
-} from 'mo/services';
+  type ILayoutService,
+  type IMenuBarService,
+} from '@allai/core/esm/services';
 
-import { KeyMod, KeyCode } from 'mo/monaco';
-import { constants } from 'mo/services/builtinService/const';
-import { Action2 } from 'mo/monaco/action';
-import { CATEGORIES, KeybindingWeight } from 'mo/monaco/common';
+import { KeyMod, KeyCode } from '@allai/core/esm/monaco';
+import { constants } from '@allai/core/esm/services/builtinService/const';
+import { Action2 } from '@allai/core/esm/monaco/action';
+import { CATEGORIES, KeybindingWeight } from '@allai/core/esm/monaco/common';
+import { DIService } from '@allai/core/esm/DIService';
 
 export class QuickTogglePanelAction extends Action2 {
   static readonly ID = constants.MENU_VIEW_PANEL;
@@ -41,8 +39,8 @@ export class QuickTogglePanelAction extends Action2 {
         primary: KeyChord(KeyMod.CtrlCmd | KeyCode.KeyJ),
       },
     });
-    this.layoutService = container.resolve(LayoutService);
-    this.menuBarService = container.resolve(MenuBarService);
+    this.layoutService = DIService.get<ILayoutService>('ILayoutService');
+    this.menuBarService = DIService.get<IMenuBarService>('IMenuBarService');
   }
 
   run(accessor: ServicesAccessor) {

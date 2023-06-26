@@ -1,13 +1,16 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import { getBEMElement, prefixClaName } from 'mo/common/className';
-import { IMenuBar, IMenuBarItem } from 'mo/model/workbench/menuBar';
-import { IMenuBarController } from 'mo/controller/menuBar';
-import { DropDown, DropDownRef } from 'mo/components/dropdown';
-import { IMenuProps, Menu } from 'mo/components/menu';
-import { Icon } from 'mo/components/icon';
-import { KeybindingHelper } from 'mo/services/keybinding';
-import { MenuBarMode } from 'mo/model/workbench/layout';
-import { HorizontalView } from './horizontalView';
+import { getBEMElement, prefixClaName } from '@allai/core/esm/common/className';
+import {
+  IMenuBar,
+  IMenuBarItem,
+} from '@allai/core/esm/model/workbench/menuBar';
+import { DropDown, DropDownRef } from '@allai/core/esm/components/dropdown';
+import { IMenuProps, Menu } from '@allai/core/esm/components/menu';
+import { Icon } from '@allai/core/esm/components/icon';
+import { KeybindingHelper } from '@allai/core/esm/services/keybinding';
+import { MenuBarMode } from '@allai/core/esm/model/workbench/layout';
+import { HorizontalView } from '@allai/core/esm/workbench/menuBar/horizontalView';
+import { IMenuBarController } from 'mo/controllers';
 
 export const defaultClassName = prefixClaName('menuBar');
 export const actionClassName = getBEMElement(defaultClassName, 'action');

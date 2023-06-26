@@ -1,7 +1,8 @@
-import { localize } from 'mo/i18n/localize';
-import { constants } from 'mo/services/builtinService/const';
-import { KeybindingHelper } from 'mo/services/keybinding';
 import { useEffect, useState } from 'react';
+
+import { localize } from '@allai/core/esm/i18n/localize';
+import { constants } from '@allai/core/esm/services/builtinService/const';
+import { KeybindingHelper } from '@allai/core/esm/services/keybinding';
 
 const KEYBINDINGS = () => [
   {
@@ -18,7 +19,7 @@ const KEYBINDINGS = () => [
   },
 ];
 
-export const useGetKeys = () => {
+const useGetKeys = () => {
   const [keys, setKeys] = useState<
     {
       keybindings: string;
@@ -52,3 +53,5 @@ export const useGetKeys = () => {
 
   return keys;
 };
+
+export default useGetKeys;

@@ -1,12 +1,16 @@
-import 'reflect-metadata';
-import { container } from 'tsyringe';
-
-import { localize } from 'mo/i18n/localize';
-import { KeyMod, KeyCode, Uri, editor as MonacoEditor } from 'mo/monaco';
-import { EditorService, IEditorService } from 'mo/services';
-import { KeybindingWeight } from 'mo/monaco/common';
-import { Action2 } from 'mo/monaco/action';
-import { constants } from 'mo/services/builtinService/const';
+/* eslint-disable import/prefer-default-export */
+import { localize } from '@allai/core/esm/i18n/localize';
+import {
+  KeyMod,
+  KeyCode,
+  Uri,
+  editor as MonacoEditor,
+} from '@allai/core/esm/monaco';
+import { IEditorService } from '@allai/core/esm/services';
+import { KeybindingWeight } from '@allai/core/esm/monaco/common';
+import { Action2 } from '@allai/core/esm/monaco/action';
+import { constants } from '@allai/core/esm/services/builtinService/const';
+import { DIService } from '@allai/core/esm/DIService';
 
 export class QuickRedo extends Action2 {
   static readonly ID = constants.ACTION_QUICK_REDO;
@@ -34,7 +38,7 @@ export class QuickRedo extends Action2 {
         primary: KeyMod.CtrlCmd | KeyMod.Shift | KeyCode.KeyZ,
       },
     });
-    this.editorService = container.resolve(EditorService);
+    this.editorService = DIService.get<IEditorService>('IEditorService');
   }
 
   isTextdom(ele: Element): ele is HTMLInputElement {

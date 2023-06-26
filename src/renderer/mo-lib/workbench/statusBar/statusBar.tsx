@@ -1,20 +1,26 @@
-import React, { useEffect, useCallback } from 'react';
-import { IStatusBar, IStatusBarItem } from 'mo/model/workbench/statusBar';
-import { mergeFunctions } from 'mo/common/utils';
-import { IStatusBarController } from 'mo/controller/statusBar';
-import { useContextMenu } from 'mo/components/contextMenu';
-import { IMenuItemProps, Menu } from 'mo/components/menu';
-import { ID_STATUS_BAR } from 'mo/common/id';
-import { select } from 'mo/common/dom';
+import React, { useCallback, useEffect } from 'react';
+import {
+  IStatusBar,
+  IStatusBarController,
+  IStatusBarItem,
+  StatusItem,
+} from '@allai/core';
+import {
+  IMenuItemProps,
+  Menu,
+  useContextMenu,
+} from '@allai/core/esm/components';
+import { mergeFunctions } from '@allai/core/esm/common/utils';
+import { select } from '@allai/core/esm/common/dom';
 import {
   leftItemsClassName,
   rightItemsClassName,
   sortByIndex,
   statusBarClassName,
-} from './base';
-import { StatusItem } from './item';
+} from '@allai/core/esm/workbench/statusBar/base';
+import { ID_STATUS_BAR } from '@allai/core/esm/common/id';
 
-export function StatusBar(props: IStatusBar & IStatusBarController) {
+function StatusBar(props: IStatusBar & IStatusBarController) {
   const {
     leftItems = [],
     contextMenu = [],
@@ -23,7 +29,7 @@ export function StatusBar(props: IStatusBar & IStatusBarController) {
     rightItems = [],
   } = props;
 
-  let contextViewMenu;
+  let contextViewMenu: any;
   const onClickMenuItem = useCallback(
     (e: React.MouseEvent, item: IMenuItemProps | undefined) => {
       onContextMenuClick?.(e, item);
@@ -65,3 +71,5 @@ export function StatusBar(props: IStatusBar & IStatusBarController) {
     </div>
   );
 }
+
+export default StatusBar;

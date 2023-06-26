@@ -1,3 +1,4 @@
+/* Do not remove these imports or the ModuleFederation will break, since it uses these libraries on the shared */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import router from 'react-router-dom';

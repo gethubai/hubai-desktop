@@ -1,80 +1,28 @@
-import { IActionBarItemProps, IMenuItemProps, ITabProps } from 'mo/components';
-import { IEditor, IEditorTab } from 'mo/model';
-import { EditorTreeEvent } from 'mo/model/workbench/explorer/editorTree';
-import { Component } from 'mo/react';
-import { EditorService } from 'mo/services';
-import { container, singleton } from 'tsyringe';
-import { UniqueId } from 'mo/common/types';
+import {
+  IActionBarItemProps,
+  IMenuItemProps,
+  ITabProps,
+} from '@allai/core/esm/components';
+import { EditorTreeEvent } from '@allai/core/esm/model/workbench/explorer/editorTree';
+import { Component } from '@allai/core/esm/react';
+import { inject, injectable } from 'tsyringe';
+import { UniqueId } from '@allai/core/esm/common/types';
+import {
+  IEditorTreeService,
+  type IEditorService,
+  IEditor,
+  IEditorTab,
+} from '@allai/core';
 
-export interface IEditorTreeService extends Component<IEditor> {
-  /**
-   * Callabck for close a certain tab
-   * @param callback
-   */
-  onClose(callback: (tabId: UniqueId, groupId: UniqueId) => void): void;
-  /**
-   * Callback for close others tabs except this tabItem
-   * @param callback
-   */
-  onCloseOthers(
-    callback: (tabItem: IEditorTab, groupId: UniqueId) => void
-  ): void;
-  /**
-   * Callback for close saved tabs in this group
-   * @param callback
-   */
-  onCloseSaved(callback: (groupId: UniqueId) => void): void;
-  /**
-   * Callback for select tab in this group
-   * @param callback
-   */
-  onSelect(callback: (tabId: UniqueId, groupId: UniqueId) => void): void;
-  /**
-   * Callback for close all tabs
-   * When specify groupId, it'll close that group
-   * @param callback
-   */
-  onCloseAll(callback: (groupId?: UniqueId) => void): void;
-  /**
-   * Callback for save all tabs
-   * When specify groupId, it'll save that group
-   * @param callback
-   */
-  onSaveAll(callback: (groupId?: UniqueId) => void): void;
-  /**
-   * Callback for the click event from toolbar buttons, except for saving button and closing button,
-   * if you want to subscribe to the click events for these two buttons, please use the methods of `onSaveAll` and `onCloseAll`
-   * @param callback
-   */
-  onToolbarClick(
-    callback: (toolbar: IActionBarItemProps, groupId?: UniqueId) => void
-  ): void;
-  /**
-   * Callback for adjust editor layout
-   * @param callback
-   */
-  onLayout(callback: () => void): void;
-  /**
-   * Callback for context menu click event which isn't in buit-in menus
-   * @param callback
-   */
-  onContextMenu(
-    callback: (menu: IMenuItemProps, file: ITabProps, groupId: UniqueId) => void
-  ): void;
-}
-
-@singleton()
-export class EditorTreeService
+@injectable()
+class EditorTreeService
   extends Component<IEditor>
   implements IEditorTreeService
 {
   protected state: IEditor;
 
-  private readonly editorService: EditorService;
-
-  constructor() {
+  constructor(@inject('IEditorService') private editorService: IEditorService) {
     super();
-    this.editorService = container.resolve(EditorService);
     this.state = this.editorService.getState();
   }
 
@@ -120,3 +68,5 @@ export class EditorTreeService
     this.subscribe(EditorTreeEvent.onContextMenu, callback);
   }
 }
+
+export default EditorTreeService;

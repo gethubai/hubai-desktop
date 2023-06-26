@@ -1,50 +1,18 @@
-import 'reflect-metadata';
 import React from 'react';
-import { container, singleton } from 'tsyringe';
-import { Component } from 'mo/react/component';
+import { container, injectable } from 'tsyringe';
+import { Component } from '@allai/core/esm/react/component';
 import {
   AuxiliaryEventKind,
   AuxiliaryModel,
   IAuxiliaryBar,
   IAuxiliaryBarMode,
   IAuxiliaryData,
-} from 'mo/model';
-import type { UniqueId } from 'mo/common/types';
+} from '@allai/core/esm/model';
+import type { UniqueId } from '@allai/core/esm/common/types';
+import { IAuxiliaryBarService } from '@allai/core';
 
-export interface IAuxiliaryBarService extends Component<IAuxiliaryBar> {
-  /**
-   * Get the current tab
-   */
-  getCurrentTab(): IAuxiliaryData | undefined;
-  addAuxiliaryBar(tabs: IAuxiliaryData[] | IAuxiliaryData): void;
-  /**
-   * Set the active one on data
-   */
-  setActive(current: UniqueId | undefined): void;
-  /**
-   * Set the mode of auxiliary bar
-   */
-  setMode: (
-    mode:
-      | IAuxiliaryBarMode
-      | ((preState: IAuxiliaryBarMode) => IAuxiliaryBarMode)
-  ) => IAuxiliaryBarMode;
-  /**
-   * Set the children of auxiliary bar
-   */
-  setChildren: (children: React.ReactNode) => void;
-  /**
-   * Called when auxiliary tab title clicked
-   */
-  onTabClick: (callback: (key: UniqueId) => void) => void;
-  /**
-   * Reset all states
-   */
-  reset: () => void;
-}
-
-@singleton()
-export class AuxiliaryBarService
+@injectable()
+class AuxiliaryBarService
   extends Component<IAuxiliaryBar>
   implements IAuxiliaryBarService
 {
@@ -54,12 +22,6 @@ export class AuxiliaryBarService
     super();
     this.state = container.resolve(AuxiliaryModel);
   }
-
-  getCurrentTab = () => {
-    const { current, data } = this.getState();
-    const tab = data?.find((item) => item.key === current);
-    return tab;
-  };
 
   addAuxiliaryBar = (tabs: IAuxiliaryData | IAuxiliaryData[]) => {
     const next = Array.isArray(tabs) ? tabs : [tabs];
@@ -106,4 +68,12 @@ export class AuxiliaryBarService
   public onTabClick(callback: (key: UniqueId) => void) {
     this.subscribe(AuxiliaryEventKind.onTabClick, callback);
   }
+
+  getCurrentTab = () => {
+    const { current, data } = this.getState();
+    const tab = data?.find((item) => item.key === current);
+    return tab;
+  };
 }
+
+export default AuxiliaryBarService;

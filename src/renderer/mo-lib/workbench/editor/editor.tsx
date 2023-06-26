@@ -1,14 +1,14 @@
 import React, { memo } from 'react';
-import SplitPane from 'mo/components/split';
-import Pane from 'mo/components/split/pane';
-import { IEditor, IEditorGroup } from 'mo/model';
+import SplitPane from '@allai/core/esm/components/split';
+import Pane from '@allai/core/esm/components/split/pane';
+import { IEditor, IEditorGroup } from '@allai/core/esm/model';
 
-import { IEditorController } from 'mo/controller/editor';
-import type { UniqueId } from 'mo/common/types';
-import { ILayout } from 'mo/model/workbench/layout';
-import EditorGroup from './group';
+import { IEditorController } from '@allai/core/esm/controller/editor';
+import type { UniqueId } from '@allai/core/esm/common/types';
+import { ILayout } from '@allai/core/esm/model/workbench/layout';
+import EditorGroup from '@allai/core/esm/workbench/editor/group';
+import { defaultEditorClassName } from '@allai/core/esm/workbench/editor/base';
 import Welcome from './welcome';
-import { defaultEditorClassName } from './base';
 
 export function Editor(
   props: { editor?: IEditor; layout?: ILayout } & IEditorController

@@ -1,24 +1,20 @@
-import 'reflect-metadata';
-import { container } from 'tsyringe';
+/* eslint-disable import/prefer-default-export */
 import { ServicesAccessor } from 'monaco-editor/esm/vs/platform/instantiation/common/instantiation';
 import { KeyChord } from 'monaco-editor/esm/vs/base/common/keyCodes';
 
-import { localize } from 'mo/i18n/localize';
-import { KeyMod, KeyCode } from 'mo/monaco';
+import { localize } from '@allai/core/esm/i18n/localize';
+import { KeyMod, KeyCode } from '@allai/core/esm/monaco';
 import {
-  ActivityBarService,
   IActivityBarService,
-  ILayoutService,
+  type ILayoutService,
   IMenuBarService,
-  ISidebarService,
-  LayoutService,
-  MenuBarService,
-  SidebarService,
-} from 'mo/services';
-import { ID_SIDE_BAR } from 'mo/common/id';
-import type { UniqueId } from 'mo/common/types';
-import { Action2 } from 'mo/monaco/action';
-import { CATEGORIES, KeybindingWeight } from 'mo/monaco/common';
+  type ISidebarService,
+} from '@allai/core/esm/services';
+import { ID_SIDE_BAR } from '@allai/core/esm/common/id';
+import type { UniqueId } from '@allai/core/esm/common/types';
+import { Action2 } from '@allai/core/esm/monaco/action';
+import { CATEGORIES, KeybindingWeight } from '@allai/core/esm/monaco/common';
+import { DIService } from '@allai/core/esm/DIService';
 
 export class CommandQuickSideBarViewAction extends Action2 {
   static readonly ID = ID_SIDE_BAR;
@@ -28,13 +24,13 @@ export class CommandQuickSideBarViewAction extends Action2 {
     'Toggle Side Bar Visibility'
   );
 
-  private readonly layoutService: ILayoutService;
+  private readonly sideBarService: ISidebarService;
 
-  private readonly activityBarService: IActivityBarService;
+  private readonly layoutService: ILayoutService;
 
   private readonly menuBarService: IMenuBarService;
 
-  private readonly sideBarService: ISidebarService;
+  private readonly activityBarService: IActivityBarService;
 
   private _preActivityBar: UniqueId | undefined;
 
@@ -54,10 +50,12 @@ export class CommandQuickSideBarViewAction extends Action2 {
         primary: KeyChord(KeyMod.CtrlCmd | KeyCode.KeyB),
       },
     });
-    this.layoutService = container.resolve(LayoutService);
-    this.activityBarService = container.resolve(ActivityBarService);
-    this.menuBarService = container.resolve(MenuBarService);
-    this.sideBarService = container.resolve(SidebarService);
+    this.layoutService = DIService.get<ILayoutService>('ILayoutService');
+    this.menuBarService = DIService.get<IMenuBarService>('IMenuBarService');
+    this.activityBarService = DIService.get<IActivityBarService>(
+      'IActivityBarService'
+    );
+    this.sideBarService = DIService.get<ISidebarService>('ISidebarService');
   }
 
   run(accessor: ServicesAccessor, ...args) {

@@ -1,5 +1,5 @@
+import { IActionBarItemProps } from '@allai/core/esm/components';
 import { LocalBrainModel } from 'api-server/brain/domain/models/localBrain';
-import { IActionBarItemProps } from 'mo/components';
 
 export enum BrainEvent {
   onBrainSettingsUpdated = 'brain.onSettingsUpdated',

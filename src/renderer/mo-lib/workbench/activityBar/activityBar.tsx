@@ -1,21 +1,26 @@
 import React, { useCallback } from 'react';
-import { IActivityMenuItemProps } from 'mo/model';
-import { IMenuItemProps, Menu } from 'mo/components/menu';
-import { ID_ACTIVITY_BAR } from 'mo/common/id';
-import { IActivityBar, IActivityBarItem } from 'mo/model/workbench/activityBar';
 
-import { Scrollbar, useContextViewEle } from 'mo/components';
-import { IActivityBarController } from 'mo/controller/activityBar';
-
-import { UniqueId } from 'mo/common/types';
+import {
+  ActivityBarItem,
+  IActivityBar,
+  IActivityBarController,
+  IActivityBarItem,
+  type UniqueId,
+} from '@allai/core';
+import { ID_ACTIVITY_BAR } from '@allai/core/esm/common/id';
+import {
+  IMenuItemProps,
+  Menu,
+  Scrollbar,
+  useContextViewEle,
+} from '@allai/core/esm/components';
 import {
   containerClassName,
   defaultClassName,
   globalItemsClassName,
   itemClassName,
   normalItemsClassName,
-} from './base';
-import { ActivityBarItem } from './activityBarItem';
+} from '@allai/core/esm/workbench/activityBar/base';
 
 export function ActivityBar(props: IActivityBar & IActivityBarController) {
   const {

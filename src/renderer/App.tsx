@@ -1,9 +1,10 @@
 import 'reflect-metadata';
 import React from 'react';
-import './settings/electronSettingsStore';
 import './dependencyInjection';
-import { create, Workbench } from 'mo';
-import './mo-lib/style/mo.scss';
+import './settings/electronSettingsStore';
+import { create } from 'mo';
+import { Workbench } from 'mo/workbench/workbench';
+import '@allai/core/esm/style/mo.css';
 
 const moInstance = create({ extensions: [] });
 

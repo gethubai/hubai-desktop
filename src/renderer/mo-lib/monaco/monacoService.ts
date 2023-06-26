@@ -1,5 +1,4 @@
-import 'reflect-metadata';
-import { singleton } from 'tsyringe';
+import { injectable } from 'tsyringe';
 import { editor as MonacoEditor } from 'monaco-editor';
 
 import {
@@ -35,23 +34,10 @@ import { ILayoutService } from 'monaco-editor/esm/vs/platform/layout/browser/lay
 import { ServiceCollection } from 'monaco-editor/esm/vs/platform/instantiation/common/serviceCollection';
 import { IModeService } from 'monaco-editor/esm/vs/editor/common/services/modeService.js';
 import { IModelService } from 'monaco-editor/esm/vs/editor/common/services/modelService.js';
+import { IMonacoService } from '@allai/core/esm/monaco/monacoService';
 
-export interface IMonacoService {
-  readonly services: ServiceCollection;
-  readonly commandService: ICommandService;
-  readonly container: HTMLElement | null;
-  create(
-    domElement: HTMLElement,
-    options?: IStandaloneEditorConstructionOptions,
-    overrides?: IEditorOverrideServices
-  ): MonacoEditor.IStandaloneCodeEditor;
-  /**
-   * Initial the Workspace, like Services and editor config.
-   */
-  initWorkspace(container: HTMLElement): void;
-}
-@singleton()
-export class MonacoService implements IMonacoService {
+@injectable()
+class MonacoService implements IMonacoService {
   private _services: ServiceCollection;
 
   private simpleEditorModelResolverService: SimpleEditorModelResolverService | null =
@@ -161,3 +147,5 @@ export class MonacoService implements IMonacoService {
     return services;
   }
 }
+
+export default MonacoService;

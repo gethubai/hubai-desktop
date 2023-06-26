@@ -1,6 +1,5 @@
-import * as molecule from './molecule.api';
+import * as molecule from './core.api';
 
-export { Workbench } from 'mo/workbench/workbench';
 export { create } from 'mo/provider';
 
 export { molecule };

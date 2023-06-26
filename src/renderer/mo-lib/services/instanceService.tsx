@@ -1,34 +1,12 @@
 import { ReactElement } from 'react';
-import { ILocale } from 'mo/i18n';
 import { container } from 'tsyringe';
-import type { Controller } from 'mo/react';
-import { defaultExtensions } from 'mo/extensions';
-import { GlobalEvent } from 'mo/common/event';
-import { IConfigProps } from 'mo/provider/create';
-import { IExtension } from 'mo/model';
-import { STORE_KEY } from 'mo/i18n/localeService';
 import molecule from 'mo';
-import {
-  ActivityBarController,
-  AuxiliaryController,
-  EditorController,
-  EditorTreeController,
-  ExplorerController,
-  ExtensionController,
-  FolderTreeController,
-  LayoutController,
-  MenuBarController,
-  NotificationController,
-  OutlineController,
-  PanelController,
-  ProblemsController,
-  SearchController,
-  SettingsController,
-  SidebarController,
-  StatusBarController,
-} from 'mo/controller';
-import ChatController from 'renderer/features/chat/controllers/chat';
-import BrainController from 'renderer/features/brain/controllers/brain';
+import { ILocale, IExtension } from '@allai/core';
+import type { Controller } from '@allai/core/esm/react';
+import { GlobalEvent } from '@allai/core/esm/common/event';
+import { STORE_KEY } from '@allai/core/esm/i18n/localeService';
+import { IConfigProps } from 'mo/provider/create';
+import { defaultExtensions } from '../extensions';
 
 interface IInstanceServiceProps {
   getConfig: () => IConfigProps;
@@ -91,29 +69,29 @@ export default class InstanceService
       this.initialLocaleService(languages);
 
       const controllers = [
-        ActivityBarController,
-        AuxiliaryController,
-        EditorController,
+        'IActivityBarController',
+        'IAuxiliaryController',
+        'IEditorController',
         /**
          * Explorer should called before EditorTreeController,
          * @refer https://github.com/DTStack/molecule/issues/829
          */
-        ExplorerController,
-        EditorTreeController,
-        ExtensionController,
-        FolderTreeController,
-        LayoutController,
-        MenuBarController,
-        NotificationController,
-        OutlineController,
-        PanelController,
-        ProblemsController,
-        SearchController,
-        SettingsController,
-        SidebarController,
-        StatusBarController,
-        ChatController,
-        BrainController,
+        'IExplorerController',
+        'IEditorTreeController',
+        'IExtensionController',
+        'IFolderTreeController',
+        'ILayoutController',
+        'IMenuBarController',
+        'INotificationController',
+        'IOutlineController',
+        'IPanelController',
+        'IProblemsController',
+        'ISearchController',
+        'ISettingsController',
+        'ISidebarController',
+        'IStatusBarController',
+        'IChatController',
+        'IBrainController',
       ];
 
       // resolve all controllers, and call `initView` to inject initial values into services

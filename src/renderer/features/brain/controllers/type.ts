@@ -1,4 +1,4 @@
-import { Controller } from 'mo/react/controller';
+import { Controller } from '@allai/core';
 import { LocalBrainViewModel } from '../models/brain';
 
 export interface IBrainController extends Partial<Controller> {

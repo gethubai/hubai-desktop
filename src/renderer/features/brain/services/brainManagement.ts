@@ -1,12 +1,12 @@
 /* eslint-disable react/no-unused-class-component-methods */
 /* eslint-disable react/destructuring-assignment */
-import { Component } from 'mo/react';
+import { type ISettingsService } from '@allai/core';
 import { LocalBrainModel } from 'api-server/brain/domain/models/localBrain';
-import { container, singleton } from 'tsyringe';
-import { ISettingsService, SettingsService } from 'mo/services';
+import { container, inject, injectable, singleton } from 'tsyringe';
 import makeSaveLocalBrainSettings from 'api-server/brain/factories/usecases/saveLocalBrainSettingsFactory';
 import makeLoadLocalBrains from 'api-server/brain/factories/usecases/loadLocalBrainsFactory';
-import { BrainEvent, BrainStateModel, IBrainState } from '../models/brain';
+import { Component } from '@allai/core/esm/react';
+import { BrainEvent, BrainStateModel, type IBrainState } from '../models/brain';
 
 export interface IBrainManagementService extends Component<IBrainState> {
   getBrains(): LocalBrainModel[];
@@ -17,20 +17,19 @@ export interface IBrainManagementService extends Component<IBrainState> {
 }
 
 @singleton()
+@injectable()
 export class BrainManagementService
   extends Component<IBrainState>
   implements IBrainManagementService
 {
   protected state: IBrainState;
 
-  private readonly settingsService: ISettingsService;
-
-  constructor() {
+  constructor(
+    @inject('ISettingsService') private settingsService: ISettingsService
+  ) {
     super();
     this.state = container.resolve(BrainStateModel);
-    this.settingsService = container.resolve(SettingsService);
     this.onBrainSettingsUpdated(this.saveBrainSettings.bind(this));
-
     this.loadBrains();
   }
 

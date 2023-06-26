@@ -1,16 +1,14 @@
-import { ExtendsFolderTree } from './folderTree';
-import { ExtendsActivityBar } from './activityBar';
-import { ExtendsPanel } from './panel';
-import { ExtendsExplorer } from './explorer';
-import { ExtendsEditorTree } from './editorTree';
-import { ExtendsLocales } from './locales-defaults';
+/* eslint-disable import/prefer-default-export */
 
-import { defaultColorThemeExtension } from './theme-defaults';
-import { monokaiColorThemeExtension } from './theme-monokai';
-import { paleNightColorThemeExtension } from './vscode-palenight-theme';
-import { webStormIntelliJExtension } from './vscode-intellij-darcula-theme-master';
-import { githubPlusExtension } from './github-plus-theme-master';
-import { ExtendsEditor } from './editor';
+import ExtendsFolderTree from './folderTree';
+// import { ExtendsActivityBar } from './activityBar';
+import ExtendsPanel from './panel';
+import ExtendsExplorer from './explorer';
+import ExtendsEditorTree from './editorTree';
+import { ExtendsLocales } from './locales-defaults';
+// import { githubPlusExtension } from './github-plus-theme-master';
+import ExtendsEditor from './editor';
+import { ExtendsActivityBar } from './activityBar';
 
 /**
  * Default extensions
@@ -20,12 +18,12 @@ export const defaultExtensions = [
   ExtendsEditor,
   ExtendsActivityBar,
   ExtendsExplorer,
-  // ExtendsEditorTree,
+  ExtendsEditorTree,
   ExtendsLocales,
   // defaultColorThemeExtension,
   // monokaiColorThemeExtension,
   // paleNightColorThemeExtension,
   // webStormIntelliJExtension,
-  githubPlusExtension,
-  // ExtendsFolderTree,
+  // githubPlusExtension,
+  ExtendsFolderTree,
 ];

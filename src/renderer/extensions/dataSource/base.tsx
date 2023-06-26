@@ -3,9 +3,9 @@ import {
   type IEditorTab,
   type ISidebarPane,
   type IMenuBarItem,
-} from 'mo/model';
+} from '@allai/core';
 import molecule from 'mo';
-import { localize } from 'mo/i18n/localize';
+import { localize } from '@allai/core/esm/i18n';
 import DataSourceView from './views/dataSourceSidebar';
 import CreateDataSourceView from './views/createDataSource';
 

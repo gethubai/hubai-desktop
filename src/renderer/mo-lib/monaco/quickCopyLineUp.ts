@@ -1,12 +1,12 @@
-import 'reflect-metadata';
-import { container } from 'tsyringe';
-import { localize } from 'mo/i18n/localize';
-import { KeyMod, KeyCode } from 'mo/monaco';
-import { EditorService, IEditorService } from 'mo/services';
+/* eslint-disable import/prefer-default-export */
+import { localize } from '@allai/core/esm/i18n/localize';
+import { KeyMod, KeyCode } from '@allai/core/esm/monaco';
+import { IEditorService } from '@allai/core';
 
-import { constants } from 'mo/services/builtinService/const';
-import { KeybindingWeight } from 'mo/monaco/common';
-import { Action2 } from 'mo/monaco/action';
+import { constants } from '@allai/core/esm/services/builtinService/const';
+import { KeybindingWeight } from '@allai/core/esm/monaco/common';
+import { Action2 } from '@allai/core/esm/monaco/action';
+import { DIService } from '@allai/core/esm/DIService';
 
 export class QuickCopyLineUp extends Action2 {
   static readonly ID = constants.ACTION_QUICK_COPY_LINE_UP;
@@ -34,7 +34,7 @@ export class QuickCopyLineUp extends Action2 {
         primary: KeyMod.Alt | KeyMod.Shift | KeyCode.PageUp,
       },
     });
-    this.editorService = container.resolve(EditorService);
+    this.editorService = DIService.get<IEditorService>('IEditorService');
   }
 
   run() {

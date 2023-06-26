@@ -1,6 +1,4 @@
-import 'reflect-metadata';
-import { container } from 'tsyringe';
-
+/* eslint-disable max-classes-per-file */
 import { localize } from 'monaco-editor/esm/vs/nls';
 import { DisposableStore } from 'monaco-editor/esm/vs/base/common/lifecycle';
 import { QuickCommandNLS } from 'monaco-editor/esm/vs/editor/common/standaloneStrings';
@@ -24,18 +22,21 @@ import {
 } from 'monaco-editor/esm/vs/platform/actions/common/actions';
 import { stripIcons } from 'monaco-editor/esm/vs/base/common/iconLabels';
 
-import { KeyMod, KeyCode, editor as MonacoEditor } from 'mo/monaco';
-import { EditorService, IEditorService } from 'mo/services';
-import { constants } from 'mo/services/builtinService/const';
-import { Action2 } from 'mo/monaco/action';
-import { KeybindingWeight } from 'mo/monaco/common';
-import { MonacoService } from 'mo/monaco/monacoService';
-import { registerQuickAccessProvider } from 'mo/monaco/quickAccessProvider';
+import {
+  KeyMod,
+  KeyCode,
+  editor as MonacoEditor,
+} from '@allai/core/esm/monaco';
+import { IEditorService } from '@allai/core';
+import { constants } from '@allai/core/esm/services/builtinService/const';
+import { Action2 } from '@allai/core/esm/monaco/action';
+import { KeybindingWeight } from '@allai/core/esm/monaco/common';
+import { DIService } from '@allai/core/esm/DIService';
+import { type IMonacoService } from '@allai/core/esm/monaco/monacoService';
+import { registerQuickAccessProvider } from './quickAccessProvider';
 
 export class CommandQuickAccessProvider extends AbstractEditorCommandsQuickAccessProvider {
   static PREFIX = '>';
-
-  protected readonly editorService: IEditorService | undefined;
 
   protected get activeTextEditorControl():
     | MonacoEditor.IStandaloneCodeEditor
@@ -44,8 +45,10 @@ export class CommandQuickAccessProvider extends AbstractEditorCommandsQuickAcces
   }
 
   protected static get services() {
-    return container.resolve(MonacoService).services;
+    return DIService.get<IMonacoService>('IMonacoService').services;
   }
+
+  private readonly editorService?: IEditorService;
 
   constructor() {
     super(
@@ -62,7 +65,7 @@ export class CommandQuickAccessProvider extends AbstractEditorCommandsQuickAcces
       CommandQuickAccessProvider.services.get(ITelemetryService),
       CommandQuickAccessProvider.services.get(INotificationService)
     );
-    this.editorService = container.resolve(EditorService);
+    this.editorService = DIService.get<IEditorService>('IEditorService');
   }
 
   protected async getCommandPicks(

@@ -1,29 +1,15 @@
+/* eslint-disable import/prefer-default-export */
+
 import { DisposableStore } from 'monaco-editor/esm/vs/base/common/lifecycle';
 import { ContextKeyExpr } from 'monaco-editor/esm/vs/platform/contextkey/common/contextkey';
 import { KeybindingsRegistry } from 'monaco-editor/esm/vs/platform/keybinding/common/keybindingsRegistry';
 import { CommandsRegistry } from 'monaco-editor/esm/vs/platform/commands/common/commands';
-import { ServicesAccessor } from 'monaco-editor/esm/vs/platform/instantiation/common/instantiation';
 import {
   MenuRegistry,
   MenuId,
 } from 'monaco-editor/esm/vs/platform/actions/common/actions';
-import { IDisposable } from './common';
-
-export abstract class Action2 {
-  static readonly ID: string;
-
-  constructor(
-    readonly desc: Readonly<{
-      /**
-       * Specify visible in quick access view
-       */
-      f1: boolean;
-      [key: string]: any;
-    }>
-  ) {}
-
-  abstract run(accessor: ServicesAccessor, ...args: any[]): any;
-}
+import { IDisposable } from '@allai/core/esm/monaco/common';
+import { Action2 } from '@allai/core/esm/monaco/action';
 
 export function registerAction2(Ctor: { new (): Action2 }): IDisposable {
   const disposables = new DisposableStore();
