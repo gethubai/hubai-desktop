@@ -25,7 +25,7 @@ module.exports = {
     'react/no-unused-state': 'off',
     'react/destructuring-assignment': 'off',
     'react/jsx-props-no-spreading': 'off',
-    'import/prefer-default-export ': 'off',
+    'import/prefer-default-export': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,
