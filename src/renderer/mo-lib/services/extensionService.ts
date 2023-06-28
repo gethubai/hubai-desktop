@@ -1,10 +1,20 @@
 import { container, inject, injectable } from 'tsyringe';
 import { ErrorMsg } from '@allai/core/esm/common/error';
 import {
+  AppContext,
+  AppContextServices,
   IContribute,
   IContributeType,
   IExtension,
+  ISidebarService,
   type IExtensionService,
+  IActivityBarService,
+  IMenuBarService,
+  IEditorService,
+  INotificationService,
+  IProblemsService,
+  ISettingsService,
+  ILayoutService,
 } from '@allai/core';
 import { IColorTheme } from '@allai/core/esm/model/colorTheme';
 import { type ILocaleService, ILocale } from '@allai/core/esm/i18n';
@@ -17,6 +27,7 @@ import type { UniqueId } from '@allai/core/esm/common/types';
 import { Action2 } from '@allai/core/esm/monaco/action';
 import { type IColorThemeService } from '@allai/core/esm/services/theme/colorThemeService';
 import { registerAction2 } from 'mo/monaco/action';
+import { loadComponent } from 'renderer/common/dynamicModule';
 
 @injectable()
 class ExtensionService implements IExtensionService {
@@ -54,6 +65,18 @@ class ExtensionService implements IExtensionService {
 
   public getAllExtensions(): IExtension[] {
     return this.extensions.concat();
+  }
+
+  public static async loadFromSystem(
+    extensionName: string
+  ): Promise<IExtension> {
+    const res = await loadComponent(
+      `plugins://${extensionName}`,
+      'my-plugin',
+      './Module'
+    )();
+
+    return res.default;
   }
 
   public add(extensions: IExtension[]): IExtension[] | null {
@@ -116,7 +139,7 @@ class ExtensionService implements IExtensionService {
   public activate(extensions: IExtension[]): void {
     if (extensions.length === 0) return;
 
-    const ctx = this;
+    const ctx = this.createContext();
     extensions?.forEach((extension: IExtension, index: number) => {
       // Ignore the inactive or invalid extension
       if (!extension || this.isInactive(extension)) return;
@@ -131,8 +154,24 @@ class ExtensionService implements IExtensionService {
     });
   }
 
+  private createContext(): AppContext {
+    const services = new AppContextServices(
+      container.resolve<ISidebarService>('ISidebarService'),
+      container.resolve<IActivityBarService>('IActivityBarService'),
+      container.resolve<IMenuBarService>('IMenuBarService'),
+      container.resolve<IEditorService>('IEditorService'),
+      container.resolve<INotificationService>('INotificationService'),
+      container.resolve<IColorThemeService>('IColorThemeService'),
+      container.resolve<IProblemsService>('IProblemsService'),
+      container.resolve<ISettingsService>('ISettingsService'),
+      container.resolve<IExtensionService>('IExtensionService'),
+      container.resolve<ILayoutService>('ILayoutService')
+    );
+    return new AppContext(services);
+  }
+
   public dispose(extensionId: UniqueId): void {
-    const ctx = this;
+    const ctx = this.createContext();
     const extIndex = this.extensions.findIndex(searchById(extensionId));
     if (extIndex > -1) {
       const extension: IExtension = this.extensions[extIndex];
@@ -142,8 +181,9 @@ class ExtensionService implements IExtensionService {
   }
 
   public disposeAll() {
+    const ctx = this.createContext();
     this.extensions.forEach((ext) => {
-      ext.dispose?.(this);
+      ext.dispose?.(ctx);
     });
     this.reset();
   }

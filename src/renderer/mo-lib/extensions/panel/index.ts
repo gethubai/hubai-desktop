@@ -1,10 +1,10 @@
-import { IExtension, IExtensionService } from '@allai/core';
+import { AppContext, IExtension } from '@allai/core';
 import molecule from 'mo';
 
 const ExtendsPanel: IExtension = {
   id: 'ExtendsPanel',
   name: 'Extends Panel',
-  activate(extensionCtx: IExtensionService) {
+  activate(context: AppContext) {
     molecule.panel.onTabClose((key) => {
       const { data = [], current } = molecule.panel.getState();
       if (current?.id === key) {
