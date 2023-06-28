@@ -12,6 +12,8 @@ import baseConfig from './webpack.config.base';
 import webpackPaths from './webpack.paths';
 import checkNodeEnv from '../scripts/check-node-env';
 
+const moduleFederationConfig = require('./moduleFederation');
+
 // When an ESLint server is running, we can't set the NODE_ENV so we'll check if it's
 // at the dev webpack config is not accidentally run in a production environment
 if (process.env.NODE_ENV === 'production') {
@@ -163,23 +165,8 @@ const configuration: webpack.Configuration = {
       isDevelopment: process.env.NODE_ENV !== 'production',
       nodeModules: webpackPaths.appNodeModulesPath,
     }),
-    new ModuleFederationPlugin({
-      name: 'allaiapp',
-      // library: { type: 'module' },
-      shared: {
-        'react-router-dom': {
-          singleton: true,
-          strictVersion: true,
-          requiredVersion: '6.11.2',
-        },
-        react: {
-          eager: true,
-          singleton: true,
-          strictVersion: true,
-          requiredVersion: '18.2.0',
-        },
-      },
-    }),
+
+    new ModuleFederationPlugin(moduleFederationConfig) as any,
   ],
 
   node: {
