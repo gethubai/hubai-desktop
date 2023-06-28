@@ -22,6 +22,8 @@ import log from 'electron-log';
 import { exposeIpcMainRxStorage } from 'rxdb/plugins/electron';
 import {
   createDirectoryIfNotExists,
+  getBrainsStoragePath,
+  getExtensionsStoragePath,
   getMessageAudioStoragePath,
   getMessageStoragePath,
 } from 'utils/pathUtils';
@@ -202,6 +204,9 @@ app
   .then(async () => {
     createDirectoryIfNotExists(getMessageStoragePath(''));
     createDirectoryIfNotExists(getMessageAudioStoragePath(''));
+    createDirectoryIfNotExists(getExtensionsStoragePath(''));
+    createDirectoryIfNotExists(getBrainsStoragePath(''));
+
     exposeIpcMainRxStorage({
       key: 'main-storage',
       storage: getStorage(),
@@ -209,8 +214,9 @@ app
     });
 
     protocol.registerFileProtocol('msg', (request, callback) => {
-      const url = request.url.substr(6); /* all urls start with 'msg://' */
-      const filePath = getMessageStoragePath(url);
+      const relativePath =
+        request.url.substr(6); /* all urls start with 'msg://' */
+      const filePath = getMessageStoragePath(relativePath);
       try {
         const decodedUrl = decodeURI(filePath); // Decodes the url if it is encoded
         return callback(decodedUrl);
@@ -221,12 +227,13 @@ app
     });
 
     protocol.registerFileProtocol('plugins', (request, callback) => {
-      const url = request.url.substr(10); /* all urls start with 'plugins://' */
-      const filePath = path.normalize(
-        `/Users/macbook/Documents/Work/allai/extensions/org/dist/apps/plugins/${url}`
-      );
+      const extensionRelativePath =
+        request.url.substr(10); /* all urls start with 'plugins://' */
+
+      const pluginUrl = getExtensionsStoragePath(extensionRelativePath);
+
       try {
-        const decodedUrl = decodeURI(filePath); // Decodes the url if it is encoded
+        const decodedUrl = decodeURI(pluginUrl); // Decodes the url if it is encoded
         return callback(decodedUrl);
       } catch (error) {
         // Handle the error as needed

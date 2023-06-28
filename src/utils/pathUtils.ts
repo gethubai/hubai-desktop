@@ -11,6 +11,12 @@ export const getMessageStoragePath = (append: string) =>
 export const getMessageAudioStoragePath = (append: string) =>
   getMessageStoragePath(`audio/${append}`);
 
+export const getBrainsStoragePath = (append: string) =>
+  getAppDataStoragePath(`brains/${append}`);
+
+export const getExtensionsStoragePath = (append: string) =>
+  getAppDataStoragePath(`installed-extensions/${append}`);
+
 export const createDirectoryIfNotExists = (directoryPath: string) => {
   try {
     fs.mkdirSync(directoryPath, { recursive: true });
