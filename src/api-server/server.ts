@@ -73,7 +73,7 @@ httpServer.listen(port, async () => {
       };
 
       const brainServer: IBrainServer = new TcpBrainServer(
-        brainService.default,
+        IsDevelopment() ? brainService.default : brainService.default?.default,
         settings
       );
 
