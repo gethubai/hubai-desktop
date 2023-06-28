@@ -16,12 +16,15 @@ function loadModule(url: string) {
   return null;
 }
 
-function loadComponent(remoteUrl: string, scope: string, module: string) {
+export function loadComponent(
+  remoteUrl: string,
+  scope: string,
+  module: string
+) {
   return async () => {
     // eslint-disable-next-line no-undef
     await __webpack_init_sharing__('default');
     const container: Container = await loadModule(remoteUrl);
-    console.log(container);
     // eslint-disable-next-line no-undef
     await container.init(__webpack_share_scopes__.default);
     const factory = await container.get(module);

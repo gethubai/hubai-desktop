@@ -1,13 +1,30 @@
 import 'reflect-metadata';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './dependencyInjection';
 import './settings/electronSettingsStore';
 import { create } from 'mo';
 import { Workbench } from 'mo/workbench/workbench';
 import '@allai/core/esm/style/mo.css';
-
-const moInstance = create({ extensions: [] });
+import InstanceService from 'mo/services/instanceService';
+import loadExtensions from './extensions';
 
 export default function App() {
+  const [moInstance, setMoInstance] = useState<InstanceService | null>(null);
+
+  useEffect(() => {
+    const loadAndCreate = async () => {
+      const extensions = await loadExtensions();
+      const instance = create({ extensions });
+      setMoInstance(instance);
+    };
+
+    loadAndCreate();
+  }, []);
+
+  if (!moInstance) {
+    // You could return some loading state here
+    return null;
+  }
+
   return moInstance.render(<Workbench />);
 }
