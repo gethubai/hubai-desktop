@@ -1,12 +1,8 @@
 import React from 'react';
 import { classNames } from '@allai/core/esm/common/className';
 import type { IAuxiliaryBar } from '@allai/core/esm/model';
-import {
-  tabActiveClassName,
-  tabClassName,
-  tabsClassName,
-} from '@allai/core/esm/workbench/auxiliaryBar/base';
 import { IAuxiliaryController } from 'mo/controllers';
+import { tabActiveClassName, tabClassName, tabsClassName } from './base';
 
 export default function AuxiliaryBarTab({
   mode,
