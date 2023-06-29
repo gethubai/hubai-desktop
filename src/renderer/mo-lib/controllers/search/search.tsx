@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 import { Controller } from '@allai/core/esm/react/controller';
 import { connect } from '@allai/core/esm/react';
-import { SearchPanel } from '@allai/core/esm/workbench/sidebar/search';
+import { SearchPanel } from 'mo/workbench/sidebar/search';
 import { IActionBarItemProps } from '@allai/core/esm/components/actionBar';
 import { SearchEvent } from '@allai/core/esm/model/workbench/search';
 import {

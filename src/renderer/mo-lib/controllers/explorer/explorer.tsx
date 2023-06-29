@@ -2,10 +2,7 @@ import React from 'react';
 import { Controller } from '@allai/core/esm/react/controller';
 import { inject, injectable } from 'tsyringe';
 import { ControllerObject, connect } from '@allai/core/esm/react';
-import {
-  Explorer,
-  FolderTree,
-} from '@allai/core/esm/workbench/sidebar/explore';
+import { Explorer, FolderTree } from 'mo/workbench/sidebar/explore';
 import { IMenuItemProps } from '@allai/core/esm/components/menu';
 import {
   ExplorerEvent,

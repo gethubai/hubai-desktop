@@ -9,7 +9,7 @@ import {
 import {
   EditorTree,
   IOpenEditProps,
-} from '@allai/core/esm/workbench/sidebar/explore/editorTree';
+} from 'mo/workbench/sidebar/explore/editorTree';
 import { connect } from '@allai/core/esm/react';
 import {
   IActionBarItemProps,
