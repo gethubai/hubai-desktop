@@ -9,7 +9,7 @@ import {
   IStatusBarItem,
   StatusBarEvent,
 } from '@allai/core';
-import { EditorStatusBarView } from '@allai/core/esm/workbench/editor';
+import { EditorStatusBarView } from 'mo/workbench/editor';
 import { cloneDeep } from 'lodash';
 import { type IMenuBarController } from './menuBar';
 
