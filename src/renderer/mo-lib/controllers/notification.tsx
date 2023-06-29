@@ -12,7 +12,7 @@ import {
 } from '@allai/core';
 import { Controller } from '@allai/core/esm/react/controller';
 import { IActionBarItemProps } from '@allai/core/esm/components/actionBar';
-import { NotificationStatusBarView } from '@allai/core/esm/workbench/notification';
+import { NotificationStatusBarView } from 'mo/workbench/notification';
 
 @injectable()
 class NotificationController

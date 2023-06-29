@@ -11,7 +11,7 @@ import {
   Controller,
 } from '@allai/core';
 import { ILocale, type ILocaleService } from '@allai/core/esm/i18n';
-import { LocaleNotification } from '@allai/core/esm/workbench/notification/notificationPane/localeNotification';
+import LocaleNotification from 'mo/workbench/notification/notificationPane/localeNotification';
 
 export interface ISettingsController extends Partial<Controller> {}
 
