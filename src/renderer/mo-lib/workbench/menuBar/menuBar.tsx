@@ -9,8 +9,8 @@ import { IMenuProps, Menu } from '@allai/core/esm/components/menu';
 import { Icon } from '@allai/core/esm/components/icon';
 import { KeybindingHelper } from '@allai/core/esm/services/keybinding';
 import { MenuBarMode } from '@allai/core/esm/model/workbench/layout';
-import { HorizontalView } from '@allai/core/esm/workbench/menuBar/horizontalView';
 import { IMenuBarController } from 'mo/controllers';
+import { HorizontalView } from './horizontalView';
 
 export const defaultClassName = prefixClaName('menuBar');
 export const actionClassName = getBEMElement(defaultClassName, 'action');
