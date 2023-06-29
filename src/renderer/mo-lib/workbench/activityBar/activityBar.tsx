@@ -1,7 +1,7 @@
+/* eslint-disable no-unused-expressions */
 import React, { useCallback } from 'react';
 
 import {
-  ActivityBarItem,
   IActivityBar,
   IActivityBarController,
   IActivityBarItem,
@@ -20,7 +20,8 @@ import {
   globalItemsClassName,
   itemClassName,
   normalItemsClassName,
-} from '@allai/core/esm/workbench/activityBar/base';
+} from './base';
+import { ActivityBarItem } from './ActivityBarItem';
 
 export function ActivityBar(props: IActivityBar & IActivityBarController) {
   const {
@@ -73,7 +74,7 @@ export function ActivityBar(props: IActivityBar & IActivityBarController) {
       onContextMenuClick?.(e, item);
       contextView?.hide();
     },
-    [contextMenu]
+    [contextMenu, onContextMenuClick, contextView]
   );
 
   const handleRightClick = (e) => {
