@@ -13,12 +13,9 @@ import {
 } from '@allai/core';
 import { inject, injectable } from 'tsyringe';
 import { type IMonacoService } from '@allai/core/esm/monaco/monacoService';
-import {
-  ProblemsPaneView,
-  ProblemsStatusBarView,
-} from '@allai/core/esm/workbench/problems';
 import { connect } from '@allai/core/esm/react';
 import { QuickTogglePanelAction } from 'mo/monaco/quickTogglePanelAction';
+import { ProblemsPaneView, ProblemsStatusBarView } from 'mo/workbench/problems';
 
 export interface IProblemsController extends Partial<Controller> {
   onClick?: (e: React.MouseEvent, item: IStatusBarItem) => void;
