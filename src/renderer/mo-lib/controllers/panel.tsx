@@ -8,9 +8,9 @@ import {
   Controller,
 } from '@allai/core';
 import { type IMonacoService } from '@allai/core/esm/monaco/monacoService';
-import Output from '@allai/core/esm/workbench/panel/output';
 import type { UniqueId } from '@allai/core/esm/common/types';
 import { QuickTogglePanelAction } from 'mo/monaco/quickTogglePanelAction';
+import Output from 'mo/workbench/panel/output';
 
 export interface IPanelController extends Partial<Controller> {
   onTabChange?(key: UniqueId): void;
