@@ -1,3 +1,5 @@
+const { dependencies } = require('../../package.json');
+
 module.exports = {
   name: 'allaiapp',
   // library: { type: 'module' },
@@ -5,49 +7,49 @@ module.exports = {
     'react-router-dom': {
       singleton: true,
       strictVersion: false,
-      requiredVersion: '6.11.2',
+      requiredVersion: dependencies['react-router-dom'],
     },
     react: {
       eager: true,
       singleton: true,
       strictVersion: false,
-      requiredVersion: '18.2.0',
+      requiredVersion: dependencies.react,
     },
     'react-dom': {
       eager: true,
       singleton: true,
       strictVersion: false,
-      requiredVersion: '18.2.0',
+      requiredVersion: dependencies['react-dom'],
     },
     '@allai/core': {
       eager: true,
       singleton: true,
       strictVersion: true,
-      requiredVersion: '^1.0.5',
+      requiredVersion: dependencies['@allai/core'],
     },
     'monaco-editor': {
       eager: true,
       singleton: true,
       strictVersion: true,
-      requiredVersion: '^0.31.0',
+      requiredVersion: dependencies['monaco-editor'],
     },
     '@vscode/codicons': {
       eager: true,
       singleton: true,
       strictVersion: false,
-      requiredVersion: '^0.0.33',
+      requiredVersion: dependencies['@vscode/codicons'],
     },
     lodash: {
       singleton: true,
       eager: true,
       strictVersion: false,
-      requiredVersion: '^4.17.21',
+      requiredVersion: dependencies.lodash,
     },
     'styled-components': {
       singleton: true,
       eager: true,
       strictVersion: false,
-      requiredVersion: '^6.0.0',
+      requiredVersion: dependencies['styled-components'],
     },
   },
 };
