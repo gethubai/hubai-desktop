@@ -8,11 +8,23 @@ import {
   type IStatusBarService,
   type INotificationService,
   type IBuiltinService,
-  INotificationController,
 } from '@allai/core';
 import { Controller } from '@allai/core/esm/react/controller';
 import { IActionBarItemProps } from '@allai/core/esm/components/actionBar';
 import { NotificationStatusBarView } from 'mo/workbench/notification';
+
+export interface INotificationController extends Partial<Controller> {
+  onCloseNotification(item: INotificationItem): void;
+  onClick?: (e: React.MouseEvent, item: IStatusBarItem) => void;
+  onActionBarClick?(
+    event: React.MouseEvent<Element, MouseEvent>,
+    item: IActionBarItemProps<any>
+  ): void;
+  /**
+   * Toggle the Notifications visibility
+   */
+  toggleNotifications(): void;
+}
 
 @injectable()
 class NotificationController

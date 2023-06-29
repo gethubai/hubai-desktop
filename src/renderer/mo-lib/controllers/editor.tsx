@@ -2,12 +2,7 @@ import 'reflect-metadata';
 import { inject, injectable } from 'tsyringe';
 import React from 'react';
 
-import {
-  EditorEvent,
-  IEditorTab,
-  IEditorActionsProps,
-  IEditorController,
-} from '@allai/core';
+import { EditorEvent, IEditorTab, IEditorActionsProps } from '@allai/core';
 import { Controller } from '@allai/core/esm/react/controller';
 import { IMenuItemProps, IMonacoEditorProps } from '@allai/core/esm/components';
 import { editor as MonacoEditor, Uri } from '@allai/core/esm/monaco';
@@ -19,6 +14,35 @@ import {
   type IStatusBarService,
 } from '@allai/core/esm/services';
 import type { UniqueId } from '@allai/core/esm/common/types';
+
+export interface IEditorController extends Partial<Controller> {
+  open?<T = any>(tab: IEditorTab<T>, groupId?: UniqueId): void;
+  onClickContextMenu?: (
+    e: React.MouseEvent,
+    item: IMenuItemProps,
+    tabItem?: IEditorTab
+  ) => void;
+  onCloseAll?: (group: UniqueId) => void;
+  onCloseTab?: (tabId: UniqueId, group: UniqueId) => void;
+  onCloseToLeft?: (tab: IEditorTab, group: UniqueId) => void;
+  onCloseToRight?: (tab: IEditorTab, group: UniqueId) => void;
+  onCloseOther?: (tab: IEditorTab, group: UniqueId) => void;
+  onCloseSaved?: (group: UniqueId) => void;
+  onChangeEditorProps?: (
+    preProps: IMonacoEditorProps,
+    nextProps: IMonacoEditorProps
+  ) => void;
+  onMoveTab?: <T = any>(updateTabs: IEditorTab<T>[], group: UniqueId) => void;
+  onSelectTab?: (tabId: UniqueId, group: UniqueId) => void;
+  onClickActions: (action: IEditorActionsProps) => void;
+  onUpdateEditorIns?: (editorInstance: any, groupId: UniqueId) => void;
+  onPaneSizeChange?: (newSize: number[]) => void;
+  initEditorEvents?: (
+    editorInstance: MonacoEditor.IStandaloneCodeEditor,
+    groupId: UniqueId
+  ) => void;
+  getViewState?: (id: UniqueId) => MonacoEditor.ICodeEditorViewState;
+}
 
 @injectable()
 class EditorController extends Controller implements IEditorController {

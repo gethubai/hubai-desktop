@@ -1,6 +1,5 @@
 import React from 'react';
 import { inject, injectable } from 'tsyringe';
-import { IActivityBarController } from '@allai/core/esm/controller';
 import { IMenuItemProps } from '@allai/core/esm/components/menu';
 import {
   ActivityBarEvent,
@@ -15,6 +14,21 @@ import type { UniqueId } from '@allai/core/esm/common/types';
 import { CommandQuickAccessViewAction } from 'mo/monaco/quickAccessViewAction';
 import { SelectColorThemeAction } from 'mo/monaco/selectColorThemeAction';
 import { type IMenuBarController } from './menuBar';
+
+export interface IActivityBarController extends Partial<Controller> {
+  /**
+   * Called when activity bar item is clicked
+   */
+  onClick?: (selectedKey: UniqueId, selectedNode: IActivityBarItem) => void;
+  /**
+   * Called when activity bar item which is not global is changed
+   */
+  onChange?: (prevSelected?: UniqueId, nextSelected?: UniqueId) => void;
+  onContextMenuClick?: (
+    e: React.MouseEvent,
+    item: IMenuItemProps | undefined
+  ) => void;
+}
 
 @injectable()
 class ActivityBarController

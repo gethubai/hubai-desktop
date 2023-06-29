@@ -15,10 +15,20 @@ import {
 } from '@allai/core';
 import { FileTypes, EditorTreeEvent } from '@allai/core/esm/model';
 import { IActionBarItemProps } from '@allai/core/esm/components/actionBar';
-import {
-  type IExplorerController,
-  type IFolderTreeController,
-} from '@allai/core/esm/controller';
+import { type IFolderTreeController } from './folderTree';
+
+export interface IExplorerController extends Partial<Controller> {
+  onActionsContextMenuClick?: (
+    e: React.MouseEvent,
+    item?: IMenuItemProps
+  ) => void;
+  onCollapseChange?: (keys) => void;
+  onToolbarClick?: (
+    item: IActionBarItemProps,
+    panel: IExplorerPanelItem
+  ) => void;
+  onClick?: (event, item) => void;
+}
 
 @injectable()
 class ExplorerController extends Controller implements IExplorerController {

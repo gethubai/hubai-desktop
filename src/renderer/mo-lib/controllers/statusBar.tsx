@@ -1,6 +1,5 @@
 import React from 'react';
 import { Controller } from '@allai/core/esm/react/controller';
-import { IStatusBarController } from '@allai/core/esm/controller';
 import { IMenuItemProps } from '@allai/core/esm/components/menu';
 import { inject, injectable } from 'tsyringe';
 import {
@@ -12,6 +11,14 @@ import {
 import { EditorStatusBarView } from 'mo/workbench/editor';
 import { cloneDeep } from 'lodash';
 import { type IMenuBarController } from './menuBar';
+
+export interface IStatusBarController extends Partial<Controller> {
+  onClick?: (e: React.MouseEvent, item: IStatusBarItem) => void;
+  onContextMenuClick?: (
+    e: React.MouseEvent,
+    item: IMenuItemProps | undefined
+  ) => void;
+}
 
 @injectable()
 class StatusBarController extends Controller implements IStatusBarController {

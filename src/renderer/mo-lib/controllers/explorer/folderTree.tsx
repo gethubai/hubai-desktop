@@ -12,7 +12,23 @@ import {
   type IFolderTreeService,
 } from '@allai/core';
 import type { UniqueId } from '@allai/core/esm/common/types';
-import { IFolderTreeController } from '@allai/core/esm/controller';
+
+export interface IFolderTreeController extends Partial<Controller> {
+  readonly createTreeNode?: (type: FileType, id?: UniqueId) => void;
+  readonly onClickContextMenu?: (
+    contextMenu: IMenuItemProps,
+    treeNode?: IFolderTreeNodeProps
+  ) => void;
+  readonly onUpdateFileName?: (file: IFolderTreeNodeProps) => void;
+  readonly onSelectFile?: (file?: IFolderTreeNodeProps) => void;
+  readonly onDropTree?: (
+    source: IFolderTreeNodeProps,
+    target: IFolderTreeNodeProps
+  ) => void;
+  readonly onLoadData?: (treeNode: IFolderTreeNodeProps) => Promise<void>;
+  readonly onExpandKeys?: (expandKeys: UniqueId[]) => void;
+  readonly onRightClick?: (treeNode: IFolderTreeNodeProps) => IMenuItemProps[];
+}
 
 @injectable()
 class FolderTreeController extends Controller implements IFolderTreeController {

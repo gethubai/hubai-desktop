@@ -40,18 +40,12 @@ import BuiltinService from 'mo/services/builtinService';
 import ProblemsService from 'mo/services/problemsService';
 import NotificationService from 'mo/services/notificationService';
 import { ISideBarController, SidebarController } from 'mo/controllers/sidebar';
-import EditorTreeController from 'mo/controllers/explorer/editorTree';
-import {
-  IActivityBarController,
-  IEditorController,
+import EditorTreeController, {
   IEditorTreeController,
-  IExplorerController,
+} from 'mo/controllers/explorer/editorTree';
+import FolderTreeController, {
   IFolderTreeController,
-  INotificationController,
-  ISearchController,
-  IStatusBarController,
-} from '@allai/core/esm/controller';
-import FolderTreeController from 'mo/controllers/explorer/folderTree';
+} from 'mo/controllers/explorer/folderTree';
 import {
   AuxiliaryController,
   ExtensionController,
@@ -70,16 +64,26 @@ import {
   ProblemsController,
   SettingsController,
 } from 'mo/controllers';
-import SearchController from 'mo/controllers/search/search';
-import ActivityBarController from 'mo/controllers/activityBar';
-import EditorController from 'mo/controllers/editor';
-import NotificationController from 'mo/controllers/notification';
-import ExplorerController from 'mo/controllers/explorer/explorer';
+import SearchController, {
+  ISearchController,
+} from 'mo/controllers/search/search';
+import ActivityBarController, {
+  IActivityBarController,
+} from 'mo/controllers/activityBar';
+import EditorController, { IEditorController } from 'mo/controllers/editor';
+import NotificationController, {
+  INotificationController,
+} from 'mo/controllers/notification';
+import ExplorerController, {
+  IExplorerController,
+} from 'mo/controllers/explorer/explorer';
 import ExtensionService from 'mo/services/extensionService';
 import ColorThemeService from 'mo/services/theme/colorThemeService';
 import { IMonacoService } from '@allai/core/esm/monaco/monacoService';
 import MonacoService from 'mo/monaco/monacoService';
-import StatusBarController from 'mo/controllers/statusBar';
+import StatusBarController, {
+  IStatusBarController,
+} from 'mo/controllers/statusBar';
 import { ChatStateModel, IChatState } from './features/chat/models/chat';
 import { BrainStateModel, IBrainState } from './features/brain/models/brain';
 import { ChatService } from './features/chat/services/chat';

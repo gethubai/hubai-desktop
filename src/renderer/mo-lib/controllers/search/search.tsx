@@ -11,7 +11,26 @@ import {
   type ISidebarService,
 } from '@allai/core/esm/services';
 import { ISearchProps, ITreeNodeItemProps } from '@allai/core/esm/components';
-import { ISearchController } from '@allai/core/esm/controller';
+
+export interface ISearchController extends Partial<Controller> {
+  getSearchIndex?: (text: string, queryVal?: string) => number;
+  setSearchValue?: (value?: string) => void;
+  setReplaceValue?: (value?: string) => void;
+  setValidateInfo?: (info: string | ISearchProps['validationInfo']) => void;
+  toggleMode?: (status: boolean) => void;
+  toggleAddon?: (addon?: IActionBarItemProps) => void;
+  validateValue?: (
+    value: string,
+    callback: (err: void | Error) => void
+  ) => void;
+
+  onResultClick?: (
+    item: ITreeNodeItemProps,
+    resultData: ITreeNodeItemProps[]
+  ) => void;
+  onChange?: (value: string, replaceValue: string) => void;
+  onSearch?: (value: string, replaceValue: string) => void;
+}
 
 @injectable()
 class SearchController extends Controller implements ISearchController {
