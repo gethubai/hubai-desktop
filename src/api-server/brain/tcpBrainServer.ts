@@ -9,11 +9,14 @@ import {
   IAudioTranscriberBrainService,
   IBrainService,
   ITextBrainService,
+  SetUserSettingsResult,
 } from './brainService';
 import { IBrainSettings } from './brainSettings';
 
 export default class TcpBrainServer implements IBrainServer {
   private socket!: Socket;
+
+  private userSettingsResult?: SetUserSettingsResult;
 
   constructor(
     private readonly brainService: IBrainService,
@@ -62,6 +65,17 @@ export default class TcpBrainServer implements IBrainServer {
     console.log('messages received from chat server', message);
 
     callback();
+
+    if (!this?.userSettingsResult?.success) {
+      const reply = this.getMessageReply(message);
+      reply.setText({
+        body: `You must configure the following settings before using this brain: \n ${this.userSettingsResult?.errors.join(
+          '\n'
+        )}`,
+      });
+      this.sendMessage(reply);
+      return;
+    }
 
     if (message.messageType === 'text') {
       await this.replyWithTextPrompt(message);
@@ -174,5 +188,9 @@ export default class TcpBrainServer implements IBrainServer {
 
   public getSettings(): IBrainSettings {
     return this.defaultBrainSettings;
+  }
+
+  setUserSettingsResult(result: SetUserSettingsResult): void {
+    this.userSettingsResult = result;
   }
 }

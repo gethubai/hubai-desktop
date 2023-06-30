@@ -1,4 +1,4 @@
-import { IBrainService } from './brainService';
+import { IBrainService, SetUserSettingsResult } from './brainService';
 import { IBrainSettings } from './brainSettings';
 
 export interface IBrainServer {
@@ -9,4 +9,6 @@ export interface IBrainServer {
   getSettings(): IBrainSettings;
 
   getService(): IBrainService;
+
+  setUserSettingsResult(result: SetUserSettingsResult): void;
 }

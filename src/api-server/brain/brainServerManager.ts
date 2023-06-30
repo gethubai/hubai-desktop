@@ -1,6 +1,6 @@
 import userSettingsStorage from 'data/user/mainStorage';
 import { IBrainServer } from './brainServer';
-import { IBrainService, SetUserSettingsResult } from './brainService';
+import { SetUserSettingsResult } from './brainService';
 import { IBrainSettings } from './brainSettings';
 
 class BrainClientManager {
@@ -17,12 +17,13 @@ class BrainClientManager {
       client.disconnect();
       return;
     }
-    this.initService(client.getService(), settings);
+    this.initService(client, settings);
     await client.start('http://localhost:4114');
     this.connectedClients.push(client);
   }
 
-  initService(brain: IBrainService, settings: IBrainSettings) {
+  initService(client: IBrainServer, settings: IBrainSettings) {
+    const brain = client.getService();
     const brainsSettings = userSettingsStorage.get('brain');
     if (!brainsSettings) {
       console.warn('brains settings not found');
@@ -32,7 +33,7 @@ class BrainClientManager {
     const brainSetting = brainsSettings[settings.name];
     if (brainSetting) {
       try {
-        brain.setUserSettings(brainSetting);
+        client.setUserSettingsResult(brain.setUserSettings(brainSetting));
       } catch (e) {
         console.error('Error on setting brain user settings: ', {
           brain,
@@ -53,7 +54,9 @@ class BrainClientManager {
       return SetUserSettingsResult.createError('Brain client not found');
     }
 
-    return client.getService().setUserSettings(newSettings);
+    const result = client.getService().setUserSettings(newSettings);
+    client.setUserSettingsResult(result);
+    return result;
   }
 
   isConnected(client: IBrainServer): boolean {
