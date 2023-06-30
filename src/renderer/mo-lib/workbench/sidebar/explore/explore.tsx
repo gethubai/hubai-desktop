@@ -2,9 +2,9 @@ import React from 'react';
 import { Collapse } from '@allai/core/esm/components/collapse';
 import { Header, Content } from '@allai/core/esm/workbench';
 import { IExplorer } from '@allai/core/esm/model/workbench/explorer/explorer';
-import { IExplorerController } from '@allai/core/esm/controller/explorer/explorer';
 import { Toolbar } from '@allai/core/esm/components/toolbar';
 import { localize } from '@allai/core/esm/i18n/localize';
+import { IExplorerController } from 'mo/controllers';
 import { defaultExplorerClassName } from './base';
 
 type IExplorerProps = IExplorer & IExplorerController;

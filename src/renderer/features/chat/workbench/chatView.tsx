@@ -1,31 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
+import './styles.scss';
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
-import {
-  MainContainer,
-  ChatContainer,
-  MessageList,
-  Message,
-  MessageInput,
-  MessageModel,
-  SendButton,
-  AttachmentButton,
-} from '@chatscope/chat-ui-kit-react';
-import { AudioRecorder, useAudioRecorder } from 'react-audio-voice-recorder';
-import AudioPlayer from 'react-h5-audio-player';
+import { AudioRecorder } from 'react-audio-voice-recorder';
 import 'react-h5-audio-player/lib/styles.css';
+import { MessageBox, MessageList } from 'react-chat-elements';
 import {
-  ChatMessageStatus,
-  ChatMessageType,
-} from 'api-server/chat/domain/models/chatMessage';
+  AttachmentButton,
+  MessageInput,
+  SendButton,
+} from '@chatscope/chat-ui-kit-react';
 import { IChatWindowController } from '../controllers/type';
 import { IChatWindowState } from '../models/chatWindow';
 import BrainSelector from './components/brainSelector';
-
-type MessageType = MessageModel & {
-  id: string;
-  status: ChatMessageStatus;
-  messageType: ChatMessageType;
-};
 
 export interface IChatWindowProps
   extends IChatWindowController,
@@ -43,8 +29,14 @@ function ChatWindow({
   const [micStatus, setMicStatus] = useState('idle');
   const [msgInputValue, setMsgInputValue] = useState('');
 
-  const recorderControls = useAudioRecorder();
   const addAudioElement = async (blob: Blob) => {
+    /* const context = new AudioContext();
+    const buffer = await blob.arrayBuffer();
+    const audio = await context.decodeAudioData(buffer);
+
+    context.close();
+
+    console.log(audio.duration); */
     onSendVoiceMessage?.(blob);
   };
 
@@ -57,16 +49,25 @@ function ChatWindow({
 
   const messages = newMessages.map((message) => {
     const content: string = message.text?.body ?? '';
-
-    return {
+    const msg = {
       message: content,
       messageType: message.messageType,
       sentTime: message.sendDate,
       sender: message.sender,
-      direction: message.senderType === 'user' ? 'outgoing' : 'incoming',
+      direction: message.senderType === 'user' ? 'right' : 'left',
       id: message.id,
       status: message.status,
-    } as MessageType;
+    } as any;
+
+    if (msg.messageType === 'voice') {
+      msg.messageType = 'audio';
+      msg.data = {
+        audioURL: `msg://audio/${message.id}.wav`,
+        audioType: message.voice?.mimeType,
+      };
+    }
+
+    return msg;
   });
 
   useEffect(() => {
@@ -98,78 +99,83 @@ function ChatWindow({
         selectedBrains={selectedBrains}
         onCapabilityBrainChanged={onCapabilityBrainChanged}
       />
-      <MainContainer>
-        <ChatContainer>
-          <MessageList>
-            {messages.map((message) => (
-              <Message key={message.id} model={message}>
-                <Message.Header>{message.sender}</Message.Header>
-                <Message.Footer>
-                  <p>{message.sentTime} - </p>
-                  <p>{message.status}</p>
-                </Message.Footer>
-                {message.messageType === 'voice' && (
-                  <Message.CustomContent>
-                    <AudioPlayer
-                      autoPlay={false}
-                      src={`msg://audio/${message.id}.wav`}
-                      showSkipControls={false}
-                      showFilledVolume={false}
-                    />
-                    <p>{message.message}</p>
-                  </Message.CustomContent>
-                )}
-              </Message>
-            ))}
-          </MessageList>
-          <div
-            as={MessageInput}
+      <div>
+        <MessageList
+          dataSource={[]}
+          lockable={false}
+          toBottomHeight="100%"
+          isShowChild
+          customProps={{ style: { flexDirection: 'column' } }}
+        >
+          {messages.map((message) => (
+            <MessageBox
+              key={message.id}
+              position={message.direction}
+              audioProps={{ preload: 'metadata' }}
+              title={message.sender}
+              type={message.messageType}
+              text={message.message}
+              data={message.data}
+              date={message.sentTime}
+              notch={false}
+              avatar="https://img.freepik.com/premium-vector/male-avatar-icon-unknown-anonymous-person-default-avatar-profile-icon-social-media-user-business-man-man-profile-silhouette-isolated-white-background-vector-illustration_735449-120.jpg"
+              replyButton
+            />
+          ))}
+        </MessageList>
+
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            borderTop: '1px dashed #d1dbe4',
+            backgroundColor: '#ffff',
+            color: '#000',
+          }}
+        >
+          <MessageInput
+            ref={inputRef}
+            onChange={(msg) => setMsgInputValue(msg)}
+            value={msgInputValue}
+            sendButton={false}
+            attachButton={false}
+            onSend={handleSendMessage}
+            placeholder="Type message here"
             style={{
-              display: 'flex',
-              flexDirection: 'row',
-              borderTop: '1px dashed #d1dbe4',
+              flexGrow: 1,
+              borderTop: 0,
+              flexShrink: 'initial',
             }}
-          >
-            <MessageInput
-              ref={inputRef}
-              onChange={(msg) => setMsgInputValue(msg)}
-              value={msgInputValue}
-              sendButton={false}
-              attachButton={false}
-              onSend={handleSendMessage}
-              placeholder="Type message here"
-              style={{
-                flexGrow: 1,
-                borderTop: 0,
-                flexShrink: 'initial',
-              }}
-            />
-            <SendButton
-              onClick={() => handleSendMessage(msgInputValue)}
-              disabled={msgInputValue.length === 0}
-              style={{
-                fontSize: '1.2em',
-                marginLeft: 0,
-                paddingLeft: '0.2em',
-                paddingRight: '0.2em',
-              }}
-            />
+          />
+          <SendButton
+            onClick={() => handleSendMessage(msgInputValue)}
+            disabled={msgInputValue.length === 0}
+            style={{
+              fontSize: '1.2em',
+              marginLeft: 0,
+              paddingLeft: '0.2em',
+              paddingRight: '0.2em',
+            }}
+          />
 
-            <AttachmentButton
-              style={{
-                fontSize: '1.2em',
-                paddingLeft: '0.2em',
-                paddingRight: '0.2em',
-              }}
-            />
+          <AttachmentButton
+            style={{
+              fontSize: '1.2em',
+              paddingLeft: '0.2em',
+              paddingRight: '0.2em',
+            }}
+          />
 
-            <AudioRecorder
-              onRecordingComplete={(blob) => addAudioElement(blob)}
-              recorderControls={recorderControls}
-            />
-          </div>
-        </ChatContainer>
-      </MainContainer>
+          <AudioRecorder
+            onRecordingComplete={(blob) => addAudioElement(blob)}
+            audioTrackConstraints={{
+              noiseSuppression: true,
+              echoCancellation: true,
+            }}
+            downloadFileExtension="wav"
+          />
+        </div>
+      </div>
       MicStatus: {micStatus}
     </div>
   );

@@ -8,6 +8,7 @@ import 'styled-components';
 import icon from '@vscode/codicons';
 import monaco from 'monaco-editor';
 import '@vscode/codicons/dist/codicon.css';
+import 'react-chat-elements/dist/main.css';
 import core from '@allai/core';
 import { createRoot } from 'react-dom/client';
 import { container as DIContainer } from 'tsyringe';
