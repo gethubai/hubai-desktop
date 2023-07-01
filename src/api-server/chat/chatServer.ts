@@ -69,7 +69,11 @@ class ChatServer {
         const sendUseCase = await makeSendChatMessage();
         const addedMessage = await sendUseCase.send(message);
         this.onMessageSent(message.senderId, addedMessage);
-        this.sendMessageToRecipient(message.to, addedMessage);
+
+        // Check if we are sending a message to ourself and if we have a recipient
+        if (message.senderId !== message.to && message.to) {
+          this.sendMessageToRecipient(message.to, addedMessage);
+        }
 
         callback?.(addedMessage);
       }
