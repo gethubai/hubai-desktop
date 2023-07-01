@@ -21,6 +21,7 @@ import { MenuBarView } from './menuBar/menuBarView';
 import { EditorView } from './editor/editorView';
 import { PanelView } from './panel/panelView';
 import { AuxiliaryBar, AuxiliaryBarTab } from './auxiliaryBar';
+import StatusBarView from './statusBar/statusBarView';
 
 const mainBenchClassName = prefixClaName('mainBench');
 const workbenchClassName = prefixClaName('workbench');
@@ -166,9 +167,9 @@ export function WorkbenchView(props: IWorkbench & ILayout & ILayoutController) {
           <AuxiliaryBarTab />
         </div>
       </div>
-      {/* <Display visible={false}>
+      <Display visible={false}>
         <StatusBarView />
-  </Display> */}
+      </Display>
     </div>
   );
 }
