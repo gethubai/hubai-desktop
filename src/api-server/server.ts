@@ -5,11 +5,8 @@
 import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
-import { app as electronApp } from 'electron';
-import path from 'path';
 import url from 'url';
 import IsDevelopment from 'utils/isDevelopment';
-import { getAppDataStoragePath } from 'utils/pathUtils';
 import brainRoutes from './brain/routes';
 import chatServer from './chat/chatServer';
 import { IBrainServer } from './brain/brainServer';
@@ -17,6 +14,7 @@ import TcpBrainServer from './brain/tcpBrainServer';
 import makeLoadLocalBrains from './brain/factories/usecases/loadLocalBrainsFactory';
 import { getSupportedPromptTypesFromCapabilities } from './brain/brainSettings';
 import brainServerManager from './brain/brainServerManager';
+import { getBrainMainPath } from './brain/const';
 
 const bodyParser = require('body-parser');
 
@@ -52,11 +50,7 @@ httpServer.listen(port, async () => {
 
   for (const brain of brains) {
     try {
-      const brainsBasePath = IsDevelopment()
-        ? path.join(electronApp.getPath('home'), 'brains', 'builds')
-        : getAppDataStoragePath('brains');
-
-      const brainPath = path.join(brainsBasePath, brain.name, 'main.js');
+      const brainPath = getBrainMainPath(brain);
       const brainURL = IsDevelopment()
         ? brainPath
         : url.pathToFileURL(brainPath).toString();
