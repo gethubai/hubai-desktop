@@ -12,7 +12,8 @@ export default class MockLoadLocalBrains implements LoadLocalBrains {
         id: 'fakeBrainId',
         name: 'fakeBrain',
         title: 'Test Brain',
-        createdDate: new Date(),
+        version: '1.0.0',
+        main: 'main.js',
         capabilities: [
           BrainCapability.CONVERSATION,
           BrainCapability.VOICE_TRANSCRIPTION,
@@ -23,8 +24,9 @@ export default class MockLoadLocalBrains implements LoadLocalBrains {
         id: 'openai-id',
         name: 'openaiapi',
         title: 'OpenAI API',
+        version: '1.0.0',
+        main: 'main.js',
         description: 'Brain that uses OpenAI API',
-        createdDate: new Date(),
         capabilities: [
           BrainCapability.CONVERSATION,
           BrainCapability.VOICE_TRANSCRIPTION,
@@ -64,7 +66,8 @@ export default class MockLoadLocalBrains implements LoadLocalBrains {
         name: 'chatgpt35unnoficialapi',
         title: 'Chat GPT Unofficial API',
         description: 'Brain that uses an unofficial CHAT GPT-3 API',
-        createdDate: new Date(),
+        version: '1.0.0',
+        main: 'main.js',
         capabilities: [BrainCapability.CONVERSATION],
         settingsMap: [
           new LocalBrainSettingMap(

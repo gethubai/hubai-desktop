@@ -1,4 +1,3 @@
-// https://chat.openai.com/api/auth/session
 import { LocalBrainModel } from 'api-server/brain/domain/models/localBrain';
 import { RxJsonSchema, RxDocument, RxCollection } from 'rxdb';
 
@@ -24,6 +23,14 @@ export const LocalBrainSchemaLiteral = {
     description: {
       type: 'string',
       maxLength: 2000,
+    },
+    version: {
+      type: 'string',
+      maxLength: 15,
+    },
+    main: {
+      type: 'string',
+      maxLength: 100,
     },
     settingsMap: {
       type: 'array',
@@ -73,7 +80,7 @@ export const LocalBrainSchemaLiteral = {
       },
     },
   },
-  required: ['id', 'name', 'capabilities', 'title'],
+  required: ['id', 'name', 'capabilities', 'title', 'version'],
   indexes: ['name'],
 } as const; // <- It is important to set 'as const' to preserve the literal type
 
@@ -85,19 +92,25 @@ export type LocalBrainCollectionMethods = {
 export type LocalBrainDocMethods = {};
 
 // aggregate the document type from the schema
-export type LocalBrainDocType = LocalBrainModel & {};
+export type LocalBrainDocType = LocalBrainModel & {
+  createdDate: string;
+};
 
 // create the typed RxJsonSchema from the literal typed object.
-export const ChatSchema: RxJsonSchema<LocalBrainDocType> =
+export const LocalBrainSchema: RxJsonSchema<LocalBrainDocType> =
   LocalBrainSchemaLiteral;
 
-export type ChatDocument = RxDocument<
+export type LocalBrainDocument = RxDocument<
   LocalBrainDocType,
   LocalBrainCollectionMethods
 >;
 
-export type ChatCollection = RxCollection<
+export type LocalBrainCollection = RxCollection<
   LocalBrainDocType,
   LocalBrainDocMethods,
   LocalBrainCollectionMethods
 >;
+
+export type BrainDatabaseCollections = {
+  brains: LocalBrainCollection;
+};

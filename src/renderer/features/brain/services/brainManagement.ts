@@ -4,9 +4,9 @@ import { type ISettingsService } from '@allai/core';
 import { LocalBrainModel } from 'api-server/brain/domain/models/localBrain';
 import { container, inject, injectable, singleton } from 'tsyringe';
 import makeSaveLocalBrainSettings from 'api-server/brain/factories/usecases/saveLocalBrainSettingsFactory';
-import makeLoadLocalBrains from 'api-server/brain/factories/usecases/loadLocalBrainsFactory';
 import { Component } from '@allai/core/esm/react';
 import { BrainEvent, BrainStateModel, type IBrainState } from '../models/brain';
+import makeLoadLocalBrains from '../factories/usecases/makeLoadLocalBrains';
 
 export interface IBrainManagementService extends Component<IBrainState> {
   getBrains(): LocalBrainModel[];

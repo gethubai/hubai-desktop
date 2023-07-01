@@ -107,6 +107,7 @@
     "lodash": "^4.17.21",
     "lokijs": "^1.5.12",
     "monaco-editor": "^0.31.0",
+    "node-stream-zip": "^1.15.0",
     "react": "^18.2.0",
     "react-audio-voice-recorder": "^1.2.1",
     "react-chat-elements": "^12.0.10",

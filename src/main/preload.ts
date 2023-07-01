@@ -6,6 +6,7 @@ Object.defineProperty(window, 'isRenderer', { get: () => true });
 export type Channels = 'ipc-example';
 
 const electronHandler = {
+  restart: () => ipcRenderer.send('restart-app'),
   ipcRenderer: {
     sendMessage(channel: Channels, ...args: unknown[]) {
       ipcRenderer.send(channel, ...args);
@@ -40,6 +41,12 @@ const electronHandler = {
     // Other method you want to add like has(), reset(), etc.
   },
   brain: {
+    installBrain(brainZipPath: string) {
+      return ipcRenderer.sendSync('install-brain', brainZipPath);
+    },
+    getInstalledBrains() {
+      return ipcRenderer.sendSync('get-installed-brains');
+    },
     updateSettings(brainId: string, newSettings: any) {
       return ipcRenderer.sendSync(
         'update-brain-settings',

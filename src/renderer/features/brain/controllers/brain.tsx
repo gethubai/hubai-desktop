@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
 import {
   react,
@@ -6,8 +7,11 @@ import {
   type IEditorService,
   type ISidebarService,
   IActivityBarItem,
+  INotificationService,
+  INotificationItem,
 } from '@allai/core';
 import { container, inject, injectable } from 'tsyringe';
+import generateUniqueId from 'renderer/common/uniqueIdGenerator';
 import { IBrainController } from './type';
 import { BrainManagementService } from '../services/brainManagement';
 import BrainSidebar from '../workbench/brainSidebar';
@@ -15,6 +19,29 @@ import { BrainEvent, LocalBrainViewModel } from '../models/brain';
 import LocalBrainWindow from '../workbench/localBrainWindow';
 
 const { connect } = react;
+
+function openFileSelector(onSelect: any) {
+  // create the file input dynamically
+  const fileInput = document.createElement('input');
+
+  // set the attributes
+  fileInput.setAttribute('type', 'file');
+  fileInput.setAttribute('accept', '.zip'); // accept only zip files
+  fileInput.setAttribute('multiple', 'false'); // accept only one file
+
+  // register the change event to capture the selected files
+  fileInput.addEventListener('change', function () {
+    const { files } = fileInput;
+    // perform the operation you want on the selected files
+    // e.g., print the name of the first selected file
+    if (files && files.length > 0) {
+      onSelect(files[0]);
+    }
+  });
+
+  // programmatically trigger the click event
+  fileInput.click();
+}
 
 @injectable()
 export default class BrainController
@@ -27,7 +54,9 @@ export default class BrainController
     @inject('ISidebarService') private sideBarService: ISidebarService,
     @inject('IActivityBarService')
     private activityBarService: IActivityBarService,
-    @inject('IEditorService') private editorService: IEditorService
+    @inject('IEditorService') private editorService: IEditorService,
+    @inject('INotificationService')
+    private notificationService: INotificationService
   ) {
     super();
     this.brainService = container.resolve(BrainManagementService);
@@ -58,7 +87,9 @@ export default class BrainController
         icon: 'add',
         id: 'addBrain',
         title: 'Add Brain',
-        onClick: () => console.log('not implemented!'),
+        onClick: () => {
+          return openFileSelector(this.onSelectLocalBrainToInstall.bind(this));
+        },
       },
     ];
 
@@ -75,6 +106,41 @@ export default class BrainController
 
   public onSaveSettings = (brain: LocalBrainViewModel, settings: any) => {
     this.emit(BrainEvent.onBrainSettingsUpdated, brain, settings);
+  };
+
+  private onSelectLocalBrainToInstall = (file: File) => {
+    const res = window.electron.brain.installBrain(file.path);
+
+    const items = [
+      {
+        id: generateUniqueId(),
+        value: res,
+        render: (item: INotificationItem) => {
+          if (item.value.success) {
+            return (
+              <div>
+                <p>{item.value.brain.title} installed successfully!</p>
+                <p>
+                  <a href="#" onClick={() => window.electron.restart()}>
+                    Restart&nbsp;
+                  </a>
+                  the application to use it
+                </p>
+              </div>
+            );
+          }
+
+          return (
+            <div>
+              <p>Failed to install the brain:</p>
+              <p>{item.value.error ?? 'Internal error'}</p>
+            </div>
+          );
+        },
+      } as INotificationItem<string>,
+    ];
+    this.notificationService.add(items);
+    this.notificationService.toggleNotification();
   };
 
   private async selectOrOpenBrainWindow(

@@ -29,6 +29,9 @@ import {
 } from 'utils/pathUtils';
 import brainServerManager from 'api-server/brain/brainServerManager';
 import userSettingsStorage from 'data/user/mainStorage';
+import makeLoadLocalBrains from 'api-server/brain/factories/usecases/loadLocalBrainsFactory';
+// import brainDatabase from 'data/brain/pouchDb';
+import brainInstaller from 'api-server/brain/brainInstaller';
 import getStorage from '../data/storage';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
@@ -78,6 +81,17 @@ ipcMain.on(
   }
 );
 
+ipcMain.on('get-installed-brains', async (event) => {
+  const getBrainsUseCase = await makeLoadLocalBrains();
+  const brains = await getBrainsUseCase.getBrains();
+  event.returnValue = brains;
+});
+
+ipcMain.on('install-brain', async (event, brainZipPath: string) => {
+  const result = await brainInstaller.installBrain(brainZipPath);
+  event.returnValue = result;
+});
+
 ipcMain.on(
   'get-media-access-status',
   async (event, mediaType: 'microphone' | 'camera' | 'screen') => {
@@ -93,6 +107,11 @@ ipcMain.on(
     event.returnValue = await systemPreferences.askForMediaAccess(mediaType);
   }
 );
+
+ipcMain.on('restart-app', () => {
+  app.relaunch();
+  app.exit();
+});
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
