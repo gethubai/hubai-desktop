@@ -1,2 +1,2 @@
-const IsRenderer = () => globalThis?.isRenderer !== undefined;
+const IsRenderer = () => globalThis.electron !== undefined;
 export default IsRenderer;
