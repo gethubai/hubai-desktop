@@ -133,7 +133,7 @@ export default class BrainController
           return (
             <div>
               <p>Failed to install the brain:</p>
-              <p>{item.value.error ?? 'Internal error'}</p>
+              <p>{item.value.error?.message ?? 'Internal error'}</p>
             </div>
           );
         },
