@@ -1,1 +1,1 @@
-#AllAI App source
+#HubAI desktop application
