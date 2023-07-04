@@ -100,4 +100,6 @@ export type LocalBrainModel = {
   main: string;
   capabilities: BrainCapability[];
   settingsMap?: LocalBrainSettingMap[];
+  installationDate?: Date;
+  updatedDate?: Date;
 };

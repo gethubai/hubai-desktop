@@ -3,11 +3,11 @@ import {
   LocalBrainModel,
 } from 'api-server/brain/domain/models/localBrain';
 import { AddLocalBrain } from 'api-server/brain/domain/usecases/addLocalBrain';
-import { Database } from 'data/brain/db';
+import { ILocalBrainRepository } from 'data/brain/localBrainRepository';
 import generateUniqueId from 'renderer/common/uniqueIdGenerator';
 
 export default class LocalDbAddLocalBrain implements AddLocalBrain {
-  constructor(private readonly database: Database) {}
+  constructor(private readonly repository: ILocalBrainRepository) {}
 
   add = async (brain: AddLocalBrain.Params): Promise<LocalBrainModel> => {
     // throw error if brain name contains any character other than letters, numbers, and underscores
@@ -27,40 +27,29 @@ export default class LocalDbAddLocalBrain implements AddLocalBrain {
       throw new Error('Brain name cannot be longer than 50 characters');
     }
 
-    const brainWithName = await this.database.brains
-      .findOne({
-        selector: {
-          name: {
-            $eq: brain.name,
-          },
-        },
-      })
-      .exec();
+    const brainWithName = await this.repository.getBrainByName(brain.name);
 
     if (brainWithName) {
       // Update brain
-      const result = await brainWithName.incrementalUpdate({
-        $set: {
-          title: brain.nameAlias ?? brain.name,
-          description: brain.description,
-          main: brain.main,
-          version: brain.version,
-          capabilities: brain.capabilities,
-          settingsMap: brain.settingsMap,
-        },
+      const result = await this.repository.update({
+        ...brainWithName,
+        title: brain.nameAlias ?? brain.name,
+        description: brain.description,
+        main: brain.main,
+        version: brain.version,
+        capabilities: brain.capabilities as BrainCapability[],
+        settingsMap: brain.settingsMap,
       });
-
-      return result._data as LocalBrainModel;
+      return result;
     }
 
-    const result = await this.database.brains.insert({
+    const result = await this.repository.add({
       ...brain,
       id: generateUniqueId(),
-      createdDate: new Date().toISOString(),
-      capabilities: brain.capabilities as BrainCapability[],
       title: brain.nameAlias ?? brain.name,
+      capabilities: brain.capabilities as BrainCapability[],
+      installationDate: new Date(), // TODO: Convert to UTC
     });
-
-    return result._data as LocalBrainModel;
+    return result;
   };
 }
