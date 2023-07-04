@@ -7,16 +7,21 @@ import { IExtension } from '@allai/core';
 import ExtensionService from 'mo/services/extensionService';
 
 const loadExtensions = async () => {
-  const extensionsToLoad = ['test-extension'];
+  // TODO: Load installed extensions from the database
+  const extensionsToLoad = [];
 
   const extensions: IExtension[] = [];
 
   for (const extensionName of extensionsToLoad) {
-    const res = await ExtensionService.loadFromSystem(
-      `${extensionName}/remoteEntry.js`
-    );
+    try {
+      const res = await ExtensionService.loadFromSystem(
+        `${extensionName}/remoteEntry.js`
+      );
 
-    extensions.push(res);
+      extensions.push(res);
+    } catch (err) {
+      console.error(`Error loading extension: ${extensionName}`, err);
+    }
   }
 
   console.log('Installed extensions loaded:', extensions);
