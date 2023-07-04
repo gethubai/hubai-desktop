@@ -36,8 +36,13 @@ import getStorage from '../data/storage';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
-console.log = log.log;
-Object.assign(console, log.functions);
+const isDebug =
+  process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
+
+if (!isDebug) {
+  console.log = log.log;
+  Object.assign(console, log.functions);
+}
 
 const sv = require('../api-server/server');
 
@@ -117,9 +122,6 @@ if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
   sourceMapSupport.install();
 }
-
-const isDebug =
-  process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
 
 if (isDebug) {
   require('electron-debug')();
