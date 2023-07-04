@@ -5,6 +5,9 @@ import fs from 'fs';
 export const getAppDataStoragePath = (append: string) =>
   path.normalize(`${app.getPath('userData')}/${append}`);
 
+export const getAppDatabaseStoragePath = (append: string) =>
+  getAppDataStoragePath(`db/${append}`);
+
 export const getMessageStoragePath = (append: string) =>
   getAppDataStoragePath(`chat/messages/${append}`);
 
