@@ -1,6 +1,6 @@
 import React from 'react';
 import { inject, injectable } from 'tsyringe';
-import { IMenuItemProps } from '@allai/core/esm/components/menu';
+import { IMenuItemProps } from '@hubai/core/esm/components/menu';
 import {
   ActivityBarEvent,
   IActivityBarItem,
@@ -8,9 +8,9 @@ import {
   type IActivityBarService,
   type IBuiltinService,
   type ISettingsService,
-} from '@allai/core';
-import { type IMonacoService } from '@allai/core/esm/monaco/monacoService';
-import type { UniqueId } from '@allai/core/esm/common/types';
+} from '@hubai/core';
+import { type IMonacoService } from '@hubai/core/esm/monaco/monacoService';
+import type { UniqueId } from '@hubai/core/esm/common/types';
 import { CommandQuickAccessViewAction } from 'mo/monaco/quickAccessViewAction';
 import { SelectColorThemeAction } from 'mo/monaco/selectColorThemeAction';
 import { type IMenuBarController } from './menuBar';

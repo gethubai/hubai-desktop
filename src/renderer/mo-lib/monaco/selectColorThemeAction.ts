@@ -6,12 +6,12 @@ import {
 import { KeyChord } from 'monaco-editor/esm/vs/base/common/keyCodes';
 import { ServicesAccessor } from 'monaco-editor/esm/vs/platform/instantiation/common/instantiation';
 
-import { KeyMod, KeyCode } from '@allai/core/esm/monaco';
-import { Action2 } from '@allai/core/esm/monaco/action';
-import { KeybindingWeight } from '@allai/core/esm/monaco/common';
-import { IColorTheme } from '@allai/core/esm/model/colorTheme';
-import { constants } from '@allai/core/esm/services/builtinService/const';
-import { IColorThemeService } from '@allai/core/esm/services';
+import { KeyMod, KeyCode } from '@hubai/core/esm/monaco';
+import { Action2 } from '@hubai/core/esm/monaco/action';
+import { KeybindingWeight } from '@hubai/core/esm/monaco/common';
+import { IColorTheme } from '@hubai/core/esm/model/colorTheme';
+import { constants } from '@hubai/core/esm/services/builtinService/const';
+import { IColorThemeService } from '@hubai/core/esm/services';
 import { container } from 'tsyringe';
 
 // eslint-disable-next-line import/prefer-default-export

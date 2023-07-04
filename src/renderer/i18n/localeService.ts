@@ -1,12 +1,12 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable import/prefer-default-export */
 import { injectable } from 'tsyringe';
-import { APP_PREFIX } from '@allai/core/esm/common/const';
-import logger from '@allai/core/esm/common/logger';
-import { ILocale, LocalizationEvent } from '@allai/core/esm/i18n/localization';
+import { APP_PREFIX } from '@hubai/core/esm/common/const';
+import logger from '@hubai/core/esm/common/logger';
+import { ILocale, LocalizationEvent } from '@hubai/core/esm/i18n/localization';
 
-import { Component } from '@allai/core/esm/react';
-import { ILocaleService } from '@allai/core';
+import { Component } from '@hubai/core/esm/react';
+import { ILocaleService } from '@hubai/core';
 
 export const STORE_KEY = `${APP_PREFIX}.localeId`;
 export const DEFAULT_LOCALE_ID = `${APP_PREFIX}.defaultLocaleId`;

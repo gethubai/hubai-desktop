@@ -6,11 +6,11 @@ import {
   NotificationModel,
   NotificationStatus,
   INotificationService,
-} from '@allai/core';
-import { Component } from '@allai/core/esm/react';
-import { randomId, searchById } from '@allai/core/esm/common/utils';
-import logger from '@allai/core/esm/common/logger';
-import type { UniqueId } from '@allai/core/esm/common/types';
+} from '@hubai/core';
+import { Component } from '@hubai/core/esm/react';
+import { randomId, searchById } from '@hubai/core/esm/common/utils';
+import logger from '@hubai/core/esm/common/logger';
+import type { UniqueId } from '@hubai/core/esm/common/types';
 
 class NotificationService
   extends Component<INotification>

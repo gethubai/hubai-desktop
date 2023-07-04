@@ -21,11 +21,11 @@ module.exports = {
       strictVersion: false,
       requiredVersion: dependencies['react-dom'],
     },
-    '@allai/core': {
+    '@hubai/core': {
       eager: true,
       singleton: true,
       strictVersion: true,
-      requiredVersion: dependencies['@allai/core'],
+      requiredVersion: dependencies['@hubai/core'],
     },
     'monaco-editor': {
       eager: true,

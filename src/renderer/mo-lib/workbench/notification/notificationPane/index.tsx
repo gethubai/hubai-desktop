@@ -1,16 +1,16 @@
 import React, { memo } from 'react';
-import { INotification } from '@allai/core/esm/model/notification';
-import { INotificationController } from '@allai/core/esm/controller/notification';
+import { INotification } from '@hubai/core/esm/model/notification';
+import { INotificationController } from '@hubai/core/esm/controller/notification';
 import {
   classNames,
   getBEMElement,
   getBEMModifier,
   prefixClaName,
-} from '@allai/core/esm/common/className';
-import { ActionBar } from '@allai/core/esm/components/actionBar';
-import { shadowClassName } from '@allai/core/esm/components/contextView/base';
-import { Icon } from '@allai/core/esm/components/icon';
-import { localize } from '@allai/core/esm/i18n/localize';
+} from '@hubai/core/esm/common/className';
+import { ActionBar } from '@hubai/core/esm/components/actionBar';
+import { shadowClassName } from '@hubai/core/esm/components/contextView/base';
+import { Icon } from '@hubai/core/esm/components/icon';
+import { localize } from '@hubai/core/esm/i18n/localize';
 
 export const defaultNotificationClassName = prefixClaName('notification');
 const notificationHeaderClassName = getBEMElement(

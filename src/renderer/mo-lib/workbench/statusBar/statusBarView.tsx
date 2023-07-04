@@ -1,7 +1,7 @@
 import { container } from 'tsyringe';
-import { IStatusBarService } from '@allai/core';
-import { IStatusBarController } from '@allai/core/esm/controller';
-import { Controller, connect } from '@allai/core/esm/react';
+import { IStatusBarService } from '@hubai/core';
+import { IStatusBarController } from '@hubai/core/esm/controller';
+import { Controller, connect } from '@hubai/core/esm/react';
 import StatusBar from './statusBar';
 
 const statusBarService =

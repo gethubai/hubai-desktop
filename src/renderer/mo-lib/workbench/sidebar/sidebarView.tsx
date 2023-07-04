@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { ISidebarService, ISidebar, ISidebarPane } from '@allai/core';
-import { getBEMElement, prefixClaName } from '@allai/core/esm/common/className';
+import { ISidebarService, ISidebar, ISidebarPane } from '@hubai/core';
+import { getBEMElement, prefixClaName } from '@hubai/core/esm/common/className';
 
-import { Controller, connect } from '@allai/core/esm/react';
+import { Controller, connect } from '@hubai/core/esm/react';
 import { container } from 'tsyringe';
 import { ISideBarController } from 'mo/controllers/sidebar';
 

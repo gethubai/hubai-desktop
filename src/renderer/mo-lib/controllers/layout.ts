@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 import { inject, injectable } from 'tsyringe';
-import { Controller } from '@allai/core/esm/react/controller';
-import { type ILayoutService } from '@allai/core';
-import { LayoutEvents } from '@allai/core/esm/model/workbench/layout';
+import { Controller } from '@hubai/core/esm/react/controller';
+import { type ILayoutService } from '@hubai/core';
+import { LayoutEvents } from '@hubai/core/esm/model/workbench/layout';
 
 export interface ILayoutController extends Partial<Controller> {
   onWorkbenchDidMount?: () => void;

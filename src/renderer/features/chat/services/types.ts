@@ -1,5 +1,5 @@
 import { ChatModel } from 'api-server/chat/domain/models/chat';
-import { Component } from '@allai/core/esm/react';
+import { Component } from '@hubai/core/esm/react';
 import { CreateChat } from 'api-server/chat/domain/usecases/createChat';
 import { UpdateChatBrains } from 'api-server/chat/domain/usecases/updateChatBrains';
 import {

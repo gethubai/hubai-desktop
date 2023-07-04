@@ -1,4 +1,4 @@
-import { AppContext, IExtension } from '@allai/core';
+import { AppContext, IExtension } from '@hubai/core';
 import molecule from 'mo';
 
 const ExtendsPanel: IExtension = {

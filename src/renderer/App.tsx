@@ -4,7 +4,7 @@ import './dependencyInjection';
 import './settings/electronSettingsStore';
 import { create } from 'mo';
 import { Workbench } from 'mo/workbench/workbench';
-import '@allai/core/esm/style/mo.css';
+import '@hubai/core/esm/style/mo.css';
 import './mo-lib/style/styles.scss';
 import InstanceService from 'mo/services/instanceService';
 import loadExtensions from './extensions';

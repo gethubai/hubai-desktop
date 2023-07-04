@@ -2,7 +2,7 @@ import {
   getBEMElement,
   getBEMModifier,
   prefixClaName,
-} from '@allai/core/esm/common/className';
+} from '@hubai/core/esm/common/className';
 
 export const defaultClassName = prefixClaName('auxiliaryBar');
 export const containerClassName = getBEMElement(defaultClassName, 'container');

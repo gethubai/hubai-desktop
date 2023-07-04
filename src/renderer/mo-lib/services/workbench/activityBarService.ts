@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 import { container, inject, injectable } from 'tsyringe';
-import { Component } from '@allai/core/esm/react/component';
-import { searchById } from '@allai/core/esm/common/utils';
-import logger from '@allai/core/esm/common/logger';
-import type { UniqueId } from '@allai/core/esm/common/types';
+import { Component } from '@hubai/core/esm/react/component';
+import { searchById } from '@hubai/core/esm/common/utils';
+import logger from '@hubai/core/esm/common/logger';
+import type { UniqueId } from '@hubai/core/esm/common/types';
 import {
   IActivityBarService,
   type ISidebarService,
@@ -12,7 +12,7 @@ import {
   ActivityBarEvent,
   IActivityBar,
   IActivityBarItem,
-} from '@allai/core';
+} from '@hubai/core';
 
 @injectable()
 class ActivityBarService

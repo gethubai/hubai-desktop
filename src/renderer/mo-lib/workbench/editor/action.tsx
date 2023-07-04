@@ -1,14 +1,14 @@
 import React, { useRef, memo } from 'react';
-import { Icon } from '@allai/core/esm/components/icon';
-import { Menu } from '@allai/core/esm/components/menu';
-import { DropDown, DropDownRef } from '@allai/core/esm/components/dropdown';
+import { Icon } from '@hubai/core/esm/components/icon';
+import { Menu } from '@hubai/core/esm/components/menu';
+import { DropDown, DropDownRef } from '@hubai/core/esm/components/dropdown';
 import {
   IEditorActionsProps,
   IEditorAction,
   IEditorController,
-} from '@allai/core';
-import { classNames } from '@allai/core/esm/common/className';
-import Tooltip from '@allai/core/esm/components/tooltip';
+} from '@hubai/core';
+import { classNames } from '@hubai/core/esm/common/className';
+import Tooltip from '@hubai/core/esm/components/tooltip';
 import {
   groupActionItemDisabledClassName,
   groupActionsClassName,

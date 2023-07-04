@@ -9,7 +9,7 @@ import {
   IActivityBarItem,
   INotificationService,
   INotificationItem,
-} from '@allai/core';
+} from '@hubai/core';
 import { container, inject, injectable } from 'tsyringe';
 import generateUniqueId from 'renderer/common/uniqueIdGenerator';
 import { IBrainController } from './type';

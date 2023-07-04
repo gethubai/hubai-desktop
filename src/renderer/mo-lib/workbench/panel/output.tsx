@@ -1,7 +1,7 @@
 import React from 'react';
-import { prefixClaName } from '@allai/core/esm/common/className';
-import { IOutput } from '@allai/core/esm/model/workbench/panel';
-import { MonacoEditor } from '@allai/core/esm/components/monaco';
+import { prefixClaName } from '@hubai/core/esm/common/className';
+import { IOutput } from '@hubai/core/esm/model/workbench/panel';
+import { MonacoEditor } from '@hubai/core/esm/components/monaco';
 
 const defaultClassName = prefixClaName('output');
 

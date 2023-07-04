@@ -1,4 +1,4 @@
-import { ISettings, ISettingsService } from '@allai/core';
+import { ISettings, ISettingsService } from '@hubai/core';
 import rendererUserSettingsStorage from 'data/user/rendererUserSettingsStorage';
 import { container } from 'tsyringe';
 

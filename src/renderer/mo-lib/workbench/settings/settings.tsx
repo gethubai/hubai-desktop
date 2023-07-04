@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 
-import { prefixClaName } from '@allai/core/esm/common/className';
+import { prefixClaName } from '@hubai/core/esm/common/className';
 
 const defaultClassName = prefixClaName('settings');
 

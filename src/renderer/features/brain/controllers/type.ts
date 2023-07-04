@@ -1,4 +1,4 @@
-import { Controller } from '@allai/core';
+import { Controller } from '@hubai/core';
 import { LocalBrainViewModel } from '../models/brain';
 
 export interface IBrainController extends Partial<Controller> {

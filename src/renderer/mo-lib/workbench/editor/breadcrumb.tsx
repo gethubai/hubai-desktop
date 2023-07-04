@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import {
   Breadcrumb,
   IBreadcrumbItemProps,
-} from '@allai/core/esm/components/breadcrumb';
+} from '@hubai/core/esm/components/breadcrumb';
 import { groupBreadcrumbClassName } from './base';
 
 export interface IEditorBreadcrumbProps {

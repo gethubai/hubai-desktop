@@ -2,8 +2,8 @@ import {
   getBEMElement,
   getBEMModifier,
   prefixClaName,
-} from '@allai/core/esm/common/className';
-import { ID_ACTIVITY_BAR } from '@allai/core/esm/common/id';
+} from '@hubai/core/esm/common/className';
+import { ID_ACTIVITY_BAR } from '@hubai/core/esm/common/id';
 
 export const defaultClassName = prefixClaName(ID_ACTIVITY_BAR);
 export const containerClassName = getBEMElement(defaultClassName, 'container');

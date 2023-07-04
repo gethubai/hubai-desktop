@@ -2,16 +2,16 @@
 import { ServicesAccessor } from 'monaco-editor/esm/vs/platform/instantiation/common/instantiation';
 import { KeyChord } from 'monaco-editor/esm/vs/base/common/keyCodes';
 
-import { localize } from '@allai/core/esm/i18n/localize';
+import { localize } from '@hubai/core/esm/i18n/localize';
 import {
   type ILayoutService,
   type IMenuBarService,
-} from '@allai/core/esm/services';
+} from '@hubai/core/esm/services';
 
-import { KeyMod, KeyCode } from '@allai/core/esm/monaco';
-import { constants } from '@allai/core/esm/services/builtinService/const';
-import { Action2 } from '@allai/core/esm/monaco/action';
-import { CATEGORIES, KeybindingWeight } from '@allai/core/esm/monaco/common';
+import { KeyMod, KeyCode } from '@hubai/core/esm/monaco';
+import { constants } from '@hubai/core/esm/services/builtinService/const';
+import { Action2 } from '@hubai/core/esm/monaco/action';
+import { CATEGORIES, KeybindingWeight } from '@hubai/core/esm/monaco/common';
 import { container } from 'tsyringe';
 
 export class QuickTogglePanelAction extends Action2 {

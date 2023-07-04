@@ -2,7 +2,7 @@ import {
   BrainCapability,
   LocalBrainModel,
 } from 'api-server/brain/domain/models/localBrain';
-import { Controller } from '@allai/core';
+import { Controller } from '@hubai/core';
 import { IChatItem } from '../models/chat';
 
 export interface IChatController extends Partial<Controller> {

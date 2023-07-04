@@ -10,10 +10,10 @@ import {
   type IBuiltinService,
   type IProblemsService,
   Controller,
-} from '@allai/core';
+} from '@hubai/core';
 import { inject, injectable } from 'tsyringe';
-import { type IMonacoService } from '@allai/core/esm/monaco/monacoService';
-import { connect } from '@allai/core/esm/react';
+import { type IMonacoService } from '@hubai/core/esm/monaco/monacoService';
+import { connect } from '@hubai/core/esm/react';
 import { QuickTogglePanelAction } from 'mo/monaco/quickTogglePanelAction';
 import { ProblemsPaneView, ProblemsStatusBarView } from 'mo/workbench/problems';
 

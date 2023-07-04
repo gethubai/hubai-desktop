@@ -1,4 +1,4 @@
-import { IExtension, IContributeType } from '@allai/core';
+import { IExtension, IContributeType } from '@hubai/core';
 
 const en = require('./locales/en.json');
 

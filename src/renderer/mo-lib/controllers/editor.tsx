@@ -2,18 +2,18 @@ import 'reflect-metadata';
 import { inject, injectable } from 'tsyringe';
 import React from 'react';
 
-import { EditorEvent, IEditorTab, IEditorActionsProps } from '@allai/core';
-import { Controller } from '@allai/core/esm/react/controller';
-import { IMenuItemProps, IMonacoEditorProps } from '@allai/core/esm/components';
-import { editor as MonacoEditor, Uri } from '@allai/core/esm/monaco';
+import { EditorEvent, IEditorTab, IEditorActionsProps } from '@hubai/core';
+import { Controller } from '@hubai/core/esm/react/controller';
+import { IMenuItemProps, IMonacoEditorProps } from '@hubai/core/esm/components';
+import { editor as MonacoEditor, Uri } from '@hubai/core/esm/monaco';
 
 import {
   type IBuiltinService,
   type IEditorService,
   type ILayoutService,
   type IStatusBarService,
-} from '@allai/core/esm/services';
-import type { UniqueId } from '@allai/core/esm/common/types';
+} from '@hubai/core/esm/services';
+import type { UniqueId } from '@hubai/core/esm/common/types';
 
 export interface IEditorController extends Partial<Controller> {
   open?<T = any>(tab: IEditorTab<T>, groupId?: UniqueId): void;

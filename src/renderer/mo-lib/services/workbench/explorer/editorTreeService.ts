@@ -2,17 +2,17 @@ import {
   IActionBarItemProps,
   IMenuItemProps,
   ITabProps,
-} from '@allai/core/esm/components';
-import { EditorTreeEvent } from '@allai/core/esm/model/workbench/explorer/editorTree';
-import { Component } from '@allai/core/esm/react';
+} from '@hubai/core/esm/components';
+import { EditorTreeEvent } from '@hubai/core/esm/model/workbench/explorer/editorTree';
+import { Component } from '@hubai/core/esm/react';
 import { inject, injectable } from 'tsyringe';
-import { UniqueId } from '@allai/core/esm/common/types';
+import { UniqueId } from '@hubai/core/esm/common/types';
 import {
   IEditorTreeService,
   type IEditorService,
   IEditor,
   IEditorTab,
-} from '@allai/core';
+} from '@hubai/core';
 
 @injectable()
 class EditorTreeService

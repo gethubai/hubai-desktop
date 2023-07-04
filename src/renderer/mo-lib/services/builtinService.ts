@@ -1,15 +1,15 @@
 import { injectable } from 'tsyringe';
-import logger from '@allai/core/esm/common/logger';
+import logger from '@hubai/core/esm/common/logger';
 import { cloneDeep } from 'lodash';
 import {
   IBuiltinService,
   IBuiltinConstantProps,
   IBuiltinModuleProps,
-} from '@allai/core';
+} from '@hubai/core';
 import {
   constants,
   modules,
-} from '@allai/core/esm/services/builtinService/const';
+} from '@hubai/core/esm/services/builtinService/const';
 
 @injectable()
 export class BuiltinService implements IBuiltinService {

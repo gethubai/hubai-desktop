@@ -26,12 +26,12 @@ import {
   KeyMod,
   KeyCode,
   editor as MonacoEditor,
-} from '@allai/core/esm/monaco';
-import { IEditorService } from '@allai/core';
-import { constants } from '@allai/core/esm/services/builtinService/const';
-import { Action2 } from '@allai/core/esm/monaco/action';
-import { KeybindingWeight } from '@allai/core/esm/monaco/common';
-import { type IMonacoService } from '@allai/core/esm/monaco/monacoService';
+} from '@hubai/core/esm/monaco';
+import { IEditorService } from '@hubai/core';
+import { constants } from '@hubai/core/esm/services/builtinService/const';
+import { Action2 } from '@hubai/core/esm/monaco/action';
+import { KeybindingWeight } from '@hubai/core/esm/monaco/common';
+import { type IMonacoService } from '@hubai/core/esm/monaco/monacoService';
 import { container } from 'tsyringe';
 import { registerQuickAccessProvider } from './quickAccessProvider';
 

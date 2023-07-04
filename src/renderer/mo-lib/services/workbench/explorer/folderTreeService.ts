@@ -1,7 +1,7 @@
 import React from 'react';
 import { container, inject, injectable } from 'tsyringe';
 import cloneDeep from 'lodash/cloneDeep';
-import { Component } from '@allai/core/esm/react/component';
+import { Component } from '@hubai/core/esm/react/component';
 import {
   FileTypes,
   FileType,
@@ -13,11 +13,11 @@ import {
   type IExplorerService,
   type IBuiltinService,
   IFolderTreeService,
-} from '@allai/core';
-import { IMenuItemProps } from '@allai/core/esm/components';
-import logger from '@allai/core/esm/common/logger';
-import type { UniqueId } from '@allai/core/esm/common/types';
-import { TreeViewUtil } from '@allai/core/esm/common/treeUtil';
+} from '@hubai/core';
+import { IMenuItemProps } from '@hubai/core/esm/components';
+import logger from '@hubai/core/esm/common/logger';
+import type { UniqueId } from '@hubai/core/esm/common/types';
+import { TreeViewUtil } from '@hubai/core/esm/common/treeUtil';
 
 @injectable()
 class FolderTreeService

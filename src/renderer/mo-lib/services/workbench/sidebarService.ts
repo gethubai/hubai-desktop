@@ -5,12 +5,12 @@ import {
   type ISidebar,
   type ISidebarPane,
   SidebarModel,
-} from '@allai/core/esm/model/workbench/sidebar';
-import { searchById } from '@allai/core/esm/common/utils';
-import type { UniqueId } from '@allai/core/esm/common/types';
-import { Component } from '@allai/core/esm/react/component';
-import { ISidebarService } from '@allai/core';
-import logger from '@allai/core/esm/common/logger';
+} from '@hubai/core/esm/model/workbench/sidebar';
+import { searchById } from '@hubai/core/esm/common/utils';
+import type { UniqueId } from '@hubai/core/esm/common/types';
+import { Component } from '@hubai/core/esm/react/component';
+import { ISidebarService } from '@hubai/core';
+import logger from '@hubai/core/esm/common/logger';
 
 @injectable()
 class SidebarService extends Component<ISidebar> implements ISidebarService {

@@ -1,11 +1,11 @@
 /* eslint-disable import/prefer-default-export */
-import { localize } from '@allai/core/esm/i18n/localize';
-import { KeyMod, KeyCode } from '@allai/core/esm/monaco';
-import { IEditorService } from '@allai/core';
+import { localize } from '@hubai/core/esm/i18n/localize';
+import { KeyMod, KeyCode } from '@hubai/core/esm/monaco';
+import { IEditorService } from '@hubai/core';
 
-import { constants } from '@allai/core/esm/services/builtinService/const';
-import { KeybindingWeight } from '@allai/core/esm/monaco/common';
-import { Action2 } from '@allai/core/esm/monaco/action';
+import { constants } from '@hubai/core/esm/services/builtinService/const';
+import { KeybindingWeight } from '@hubai/core/esm/monaco/common';
+import { Action2 } from '@hubai/core/esm/monaco/action';
 import { container } from 'tsyringe';
 
 export class QuickCopyLineUp extends Action2 {

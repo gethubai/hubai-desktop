@@ -11,14 +11,14 @@ import {
   type ISettingsService,
   type IBuiltinService,
   BuiltInSettingsTabType,
-} from '@allai/core';
+} from '@hubai/core';
 import {
   flatObject,
   mergeObjects,
   normalizeFlattedObject,
-} from '@allai/core/esm/common/utils';
-import { GlobalEvent } from '@allai/core/esm/common/event';
-import { type ILocaleService } from '@allai/core/esm/i18n';
+} from '@hubai/core/esm/common/utils';
+import { GlobalEvent } from '@hubai/core/esm/common/event';
+import { type ILocaleService } from '@hubai/core/esm/i18n';
 
 @injectable()
 class SettingsService extends GlobalEvent implements ISettingsService {

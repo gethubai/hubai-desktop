@@ -4,7 +4,7 @@ import {
   type IBuiltinService,
   type IExplorerService,
   Controller,
-} from '@allai/core';
+} from '@hubai/core';
 
 export interface IOutlineController extends Partial<Controller> {}
 

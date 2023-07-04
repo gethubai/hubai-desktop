@@ -1,16 +1,16 @@
 /* eslint-disable react/function-component-definition */
 import 'reflect-metadata';
 import React, { memo, useRef, useEffect, useLayoutEffect } from 'react';
-import { type IFolderTree, type IFolderTreeNodeProps } from '@allai/core';
-import { select, getEventPosition } from '@allai/core/esm/common/dom';
-import Tree, { type ITreeProps } from '@allai/core/esm/components/tree';
-import { type IMenuItemProps, Menu } from '@allai/core/esm/components/menu';
-import { Button } from '@allai/core/esm/components/button';
-import type { IFolderTreeController } from '@allai/core/esm/controller/explorer/folderTree';
-import { useContextMenu } from '@allai/core/esm/components/contextMenu';
-import { classNames } from '@allai/core/esm/common/className';
-import { Scrollbar, useContextViewEle } from '@allai/core/esm/components';
-import { type ICollapseItem } from '@allai/core/esm/components/collapse';
+import { type IFolderTree, type IFolderTreeNodeProps } from '@hubai/core';
+import { select, getEventPosition } from '@hubai/core/esm/common/dom';
+import Tree, { type ITreeProps } from '@hubai/core/esm/components/tree';
+import { type IMenuItemProps, Menu } from '@hubai/core/esm/components/menu';
+import { Button } from '@hubai/core/esm/components/button';
+import type { IFolderTreeController } from '@hubai/core/esm/controller/explorer/folderTree';
+import { useContextMenu } from '@hubai/core/esm/components/contextMenu';
+import { classNames } from '@hubai/core/esm/common/className';
+import { Scrollbar, useContextViewEle } from '@hubai/core/esm/components';
+import { type ICollapseItem } from '@hubai/core/esm/components/collapse';
 import {
   folderTreeClassName,
   folderTreeEditClassName,

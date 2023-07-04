@@ -1,5 +1,5 @@
 import { container, injectable } from 'tsyringe';
-import { Component } from '@allai/core/esm/react/component';
+import { Component } from '@hubai/core/esm/react/component';
 
 import {
   ISearchProps,
@@ -7,9 +7,9 @@ import {
   SearchModel,
   ISearchService,
   IBuiltinService,
-} from '@allai/core';
-import { ITreeNodeItemProps } from '@allai/core/esm/components';
-import { searchById } from '@allai/core/esm/common/utils';
+} from '@hubai/core';
+import { ITreeNodeItemProps } from '@hubai/core/esm/components';
+import { searchById } from '@hubai/core/esm/common/utils';
 
 @injectable()
 class SearchService extends Component<ISearchProps> implements ISearchService {

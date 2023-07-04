@@ -1,6 +1,6 @@
 import React from 'react';
 import { inject, injectable } from 'tsyringe';
-import { type ISidebarService, Controller } from '@allai/core';
+import { type ISidebarService, Controller } from '@hubai/core';
 
 export interface ISideBarController extends Partial<Controller> {}
 

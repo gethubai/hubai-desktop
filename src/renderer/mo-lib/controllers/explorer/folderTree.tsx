@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 import { inject, injectable } from 'tsyringe';
 import cloneDeep from 'lodash/cloneDeep';
-import { Controller } from '@allai/core/esm/react/controller';
-import { IMenuItemProps } from '@allai/core/esm/components/menu';
+import { Controller } from '@hubai/core/esm/react/controller';
+import { IMenuItemProps } from '@hubai/core/esm/components/menu';
 import {
   FolderTreeEvent,
   FileTypes,
@@ -10,8 +10,8 @@ import {
   IFolderTreeNodeProps,
   type IBuiltinService,
   type IFolderTreeService,
-} from '@allai/core';
-import type { UniqueId } from '@allai/core/esm/common/types';
+} from '@hubai/core';
+import type { UniqueId } from '@hubai/core/esm/common/types';
 
 export interface IFolderTreeController extends Partial<Controller> {
   readonly createTreeNode?: (type: FileType, id?: UniqueId) => void;

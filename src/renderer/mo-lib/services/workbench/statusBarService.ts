@@ -7,11 +7,11 @@ import {
   IStatusBarService,
   StatusBarEvent,
   StatusBarModel,
-} from '@allai/core';
-import { Component } from '@allai/core/esm/react';
-import { searchById } from '@allai/core/esm/common/utils';
-import logger from '@allai/core/esm/common/logger';
-import type { UniqueId } from '@allai/core/esm/common/types';
+} from '@hubai/core';
+import { Component } from '@hubai/core/esm/react';
+import { searchById } from '@hubai/core/esm/common/utils';
+import logger from '@hubai/core/esm/common/logger';
+import type { UniqueId } from '@hubai/core/esm/common/types';
 
 type StatusBarItemInfos =
   | {

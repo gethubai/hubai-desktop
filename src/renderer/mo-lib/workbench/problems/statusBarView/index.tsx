@@ -1,6 +1,6 @@
 import React from 'react';
-import { Icon } from '@allai/core/esm/components/icon';
-import { IStatusBarItem } from '@allai/core/esm/model/workbench/statusBar';
+import { Icon } from '@hubai/core/esm/components/icon';
+import { IStatusBarItem } from '@hubai/core/esm/model/workbench/statusBar';
 
 export function ProblemsStatusBarView(props: IStatusBarItem) {
   const { data = { errors: 0, warnings: 0, infos: 0 } } = props;

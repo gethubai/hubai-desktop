@@ -2,14 +2,14 @@ import {
   getBEMElement,
   getBEMModifier,
   prefixClaName,
-} from '@allai/core/esm/common/className';
+} from '@hubai/core/esm/common/className';
 import {
   ID_ACTIVITY_BAR,
   ID_SIDE_BAR,
   ID_EXPLORER,
   ID_FOLDER_TREE,
   ID_EDITOR_TREE,
-} from '@allai/core/esm/common/id';
+} from '@hubai/core/esm/common/id';
 
 const defaultClassName = prefixClaName(ID_SIDE_BAR);
 const defaultExplorerClassName = prefixClaName(ID_EXPLORER, defaultClassName);

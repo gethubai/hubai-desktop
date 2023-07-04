@@ -1,4 +1,4 @@
-import { BuiltInEditorTabDataType, IEditorTab, IExtension } from '@allai/core';
+import { BuiltInEditorTabDataType, IEditorTab, IExtension } from '@hubai/core';
 import molecule from 'mo';
 
 const ExtendsFolderTree: IExtension = {

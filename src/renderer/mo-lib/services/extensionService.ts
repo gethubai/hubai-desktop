@@ -1,5 +1,5 @@
 import { container, inject, injectable } from 'tsyringe';
-import { ErrorMsg } from '@allai/core/esm/common/error';
+import { ErrorMsg } from '@hubai/core/esm/common/error';
 import {
   AppContext,
   AppContextServices,
@@ -15,17 +15,17 @@ import {
   IProblemsService,
   ISettingsService,
   ILayoutService,
-} from '@allai/core';
-import { IColorTheme } from '@allai/core/esm/model/colorTheme';
-import { type ILocaleService, ILocale } from '@allai/core/esm/i18n';
-import logger from '@allai/core/esm/common/logger';
-import { IDisposable } from '@allai/core/esm/monaco/common';
-import { type IMonacoService } from '@allai/core/esm/monaco/monacoService';
+} from '@hubai/core';
+import { IColorTheme } from '@hubai/core/esm/model/colorTheme';
+import { type ILocaleService, ILocale } from '@hubai/core/esm/i18n';
+import logger from '@hubai/core/esm/common/logger';
+import { IDisposable } from '@hubai/core/esm/monaco/common';
+import { type IMonacoService } from '@hubai/core/esm/monaco/monacoService';
 
-import { searchById } from '@allai/core/esm/common/utils';
-import type { UniqueId } from '@allai/core/esm/common/types';
-import { Action2 } from '@allai/core/esm/monaco/action';
-import { type IColorThemeService } from '@allai/core/esm/services/theme/colorThemeService';
+import { searchById } from '@hubai/core/esm/common/utils';
+import type { UniqueId } from '@hubai/core/esm/common/types';
+import { Action2 } from '@hubai/core/esm/monaco/action';
+import { type IColorThemeService } from '@hubai/core/esm/services/theme/colorThemeService';
 import { registerAction2 } from 'mo/monaco/action';
 import { loadComponent } from 'renderer/common/dynamicModule';
 

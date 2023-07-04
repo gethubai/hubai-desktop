@@ -5,18 +5,18 @@ import {
   type IEditorService,
   EditorTreeEvent,
   Controller,
-} from '@allai/core';
+} from '@hubai/core';
 import {
   EditorTree,
   IOpenEditProps,
 } from 'mo/workbench/sidebar/explore/editorTree';
-import { connect } from '@allai/core/esm/react';
+import { connect } from '@hubai/core/esm/react';
 import {
   IActionBarItemProps,
   IMenuItemProps,
   ITabProps,
-} from '@allai/core/esm/components';
-import type { UniqueId } from '@allai/core/esm/common/types';
+} from '@hubai/core/esm/components';
+import type { UniqueId } from '@hubai/core/esm/common/types';
 
 export interface IEditorTreeController extends Partial<Controller> {
   readonly onClose?: (tabId: UniqueId, groupId: UniqueId) => void;

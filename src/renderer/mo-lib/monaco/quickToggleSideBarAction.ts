@@ -2,18 +2,18 @@
 import { ServicesAccessor } from 'monaco-editor/esm/vs/platform/instantiation/common/instantiation';
 import { KeyChord } from 'monaco-editor/esm/vs/base/common/keyCodes';
 
-import { localize } from '@allai/core/esm/i18n/localize';
-import { KeyMod, KeyCode } from '@allai/core/esm/monaco';
+import { localize } from '@hubai/core/esm/i18n/localize';
+import { KeyMod, KeyCode } from '@hubai/core/esm/monaco';
 import {
   IActivityBarService,
   type ILayoutService,
   IMenuBarService,
   type ISidebarService,
-} from '@allai/core/esm/services';
-import { ID_SIDE_BAR } from '@allai/core/esm/common/id';
-import type { UniqueId } from '@allai/core/esm/common/types';
-import { Action2 } from '@allai/core/esm/monaco/action';
-import { CATEGORIES, KeybindingWeight } from '@allai/core/esm/monaco/common';
+} from '@hubai/core/esm/services';
+import { ID_SIDE_BAR } from '@hubai/core/esm/common/id';
+import type { UniqueId } from '@hubai/core/esm/common/types';
+import { Action2 } from '@hubai/core/esm/monaco/action';
+import { CATEGORIES, KeybindingWeight } from '@hubai/core/esm/monaco/common';
 import { container } from 'tsyringe';
 
 export class CommandQuickSideBarViewAction extends Action2 {

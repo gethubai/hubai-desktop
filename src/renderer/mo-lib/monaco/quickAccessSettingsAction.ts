@@ -3,11 +3,11 @@ import { localize } from 'monaco-editor/esm/vs/nls';
 import { KeyChord } from 'monaco-editor/esm/vs/base/common/keyCodes';
 import { ServicesAccessor } from 'monaco-editor/esm/vs/platform/instantiation/common/instantiation';
 
-import { KeyMod, KeyCode } from '@allai/core/esm/monaco';
-import { KeybindingWeight } from '@allai/core/esm/monaco/common';
-import { Action2 } from '@allai/core/esm/monaco/action';
-import { constants } from '@allai/core/esm/services/builtinService/const';
-import { ISettingsService } from '@allai/core/esm/services';
+import { KeyMod, KeyCode } from '@hubai/core/esm/monaco';
+import { KeybindingWeight } from '@hubai/core/esm/monaco/common';
+import { Action2 } from '@hubai/core/esm/monaco/action';
+import { constants } from '@hubai/core/esm/services/builtinService/const';
+import { ISettingsService } from '@hubai/core/esm/services';
 import { container } from 'tsyringe';
 
 export class QuickAccessSettings extends Action2 {

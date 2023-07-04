@@ -1,8 +1,8 @@
 import React from 'react';
-import { classNames } from '@allai/core/esm/common/className';
-import { IStatusBarItem } from '@allai/core/esm/model/workbench/statusBar';
-import { IStatusBarController } from '@allai/core/esm/controller/statusBar';
-import { getDataAttributionsFromProps } from '@allai/core/esm/common/dom';
+import { classNames } from '@hubai/core/esm/common/className';
+import { IStatusBarItem } from '@hubai/core/esm/model/workbench/statusBar';
+import { IStatusBarController } from '@hubai/core/esm/controller/statusBar';
+import { getDataAttributionsFromProps } from '@hubai/core/esm/common/dom';
 import { itemClassName } from './base';
 
 export function StatusItem(props: IStatusBarItem & IStatusBarController) {

@@ -2,7 +2,7 @@ import {
   getBEMElement,
   getBEMModifier,
   prefixClaName,
-} from '@allai/core/esm/common/className';
+} from '@hubai/core/esm/common/className';
 
 const emptyTextValueClassName = getBEMModifier(
   getBEMElement(prefixClaName('search'), 'treeNode'),

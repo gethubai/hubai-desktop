@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { Button } from '@allai/core/esm/components';
-import { localize } from '@allai/core/esm/i18n';
+import { Button } from '@hubai/core/esm/components';
+import { localize } from '@hubai/core/esm/i18n';
 
 interface ILocaleNotificationProps {
   locale: string;

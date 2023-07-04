@@ -34,7 +34,7 @@ import { ILayoutService } from 'monaco-editor/esm/vs/platform/layout/browser/lay
 import { ServiceCollection } from 'monaco-editor/esm/vs/platform/instantiation/common/serviceCollection';
 import { IModeService } from 'monaco-editor/esm/vs/editor/common/services/modeService.js';
 import { IModelService } from 'monaco-editor/esm/vs/editor/common/services/modelService.js';
-import { IMonacoService } from '@allai/core/esm/monaco/monacoService';
+import { IMonacoService } from '@hubai/core/esm/monaco/monacoService';
 
 @injectable()
 class MonacoService implements IMonacoService {

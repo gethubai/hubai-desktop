@@ -1,15 +1,15 @@
 /* eslint-disable import/prefer-default-export */
-import { localize } from '@allai/core/esm/i18n/localize';
+import { localize } from '@hubai/core/esm/i18n/localize';
 import {
   KeyMod,
   KeyCode,
   Uri,
   editor as MonacoEditor,
-} from '@allai/core/esm/monaco';
-import { IEditorService } from '@allai/core/esm/services';
-import { KeybindingWeight } from '@allai/core/esm/monaco/common';
-import { Action2 } from '@allai/core/esm/monaco/action';
-import { constants } from '@allai/core/esm/services/builtinService/const';
+} from '@hubai/core/esm/monaco';
+import { IEditorService } from '@hubai/core/esm/services';
+import { KeybindingWeight } from '@hubai/core/esm/monaco/common';
+import { Action2 } from '@hubai/core/esm/monaco/action';
+import { constants } from '@hubai/core/esm/services/builtinService/const';
 import { container } from 'tsyringe';
 
 export class QuickRedo extends Action2 {

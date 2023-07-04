@@ -3,14 +3,14 @@ import {
   getBEMElement,
   prefixClaName,
   getBEMModifier,
-} from '@allai/core/esm/common/className';
-import { IMenuBarItem } from '@allai/core/esm/model/workbench/menuBar';
+} from '@hubai/core/esm/common/className';
+import { IMenuBarItem } from '@hubai/core/esm/model/workbench/menuBar';
 import {
   Menu,
   MenuMode,
   MenuRef,
   IMenuProps,
-} from '@allai/core/esm/components/menu';
+} from '@hubai/core/esm/components/menu';
 import Logo from './logo';
 
 export const defaultClassName = prefixClaName('menuBar');

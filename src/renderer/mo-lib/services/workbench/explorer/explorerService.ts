@@ -1,18 +1,18 @@
 import { container, injectable } from 'tsyringe';
 import cloneDeep from 'lodash/cloneDeep';
-import { Component } from '@allai/core/esm/react/component';
-import { IMenuItemProps } from '@allai/core/esm/components/menu';
-import { searchById } from '@allai/core/esm/common/utils';
-import { IActionBarItemProps } from '@allai/core/esm/components';
-import logger from '@allai/core/esm/common/logger';
-import type { UniqueId } from '@allai/core/esm/common/types';
+import { Component } from '@hubai/core/esm/react/component';
+import { IMenuItemProps } from '@hubai/core/esm/components/menu';
+import { searchById } from '@hubai/core/esm/common/utils';
+import { IActionBarItemProps } from '@hubai/core/esm/components';
+import logger from '@hubai/core/esm/common/logger';
+import type { UniqueId } from '@hubai/core/esm/common/types';
 import {
   IExplorerService,
   IExplorerPanelItem,
   IExplorer,
   IExplorerModel,
   ExplorerEvent,
-} from '@allai/core';
+} from '@hubai/core';
 
 @injectable()
 class ExplorerService extends Component<IExplorer> implements IExplorerService {

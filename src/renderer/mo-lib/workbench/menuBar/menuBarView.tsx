@@ -1,7 +1,7 @@
 import { container } from 'tsyringe';
-import { Controller, connect } from '@allai/core/esm/react';
+import { Controller, connect } from '@hubai/core/esm/react';
 
-import { IMenuBarService } from '@allai/core';
+import { IMenuBarService } from '@hubai/core';
 import { IMenuBarController } from 'mo/controllers';
 import MenuBar from './menuBar';
 

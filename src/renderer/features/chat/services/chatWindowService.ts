@@ -12,7 +12,7 @@ import {
   BrainManagementService,
   IBrainManagementService,
 } from 'renderer/features/brain/services/brainManagement';
-import { Component } from '@allai/core/esm/react';
+import { Component } from '@hubai/core/esm/react';
 import {
   ChatWindowMessage,
   ChatWindowStateModel,

@@ -1,4 +1,4 @@
-import { IActionBarItemProps } from '@allai/core/esm/components';
+import { IActionBarItemProps } from '@hubai/core/esm/components';
 import { LocalBrainModel } from 'api-server/brain/domain/models/localBrain';
 
 export enum BrainEvent {

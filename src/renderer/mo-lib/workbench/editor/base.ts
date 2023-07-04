@@ -2,7 +2,7 @@ import {
   getBEMElement,
   getBEMModifier,
   prefixClaName,
-} from '@allai/core/esm/common/className';
+} from '@hubai/core/esm/common/className';
 
 export const defaultEditorClassName = prefixClaName('editor');
 export const groupClassName = getBEMElement(defaultEditorClassName, 'group');

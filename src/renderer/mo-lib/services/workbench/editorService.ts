@@ -1,7 +1,7 @@
 import React from 'react';
 import { container, inject, injectable } from 'tsyringe';
 import { cloneDeep, isString } from 'lodash';
-import { Component } from '@allai/core/esm/react';
+import { Component } from '@hubai/core/esm/react';
 import {
   EditorModel,
   EditorGroupModel,
@@ -11,16 +11,16 @@ import {
   EditorEvent,
   IEditorActionsProps,
   IEditorOptions,
-} from '@allai/core/esm/model';
-import { randomId, searchById } from '@allai/core/esm/common/utils';
-import { editor as MonacoEditor, Uri } from '@allai/core/esm/monaco';
-import { IMenuItemProps } from '@allai/core/esm/components';
-import type { UniqueId } from '@allai/core/esm/common/types';
+} from '@hubai/core/esm/model';
+import { randomId, searchById } from '@hubai/core/esm/common/utils';
+import { editor as MonacoEditor, Uri } from '@hubai/core/esm/monaco';
+import { IMenuItemProps } from '@hubai/core/esm/components';
+import type { UniqueId } from '@hubai/core/esm/common/types';
 import {
   type IEditorService,
   type IExplorerService,
   type ILayoutService,
-} from '@allai/core';
+} from '@hubai/core';
 
 @injectable()
 class EditorService extends Component<IEditor> implements IEditorService {

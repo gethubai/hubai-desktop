@@ -3,7 +3,7 @@
 /* eslint-disable promise/catch-or-return */
 // import ChatExtension from './chat';
 
-import { IExtension } from '@allai/core';
+import { IExtension } from '@hubai/core';
 import ExtensionService from 'mo/services/extensionService';
 
 const loadExtensions = async () => {

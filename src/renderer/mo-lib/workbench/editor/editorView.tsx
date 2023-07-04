@@ -1,7 +1,7 @@
 import { container } from 'tsyringe';
-import { Controller, connect } from '@allai/core/esm/react';
-import { IEditorController } from '@allai/core/esm/controller/editor';
-import { type IEditorService, type ILayoutService } from '@allai/core';
+import { Controller, connect } from '@hubai/core/esm/react';
+import { IEditorController } from '@hubai/core/esm/controller/editor';
+import { type IEditorService, type ILayoutService } from '@hubai/core';
 import { Editor } from './editor';
 import { EditorStatusBarView } from './statusBarView';
 

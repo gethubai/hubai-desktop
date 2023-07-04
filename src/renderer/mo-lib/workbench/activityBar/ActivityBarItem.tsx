@@ -1,11 +1,11 @@
 import React from 'react';
-import { classNames } from '@allai/core/esm/common/className';
-import { IActivityBarItem } from '@allai/core/esm/model/workbench/activityBar';
-import { IMenuItemProps, Menu } from '@allai/core/esm/components/menu';
-import { IActivityBarController } from '@allai/core';
+import { classNames } from '@hubai/core/esm/common/className';
+import { IActivityBarItem } from '@hubai/core/esm/model/workbench/activityBar';
+import { IMenuItemProps, Menu } from '@hubai/core/esm/components/menu';
+import { IActivityBarController } from '@hubai/core';
 
-import { Icon, useContextViewEle } from '@allai/core/esm/components';
-import { KeybindingHelper } from '@allai/core/esm/services/keybinding';
+import { Icon, useContextViewEle } from '@hubai/core/esm/components';
+import { KeybindingHelper } from '@hubai/core/esm/services/keybinding';
 import {
   indicatorClassName,
   labelClassName,

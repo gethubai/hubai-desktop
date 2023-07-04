@@ -6,7 +6,7 @@ import {
   type ISidebarService,
   react,
   IActivityBarItem,
-} from '@allai/core';
+} from '@hubai/core';
 
 import { container, injectable, inject } from 'tsyringe';
 import { ChatModel } from 'api-server/chat/domain/models/chat';

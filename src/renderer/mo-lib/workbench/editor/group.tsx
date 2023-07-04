@@ -1,10 +1,10 @@
-import { MonacoEditor } from '@allai/core/esm/components/monaco';
-import { Tabs } from '@allai/core/esm/components/tabs';
-import { IEditorGroup, IEditorOptions, IEditorController } from '@allai/core';
+import { MonacoEditor } from '@hubai/core/esm/components/monaco';
+import { Tabs } from '@hubai/core/esm/components/tabs';
+import { IEditorGroup, IEditorOptions, IEditorController } from '@hubai/core';
 import React, { memo, useEffect } from 'react';
-import { Menu } from '@allai/core/esm/components/menu';
-import { useContextView } from '@allai/core/esm/components/contextView';
-import { getEventPosition } from '@allai/core/esm/common/dom';
+import { Menu } from '@hubai/core/esm/components/menu';
+import { useContextView } from '@hubai/core/esm/components/contextView';
+import { getEventPosition } from '@hubai/core/esm/common/dom';
 import EditorBreadcrumb from './breadcrumb';
 import EditorAction from './action';
 import {

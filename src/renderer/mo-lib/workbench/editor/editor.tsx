@@ -1,11 +1,11 @@
 import React, { memo } from 'react';
-import SplitPane from '@allai/core/esm/components/split';
-import Pane from '@allai/core/esm/components/split/pane';
-import { IEditor, IEditorGroup } from '@allai/core/esm/model';
+import SplitPane from '@hubai/core/esm/components/split';
+import Pane from '@hubai/core/esm/components/split/pane';
+import { IEditor, IEditorGroup } from '@hubai/core/esm/model';
 
-import { IEditorController } from '@allai/core/esm/controller/editor';
-import type { UniqueId } from '@allai/core/esm/common/types';
-import { ILayout } from '@allai/core/esm/model/workbench/layout';
+import { IEditorController } from '@hubai/core/esm/controller/editor';
+import type { UniqueId } from '@hubai/core/esm/common/types';
+import { ILayout } from '@hubai/core/esm/model/workbench/layout';
 import Welcome from './welcome';
 import { EditorGroup } from './group';
 import { defaultEditorClassName } from './base';

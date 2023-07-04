@@ -1,13 +1,13 @@
 import React, { memo, useEffect, useRef } from 'react';
-import { Icon } from '@allai/core/esm/components/icon';
-import type { INotification, INotificationController } from '@allai/core';
+import { Icon } from '@hubai/core/esm/components/icon';
+import type { INotification, INotificationController } from '@hubai/core';
 import {
   classNames,
   getBEMModifier,
   prefixClaName,
-} from '@allai/core/esm/common/className';
-import { select } from '@allai/core/esm/common/dom';
-import { render } from '@allai/core/esm/react/render';
+} from '@hubai/core/esm/common/className';
+import { select } from '@hubai/core/esm/common/dom';
+import { render } from '@hubai/core/esm/react/render';
 import { NotificationPane } from '../notificationPane';
 
 const defaultBellClassName = prefixClaName('bell');

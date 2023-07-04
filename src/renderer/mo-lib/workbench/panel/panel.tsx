@@ -1,8 +1,8 @@
 import React from 'react';
-import { getBEMElement, prefixClaName } from '@allai/core/esm/common/className';
-import { IPanel, IPanelItem } from '@allai/core/esm/model/workbench/panel';
-import { Tabs } from '@allai/core/esm/components/tabs';
-import { ActionBar } from '@allai/core/esm/components/actionBar';
+import { getBEMElement, prefixClaName } from '@hubai/core/esm/common/className';
+import { IPanel, IPanelItem } from '@hubai/core/esm/model/workbench/panel';
+import { Tabs } from '@hubai/core/esm/components/tabs';
+import { ActionBar } from '@hubai/core/esm/components/actionBar';
 import { IPanelController } from 'mo/controllers';
 
 const defaultClassName = prefixClaName('panel');

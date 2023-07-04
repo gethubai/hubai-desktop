@@ -8,8 +8,8 @@ import {
   MenuRegistry,
   MenuId,
 } from 'monaco-editor/esm/vs/platform/actions/common/actions';
-import { IDisposable } from '@allai/core/esm/monaco/common';
-import { Action2 } from '@allai/core/esm/monaco/action';
+import { IDisposable } from '@hubai/core/esm/monaco/common';
+import { Action2 } from '@hubai/core/esm/monaco/action';
 
 export function registerAction2(Ctor: { new (): Action2 }): IDisposable {
   const disposables = new DisposableStore();

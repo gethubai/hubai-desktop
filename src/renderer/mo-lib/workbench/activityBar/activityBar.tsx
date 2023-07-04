@@ -6,14 +6,14 @@ import {
   IActivityBarController,
   IActivityBarItem,
   type UniqueId,
-} from '@allai/core';
-import { ID_ACTIVITY_BAR } from '@allai/core/esm/common/id';
+} from '@hubai/core';
+import { ID_ACTIVITY_BAR } from '@hubai/core/esm/common/id';
 import {
   IMenuItemProps,
   Menu,
   Scrollbar,
   useContextViewEle,
-} from '@allai/core/esm/components';
+} from '@hubai/core/esm/components';
 import {
   containerClassName,
   defaultClassName,

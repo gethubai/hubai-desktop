@@ -1,16 +1,16 @@
 import 'reflect-metadata';
 import { cloneDeep } from 'lodash';
 import { container, injectable } from 'tsyringe';
-import type { UniqueId } from '@allai/core/esm/common/types';
+import type { UniqueId } from '@hubai/core/esm/common/types';
 import {
   IMenuBar,
   IMenuBarItem,
   MenuBarModel,
   MenuBarEvent,
-} from '@allai/core/esm/model/workbench/menuBar';
-import { Component } from '@allai/core/esm/react';
-import logger from '@allai/core/esm/common/logger';
-import { IMenuBarService } from '@allai/core';
+} from '@hubai/core/esm/model/workbench/menuBar';
+import { Component } from '@hubai/core/esm/react';
+import logger from '@hubai/core/esm/common/logger';
+import { IMenuBarService } from '@hubai/core';
 
 @injectable()
 class MenuBarService extends Component<IMenuBar> implements IMenuBarService {

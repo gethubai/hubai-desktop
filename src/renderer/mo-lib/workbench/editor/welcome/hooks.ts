@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 
-import { localize } from '@allai/core/esm/i18n/localize';
-import { constants } from '@allai/core/esm/services/builtinService/const';
-import { KeybindingHelper } from '@allai/core/esm/services/keybinding';
+import { localize } from '@hubai/core/esm/i18n/localize';
+import { constants } from '@hubai/core/esm/services/builtinService/const';
+import { KeybindingHelper } from '@hubai/core/esm/services/keybinding';
 
 const KEYBINDINGS = () => [
   {

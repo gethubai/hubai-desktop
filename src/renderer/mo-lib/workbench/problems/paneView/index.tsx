@@ -1,9 +1,9 @@
 import React, { memo } from 'react';
-import { getBEMElement, prefixClaName } from '@allai/core/esm/common/className';
-import TreeView from '@allai/core/esm/components/tree';
-import { localize } from '@allai/core/esm/i18n/localize';
-import { Icon, Scrollbar } from '@allai/core/esm/components';
-import { IProblems, MarkerSeverity } from '@allai/core/esm/model';
+import { getBEMElement, prefixClaName } from '@hubai/core/esm/common/className';
+import TreeView from '@hubai/core/esm/components/tree';
+import { localize } from '@hubai/core/esm/i18n/localize';
+import { Icon, Scrollbar } from '@hubai/core/esm/components';
+import { IProblems, MarkerSeverity } from '@hubai/core/esm/model';
 
 const defaultClassName = prefixClaName('problems');
 const treeClassName = getBEMElement(defaultClassName, 'treeview');

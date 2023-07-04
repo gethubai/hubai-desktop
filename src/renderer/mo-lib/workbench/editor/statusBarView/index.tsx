@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { IStatusBarItem } from '@allai/core/esm/model/workbench/statusBar';
+import { IStatusBarItem } from '@hubai/core/esm/model/workbench/statusBar';
 
 export function EditorStatusBarView(props: IStatusBarItem) {
   const { data = { ln: 0, col: 0 } } = props;

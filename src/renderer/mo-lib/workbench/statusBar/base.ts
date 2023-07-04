@@ -1,5 +1,5 @@
-import { getBEMElement, prefixClaName } from '@allai/core/esm/common/className';
-import { IStatusBarItem } from '@allai/core/esm/model';
+import { getBEMElement, prefixClaName } from '@hubai/core/esm/common/className';
+import { IStatusBarItem } from '@hubai/core/esm/model';
 
 export const statusBarClassName = prefixClaName('statusBar');
 export const leftItemsClassName = getBEMElement(

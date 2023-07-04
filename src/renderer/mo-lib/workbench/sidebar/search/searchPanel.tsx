@@ -1,12 +1,12 @@
 import React from 'react';
-import { Toolbar } from '@allai/core/esm/components/toolbar';
-import { classNames, prefixClaName } from '@allai/core/esm/common/className';
-import { Header, Content } from '@allai/core/esm/workbench';
-import { Search } from '@allai/core/esm/components/search';
-import type { SearchValues } from '@allai/core/esm/components/search';
-import { ISearchProps } from '@allai/core/esm/model/workbench/search';
-import { localize } from '@allai/core/esm/i18n/localize';
-import { ISearchController } from '@allai/core/esm/controller';
+import { Toolbar } from '@hubai/core/esm/components/toolbar';
+import { classNames, prefixClaName } from '@hubai/core/esm/common/className';
+import { Header, Content } from '@hubai/core/esm/workbench';
+import { Search } from '@hubai/core/esm/components/search';
+import type { SearchValues } from '@hubai/core/esm/components/search';
+import { ISearchProps } from '@hubai/core/esm/model/workbench/search';
+import { localize } from '@hubai/core/esm/i18n/localize';
+import { ISearchController } from '@hubai/core/esm/controller';
 import SearchTree from './searchTree';
 import {
   deleteSearchValueClassName,

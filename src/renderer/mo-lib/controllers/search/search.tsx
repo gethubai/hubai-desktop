@@ -1,16 +1,16 @@
 import { inject, injectable } from 'tsyringe';
-import { Controller } from '@allai/core/esm/react/controller';
-import { connect } from '@allai/core/esm/react';
+import { Controller } from '@hubai/core/esm/react/controller';
+import { connect } from '@hubai/core/esm/react';
 import { SearchPanel } from 'mo/workbench/sidebar/search';
-import { IActionBarItemProps } from '@allai/core/esm/components/actionBar';
-import { SearchEvent } from '@allai/core/esm/model/workbench/search';
+import { IActionBarItemProps } from '@hubai/core/esm/components/actionBar';
+import { SearchEvent } from '@hubai/core/esm/model/workbench/search';
 import {
   type IActivityBarService,
   type IBuiltinService,
   type ISearchService,
   type ISidebarService,
-} from '@allai/core/esm/services';
-import { ISearchProps, ITreeNodeItemProps } from '@allai/core/esm/components';
+} from '@hubai/core/esm/services';
+import { ISearchProps, ITreeNodeItemProps } from '@hubai/core/esm/components';
 
 export interface ISearchController extends Partial<Controller> {
   getSearchIndex?: (text: string, queryVal?: string) => number;

@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect } from 'react';
-import { IStatusBar, IStatusBarController, IStatusBarItem } from '@allai/core';
+import { IStatusBar, IStatusBarController, IStatusBarItem } from '@hubai/core';
 import {
   IMenuItemProps,
   Menu,
   useContextMenu,
-} from '@allai/core/esm/components';
-import { mergeFunctions } from '@allai/core/esm/common/utils';
-import { select } from '@allai/core/esm/common/dom';
-import { ID_STATUS_BAR } from '@allai/core/esm/common/id';
+} from '@hubai/core/esm/components';
+import { mergeFunctions } from '@hubai/core/esm/common/utils';
+import { select } from '@hubai/core/esm/common/dom';
+import { ID_STATUS_BAR } from '@hubai/core/esm/common/id';
 import {
   leftItemsClassName,
   rightItemsClassName,

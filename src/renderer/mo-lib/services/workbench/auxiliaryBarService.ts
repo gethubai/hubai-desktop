@@ -1,15 +1,15 @@
 import React from 'react';
 import { container, injectable } from 'tsyringe';
-import { Component } from '@allai/core/esm/react/component';
+import { Component } from '@hubai/core/esm/react/component';
 import {
   AuxiliaryEventKind,
   AuxiliaryModel,
   IAuxiliaryBar,
   IAuxiliaryBarMode,
   IAuxiliaryData,
-} from '@allai/core/esm/model';
-import type { UniqueId } from '@allai/core/esm/common/types';
-import { IAuxiliaryBarService } from '@allai/core';
+} from '@hubai/core/esm/model';
+import type { UniqueId } from '@hubai/core/esm/common/types';
+import { IAuxiliaryBarService } from '@hubai/core';
 
 @injectable()
 class AuxiliaryBarService

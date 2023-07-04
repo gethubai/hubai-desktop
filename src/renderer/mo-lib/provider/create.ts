@@ -1,4 +1,4 @@
-import { IExtension } from '@allai/core';
+import { IExtension } from '@hubai/core';
 import InstanceService from 'mo/services/instanceService';
 
 export interface IConfigProps {

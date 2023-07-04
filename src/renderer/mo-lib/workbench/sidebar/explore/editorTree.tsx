@@ -1,6 +1,6 @@
 import React, { useLayoutEffect, useRef } from 'react';
-import { IEditorTreeController } from '@allai/core/esm/controller';
-import { IEditor, IEditorGroup } from '@allai/core';
+import { IEditorTreeController } from '@hubai/core/esm/controller';
+import { IEditor, IEditorGroup } from '@hubai/core';
 import {
   IActionBarItemProps,
   Icon,
@@ -11,17 +11,17 @@ import {
   useContextView,
   Scrollbar,
   IScrollRef,
-} from '@allai/core/esm/components';
-import { classNames } from '@allai/core/esm/common/className';
-import { getEventPosition } from '@allai/core/esm/common/dom';
-import { localize } from '@allai/core/esm/i18n/localize';
+} from '@hubai/core/esm/components';
+import { classNames } from '@hubai/core/esm/common/className';
+import { getEventPosition } from '@hubai/core/esm/common/dom';
+import { localize } from '@hubai/core/esm/i18n/localize';
 import {
   ICollapseItem,
   HEADER_HEIGTH,
   MAX_GROW_HEIGHT,
-} from '@allai/core/esm/components/collapse';
-import { constants } from '@allai/core/esm/services/builtinService/const';
-import type { UniqueId } from '@allai/core/esm/common/types';
+} from '@hubai/core/esm/components/collapse';
+import { constants } from '@hubai/core/esm/services/builtinService/const';
+import type { UniqueId } from '@hubai/core/esm/common/types';
 import {
   editorTreeActiveItemClassName,
   editorTreeClassName,

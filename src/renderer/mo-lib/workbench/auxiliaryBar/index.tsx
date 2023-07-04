@@ -1,6 +1,6 @@
 import { container } from 'tsyringe';
-import { Controller, connect } from '@allai/core/esm/react';
-import { IAuxiliaryBarService } from '@allai/core';
+import { Controller, connect } from '@hubai/core/esm/react';
+import { IAuxiliaryBarService } from '@hubai/core';
 import { IAuxiliaryController } from 'mo/controllers';
 import AuxiliaryBarView from './auxiliaryBar';
 import AuxiliaryBarTabView from './auxiliaryBarTab';

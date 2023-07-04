@@ -1,15 +1,15 @@
 /* eslint-disable import/prefer-default-export */
-import { localize } from '@allai/core/esm/i18n/localize';
-import { IEditorService } from '@allai/core/esm/services';
-import { constants } from '@allai/core/esm/services/builtinService/const';
-import { KeybindingWeight } from '@allai/core/esm/monaco/common';
-import { Action2 } from '@allai/core/esm/monaco/action';
+import { localize } from '@hubai/core/esm/i18n/localize';
+import { IEditorService } from '@hubai/core/esm/services';
+import { constants } from '@hubai/core/esm/services/builtinService/const';
+import { KeybindingWeight } from '@hubai/core/esm/monaco/common';
+import { Action2 } from '@hubai/core/esm/monaco/action';
 import {
   KeyMod,
   KeyCode,
   Uri,
   editor as MonacoEditor,
-} from '@allai/core/esm/monaco';
+} from '@hubai/core/esm/monaco';
 import { container } from 'tsyringe';
 
 export class QuickUndo extends Action2 {

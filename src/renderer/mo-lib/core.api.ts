@@ -21,9 +21,9 @@ import {
   type ILocaleService,
   type ISidebarService,
   IBuiltinService,
-} from '@allai/core';
+} from '@hubai/core';
 
-import { type IMonacoService } from '@allai/core/esm/monaco/monacoService';
+import { type IMonacoService } from '@hubai/core/esm/monaco/monacoService';
 
 /**
  * The locale service

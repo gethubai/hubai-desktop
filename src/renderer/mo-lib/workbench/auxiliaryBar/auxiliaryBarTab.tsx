@@ -1,6 +1,6 @@
 import React from 'react';
-import { classNames } from '@allai/core/esm/common/className';
-import type { IAuxiliaryBar } from '@allai/core/esm/model';
+import { classNames } from '@hubai/core/esm/common/className';
+import type { IAuxiliaryBar } from '@hubai/core/esm/model';
 import { IAuxiliaryController } from 'mo/controllers';
 import { tabActiveClassName, tabClassName, tabsClassName } from './base';
 

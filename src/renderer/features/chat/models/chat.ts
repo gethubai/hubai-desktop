@@ -1,5 +1,5 @@
-import { UniqueId } from '@allai/core';
-import { IActionBarItemProps } from '@allai/core/esm/components';
+import { UniqueId } from '@hubai/core';
+import { IActionBarItemProps } from '@hubai/core/esm/components';
 
 export enum ChatEvent {
   onListUpdated = 'chat.onListUpdated',

@@ -21,7 +21,7 @@ import {
   IExtensionService,
   IColorThemeService,
   ILocaleService,
-} from '@allai/core';
+} from '@hubai/core';
 
 import SidebarService from 'mo/services/workbench/sidebarService';
 import ActivityBarService from 'mo/services/workbench/activityBarService';
@@ -79,7 +79,7 @@ import ExplorerController, {
 } from 'mo/controllers/explorer/explorer';
 import ExtensionService from 'mo/services/extensionService';
 import ColorThemeService from 'mo/services/theme/colorThemeService';
-import { IMonacoService } from '@allai/core/esm/monaco/monacoService';
+import { IMonacoService } from '@hubai/core/esm/monaco/monacoService';
 import MonacoService from 'mo/monaco/monacoService';
 import StatusBarController, {
   IStatusBarController,

@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import Tree, { ITreeProps } from '@allai/core/esm/components/tree';
+import Tree, { ITreeProps } from '@hubai/core/esm/components/tree';
 import { treeContentClassName } from './base';
 
 export interface SearchTreeProps extends ITreeProps {}

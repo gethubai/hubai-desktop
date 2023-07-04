@@ -1,11 +1,11 @@
 /* eslint-disable promise/catch-or-return */
 import React from 'react';
-import { prefixClaName } from '@allai/core/esm/common/className';
+import { prefixClaName } from '@hubai/core/esm/common/className';
 // import { loadComponent } from 'renderer/common/dynamicModule';
 import ExtensionService from 'mo/services/extensionService';
 import { container } from 'tsyringe';
-import { IExtension, IExtensionService } from '@allai/core';
-import { Button } from '@allai/core/esm/components';
+import { IExtension, IExtensionService } from '@hubai/core';
+import { Button } from '@hubai/core/esm/components';
 import useGetKeys from './hooks';
 
 export default function Welcome() {

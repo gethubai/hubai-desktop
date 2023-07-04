@@ -9,8 +9,8 @@ import {
   type INotificationService,
   SettingsEvent,
   Controller,
-} from '@allai/core';
-import { ILocale, type ILocaleService } from '@allai/core/esm/i18n';
+} from '@hubai/core';
+import { ILocale, type ILocaleService } from '@hubai/core/esm/i18n';
 import LocaleNotification from 'mo/workbench/notification/notificationPane/localeNotification';
 
 export interface ISettingsController extends Partial<Controller> {}

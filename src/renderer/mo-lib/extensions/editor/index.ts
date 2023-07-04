@@ -1,4 +1,4 @@
-import { IExtension } from '@allai/core';
+import { IExtension } from '@hubai/core';
 import molecule from 'mo';
 
 const ExtendsEditor: IExtension = {

@@ -1,13 +1,13 @@
 import React from 'react';
-import { Controller } from '@allai/core/esm/react/controller';
-import { IMenuItemProps } from '@allai/core/esm/components/menu';
+import { Controller } from '@hubai/core/esm/react/controller';
+import { IMenuItemProps } from '@hubai/core/esm/components/menu';
 import { inject, injectable } from 'tsyringe';
 import {
   type IBuiltinService,
   type IStatusBarService,
   IStatusBarItem,
   StatusBarEvent,
-} from '@allai/core';
+} from '@hubai/core';
 import { EditorStatusBarView } from 'mo/workbench/editor';
 import { cloneDeep } from 'lodash';
 import { type IMenuBarController } from './menuBar';

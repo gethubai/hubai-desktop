@@ -3,19 +3,19 @@ import {
   ColorThemeMode,
   ColorScheme,
   ColorThemeEvent,
-} from '@allai/core/esm/model/colorTheme';
-import { editor as monacoEditor } from '@allai/core/esm/monaco';
-import { applyStyleSheetRules } from '@allai/core/esm/common/css';
-import logger from '@allai/core/esm/common/logger';
-import { prefixClaName } from '@allai/core/esm/common/className';
-import { searchById, colorLightOrDark } from '@allai/core/esm/common/utils';
-import { GlobalEvent } from '@allai/core/esm/common/event';
+} from '@hubai/core/esm/model/colorTheme';
+import { editor as monacoEditor } from '@hubai/core/esm/monaco';
+import { applyStyleSheetRules } from '@hubai/core/esm/common/css';
+import logger from '@hubai/core/esm/common/logger';
+import { prefixClaName } from '@hubai/core/esm/common/className';
+import { searchById, colorLightOrDark } from '@hubai/core/esm/common/utils';
+import { GlobalEvent } from '@hubai/core/esm/common/event';
 import { injectable } from 'tsyringe';
-import { IColorThemeService } from '@allai/core';
+import { IColorThemeService } from '@hubai/core';
 import {
   getThemeData,
   convertToCSSVars,
-} from '@allai/core/esm/services/theme/helper';
+} from '@hubai/core/esm/services/theme/helper';
 
 /**
  * @ignore

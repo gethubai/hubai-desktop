@@ -1,9 +1,9 @@
-import { Controller } from '@allai/core/esm/react/controller';
+import { Controller } from '@hubai/core/esm/react/controller';
 import { inject, injectable } from 'tsyringe';
-import { type IBuiltinService, type IExtensionService } from '@allai/core';
-import { SelectLocaleAction } from '@allai/core/esm/i18n/selectLocaleAction';
-import { ID_SIDE_BAR } from '@allai/core/esm/common/id';
-import type { Action2 } from '@allai/core/esm/monaco/action';
+import { type IBuiltinService, type IExtensionService } from '@hubai/core';
+import { SelectLocaleAction } from '@hubai/core/esm/i18n/selectLocaleAction';
+import { ID_SIDE_BAR } from '@hubai/core/esm/common/id';
+import type { Action2 } from '@hubai/core/esm/monaco/action';
 import { CommandQuickAccessViewAction } from 'mo/monaco/quickAccessViewAction';
 import { QuickAccessSettings } from 'mo/monaco/quickAccessSettingsAction';
 import { SelectColorThemeAction } from 'mo/monaco/selectColorThemeAction';

@@ -3,24 +3,24 @@ import { container, inject, injectable } from 'tsyringe';
 import { StandaloneEditor } from 'monaco-editor/esm/vs/editor/standalone/browser/standaloneCodeEditor';
 import { cloneDeepWith, cloneDeep } from 'lodash';
 import pickBy from 'lodash/pickBy';
-import { Component } from '@allai/core/esm/react';
+import { Component } from '@hubai/core/esm/react';
 import {
   IOutput,
   IPanel,
   IPanelItem,
   PanelEvent,
   PanelModel,
-} from '@allai/core/esm/model/workbench/panel';
+} from '@hubai/core/esm/model/workbench/panel';
 
-import { searchById } from '@allai/core/esm/common/utils';
-import { IActionBarItemProps } from '@allai/core/esm/components/actionBar';
+import { searchById } from '@hubai/core/esm/common/utils';
+import { IActionBarItemProps } from '@hubai/core/esm/components/actionBar';
 import {
   type IBuiltinService,
   IPanelService,
   type ILayoutService,
-} from '@allai/core';
-import logger from '@allai/core/esm/common/logger';
-import type { UniqueId } from '@allai/core/esm/common/types';
+} from '@hubai/core';
+import logger from '@hubai/core/esm/common/logger';
+import type { UniqueId } from '@hubai/core/esm/common/types';
 
 @injectable()
 class PanelService extends Component<IPanel> implements IPanelService {

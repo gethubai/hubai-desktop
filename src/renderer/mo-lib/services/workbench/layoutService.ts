@@ -1,15 +1,15 @@
 import { container, injectable } from 'tsyringe';
-import { Component } from '@allai/core/esm/react';
-import { ID_APP } from '@allai/core/esm/common/id';
+import { Component } from '@hubai/core/esm/react';
+import { ID_APP } from '@hubai/core/esm/common/id';
 import {
   ILayout,
   Position,
   LayoutModel,
   MenuBarMode,
   LayoutEvents,
-} from '@allai/core/esm/model/workbench/layout';
-import { MenuBarEvent } from '@allai/core/esm/model/workbench/menuBar';
-import { ILayoutService } from '@allai/core';
+} from '@hubai/core/esm/model/workbench/layout';
+import { MenuBarEvent } from '@hubai/core/esm/model/workbench/menuBar';
+import { ILayoutService } from '@hubai/core';
 
 @injectable()
 class LayoutService extends Component<ILayout> implements ILayoutService {

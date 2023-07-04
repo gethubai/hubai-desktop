@@ -1,4 +1,4 @@
-import { Controller } from '@allai/core/esm/react';
+import { Controller } from '@hubai/core/esm/react';
 import { ChatBrain, ChatModel } from 'api-server/chat/domain/models/chat';
 import {
   ChatMessageType,

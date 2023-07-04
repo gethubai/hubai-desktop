@@ -1,11 +1,11 @@
 /* eslint-disable import/prefer-default-export */
-import { IFolderTreeController } from '@allai/core/esm/controller/explorer/folderTree';
-import { KeybindingWeight } from '@allai/core/esm/monaco/common';
-import { constants } from '@allai/core/esm/services/builtinService/const';
-import { Action2 } from '@allai/core/esm/monaco/action';
-import { localize } from '@allai/core/esm/i18n/localize';
-import { KeyMod, KeyCode } from '@allai/core/esm/monaco';
-import { FileTypes } from '@allai/core/esm/model';
+import { IFolderTreeController } from '@hubai/core/esm/controller/explorer/folderTree';
+import { KeybindingWeight } from '@hubai/core/esm/monaco/common';
+import { constants } from '@hubai/core/esm/services/builtinService/const';
+import { Action2 } from '@hubai/core/esm/monaco/action';
+import { localize } from '@hubai/core/esm/i18n/localize';
+import { KeyMod, KeyCode } from '@hubai/core/esm/monaco';
+import { FileTypes } from '@hubai/core/esm/model';
 import { container } from 'tsyringe';
 
 export class QuickCreateFile extends Action2 {

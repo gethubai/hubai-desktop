@@ -1,9 +1,9 @@
 import React from 'react';
-import { Controller } from '@allai/core/esm/react/controller';
+import { Controller } from '@hubai/core/esm/react/controller';
 import { inject, injectable } from 'tsyringe';
-import { ControllerObject, connect } from '@allai/core/esm/react';
+import { ControllerObject, connect } from '@hubai/core/esm/react';
 import { Explorer, FolderTree } from 'mo/workbench/sidebar/explore';
-import { IMenuItemProps } from '@allai/core/esm/components/menu';
+import { IMenuItemProps } from '@hubai/core/esm/components/menu';
 import {
   ExplorerEvent,
   IExplorerPanelItem,
@@ -12,9 +12,9 @@ import {
   type IActivityBarService,
   type IBuiltinService,
   type IFolderTreeService,
-} from '@allai/core';
-import { FileTypes, EditorTreeEvent } from '@allai/core/esm/model';
-import { IActionBarItemProps } from '@allai/core/esm/components/actionBar';
+} from '@hubai/core';
+import { FileTypes, EditorTreeEvent } from '@hubai/core/esm/model';
+import { IActionBarItemProps } from '@hubai/core/esm/components/actionBar';
 import { type IFolderTreeController } from './folderTree';
 
 export interface IExplorerController extends Partial<Controller> {

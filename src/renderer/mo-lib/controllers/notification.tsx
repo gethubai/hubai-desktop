@@ -1,6 +1,6 @@
 import React from 'react';
 import { inject, injectable } from 'tsyringe';
-import { connect } from '@allai/core/esm/react';
+import { connect } from '@hubai/core/esm/react';
 import {
   Float,
   IStatusBarItem,
@@ -8,9 +8,9 @@ import {
   type IStatusBarService,
   type INotificationService,
   type IBuiltinService,
-} from '@allai/core';
-import { Controller } from '@allai/core/esm/react/controller';
-import { IActionBarItemProps } from '@allai/core/esm/components/actionBar';
+} from '@hubai/core';
+import { Controller } from '@hubai/core/esm/react/controller';
+import { IActionBarItemProps } from '@hubai/core/esm/components/actionBar';
 import { NotificationStatusBarView } from 'mo/workbench/notification';
 
 export interface INotificationController extends Partial<Controller> {

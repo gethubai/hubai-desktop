@@ -14,7 +14,7 @@ import {
 import { ChatMessagesContext } from 'api-server/chat/domain/models/chatContext';
 import { CreateChat } from 'api-server/chat/domain/usecases/createChat';
 import { UpdateChatBrains } from 'api-server/chat/domain/usecases/updateChatBrains';
-import { Component } from '@allai/core/esm/react';
+import { Component } from '@hubai/core/esm/react';
 import {
   ChatStateModel,
   IChatGroup,

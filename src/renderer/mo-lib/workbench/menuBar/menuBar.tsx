@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import { getBEMElement, prefixClaName } from '@allai/core/esm/common/className';
+import { getBEMElement, prefixClaName } from '@hubai/core/esm/common/className';
 import {
   IMenuBar,
   IMenuBarItem,
-} from '@allai/core/esm/model/workbench/menuBar';
-import { DropDown, DropDownRef } from '@allai/core/esm/components/dropdown';
-import { IMenuProps, Menu } from '@allai/core/esm/components/menu';
-import { Icon } from '@allai/core/esm/components/icon';
-import { KeybindingHelper } from '@allai/core/esm/services/keybinding';
-import { MenuBarMode } from '@allai/core/esm/model/workbench/layout';
+} from '@hubai/core/esm/model/workbench/menuBar';
+import { DropDown, DropDownRef } from '@hubai/core/esm/components/dropdown';
+import { IMenuProps, Menu } from '@hubai/core/esm/components/menu';
+import { Icon } from '@hubai/core/esm/components/icon';
+import { KeybindingHelper } from '@hubai/core/esm/services/keybinding';
+import { MenuBarMode } from '@hubai/core/esm/model/workbench/layout';
 import { IMenuBarController } from 'mo/controllers';
 import { HorizontalView } from './horizontalView';
 

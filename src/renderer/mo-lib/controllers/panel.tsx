@@ -1,14 +1,14 @@
 import { inject, injectable } from 'tsyringe';
 import React from 'react';
-import { IActionBarItemProps } from '@allai/core/esm/components/actionBar';
+import { IActionBarItemProps } from '@hubai/core/esm/components/actionBar';
 import {
   type IBuiltinService,
   type IPanelService,
   PanelEvent,
   Controller,
-} from '@allai/core';
-import { type IMonacoService } from '@allai/core/esm/monaco/monacoService';
-import type { UniqueId } from '@allai/core/esm/common/types';
+} from '@hubai/core';
+import { type IMonacoService } from '@hubai/core/esm/monaco/monacoService';
+import type { UniqueId } from '@hubai/core/esm/common/types';
 import { QuickTogglePanelAction } from 'mo/monaco/quickTogglePanelAction';
 import Output from 'mo/workbench/panel/output';
 

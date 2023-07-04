@@ -7,13 +7,13 @@ import {
   prefixClaName,
   getBEMModifier,
   getBEMElement,
-} from '@allai/core/esm/common/className';
-import { APP_PREFIX } from '@allai/core/esm/common/const';
-import { ID_APP } from '@allai/core/esm/common/id';
-import { type ILayoutService, type IWorkbench } from '@allai/core';
-import { ILayout, MenuBarMode } from '@allai/core/esm/model/workbench/layout';
-import { Display, Pane, SplitPane } from '@allai/core/esm/components';
-import { Controller, connect } from '@allai/core/esm/react';
+} from '@hubai/core/esm/common/className';
+import { APP_PREFIX } from '@hubai/core/esm/common/const';
+import { ID_APP } from '@hubai/core/esm/common/id';
+import { type ILayoutService, type IWorkbench } from '@hubai/core';
+import { ILayout, MenuBarMode } from '@hubai/core/esm/model/workbench/layout';
+import { Display, Pane, SplitPane } from '@hubai/core/esm/components';
+import { Controller, connect } from '@hubai/core/esm/react';
 import { type ILayoutController } from 'mo/controllers';
 import SidebarView from './sidebar/sidebarView';
 import ActivityBarView from './activityBar/activityBarView';
