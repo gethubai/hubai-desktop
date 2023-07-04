@@ -38,7 +38,7 @@ app.use(bodyParser.json());
 app.use('/api/brain', brainRoutes);
 
 app.get('/', (req, res) => {
-  res.send('AllAi server is running!');
+  res.send('HubAI server is running!');
 });
 
 httpServer.listen(port, async () => {

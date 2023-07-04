@@ -1,7 +1,7 @@
 const { dependencies } = require('../../package.json');
 
 module.exports = {
-  name: 'allaiapp',
+  name: 'hubai',
   // library: { type: 'module' },
   shared: {
     'react-router-dom': {

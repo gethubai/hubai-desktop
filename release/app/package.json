@@ -1,12 +1,12 @@
 {
-  "name": "allai-app",
+  "name": "hubai-desktop",
   "version": "1.0.0",
   "description": "A platform for all your AI needs",
   "license": "MIT",
   "author": {
     "name": "Matheus Diniz",
     "email": "mtsdnz@hotmail.com",
-    "url": "https://github.com/allai-app"
+    "url": "https://github.com/mtsdnz"
   },
   "main": "./dist/main/main.js",
   "scripts": {

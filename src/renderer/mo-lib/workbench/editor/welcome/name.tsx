@@ -19,7 +19,7 @@ export default function () {
             <g transform="translate(654 304)">
               <text>
                 <tspan x="1.097" y="21">
-                  All AI
+                  Hub AI
                 </tspan>
               </text>
             </g>

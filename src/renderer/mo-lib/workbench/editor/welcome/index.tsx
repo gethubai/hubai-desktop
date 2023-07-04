@@ -15,7 +15,7 @@ export default function Welcome() {
   return (
     <div className={prefixClaName('welcome')}>
       {/* <Logo className="logo" /> */}
-      <h1 className="title">All AI</h1>
+      <h1 className="title">HubAI</h1>
 
       <Button
         onClick={() => {

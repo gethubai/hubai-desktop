@@ -1,22 +1,24 @@
 {
   "description": "The central place for all AIs",
   "keywords": [
-    "AI",
-    "AllAI"
+    "hubai",
+    "ai",
+    "hub",
+    "aihub"
   ],
-  "homepage": "https://github.com/mtsdnz/allai-app",
+  "homepage": "https://hubai.gg",
   "bugs": {
-    "url": "https://github.com/mtsdnz/allai-app/issues"
+    "url": "https://github.com/gethubai/hubai-desktop/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mtsdnz/allai-app.git"
+    "url": "git+https://github.com/gethubai/hubai-desktop.git"
   },
   "license": "MIT",
   "author": {
     "name": "Matheus Diniz",
     "email": "mtsdnz@hotmail.com",
-    "url": "https://allai.app"
+    "url": "https://github.com/mtsdnz"
   },
   "contributors": [
     {
@@ -195,8 +197,8 @@
     "webpack-merge": "^5.9.0"
   },
   "build": {
-    "productName": "AllAiApp",
-    "appId": "org.erb.AllaiChat",
+    "productName": "HubAI",
+    "appId": "hubai.erb.hubai",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
     "files": [
@@ -255,11 +257,11 @@
     "publish": {
       "provider": "github",
       "owner": "mtsdnz",
-      "repo": "allai-app"
+      "repo": "hubai-desktop"
     }
   },
   "collective": {
-    "url": "https://opencollective.com/allai-app"
+    "url": "https://opencollective.com/hubai-desktop"
   },
   "devEngines": {
     "node": ">=14.x",
