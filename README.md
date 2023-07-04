@@ -1,1 +1,1 @@
-#HubAI desktop application
+# HubAI desktop application
