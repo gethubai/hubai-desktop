@@ -42,8 +42,6 @@ if (!isDebug) {
   Object.assign(console, log.functions);
 }
 
-const sv = require('../api-server/server');
-
 class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
@@ -138,18 +136,32 @@ const installExtensions = async () => {
     .catch(console.log);
 };
 
+const RESOURCES_PATH = app.isPackaged
+  ? path.join(process.resourcesPath, 'assets')
+  : path.join(__dirname, '../../assets');
+
+const getAssetPath = (...paths: string[]): string => {
+  return path.join(RESOURCES_PATH, ...paths);
+};
+
+let splash: BrowserWindow;
+const createSplashScreen = () => {
+  splash = new BrowserWindow({
+    width: 500,
+    height: 300,
+    transparent: false,
+    frame: false,
+    alwaysOnTop: true,
+  });
+
+  splash.loadFile(getAssetPath('splash.html'));
+  splash.center();
+};
+
 const createWindow = async () => {
   if (isDebug) {
     await installExtensions();
   }
-
-  const RESOURCES_PATH = app.isPackaged
-    ? path.join(process.resourcesPath, 'assets')
-    : path.join(__dirname, '../../assets');
-
-  const getAssetPath = (...paths: string[]): string => {
-    return path.join(RESOURCES_PATH, ...paths);
-  };
 
   mainWindow = new BrowserWindow({
     show: false,
@@ -169,11 +181,17 @@ const createWindow = async () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
+    // splash.close();
+    splash.destroy();
     if (process.env.START_MINIMIZED) {
       mainWindow.minimize();
     } else {
       mainWindow.show();
     }
+  });
+
+  mainWindow.on('show', () => {
+    mainWindow?.focus();
   });
 
   mainWindow.on('closed', () => {
@@ -221,10 +239,14 @@ console.log('path:', {
 app
   .whenReady()
   .then(async () => {
+    createSplashScreen();
     createDirectoryIfNotExists(getMessageStoragePath(''));
     createDirectoryIfNotExists(getMessageAudioStoragePath(''));
     createDirectoryIfNotExists(getExtensionsStoragePath(''));
     createDirectoryIfNotExists(getBrainsStoragePath(''));
+
+    const { startServer } = await require('../api-server/server');
+    startServer();
 
     protocol.registerFileProtocol('msg', (request, callback) => {
       const relativePath =

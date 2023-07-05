@@ -19,61 +19,61 @@ import { getBrainMainPath } from './brain/const';
 const bodyParser = require('body-parser');
 
 const port = 4114;
-
-// Create the express application
 const app = express();
 
-const httpServer = createServer(app);
-const io = new Server(httpServer, {
-  cors: {
-    origin: 'http://localhost:1212',
-  },
-});
+export const startServer = async () => {
+  const httpServer = createServer(app);
+  const io = new Server(httpServer, {
+    cors: {
+      origin: 'http://localhost:1212',
+    },
+  });
 
-// brainServer.startServer(io);
+  chatServer.startServer(io);
 
-chatServer.startServer(io);
+  app.use(bodyParser.json());
+  app.use('/api/brain', brainRoutes);
 
-app.use(bodyParser.json());
-app.use('/api/brain', brainRoutes);
+  app.get('/', (req, res) => {
+    res.send('HubAI server is running!');
+  });
 
-app.get('/', (req, res) => {
-  res.send('HubAI server is running!');
-});
+  httpServer.listen(port, async () => {
+    console.log(`API server listening on port ${port}`);
 
-httpServer.listen(port, async () => {
-  console.log(`API server listening on port ${port}`);
+    // TODO: Create a brainLoader class to load brains from the file system and do this logic there
+    const getBrainsUseCase = await makeLoadLocalBrains();
+    const brains = await getBrainsUseCase.getBrains();
 
-  // TODO: Create a brainLoader class to load brains from the file system and do this logic there
-  const getBrainsUseCase = await makeLoadLocalBrains();
-  const brains = await getBrainsUseCase.getBrains();
+    for (const brain of brains) {
+      try {
+        const brainPath = getBrainMainPath(brain);
+        const brainURL = IsDevelopment()
+          ? brainPath
+          : url.pathToFileURL(brainPath).toString();
 
-  for (const brain of brains) {
-    try {
-      const brainPath = getBrainMainPath(brain);
-      const brainURL = IsDevelopment()
-        ? brainPath
-        : url.pathToFileURL(brainPath).toString();
+        const brainService = await import(/* webpackIgnore: true */ brainURL);
 
-      const brainService = await import(/* webpackIgnore: true */ brainURL);
+        const settings = {
+          id: brain.id,
+          name: brain.name,
+          nameAlias: brain.title,
+          supportedPromptTypes: getSupportedPromptTypesFromCapabilities(
+            brain.capabilities
+          ),
+        };
 
-      const settings = {
-        id: brain.id,
-        name: brain.name,
-        nameAlias: brain.title,
-        supportedPromptTypes: getSupportedPromptTypesFromCapabilities(
-          brain.capabilities
-        ),
-      };
+        const brainServer: IBrainServer = new TcpBrainServer(
+          IsDevelopment()
+            ? brainService.default
+            : brainService.default?.default,
+          settings
+        );
 
-      const brainServer: IBrainServer = new TcpBrainServer(
-        IsDevelopment() ? brainService.default : brainService.default?.default,
-        settings
-      );
-
-      brainServerManager.addClient(brainServer);
-    } catch (e) {
-      console.error('Error on loading brain module: ', e);
+        brainServerManager.addClient(brainServer);
+      } catch (e) {
+        console.error('Error on loading brain module: ', e);
+      }
     }
-  }
-});
+  });
+};
