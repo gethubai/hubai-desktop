@@ -1,5 +1,5 @@
 import { Server, Socket } from 'socket.io';
-import makeChatDatabase from './factories/databaseFactory';
+import { makeChatRepository } from 'data/chat/factory';
 import {
   ChatMessageModel,
   ChatMessageStatus,
@@ -238,27 +238,17 @@ class ChatServer {
   }
 
   private async getChatMessages(id: string): Promise<ChatMessagesContext> {
-    // TODO: Refactor this and use useCase
-    const db = await makeChatDatabase();
     const chat = await this.getChat(id);
-    const messages = await db.messages
-      .find({
-        selector: {
-          chat: {
-            $eq: chat?.id,
-          },
-        },
-      })
-      .sort({ sendDate: 1 })
-      .exec();
-    return new ChatMessagesContext(chat, messages);
+    return new ChatMessagesContext(chat, chat.messages ?? []);
   }
 
   private async getChat(id: string): Promise<ChatModel> {
-    // TODO: Do this using a useCase
-    const db = await makeChatDatabase();
-    const chat = await db.chat.findOne(id).exec();
-    return chat?._data as ChatModel;
+    const repository = await makeChatRepository();
+
+    const chat = await repository.get(id);
+    if (!chat) throw new Error(`Could not find chat with id ${id}`);
+
+    return chat;
   }
 }
 

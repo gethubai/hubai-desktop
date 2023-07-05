@@ -19,7 +19,6 @@ import {
 } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import { exposeIpcMainRxStorage } from 'rxdb/plugins/electron';
 import {
   createDirectoryIfNotExists,
   getBrainsStoragePath,
@@ -32,7 +31,6 @@ import userSettingsStorage from 'data/user/mainStorage';
 import makeLoadLocalBrains from 'api-server/brain/factories/usecases/loadLocalBrainsFactory';
 // import brainDatabase from 'data/brain/pouchDb';
 import brainInstaller from 'api-server/brain/brainInstaller';
-import getStorage from '../data/storage';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
@@ -227,12 +225,6 @@ app
     createDirectoryIfNotExists(getMessageAudioStoragePath(''));
     createDirectoryIfNotExists(getExtensionsStoragePath(''));
     createDirectoryIfNotExists(getBrainsStoragePath(''));
-
-    exposeIpcMainRxStorage({
-      key: 'main-storage',
-      storage: getStorage(),
-      ipcMain,
-    });
 
     protocol.registerFileProtocol('msg', (request, callback) => {
       const relativePath =

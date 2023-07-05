@@ -1,16 +1,16 @@
 import { SetVoiceMessageTranscription } from 'api-server/chat/domain/usecases/setVoiceMessageTranscription';
-import { ChatDatabase } from 'data/chat/db';
+import { IChatMessageRepository } from 'data/chat/chatMessageRepository';
 
 export default class LocalSetVoiceMessageTranscription
   implements SetVoiceMessageTranscription
 {
-  constructor(private readonly database: ChatDatabase) {}
+  constructor(private readonly repository: IChatMessageRepository) {}
 
   async setTranscription(
     params: SetVoiceMessageTranscription.Params
   ): Promise<SetVoiceMessageTranscription.Model> {
     const { messageId, transcription } = params;
-    const message = await this.database.messages.findOne(messageId).exec();
+    const message = await this.repository.get(messageId);
 
     if (message?.messageType !== 'voice') {
       throw new Error(
@@ -24,12 +24,8 @@ export default class LocalSetVoiceMessageTranscription
       );
     }
 
-    const updated = await message.incrementalUpdate({
-      $set: {
-        text: { body: transcription },
-      },
-    });
-
-    return updated._data as SetVoiceMessageTranscription.Model;
+    message.text = { body: transcription };
+    await this.repository.update(message);
+    return message;
   }
 }

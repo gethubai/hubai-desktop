@@ -6,13 +6,13 @@ import {
   SendChatMessage,
   SendMessage,
 } from 'api-server/chat/domain/usecases/sendChatMessage';
-import { ChatDatabase } from 'data/chat/db';
 import generateUniqueId from 'renderer/common/uniqueIdGenerator';
 import { getMessageAudioStoragePath } from 'utils/pathUtils';
 import fs from 'fs';
+import { IChatMessageRepository } from 'data/chat/chatMessageRepository';
 
 export default class LocalSendChatMessage implements SendMessage {
-  constructor(private readonly database: ChatDatabase) {}
+  constructor(private readonly repository: IChatMessageRepository) {}
 
   async send(params: SendChatMessage.Params): Promise<SendChatMessage.Model> {
     const {
@@ -42,7 +42,7 @@ export default class LocalSendChatMessage implements SendMessage {
       };
     }
 
-    const message = await this.database.messages.insert({
+    const message = await this.repository.add({
       id,
       sender,
       senderId,
@@ -57,6 +57,6 @@ export default class LocalSendChatMessage implements SendMessage {
       status: ChatMessageStatus.SENT,
     });
 
-    return message._data as SendChatMessage.Model;
+    return message;
   }
 }

@@ -1,29 +1,26 @@
-import { ChatDatabase } from '../../../../data/chat/db';
+/* eslint-disable no-restricted-syntax */
+import { IChatMessageRepository } from 'data/chat/chatMessageRepository';
 import { ChatMessageModel } from '../../domain/models/chatMessage';
 import { UpdateMessageStatus } from '../../domain/usecases/updateMessagesStatus';
 
 export default class LocalUpdateMessageStatus implements UpdateMessageStatus {
-  constructor(private readonly database: ChatDatabase) {}
+  constructor(private readonly repository: IChatMessageRepository) {}
 
   update = async (
     ids: UpdateMessageStatus.Params
   ): Promise<UpdateMessageStatus.Model> => {
     const { messageIds, newStatus } = ids;
 
-    const query = this.database.messages.find({
-      selector: {
-        id: {
-          $in: messageIds,
-        },
-      },
-    });
+    const messages = await this.repository.getAll({ ids: messageIds });
 
-    const updated = await query.update({
-      $set: {
-        status: newStatus,
-      },
-    });
+    // TODO: Use bulk update
+    for (const message of messages) {
+      message.status = newStatus;
 
-    return updated._data as ChatMessageModel[];
+      // eslint-disable-next-line no-await-in-loop
+      await this.repository.update(message);
+    }
+
+    return messages as ChatMessageModel[];
   };
 }

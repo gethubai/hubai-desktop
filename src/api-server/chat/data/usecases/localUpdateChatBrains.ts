@@ -1,21 +1,19 @@
 import { UpdateChatBrains } from 'api-server/chat/domain/usecases/updateChatBrains';
-import { ChatDatabase } from 'data/chat/db';
+import { IChatRepository } from 'data/chat/chatRepository';
 
 export default class LocalUpdateChatBrains implements UpdateChatBrains {
-  constructor(private readonly database: ChatDatabase) {}
+  constructor(private readonly repository: IChatRepository) {}
 
   async update(
     params: UpdateChatBrains.Params
   ): Promise<UpdateChatBrains.Model> {
     const { chatId, brains } = params;
-    const chat = await this.database.chat.findOne(chatId).exec();
+    const chat = await this.repository.get(chatId);
 
-    const updated = await chat?.incrementalUpdate({
-      $set: {
-        brains,
-      },
-    });
+    if (!chat)
+      throw new Error(`Cannot update chat brains. Chat ${chatId} not found`);
 
-    return updated._data as UpdateChatBrains.Model;
+    chat.brains = brains;
+    return this.repository.update(chat);
   }
 }

@@ -1,4 +1,4 @@
-import { RealmLocalBrainRepository } from './realm/RealmLocalBrainRepository';
+import { RealmLocalBrainRepository } from './realm/realmLocalBrainRepository';
 import { getDatabase } from './realm/db';
 
 export const makeLocalBrainRepository = async () =>

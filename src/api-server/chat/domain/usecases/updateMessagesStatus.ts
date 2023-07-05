@@ -13,5 +13,5 @@ export namespace UpdateMessageStatus {
     newStatus: ChatMessageStatus;
   };
 
-  export type Model = ChatMessageModel;
+  export type Model = ChatMessageModel[];
 }

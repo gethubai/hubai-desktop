@@ -1,13 +1,13 @@
 import { CreateChat } from 'api-server/chat/domain/usecases/createChat';
-import { ChatDatabase } from 'data/chat/db';
+import { IChatRepository } from 'data/chat/chatRepository';
 import generateUniqueId from 'renderer/common/uniqueIdGenerator';
 
 export default class LocalCreateChat implements CreateChat {
-  constructor(private readonly database: ChatDatabase) {}
+  constructor(private readonly repository: IChatRepository) {}
 
   async create(params: CreateChat.Params): Promise<CreateChat.Model> {
     const { name, initiator, brains } = params;
-    const chat = await this.database.chat.insert({
+    const chat = await this.repository.add({
       id: generateUniqueId(),
       name,
       initiator,
@@ -15,6 +15,6 @@ export default class LocalCreateChat implements CreateChat {
       createdDate: new Date().toISOString(),
       brains,
     });
-    return chat._data as CreateChat.Model;
+    return chat;
   }
 }
