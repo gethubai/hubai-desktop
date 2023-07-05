@@ -9,6 +9,7 @@ import {
   TextMessage,
   VoiceMessage,
 } from 'api-server/chat/domain/models/chatMessage';
+import keyStore from 'data/keyStore';
 import path from 'path';
 import Realm from 'realm';
 import {
@@ -225,7 +226,7 @@ let dbPromise: Promise<Realm>;
 export const getDatabase = async (): Promise<Realm> => {
   if (dbPromise != null) return dbPromise;
 
-  dbPromise = Realm.open(config);
+  dbPromise = Realm.open({ ...config, encryptionKey: keyStore.getBuffer() });
 
   return dbPromise;
 };

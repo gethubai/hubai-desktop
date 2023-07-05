@@ -13,6 +13,7 @@ import {
   createDirectoryIfNotExists,
   getAppDatabaseStoragePath,
 } from 'utils/pathUtils';
+import keyStore from 'data/keyStore';
 
 /*
 Realm supports the following primitive data types:
@@ -129,13 +130,11 @@ const config = {
   path: dbPath,
 };
 
-console.log('PATH DB:', { dbBasePath, dbPath });
-
 let dbPromise: Promise<Realm>;
 export const getDatabase = async (): Promise<Realm> => {
   if (dbPromise != null) return dbPromise;
 
-  dbPromise = Realm.open(config);
+  dbPromise = Realm.open({ ...config, encryptionKey: keyStore.getBuffer() });
 
   return dbPromise;
 };
