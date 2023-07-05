@@ -4,6 +4,7 @@ import {
   ChatMessageModel,
   SendChatMessageModel,
 } from 'api-server/chat/domain/models/chatMessage';
+import { ChatServerConfigs } from 'api-server/consts';
 import { IBrainServer } from './brainServer';
 import {
   IAudioTranscriberBrainService,
@@ -35,10 +36,13 @@ export default class TcpBrainServer implements IBrainServer {
       console.log('connected to chat server: ', this.getSettings());
     });
 
-    this.socket.on('messageReceived', this.onMessageReceived.bind(this));
+    this.socket.on(
+      ChatServerConfigs.events.messageReceived,
+      this.onMessageReceived.bind(this)
+    );
 
     this.socket.on(
-      'onMessageTranscribed',
+      ChatServerConfigs.events.messageTranscribed,
       this.onMessageTranscribed.bind(this)
     );
 
@@ -170,20 +174,20 @@ export default class TcpBrainServer implements IBrainServer {
   }
 
   private async sendMessageReceivedAck(messages: ChatMessageModel[]) {
-    this.socket?.emit('messagesReceivedAck', {
+    this.socket?.emit(ChatServerConfigs.endpoints.messageReceivedAck, {
       messages,
     });
   }
 
   public sendMessageTranscription(message: ChatMessageModel, text: string) {
-    this.socket?.emit('transcribeVoiceMessage', {
+    this.socket?.emit(ChatServerConfigs.endpoints.transcribeVoiceMessage, {
       message,
       transcription: text,
     });
   }
 
   public sendMessage(message: SendChatMessageModel) {
-    this.socket?.emit('sendMessage', message);
+    this.socket?.emit(ChatServerConfigs.endpoints.sendMessage, message);
   }
 
   public getSettings(): IBrainSettings {

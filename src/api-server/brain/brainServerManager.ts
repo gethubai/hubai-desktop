@@ -1,4 +1,5 @@
 import userSettingsStorage from 'data/user/mainStorage';
+import { ChatServerConfigs } from 'api-server/consts';
 import { IBrainServer } from './brainServer';
 import { SetUserSettingsResult } from './brainService';
 import { IBrainSettings } from './brainSettings';
@@ -18,7 +19,7 @@ class BrainClientManager {
       return;
     }
     this.initService(client, settings);
-    await client.start('http://localhost:4114/chat');
+    await client.start(ChatServerConfigs.address);
     this.connectedClients.push(client);
   }
 

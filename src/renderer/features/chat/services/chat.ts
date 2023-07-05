@@ -14,6 +14,7 @@ import { CreateChat } from 'api-server/chat/domain/usecases/createChat';
 import { UpdateChatBrains } from 'api-server/chat/domain/usecases/updateChatBrains';
 import { Component } from '@hubai/core/esm/react';
 import { type ILocalUserService } from 'renderer/features/user/services/userService';
+import { ChatServerConfigs } from 'api-server/consts';
 import {
   ChatStateModel,
   IChatGroup,
@@ -56,29 +57,35 @@ export class ChatService extends Component<IChatState> implements IChatService {
   private async initCommands(): Promise<void> {}
 
   private async initServer(): Promise<void> {
-    this.socket = io('http://localhost:4114/chat', {
+    this.socket = io(ChatServerConfigs.address, {
       query: {
         type: 'chatClient',
         id: this.localUserService.getUser().id,
       },
     });
 
-    this.socket?.on('messageSent', (message: ChatMessageModel) => {
-      if (this.subscribers[message.chat]) {
-        this.subscribers[message.chat].onMessageSent(message);
+    this.socket?.on(
+      ChatServerConfigs.events.messageSent,
+      (message: ChatMessageModel) => {
+        if (this.subscribers[message.chat]) {
+          this.subscribers[message.chat].onMessageSent(message);
+        }
       }
-    });
-
-    this.socket?.on('messageUpdated', ({ prevMessage, message }) => {
-      if (this.subscribers[message.chat]) {
-        this.subscribers[message.chat].onMessageUpdated(prevMessage, message);
-      }
-    });
+    );
 
     this.socket?.on(
-      'messageReceived',
+      ChatServerConfigs.events.messageUpdated,
+      ({ prevMessage, message }) => {
+        if (this.subscribers[message.chat]) {
+          this.subscribers[message.chat].onMessageUpdated(prevMessage, message);
+        }
+      }
+    );
+
+    this.socket?.on(
+      ChatServerConfigs.events.messageReceived,
       (message: ChatMessageModel, callback) => {
-        // this.socket?.emit('messagesReceivedAck', { messages: [message] });
+        // this.socket?.emit(ChatServerConfigs.endpoints.messageReceivedAck, { messages: [message] });
         if (this.subscribers[message.chat]) {
           this.subscribers[message.chat].onMessageReceived(message);
         }
@@ -86,11 +93,11 @@ export class ChatService extends Component<IChatState> implements IChatService {
       }
     );
 
-    this.socket?.on('chatsLoaded', ({ chats }) => {
+    this.socket?.on(ChatServerConfigs.endpoints.chatList, ({ chats }) => {
       this.onListUpdated(chats.map((c) => c.chat));
     });
 
-    this.socket?.on('chatCreated', (chat) => {
+    this.socket?.on(ChatServerConfigs.events.chatCreated, (chat) => {
       this.onListUpdated([chat]);
     });
   }
@@ -100,11 +107,15 @@ export class ChatService extends Component<IChatState> implements IChatService {
     subscriber: IChatMessageSubscriber
   ): void {
     this.subscribers[chatId] = subscriber;
-    this.socket?.emit('join', { chatId }, (response: ChatMessagesContext) => {
-      if (this.subscribers[chatId]) {
-        this.subscribers[chatId].onMessagesLoaded(response);
+    this.socket?.emit(
+      ChatServerConfigs.endpoints.join,
+      { chatId },
+      (response: ChatMessagesContext) => {
+        if (this.subscribers[chatId]) {
+          this.subscribers[chatId].onMessagesLoaded(response);
+        }
       }
-    });
+    );
   }
 
   onListUpdated(chats: ChatModel[]): void {
@@ -140,20 +151,24 @@ export class ChatService extends Component<IChatState> implements IChatService {
 
   async createChat(options: CreateChat.Params): Promise<ChatModel | undefined> {
     return new Promise((resolve, reject) => {
-      this.socket?.emit('createChat', options, (response: ChatModel) => {
-        if (!response) {
-          reject(new Error('Chat could not be created'));
-        } else {
-          resolve(response);
+      this.socket?.emit(
+        ChatServerConfigs.endpoints.createChat,
+        options,
+        (response: ChatModel) => {
+          if (!response) {
+            reject(new Error('Chat could not be created'));
+          } else {
+            resolve(response);
+          }
         }
-      });
+      );
     });
   }
 
   sendChatMessage(options: SendChatMessageModel): Promise<ChatMessageModel> {
     return new Promise((resolve, reject) => {
       this.socket?.emit(
-        'sendMessage',
+        ChatServerConfigs.endpoints.sendMessage,
         options,
         (response: ChatMessageModel) => {
           if (!response) {
@@ -168,25 +183,33 @@ export class ChatService extends Component<IChatState> implements IChatService {
 
   updateChatBrains(options: UpdateChatBrains.Params): Promise<ChatModel> {
     return new Promise((resolve, reject) => {
-      this.socket?.emit('updateChatBrains', options, (response: ChatModel) => {
-        if (!response) {
-          reject(new Error('Chat brains could not be updated'));
-        } else {
-          resolve(response);
+      this.socket?.emit(
+        ChatServerConfigs.endpoints.updateChatBrains,
+        options,
+        (response: ChatModel) => {
+          if (!response) {
+            reject(new Error('Chat brains could not be updated'));
+          } else {
+            resolve(response);
+          }
         }
-      });
+      );
     });
   }
 
   getChat(id: string): Promise<ChatModel> {
     return new Promise((resolve, reject) => {
-      this.socket?.emit('getChat', id, (response: ChatModel) => {
-        if (!response) {
-          reject(new Error('Chat could not be found'));
-        } else {
-          resolve(response);
+      this.socket?.emit(
+        ChatServerConfigs.endpoints.getChat,
+        id,
+        (response: ChatModel) => {
+          if (!response) {
+            reject(new Error('Chat could not be found'));
+          } else {
+            resolve(response);
+          }
         }
-      });
+      );
     });
   }
 }

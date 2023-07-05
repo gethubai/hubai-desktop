@@ -1,5 +1,6 @@
 import { Namespace, Socket } from 'socket.io';
 import { makeChatRepository } from 'data/chat/factory';
+import { ChatServerConfigs } from 'api-server/consts';
 import {
   ChatMessageModel,
   ChatMessageStatus,
@@ -50,21 +51,26 @@ class ChatServer {
     this.onChatClientConnected(socket);
 
     const clientMessages = await this.getClientMessages(id as string);
-    socket.emit('chatsLoaded', { chats: clientMessages });
+    socket.emit(ChatServerConfigs.endpoints.chatList, {
+      chats: clientMessages,
+    });
   }
 
   private onChatClientConnected(socket: Socket): void {
     console.log(`new client connected: ${socket.id}`);
-    socket.on('join', async ({ chatId }, callback) => {
-      const chatRoom = this.getChatRoom(chatId);
-      socket.join(chatRoom);
+    socket.on(
+      ChatServerConfigs.endpoints.join,
+      async ({ chatId }, callback) => {
+        const chatRoom = this.getChatRoom(chatId);
+        socket.join(chatRoom);
 
-      const messages = await this.getChatMessages(chatId);
-      callback(messages);
-    });
+        const messages = await this.getChatMessages(chatId);
+        callback(messages);
+      }
+    );
 
     socket.on(
-      'sendMessage',
+      ChatServerConfigs.endpoints.sendMessage,
       async (message: SendChatMessageModel, callback) => {
         const sendUseCase = await makeSendChatMessage();
         const addedMessage = await sendUseCase.send(message);
@@ -79,23 +85,32 @@ class ChatServer {
       }
     );
 
-    socket.on('getMessages', async ({ recipientId }, callback) => {
-      const loadMessagesUseCase = await makeLoadMessagesForRecipient();
-      const messages = await loadMessagesUseCase.loadMessages(recipientId);
-      callback(messages);
-    });
-
-    socket.on('messagesReceivedAck', this.onMessagesReceivedAck.bind(this));
-
-    socket.on('createChat', async (options: CreateChat.Params, callback) => {
-      const createChat = await makeCreateChat();
-      const chat = await createChat.create(options);
-      socket.emit('chatCreated', chat);
-      callback(chat);
-    });
+    socket.on(
+      ChatServerConfigs.endpoints.getMessages,
+      async ({ recipientId }, callback) => {
+        const loadMessagesUseCase = await makeLoadMessagesForRecipient();
+        const messages = await loadMessagesUseCase.loadMessages(recipientId);
+        callback(messages);
+      }
+    );
 
     socket.on(
-      'transcribeVoiceMessage',
+      ChatServerConfigs.endpoints.messageReceivedAck,
+      this.onMessagesReceivedAck.bind(this)
+    );
+
+    socket.on(
+      ChatServerConfigs.endpoints.createChat,
+      async (options: CreateChat.Params, callback) => {
+        const createChat = await makeCreateChat();
+        const chat = await createChat.create(options);
+        socket.emit(ChatServerConfigs.events.chatCreated, chat);
+        callback(chat);
+      }
+    );
+
+    socket.on(
+      ChatServerConfigs.endpoints.transcribeVoiceMessage,
       async (event: TranscribeVoiceMessageEvent, callback) => {
         const setMessageTranscription =
           await makeSetVoiceMessageTranscription();
@@ -109,7 +124,7 @@ class ChatServer {
 
         this.sendToChatParticipants(
           chat.id,
-          'onMessageTranscribed',
+          ChatServerConfigs.events.messageTranscribed,
           result,
           undefined,
           (brain) => brain.handleMessageType === 'text' // We notify the text brains about the transcription
@@ -119,13 +134,16 @@ class ChatServer {
       }
     );
 
-    socket.on('getChat', async (chatId: string, callback) => {
-      const chat = await this.getChat(chatId);
-      callback(chat);
-    });
+    socket.on(
+      ChatServerConfigs.endpoints.getChat,
+      async (chatId: string, callback) => {
+        const chat = await this.getChat(chatId);
+        callback(chat);
+      }
+    );
 
     socket.on(
-      'updateChatBrains',
+      ChatServerConfigs.endpoints.updateChatBrains,
       async (event: UpdateChatBrains.Params, callback) => {
         const updateChatBrains = await makeUpdateChatBrains();
         const chat = await updateChatBrains.update(event);
@@ -160,10 +178,14 @@ class ChatServer {
     prevMessage: ChatMessageModel,
     message: ChatMessageModel
   ): void {
-    this.sendToChatParticipants(message.chat, 'messageUpdated', {
-      prevMessage,
-      message,
-    });
+    this.sendToChatParticipants(
+      message.chat,
+      ChatServerConfigs.events.messageUpdated,
+      {
+        prevMessage,
+        message,
+      }
+    );
   }
 
   private async updateMessageStatus(
@@ -178,14 +200,19 @@ class ChatServer {
   }
 
   public sendMessageToRecipient(id: string, message: ChatMessageModel): void {
-    this.sendToClient(id, 'messageReceived', message, async () => {
-      // This callback is called when the message is ack by the brain server
-      await this.onMessagesReceivedAck({ messages: [message] });
-    });
+    this.sendToClient(
+      id,
+      ChatServerConfigs.events.messageReceived,
+      message,
+      async () => {
+        // This callback is called when the message is ack by the brain server
+        await this.onMessagesReceivedAck({ messages: [message] });
+      }
+    );
   }
 
   public onMessageSent(id: string, message: ChatMessageModel): void {
-    this.sendToClient(id, 'messageSent', message);
+    this.sendToClient(id, ChatServerConfigs.events.messageSent, message);
   }
 
   public async sendToChatParticipants(

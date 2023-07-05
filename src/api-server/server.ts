@@ -9,16 +9,10 @@ import url from 'url';
 import IsDevelopment from 'utils/isDevelopment';
 import brainRoutes from './brain/routes';
 import chatServer from './chat/chatServer';
-import { IBrainServer } from './brain/brainServer';
-import TcpBrainServer from './brain/tcpBrainServer';
-import makeLoadLocalBrains from './brain/factories/usecases/loadLocalBrainsFactory';
-import { getSupportedPromptTypesFromCapabilities } from './brain/brainSettings';
-import brainServerManager from './brain/brainServerManager';
-import { getBrainMainPath } from './brain/const';
+import { ChatServerConfigs, ServerPort } from './consts';
 
 const bodyParser = require('body-parser');
 
-const port = 4114;
 const app = express();
 
 export const startServer = async () => {
@@ -29,7 +23,7 @@ export const startServer = async () => {
     },
   });
 
-  const chatNamespace = io.of('/chat');
+  const chatNamespace = io.of(ChatServerConfigs.mainNamespace);
 
   chatServer.startServer(chatNamespace);
 
