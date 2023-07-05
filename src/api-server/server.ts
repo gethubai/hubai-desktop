@@ -5,11 +5,10 @@
 import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
-import url from 'url';
-import IsDevelopment from 'utils/isDevelopment';
 import brainRoutes from './brain/routes';
 import chatServer from './chat/chatServer';
 import { ChatServerConfigs, ServerPort } from './consts';
+import { loadLocalBrains } from './brain/brainLoader';
 
 const bodyParser = require('body-parser');
 
@@ -34,42 +33,9 @@ export const startServer = async () => {
     res.send('HubAI server is running!');
   });
 
-  httpServer.listen(port, async () => {
-    console.log(`API server listening on port ${port}`);
-
-    // TODO: Create a brainLoader class to load brains from the file system and do this logic there
-    const getBrainsUseCase = await makeLoadLocalBrains();
-    const brains = await getBrainsUseCase.getBrains();
-
-    for (const brain of brains) {
-      try {
-        const brainPath = getBrainMainPath(brain);
-        const brainURL = IsDevelopment()
-          ? brainPath
-          : url.pathToFileURL(brainPath).toString();
-
-        const brainService = await import(/* webpackIgnore: true */ brainURL);
-
-        const settings = {
-          id: brain.id,
-          name: brain.name,
-          nameAlias: brain.title,
-          supportedPromptTypes: getSupportedPromptTypesFromCapabilities(
-            brain.capabilities
-          ),
-        };
-
-        const brainServer: IBrainServer = new TcpBrainServer(
-          IsDevelopment()
-            ? brainService.default
-            : brainService.default?.default,
-          settings
-        );
-
-        brainServerManager.addClient(brainServer);
-      } catch (e) {
-        console.error('Error on loading brain module: ', e);
-      }
-    }
+  httpServer.listen(ServerPort, async () => {
+    console.log(`API server listening on port ${ServerPort}`);
+    // Load brains when server is ready
+    await loadLocalBrains();
   });
 };
