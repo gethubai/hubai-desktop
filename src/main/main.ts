@@ -31,6 +31,8 @@ import userSettingsStorage from 'data/user/mainStorage';
 import makeLoadLocalBrains from 'api-server/brain/factories/usecases/loadLocalBrainsFactory';
 // import brainDatabase from 'data/brain/pouchDb';
 import brainInstaller from 'api-server/brain/brainInstaller';
+import keyStore from 'data/keyStore';
+import { generateSecureRandom64ByteKey } from 'utils/securityUtils';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
@@ -240,6 +242,9 @@ app
   .whenReady()
   .then(async () => {
     createSplashScreen();
+    // Generate key if not exists
+    if (!keyStore.isSet()) keyStore.set(generateSecureRandom64ByteKey());
+
     createDirectoryIfNotExists(getMessageStoragePath(''));
     createDirectoryIfNotExists(getMessageAudioStoragePath(''));
     createDirectoryIfNotExists(getExtensionsStoragePath(''));
