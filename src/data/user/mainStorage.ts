@@ -1,7 +1,12 @@
 import Store from 'electron-store';
+import keyStore from 'data/keyStore';
 import ElectronStoreUserSettingsStorage from './electronStoreUserSettingsStorage';
 
-const store = new Store();
-
-const userSettingsStorage = new ElectronStoreUserSettingsStorage(store);
+const userSettingsStorage = new ElectronStoreUserSettingsStorage(() => {
+  return new Store({
+    name: 'userSettings',
+    watch: true,
+    encryptionKey: keyStore.get(),
+  });
+});
 export default userSettingsStorage;

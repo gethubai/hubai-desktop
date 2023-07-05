@@ -6,9 +6,9 @@ const USER_SETTINGS_KEY = 'user.localSettings';
 export default class ElectronStoreUserSettingsStorage
   implements IUserSettingsStorage
 {
-  constructor(private store: Store) {
-    this.store = store;
-  }
+  _store?: Store;
+
+  constructor(private storeFactory: () => Store) {}
 
   get(key: string): any {
     const value = this.getAll();
@@ -27,5 +27,10 @@ export default class ElectronStoreUserSettingsStorage
 
   set(value: any): any {
     this.store.set(USER_SETTINGS_KEY, value);
+  }
+
+  get store(): Store {
+    if (!this._store) this._store = this.storeFactory();
+    return this._store;
   }
 }
