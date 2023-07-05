@@ -201,7 +201,8 @@
     "files": [
       "dist",
       "node_modules",
-      "package.json"
+      "package.json",
+      "!**/node_modules/realm/react-native"
     ],
     "afterSign": ".erb/scripts/notarize.js",
     "mac": {
