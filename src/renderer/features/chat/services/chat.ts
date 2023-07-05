@@ -120,8 +120,15 @@ export class ChatService extends Component<IChatState> implements IChatService {
 
   onListUpdated(chats: ChatModel[]): void {
     const groups: IChatGroup[] = this.state.groups || [];
+    const user = this.localUserService.getUser();
     chats.forEach((chat) => {
-      const group = groups.find((g) => g.name === chat.initiator);
+      let groupName = chat.initiator;
+
+      if (chat.initiator === user.id) {
+        groupName = 'Your chats';
+      }
+
+      const group = groups.find((g) => g.name === groupName);
       const chatListItem = {
         id: chat.id,
         name: chat.name,
@@ -135,7 +142,7 @@ export class ChatService extends Component<IChatState> implements IChatService {
       } else {
         groups.push({
           id: generateUniqueId(),
-          name: chat.initiator,
+          name: groupName,
           items: [chatListItem],
         });
       }
