@@ -3,10 +3,10 @@
 import { type ISettingsService } from '@hubai/core';
 import { LocalBrainModel } from 'api-server/brain/domain/models/localBrain';
 import { container, inject, injectable, singleton } from 'tsyringe';
-import makeSaveLocalBrainSettings from 'api-server/brain/factories/usecases/saveLocalBrainSettingsFactory';
 import { Component } from '@hubai/core/esm/react';
 import { BrainEvent, BrainStateModel, type IBrainState } from '../models/brain';
 import makeLoadLocalBrains from '../factories/usecases/makeLoadLocalBrains';
+import makeSaveLocalBrainSettings from '../factories/usecases/makeSaveLocalBrainSettings';
 
 export interface IBrainManagementService extends Component<IBrainState> {
   getBrains(): LocalBrainModel[];

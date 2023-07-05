@@ -29,7 +29,6 @@ import {
 import brainServerManager from 'api-server/brain/brainServerManager';
 import userSettingsStorage from 'data/user/mainStorage';
 import makeLoadLocalBrains from 'api-server/brain/factories/usecases/loadLocalBrainsFactory';
-// import brainDatabase from 'data/brain/pouchDb';
 import brainInstaller from 'api-server/brain/brainInstaller';
 import keyStore from 'data/keyStore';
 import { generateSecureRandom64ByteKey } from 'utils/securityUtils';
