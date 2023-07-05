@@ -93,6 +93,11 @@ import ChatController from './features/chat/controllers/chat';
 import { IBrainController } from './features/brain/controllers/type';
 import BrainController from './features/brain/controllers/brain';
 import { LocaleService } from './i18n/localeService';
+import {
+  type ILocalUserService,
+  LocalUserService,
+} from './features/user/services/userService';
+import { ILocalUser, LocalUserModel } from './features/user/models/user';
 
 container.registerSingleton<ISideBarController>(
   'ISidebarController',
@@ -188,6 +193,11 @@ container.registerSingleton<IBrainController>(
   BrainController
 );
 
+container.registerSingleton<ILocalUserService>(
+  'ILocalUserService',
+  LocalUserService
+);
+
 container.registerSingleton<IBuiltinService>('IBuiltinService', BuiltinService);
 container.registerSingleton<IChatService>('IChatService', ChatService);
 container.registerSingleton<ISidebarService>('ISidebarService', SidebarService);
@@ -255,6 +265,11 @@ container.register<IChatState>(ChatStateModel, {
 
 container.register<IBrainState>(BrainStateModel, {
   useValue: new BrainStateModel(),
+});
+
+// TODO: Get user from settings
+container.register<ILocalUser>(LocalUserModel, {
+  useValue: new LocalUserModel('123456abc', 'You', []),
 });
 
 console.log('Services have been registered');

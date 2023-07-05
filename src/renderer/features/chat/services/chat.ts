@@ -1,12 +1,10 @@
 /* eslint-disable react/sort-comp */
 /* eslint-disable react/no-unused-class-component-methods */
-import { container } from 'tsyringe';
+import { container, inject, injectable } from 'tsyringe';
 
 import generateUniqueId from 'renderer/common/uniqueIdGenerator';
 import { ChatModel } from 'api-server/chat/domain/models/chat';
-import { Socket } from 'socket.io';
-import { io } from 'socket.io-client';
-import { DefaultEventsMap } from 'socket.io/dist/typed-events';
+import { io, Socket } from 'socket.io-client';
 import {
   ChatMessageModel,
   SendChatMessageModel,
@@ -15,6 +13,7 @@ import { ChatMessagesContext } from 'api-server/chat/domain/models/chatContext';
 import { CreateChat } from 'api-server/chat/domain/usecases/createChat';
 import { UpdateChatBrains } from 'api-server/chat/domain/usecases/updateChatBrains';
 import { Component } from '@hubai/core/esm/react';
+import { type ILocalUserService } from 'renderer/features/user/services/userService';
 import {
   ChatStateModel,
   IChatGroup,
@@ -33,6 +32,7 @@ export interface IChatMessageSubscriber {
   onMessageReceived(message: ChatMessageModel): void;
 }
 
+@injectable()
 export class ChatService extends Component<IChatState> implements IChatService {
   protected state: IChatState;
 
@@ -40,14 +40,16 @@ export class ChatService extends Component<IChatState> implements IChatService {
 
   private subscribers: Record<string, IChatMessageSubscriber> = {};
 
-  constructor() {
+  constructor(
+    @inject('ILocalUserService') private localUserService: ILocalUserService
+  ) {
     super();
     this.state = container.resolve(ChatStateModel);
     this.initCommands();
     this.initServer();
   }
 
-  getServer(): Socket<any, any, DefaultEventsMap, any> | undefined {
+  getServer(): Socket | undefined {
     return this.socket;
   }
 
@@ -57,7 +59,7 @@ export class ChatService extends Component<IChatState> implements IChatService {
     this.socket = io('http://localhost:4114', {
       query: {
         type: 'chatClient',
-        id: '1', // TODO: change to user id
+        id: this.localUserService.getUser().id,
       },
     });
 

@@ -6,7 +6,7 @@ import {
   ChatMessageModel,
   SendChatMessageModel,
 } from 'api-server/chat/domain/models/chatMessage';
-import { Socket } from 'socket.io';
+import { Socket } from 'socket.io-client';
 import { IChatState } from '../models/chat';
 
 export interface IChatService extends Component<IChatState> {

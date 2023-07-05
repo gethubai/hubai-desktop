@@ -8,6 +8,7 @@ import {
   BrainCapability,
   LocalBrainModel,
 } from 'api-server/brain/domain/models/localBrain';
+import { type ILocalUserService } from 'renderer/features/user/services/userService';
 import { IChatWindowController } from './type';
 import { IChatWindowService } from '../services/chatWindowService';
 import { getTextMessageTypeForBrainCapability } from '../utils/messageUtils';
@@ -36,7 +37,8 @@ export default class ChatWindowController
 {
   constructor(
     private readonly chatWindowService: IChatWindowService,
-    private readonly chat: ChatModel
+    private readonly chat: ChatModel,
+    private readonly localUserService: ILocalUserService
   ) {
     super();
   }
@@ -108,7 +110,8 @@ export default class ChatWindowController
   }
 
   private getSender() {
-    return { name: 'Matheus Diniz', id: '1' };
+    const user = this.localUserService.getUser();
+    return { name: user.name, id: user.id };
   }
 
   private getBrain(messageType: ChatMessageType): ChatBrain {

@@ -15,6 +15,7 @@ import {
   BrainManagementService,
   IBrainManagementService,
 } from 'renderer/features/brain/services/brainManagement';
+import { type ILocalUserService } from 'renderer/features/user/services/userService';
 import ChatSidebar from '../workbench/chatSidebar';
 import { IChatController } from './type';
 import { IChatItem } from '../models/chat';
@@ -38,7 +39,8 @@ export default class ChatController
     @inject('IActivityBarService')
     private activityBarService: IActivityBarService,
     @inject('IEditorService') private editorService: IEditorService,
-    @inject('IBuiltinService') private builtinService: IBuiltinService
+    @inject('IBuiltinService') private builtinService: IBuiltinService,
+    @inject('ILocalUserService') private localUserService: ILocalUserService
   ) {
     super();
     this.brainService = container.resolve(BrainManagementService);
@@ -83,13 +85,14 @@ export default class ChatController
 
   private async openNewChatWindow(): Promise<void> {
     const index = this.chatService.getChatCount() + 1;
+
+    const user = this.localUserService.getUser();
+
+    // TODO: Get default brains from settings
     const createOptions: CreateChat.Params = {
       name: `New chat ${index}`,
-      initiator: `Fake Extensions`,
-      brains: [
-        { id: 'brainIdTest', handleMessageType: 'text' },
-        { id: 'brainIdTest', handleMessageType: 'voice' },
-      ],
+      initiator: user.id,
+      brains: [],
     };
 
     const result = await this.chatService.createChat(createOptions);
@@ -118,7 +121,11 @@ export default class ChatController
 
   private createChatWindow(chat: ChatModel): React.ComponentType<any> {
     const service = new ChatWindowService(chat);
-    const controller = new ChatWindowController(service, chat);
+    const controller = new ChatWindowController(
+      service,
+      chat,
+      this.localUserService
+    );
     controller.initView();
 
     return connect(service, ChatView, controller);
