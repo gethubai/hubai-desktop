@@ -29,7 +29,9 @@ export const startServer = async () => {
     },
   });
 
-  chatServer.startServer(io);
+  const chatNamespace = io.of('/chat');
+
+  chatServer.startServer(chatNamespace);
 
   app.use(bodyParser.json());
   app.use('/api/brain', brainRoutes);

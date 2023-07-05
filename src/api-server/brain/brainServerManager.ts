@@ -18,7 +18,7 @@ class BrainClientManager {
       return;
     }
     this.initService(client, settings);
-    await client.start('http://localhost:4114');
+    await client.start('http://localhost:4114/chat');
     this.connectedClients.push(client);
   }
 

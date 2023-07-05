@@ -1,4 +1,4 @@
-import { Server, Socket } from 'socket.io';
+import { Namespace, Socket } from 'socket.io';
 import { makeChatRepository } from 'data/chat/factory';
 import {
   ChatMessageModel,
@@ -26,9 +26,9 @@ type TranscribeVoiceMessageEvent = {
 };
 
 class ChatServer {
-  private server: Server | undefined;
+  private server: Namespace | undefined;
 
-  public startServer(server: Server) {
+  public startServer(server: Namespace) {
     this.server = server;
 
     server.on('connection', this.onClientConnected.bind(this));

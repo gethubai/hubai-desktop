@@ -56,7 +56,7 @@ export class ChatService extends Component<IChatState> implements IChatService {
   private async initCommands(): Promise<void> {}
 
   private async initServer(): Promise<void> {
-    this.socket = io('http://localhost:4114', {
+    this.socket = io('http://localhost:4114/chat', {
       query: {
         type: 'chatClient',
         id: this.localUserService.getUser().id,
