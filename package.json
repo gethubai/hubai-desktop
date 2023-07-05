@@ -117,6 +117,7 @@
     "react-router-dom": "^6.11.2",
     "react-scrollbars-custom": "^4.1.1",
     "reflect-metadata": "^0.1.13",
+    "socket.io": "^4.7.1",
     "socket.io-client": "^4.7.1",
     "styled-components": "^6.0.0",
     "tsyringe": "^4.8.0",

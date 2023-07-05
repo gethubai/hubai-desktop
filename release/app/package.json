@@ -15,7 +15,6 @@
     "link-modules": "node -r ts-node/register ../../.erb/scripts/link-modules.ts"
   },
   "dependencies": {
-    "realm": "^11.10.1",
-    "socket.io": "^4.7.1"
+    "realm": "^11.10.1"
   }
 }
