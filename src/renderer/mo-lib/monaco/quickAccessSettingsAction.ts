@@ -6,9 +6,9 @@ import { ServicesAccessor } from 'monaco-editor/esm/vs/platform/instantiation/co
 import { KeyMod, KeyCode } from '@hubai/core/esm/monaco';
 import { KeybindingWeight } from '@hubai/core/esm/monaco/common';
 import { Action2 } from '@hubai/core/esm/monaco/action';
-import { constants } from '@hubai/core/esm/services/builtinService/const';
 import { ISettingsService } from '@hubai/core/esm/services';
 import { container } from 'tsyringe';
+import { constants } from 'mo/services/builtinService/const';
 
 export class QuickAccessSettings extends Action2 {
   static readonly ID = constants.ACTION_QUICK_ACCESS_SETTINGS;

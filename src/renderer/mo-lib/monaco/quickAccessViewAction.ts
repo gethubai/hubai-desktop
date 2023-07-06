@@ -28,7 +28,7 @@ import {
   editor as MonacoEditor,
 } from '@hubai/core/esm/monaco';
 import { IEditorService } from '@hubai/core';
-import { constants } from '@hubai/core/esm/services/builtinService/const';
+import { constants } from 'mo/services/builtinService/const';
 import { Action2 } from '@hubai/core/esm/monaco/action';
 import { KeybindingWeight } from '@hubai/core/esm/monaco/common';
 import { type IMonacoService } from '@hubai/core/esm/monaco/monacoService';

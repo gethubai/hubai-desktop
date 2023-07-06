@@ -3,10 +3,10 @@ import { localize } from '@hubai/core/esm/i18n/localize';
 import { KeyMod, KeyCode } from '@hubai/core/esm/monaco';
 import { IEditorService } from '@hubai/core';
 
-import { constants } from '@hubai/core/esm/services/builtinService/const';
 import { KeybindingWeight } from '@hubai/core/esm/monaco/common';
 import { Action2 } from '@hubai/core/esm/monaco/action';
 import { container } from 'tsyringe';
+import { constants } from 'mo/services/builtinService/const';
 
 export class QuickCopyLineUp extends Action2 {
   static readonly ID = constants.ACTION_QUICK_COPY_LINE_UP;

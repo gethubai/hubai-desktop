@@ -10,7 +10,7 @@ import { KeyMod, KeyCode } from '@hubai/core/esm/monaco';
 import { Action2 } from '@hubai/core/esm/monaco/action';
 import { KeybindingWeight } from '@hubai/core/esm/monaco/common';
 import { IColorTheme } from '@hubai/core/esm/model/colorTheme';
-import { constants } from '@hubai/core/esm/services/builtinService/const';
+import { constants } from 'mo/services/builtinService/const';
 import { IColorThemeService } from '@hubai/core/esm/services';
 import { container } from 'tsyringe';
 

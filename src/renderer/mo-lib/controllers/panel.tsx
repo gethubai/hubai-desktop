@@ -1,16 +1,12 @@
 import { inject, injectable } from 'tsyringe';
 import React from 'react';
 import { IActionBarItemProps } from '@hubai/core/esm/components/actionBar';
-import {
-  type IBuiltinService,
-  type IPanelService,
-  PanelEvent,
-  Controller,
-} from '@hubai/core';
+import { type IPanelService, PanelEvent, Controller } from '@hubai/core';
 import { type IMonacoService } from '@hubai/core/esm/monaco/monacoService';
 import type { UniqueId } from '@hubai/core/esm/common/types';
 import { QuickTogglePanelAction } from 'mo/monaco/quickTogglePanelAction';
 import Output from 'mo/workbench/panel/output';
+import { type IBuiltinService } from 'mo/services/builtinService';
 
 export interface IPanelController extends Partial<Controller> {
   onTabChange?(key: UniqueId): void;

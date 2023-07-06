@@ -7,7 +7,6 @@ import {
   type IPanelService,
   type IStatusBarService,
   type ILayoutService,
-  type IBuiltinService,
   type IProblemsService,
   Controller,
 } from '@hubai/core';
@@ -16,6 +15,7 @@ import { type IMonacoService } from '@hubai/core/esm/monaco/monacoService';
 import { connect } from '@hubai/core/esm/react';
 import { QuickTogglePanelAction } from 'mo/monaco/quickTogglePanelAction';
 import { ProblemsPaneView, ProblemsStatusBarView } from 'mo/workbench/problems';
+import { type IBuiltinService } from 'mo/services/builtinService';
 
 export interface IProblemsController extends Partial<Controller> {
   onClick?: (e: React.MouseEvent, item: IStatusBarItem) => void;

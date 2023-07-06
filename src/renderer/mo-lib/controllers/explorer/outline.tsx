@@ -1,10 +1,7 @@
 import React from 'react';
 import { inject, injectable } from 'tsyringe';
-import {
-  type IBuiltinService,
-  type IExplorerService,
-  Controller,
-} from '@hubai/core';
+import { type IExplorerService, Controller } from '@hubai/core';
+import { type IBuiltinService } from 'mo/services/builtinService';
 
 export interface IOutlineController extends Partial<Controller> {}
 

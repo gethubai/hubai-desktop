@@ -1,12 +1,12 @@
 /* eslint-disable import/prefer-default-export */
 import { IFolderTreeController } from '@hubai/core/esm/controller/explorer/folderTree';
 import { KeybindingWeight } from '@hubai/core/esm/monaco/common';
-import { constants } from '@hubai/core/esm/services/builtinService/const';
 import { Action2 } from '@hubai/core/esm/monaco/action';
 import { localize } from '@hubai/core/esm/i18n/localize';
 import { KeyMod, KeyCode } from '@hubai/core/esm/monaco';
 import { FileTypes } from '@hubai/core/esm/model';
 import { container } from 'tsyringe';
+import { constants } from 'mo/services/builtinService/const';
 
 export class QuickCreateFile extends Action2 {
   static readonly ID = constants.ACTION_QUICK_CREATE_FILE;

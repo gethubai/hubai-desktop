@@ -1,20 +1,21 @@
 import React from 'react';
 import { inject, injectable } from 'tsyringe';
-import { IActivityBarItem, IMenuBarItem } from '@hubai/core/esm/model';
 import { MenuBarEvent } from '@hubai/core/esm/model/workbench/menuBar';
 import { MenuBarMode } from '@hubai/core/esm/model/workbench/layout';
-import { Controller } from '@hubai/core/esm/react/controller';
 import {
   type IMenuBarService,
   type ILayoutService,
-  type IBuiltinService,
   type IActivityBarService,
-} from '@hubai/core/esm/services';
+  IActivityBarItem,
+  IMenuBarItem,
+  Controller,
+} from '@hubai/core';
 import { ID_APP, ID_SIDE_BAR } from '@hubai/core/esm/common/id';
 import { type IMonacoService } from '@hubai/core/esm/monaco/monacoService';
 import type { UniqueId } from '@hubai/core/esm/common/types';
 import { CommandQuickSideBarViewAction } from 'mo/monaco/quickToggleSideBarAction';
 import { QuickTogglePanelAction } from 'mo/monaco/quickTogglePanelAction';
+import { type IBuiltinService } from 'mo/services/builtinService';
 
 export interface IMenuBarController extends Partial<Controller> {
   onSelect?: (key: UniqueId, item?: IActivityBarItem) => void;

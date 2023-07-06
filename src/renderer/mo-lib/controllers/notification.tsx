@@ -7,11 +7,11 @@ import {
   INotificationItem,
   type IStatusBarService,
   type INotificationService,
-  type IBuiltinService,
 } from '@hubai/core';
 import { Controller } from '@hubai/core/esm/react/controller';
-import { IActionBarItemProps } from '@hubai/core/esm/components/actionBar';
+import { type IActionBarItemProps } from '@hubai/core/esm/components/actionBar';
 import { NotificationStatusBarView } from 'mo/workbench/notification';
+import { type IBuiltinService } from 'mo/services/builtinService';
 
 export interface INotificationController extends Partial<Controller> {
   onCloseNotification(item: INotificationItem): void;

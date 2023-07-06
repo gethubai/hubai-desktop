@@ -1,7 +1,6 @@
 import { Controller } from '@hubai/core/esm/react/controller';
 import { inject, injectable } from 'tsyringe';
-import { type IBuiltinService, type IExtensionService } from '@hubai/core';
-import { SelectLocaleAction } from '@hubai/core/esm/i18n/selectLocaleAction';
+import { type IExtensionService } from '@hubai/core';
 import { ID_SIDE_BAR } from '@hubai/core/esm/common/id';
 import type { Action2 } from '@hubai/core/esm/monaco/action';
 import { CommandQuickAccessViewAction } from 'mo/monaco/quickAccessViewAction';
@@ -14,6 +13,8 @@ import { QuickCopyLineUp } from 'mo/monaco/quickCopyLineUp';
 import { QuickUndo } from 'mo/monaco/quickUndo';
 import { QuickRedo } from 'mo/monaco/quickRedo';
 import { QuickCreateFile } from 'mo/monaco/quickCreateFile';
+import { SelectLocaleAction } from 'renderer/i18n/selectLocaleAction';
+import type { IBuiltinService } from 'mo/services/builtinService';
 
 export interface IExtensionController extends Partial<Controller> {}
 

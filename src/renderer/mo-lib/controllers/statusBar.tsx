@@ -3,13 +3,13 @@ import { Controller } from '@hubai/core/esm/react/controller';
 import { IMenuItemProps } from '@hubai/core/esm/components/menu';
 import { inject, injectable } from 'tsyringe';
 import {
-  type IBuiltinService,
   type IStatusBarService,
   IStatusBarItem,
   StatusBarEvent,
 } from '@hubai/core';
 import { EditorStatusBarView } from 'mo/workbench/editor';
 import { cloneDeep } from 'lodash';
+import { type IBuiltinService } from 'mo/services/builtinService';
 import { type IMenuBarController } from './menuBar';
 
 export interface IStatusBarController extends Partial<Controller> {

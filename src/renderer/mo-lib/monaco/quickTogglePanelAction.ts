@@ -9,7 +9,7 @@ import {
 } from '@hubai/core/esm/services';
 
 import { KeyMod, KeyCode } from '@hubai/core/esm/monaco';
-import { constants } from '@hubai/core/esm/services/builtinService/const';
+import { constants } from 'mo/services/builtinService/const';
 import { Action2 } from '@hubai/core/esm/monaco/action';
 import { CATEGORIES, KeybindingWeight } from '@hubai/core/esm/monaco/common';
 import { container } from 'tsyringe';

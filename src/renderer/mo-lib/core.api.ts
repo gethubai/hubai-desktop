@@ -20,10 +20,10 @@ import {
   type IAuxiliaryBarService,
   type ILocaleService,
   type ISidebarService,
-  IBuiltinService,
 } from '@hubai/core';
 
 import { type IMonacoService } from '@hubai/core/esm/monaco/monacoService';
+import { type IBuiltinService } from './services/builtinService';
 
 /**
  * The locale service

@@ -6,10 +6,10 @@ import {
   SearchEvent,
   SearchModel,
   ISearchService,
-  IBuiltinService,
 } from '@hubai/core';
 import { ITreeNodeItemProps } from '@hubai/core/esm/components';
 import { searchById } from '@hubai/core/esm/common/utils';
+import { type IBuiltinService } from '../builtinService';
 
 @injectable()
 class SearchService extends Component<ISearchProps> implements ISearchService {

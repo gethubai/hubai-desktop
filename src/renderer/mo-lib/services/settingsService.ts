@@ -9,7 +9,6 @@ import {
   IEditorTab,
   type IEditorService,
   type ISettingsService,
-  type IBuiltinService,
   BuiltInSettingsTabType,
 } from '@hubai/core';
 import {
@@ -19,6 +18,7 @@ import {
 } from '@hubai/core/esm/common/utils';
 import { GlobalEvent } from '@hubai/core/esm/common/event';
 import { type ILocaleService } from '@hubai/core/esm/i18n';
+import { type IBuiltinService } from './builtinService';
 
 @injectable()
 class SettingsService extends GlobalEvent implements ISettingsService {

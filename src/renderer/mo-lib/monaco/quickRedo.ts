@@ -9,7 +9,7 @@ import {
 import { IEditorService } from '@hubai/core/esm/services';
 import { KeybindingWeight } from '@hubai/core/esm/monaco/common';
 import { Action2 } from '@hubai/core/esm/monaco/action';
-import { constants } from '@hubai/core/esm/services/builtinService/const';
+import { constants } from 'mo/services/builtinService/const';
 import { container } from 'tsyringe';
 
 export class QuickRedo extends Action2 {

@@ -8,13 +8,13 @@ import {
   ProblemsEvent,
   IStatusBarItem,
   type IStatusBarService,
-  type IBuiltinService,
   IProblemsService,
 } from '@hubai/core';
 import { Component } from '@hubai/core/esm/react';
 import { searchById } from '@hubai/core/esm/common/utils';
 import logger from '@hubai/core/esm/common/logger';
 import type { UniqueId } from '@hubai/core/esm/common/types';
+import { type IBuiltinService } from './builtinService';
 
 @injectable()
 class ProblemsService extends Component<IProblems> implements IProblemsService {

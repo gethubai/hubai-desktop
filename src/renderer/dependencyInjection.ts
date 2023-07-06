@@ -1,21 +1,20 @@
 import { container } from 'tsyringe';
 
 import './mo-lib/monaco/index';
-import {
-  type IEditorService,
-  type IActivityBarService,
-  type IAuxiliaryBarService,
-  type ISidebarService,
-  type ILayoutService,
-  type IMenuBarService,
-  type IPanelService,
-  type ISearchService,
-  type IStatusBarService,
-  type ISettingsService,
+import type {
+  IEditorService,
+  IActivityBarService,
+  IAuxiliaryBarService,
+  ISidebarService,
+  ILayoutService,
+  IMenuBarService,
+  IPanelService,
+  ISearchService,
+  IStatusBarService,
+  ISettingsService,
   IEditorTreeService,
   IExplorerService,
   IFolderTreeService,
-  IBuiltinService,
   IProblemsService,
   INotificationService,
   IExtensionService,
@@ -36,7 +35,9 @@ import SettingsService from 'mo/services/settingsService';
 import EditorTreeService from 'mo/services/workbench/explorer/editorTreeService';
 import ExplorerService from 'mo/services/workbench/explorer/explorerService';
 import FolderTreeService from 'mo/services/workbench/explorer/folderTreeService';
-import BuiltinService from 'mo/services/builtinService';
+import BuiltinService, {
+  type IBuiltinService,
+} from 'mo/services/builtinService';
 import ProblemsService from 'mo/services/problemsService';
 import NotificationService from 'mo/services/notificationService';
 import { ISideBarController, SidebarController } from 'mo/controllers/sidebar';

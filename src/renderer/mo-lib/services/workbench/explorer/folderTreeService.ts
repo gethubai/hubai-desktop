@@ -11,13 +11,13 @@ import {
   IFolderTreeSubItem,
   IFolderTreeNodeProps,
   type IExplorerService,
-  type IBuiltinService,
   IFolderTreeService,
 } from '@hubai/core';
 import { IMenuItemProps } from '@hubai/core/esm/components';
 import logger from '@hubai/core/esm/common/logger';
 import type { UniqueId } from '@hubai/core/esm/common/types';
 import { TreeViewUtil } from '@hubai/core/esm/common/treeUtil';
+import { type IBuiltinService } from 'mo/services/builtinService';
 
 @injectable()
 class FolderTreeService

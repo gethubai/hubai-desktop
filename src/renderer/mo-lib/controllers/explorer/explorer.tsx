@@ -10,11 +10,11 @@ import {
   type IExplorerService,
   type ISidebarService,
   type IActivityBarService,
-  type IBuiltinService,
   type IFolderTreeService,
 } from '@hubai/core';
 import { FileTypes, EditorTreeEvent } from '@hubai/core/esm/model';
 import { IActionBarItemProps } from '@hubai/core/esm/components/actionBar';
+import { type IBuiltinService } from 'mo/services/builtinService';
 import { type IFolderTreeController } from './folderTree';
 
 export interface IExplorerController extends Partial<Controller> {

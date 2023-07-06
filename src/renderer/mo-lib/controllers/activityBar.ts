@@ -3,16 +3,16 @@ import { inject, injectable } from 'tsyringe';
 import { IMenuItemProps } from '@hubai/core/esm/components/menu';
 import {
   ActivityBarEvent,
-  IActivityBarItem,
+  type IActivityBarItem,
   Controller,
   type IActivityBarService,
-  type IBuiltinService,
   type ISettingsService,
 } from '@hubai/core';
 import { type IMonacoService } from '@hubai/core/esm/monaco/monacoService';
 import type { UniqueId } from '@hubai/core/esm/common/types';
 import { CommandQuickAccessViewAction } from 'mo/monaco/quickAccessViewAction';
 import { SelectColorThemeAction } from 'mo/monaco/selectColorThemeAction';
+import { type IBuiltinService } from 'mo/services/builtinService';
 import { type IMenuBarController } from './menuBar';
 
 export interface IActivityBarController extends Partial<Controller> {

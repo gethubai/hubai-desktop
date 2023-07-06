@@ -20,8 +20,8 @@ import {
   HEADER_HEIGTH,
   MAX_GROW_HEIGHT,
 } from '@hubai/core/esm/components/collapse';
-import { constants } from '@hubai/core/esm/services/builtinService/const';
 import type { UniqueId } from '@hubai/core/esm/common/types';
+import { constants } from 'mo/services/builtinService/const';
 import {
   editorTreeActiveItemClassName,
   editorTreeClassName,

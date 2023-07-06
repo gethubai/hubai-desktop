@@ -1,11 +1,10 @@
 import React from 'react';
 import {
   type IActivityBarService,
-  type IBuiltinService,
   type IEditorService,
   type ISidebarService,
   react,
-  IActivityBarItem,
+  type IActivityBarItem,
 } from '@hubai/core';
 
 import { container, injectable, inject } from 'tsyringe';
@@ -16,6 +15,7 @@ import {
   IBrainManagementService,
 } from 'renderer/features/brain/services/brainManagement';
 import { type ILocalUserService } from 'renderer/features/user/services/userService';
+import type { IBuiltinService } from 'mo/services/builtinService';
 import ChatSidebar from '../workbench/chatSidebar';
 import { IChatController } from './type';
 import { IChatItem } from '../models/chat';

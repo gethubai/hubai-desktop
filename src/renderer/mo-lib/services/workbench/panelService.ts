@@ -14,13 +14,10 @@ import {
 
 import { searchById } from '@hubai/core/esm/common/utils';
 import { IActionBarItemProps } from '@hubai/core/esm/components/actionBar';
-import {
-  type IBuiltinService,
-  IPanelService,
-  type ILayoutService,
-} from '@hubai/core';
+import { IPanelService, type ILayoutService } from '@hubai/core';
 import logger from '@hubai/core/esm/common/logger';
 import type { UniqueId } from '@hubai/core/esm/common/types';
+import { type IBuiltinService } from '../builtinService';
 
 @injectable()
 class PanelService extends Component<IPanel> implements IPanelService {

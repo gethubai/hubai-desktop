@@ -8,10 +8,10 @@ import {
   FileTypes,
   FileType,
   IFolderTreeNodeProps,
-  type IBuiltinService,
   type IFolderTreeService,
 } from '@hubai/core';
 import type { UniqueId } from '@hubai/core/esm/common/types';
+import { type IBuiltinService } from 'mo/services/builtinService';
 
 export interface IFolderTreeController extends Partial<Controller> {
   readonly createTreeNode?: (type: FileType, id?: UniqueId) => void;

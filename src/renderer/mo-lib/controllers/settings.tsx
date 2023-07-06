@@ -3,7 +3,6 @@ import { inject, injectable } from 'tsyringe';
 import { debounce } from 'lodash';
 
 import {
-  type IBuiltinService,
   type IEditorService,
   type ISettingsService,
   type INotificationService,
@@ -12,6 +11,7 @@ import {
 } from '@hubai/core';
 import { ILocale, type ILocaleService } from '@hubai/core/esm/i18n';
 import LocaleNotification from 'mo/workbench/notification/notificationPane/localeNotification';
+import { type IBuiltinService } from 'mo/services/builtinService';
 
 export interface ISettingsController extends Partial<Controller> {}
 

@@ -1,6 +1,5 @@
 import { inject, injectable } from 'tsyringe';
 import {
-  type IBuiltinService,
   type IExplorerService,
   type IEditorService,
   EditorTreeEvent,
@@ -17,6 +16,7 @@ import {
   ITabProps,
 } from '@hubai/core/esm/components';
 import type { UniqueId } from '@hubai/core/esm/common/types';
+import { type IBuiltinService } from 'mo/services/builtinService';
 
 export interface IEditorTreeController extends Partial<Controller> {
   readonly onClose?: (tabId: UniqueId, groupId: UniqueId) => void;
