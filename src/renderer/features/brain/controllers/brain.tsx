@@ -12,6 +12,7 @@ import {
 } from '@hubai/core';
 import { container, inject, injectable } from 'tsyringe';
 import generateUniqueId from 'renderer/common/uniqueIdGenerator';
+import { openZipFileSelector } from 'renderer/common/fileUtils';
 import { IBrainController } from './type';
 import { BrainManagementService } from '../services/brainManagement';
 import BrainSidebar from '../workbench/brainSidebar';
@@ -19,29 +20,6 @@ import { BrainEvent, LocalBrainViewModel } from '../models/brain';
 import LocalBrainWindow from '../workbench/localBrainWindow';
 
 const { connect } = react;
-
-function openFileSelector(onSelect: any) {
-  // create the file input dynamically
-  const fileInput = document.createElement('input');
-
-  // set the attributes
-  fileInput.setAttribute('type', 'file');
-  fileInput.setAttribute('accept', '.zip'); // accept only zip files
-  fileInput.setAttribute('multiple', 'false'); // accept only one file
-
-  // register the change event to capture the selected files
-  fileInput.addEventListener('change', function () {
-    const { files } = fileInput;
-    // perform the operation you want on the selected files
-    // e.g., print the name of the first selected file
-    if (files && files.length > 0) {
-      onSelect(files[0]);
-    }
-  });
-
-  // programmatically trigger the click event
-  fileInput.click();
-}
 
 @injectable()
 export default class BrainController
@@ -88,7 +66,9 @@ export default class BrainController
         id: 'addBrain',
         title: 'Add Brain',
         onClick: () => {
-          return openFileSelector(this.onSelectLocalBrainToInstall.bind(this));
+          return openZipFileSelector(
+            this.onSelectLocalBrainToInstall.bind(this)
+          );
         },
       },
     ];
