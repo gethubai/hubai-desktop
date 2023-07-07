@@ -1,10 +1,8 @@
 // In the app, if window.isElectron is defined and true, we know we're running in Electron
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
-import {
-  BrainIpcApiConfigs,
-  MediaAccessIpcApiConfigs,
-  UserSettingsIpcApiConfigs,
-} from './consts';
+import brainRendererApi from 'api-server/brain/ipc/rendererApi';
+import userSettingsRendererApi from './ipc/userSettings/rendererApi';
+import mediaAccessRendererApi from './ipc/mediaAccess/rendererApi';
 
 Object.defineProperty(window, 'isRenderer', { get: () => true });
 
@@ -29,58 +27,9 @@ const electronHandler = {
       ipcRenderer.once(channel, (_event, ...args) => func(...args));
     },
   },
-  userSettings: {
-    // TODO: I think this might be a security issue, we shouldn't be able to get and set the settings like that because this might be used by attackers
-    get(key: string) {
-      return ipcRenderer.sendSync(UserSettingsIpcApiConfigs.endpoints.get, key);
-    },
-    getAll() {
-      return ipcRenderer.sendSync(UserSettingsIpcApiConfigs.endpoints.getAll);
-    },
-    setSetting(property: string, val: any) {
-      ipcRenderer.send(
-        UserSettingsIpcApiConfigs.endpoints.setSetting,
-        property,
-        val
-      );
-    },
-    set(newSettings: any) {
-      ipcRenderer.send(UserSettingsIpcApiConfigs.endpoints.set, newSettings);
-    },
-  },
-  brain: {
-    installBrain(brainZipPath: string) {
-      return ipcRenderer.sendSync(
-        BrainIpcApiConfigs.endpoints.install,
-        brainZipPath
-      );
-    },
-    getInstalledBrains() {
-      return ipcRenderer.sendSync(BrainIpcApiConfigs.endpoints.getAll);
-    },
-    updateSettings(brainId: string, newSettings: any) {
-      return ipcRenderer.sendSync(
-        BrainIpcApiConfigs.endpoints.updateSettings,
-        brainId,
-        newSettings
-      );
-    },
-  },
-  mediaAccess: {
-    async getMicrophoneAccessStatus() {
-      return ipcRenderer.sendSync(
-        MediaAccessIpcApiConfigs.endpoints.getMicrophoneAccessStatus,
-        'microphone'
-      );
-    },
-
-    async askForMicrophoneAccess() {
-      return ipcRenderer.sendSync(
-        MediaAccessIpcApiConfigs.endpoints.askForMicrophoneAccess,
-        'microphone'
-      );
-    },
-  },
+  userSettings: userSettingsRendererApi,
+  brain: brainRendererApi,
+  mediaAccess: mediaAccessRendererApi,
 };
 
 contextBridge.exposeInMainWorld('electron', electronHandler);

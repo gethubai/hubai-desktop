@@ -9,14 +9,7 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import path from 'path';
-import {
-  app,
-  BrowserWindow,
-  shell,
-  ipcMain,
-  protocol,
-  systemPreferences,
-} from 'electron';
+import { app, BrowserWindow, shell, ipcMain, protocol } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import {
@@ -26,19 +19,14 @@ import {
   getMessageAudioStoragePath,
   getMessageStoragePath,
 } from 'utils/pathUtils';
-import brainServerManager from 'api-server/brain/brainServerManager';
-import userSettingsStorage from 'data/user/mainStorage';
-import makeLoadLocalBrains from 'api-server/brain/factories/usecases/loadLocalBrainsFactory';
-import brainInstaller from 'api-server/brain/brainInstaller';
 import keyStore from 'data/keyStore';
 import { generateSecureRandom64ByteKey } from 'utils/securityUtils';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-import {
-  BrainIpcApiConfigs,
-  MediaAccessIpcApiConfigs,
-  UserSettingsIpcApiConfigs,
-} from './consts';
+
+import 'api-server/brain/ipc/mainApi';
+import './ipc/userSettings/mainApi';
+import './ipc/mediaAccess/mainApi';
 
 const isDebug =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
@@ -57,63 +45,6 @@ class AppUpdater {
 }
 
 let mainWindow: BrowserWindow | null = null;
-
-ipcMain.on(UserSettingsIpcApiConfigs.endpoints.get, async (event, val) => {
-  event.returnValue = userSettingsStorage.get(val);
-});
-ipcMain.on(UserSettingsIpcApiConfigs.endpoints.getAll, async (event) => {
-  event.returnValue = userSettingsStorage.getAll();
-});
-ipcMain.on(
-  UserSettingsIpcApiConfigs.endpoints.setSetting,
-  async (event, key, val) => {
-    userSettingsStorage.setSetting(key, val);
-  }
-);
-
-ipcMain.on(UserSettingsIpcApiConfigs.endpoints.set, async (event, val) => {
-  userSettingsStorage.set(val);
-});
-
-ipcMain.on(BrainIpcApiConfigs.endpoints.getAll, async (event) => {
-  const getBrainsUseCase = await makeLoadLocalBrains();
-  const brains = await getBrainsUseCase.getBrains();
-  event.returnValue = brains;
-});
-
-ipcMain.on(
-  BrainIpcApiConfigs.endpoints.install,
-  async (event, brainZipPath: string) => {
-    const result = await brainInstaller.installBrain(brainZipPath);
-    event.returnValue = result;
-  }
-);
-
-ipcMain.on(
-  BrainIpcApiConfigs.endpoints.updateSettings,
-  async (event, brainId: string, newSettings: any) => {
-    event.returnValue = brainServerManager.updateClientSettings(
-      brainId,
-      newSettings
-    );
-  }
-);
-
-ipcMain.on(
-  MediaAccessIpcApiConfigs.endpoints.getMicrophoneAccessStatus,
-  async (event, mediaType: 'microphone' | 'camera' | 'screen') => {
-    // return value: "not-determined" | "granted" | "denied" | "restricted" | "unknown"
-    event.returnValue = systemPreferences.getMediaAccessStatus(mediaType);
-  }
-);
-
-ipcMain.on(
-  MediaAccessIpcApiConfigs.endpoints.askForMicrophoneAccess,
-  async (event, mediaType: 'microphone' | 'camera') => {
-    // return value: A promise that resolves with true if consent was granted and false if it was denied. If an invalid mediaType is passed, the promise will be rejected.
-    event.returnValue = await systemPreferences.askForMediaAccess(mediaType);
-  }
-);
 
 ipcMain.on('restart-app', () => {
   app.relaunch();
