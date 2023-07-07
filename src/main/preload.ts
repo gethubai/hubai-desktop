@@ -1,5 +1,10 @@
 // In the app, if window.isElectron is defined and true, we know we're running in Electron
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
+import {
+  BrainIpcApiConfigs,
+  MediaAccessIpcApiConfigs,
+  UserSettingsIpcApiConfigs,
+} from './consts';
 
 Object.defineProperty(window, 'isRenderer', { get: () => true });
 
@@ -27,29 +32,35 @@ const electronHandler = {
   userSettings: {
     // TODO: I think this might be a security issue, we shouldn't be able to get and set the settings like that because this might be used by attackers
     get(key: string) {
-      return ipcRenderer.sendSync('user-settings-get', key);
+      return ipcRenderer.sendSync(UserSettingsIpcApiConfigs.endpoints.get, key);
     },
     getAll() {
-      return ipcRenderer.sendSync('user-settings-getAll');
+      return ipcRenderer.sendSync(UserSettingsIpcApiConfigs.endpoints.getAll);
     },
     setSetting(property: string, val: any) {
-      ipcRenderer.send('user-settings-setSetting', property, val);
+      ipcRenderer.send(
+        UserSettingsIpcApiConfigs.endpoints.setSetting,
+        property,
+        val
+      );
     },
     set(newSettings: any) {
-      ipcRenderer.send('user-settings-set', newSettings);
+      ipcRenderer.send(UserSettingsIpcApiConfigs.endpoints.set, newSettings);
     },
-    // Other method you want to add like has(), reset(), etc.
   },
   brain: {
     installBrain(brainZipPath: string) {
-      return ipcRenderer.sendSync('install-brain', brainZipPath);
+      return ipcRenderer.sendSync(
+        BrainIpcApiConfigs.endpoints.install,
+        brainZipPath
+      );
     },
     getInstalledBrains() {
-      return ipcRenderer.sendSync('get-installed-brains');
+      return ipcRenderer.sendSync(BrainIpcApiConfigs.endpoints.getAll);
     },
     updateSettings(brainId: string, newSettings: any) {
       return ipcRenderer.sendSync(
-        'update-brain-settings',
+        BrainIpcApiConfigs.endpoints.updateSettings,
         brainId,
         newSettings
       );
@@ -57,11 +68,17 @@ const electronHandler = {
   },
   mediaAccess: {
     async getMicrophoneAccessStatus() {
-      return ipcRenderer.sendSync('get-media-access-status', 'microphone');
+      return ipcRenderer.sendSync(
+        MediaAccessIpcApiConfigs.endpoints.getMicrophoneAccessStatus,
+        'microphone'
+      );
     },
 
     async askForMicrophoneAccess() {
-      return ipcRenderer.sendSync('ask-for-media-access', 'microphone');
+      return ipcRenderer.sendSync(
+        MediaAccessIpcApiConfigs.endpoints.askForMicrophoneAccess,
+        'microphone'
+      );
     },
   },
 };

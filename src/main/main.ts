@@ -34,6 +34,11 @@ import keyStore from 'data/keyStore';
 import { generateSecureRandom64ByteKey } from 'utils/securityUtils';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import {
+  BrainIpcApiConfigs,
+  MediaAccessIpcApiConfigs,
+  UserSettingsIpcApiConfigs,
+} from './consts';
 
 const isDebug =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
@@ -53,28 +58,39 @@ class AppUpdater {
 
 let mainWindow: BrowserWindow | null = null;
 
-ipcMain.on('ipc-example', async (event, arg) => {
-  const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
-  console.log(msgTemplate(arg));
-  event.reply('ipc-example', msgTemplate('pong'));
-});
-
-ipcMain.on('user-settings-get', async (event, val) => {
+ipcMain.on(UserSettingsIpcApiConfigs.endpoints.get, async (event, val) => {
   event.returnValue = userSettingsStorage.get(val);
 });
-ipcMain.on('user-settings-getAll', async (event) => {
+ipcMain.on(UserSettingsIpcApiConfigs.endpoints.getAll, async (event) => {
   event.returnValue = userSettingsStorage.getAll();
 });
-ipcMain.on('user-settings-setSetting', async (event, key, val) => {
-  userSettingsStorage.setSetting(key, val);
-});
+ipcMain.on(
+  UserSettingsIpcApiConfigs.endpoints.setSetting,
+  async (event, key, val) => {
+    userSettingsStorage.setSetting(key, val);
+  }
+);
 
-ipcMain.on('user-settings-set', async (event, val) => {
+ipcMain.on(UserSettingsIpcApiConfigs.endpoints.set, async (event, val) => {
   userSettingsStorage.set(val);
 });
 
+ipcMain.on(BrainIpcApiConfigs.endpoints.getAll, async (event) => {
+  const getBrainsUseCase = await makeLoadLocalBrains();
+  const brains = await getBrainsUseCase.getBrains();
+  event.returnValue = brains;
+});
+
 ipcMain.on(
-  'update-brain-settings',
+  BrainIpcApiConfigs.endpoints.install,
+  async (event, brainZipPath: string) => {
+    const result = await brainInstaller.installBrain(brainZipPath);
+    event.returnValue = result;
+  }
+);
+
+ipcMain.on(
+  BrainIpcApiConfigs.endpoints.updateSettings,
   async (event, brainId: string, newSettings: any) => {
     event.returnValue = brainServerManager.updateClientSettings(
       brainId,
@@ -83,19 +99,8 @@ ipcMain.on(
   }
 );
 
-ipcMain.on('get-installed-brains', async (event) => {
-  const getBrainsUseCase = await makeLoadLocalBrains();
-  const brains = await getBrainsUseCase.getBrains();
-  event.returnValue = brains;
-});
-
-ipcMain.on('install-brain', async (event, brainZipPath: string) => {
-  const result = await brainInstaller.installBrain(brainZipPath);
-  event.returnValue = result;
-});
-
 ipcMain.on(
-  'get-media-access-status',
+  MediaAccessIpcApiConfigs.endpoints.getMicrophoneAccessStatus,
   async (event, mediaType: 'microphone' | 'camera' | 'screen') => {
     // return value: "not-determined" | "granted" | "denied" | "restricted" | "unknown"
     event.returnValue = systemPreferences.getMediaAccessStatus(mediaType);
@@ -103,7 +108,7 @@ ipcMain.on(
 );
 
 ipcMain.on(
-  'ask-for-media-access',
+  MediaAccessIpcApiConfigs.endpoints.askForMicrophoneAccess,
   async (event, mediaType: 'microphone' | 'camera') => {
     // return value: A promise that resolves with true if consent was granted and false if it was denied. If an invalid mediaType is passed, the promise will be rejected.
     event.returnValue = await systemPreferences.askForMediaAccess(mediaType);
