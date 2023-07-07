@@ -119,7 +119,7 @@ export default class BrainController
           if (item.value.success) {
             return (
               <div>
-                <p>{item.value.brain.title} installed successfully!</p>
+                <p>{item.value.brain.displayName} installed successfully!</p>
                 <p>
                   <a href="#" onClick={() => window.electron.restart()}>
                     Restart&nbsp;
@@ -154,7 +154,7 @@ export default class BrainController
     }
     this.editorService.open({
       id: windowId,
-      name: `${brain.title} Brain`,
+      name: `${brain.displayName} Brain`,
       icon: 'octoface',
       renderPane,
     });

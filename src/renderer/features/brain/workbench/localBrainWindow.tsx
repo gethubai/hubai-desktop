@@ -71,7 +71,7 @@ function LocalBrainWindow({
   return (
     <div style={{ marginTop: -20, marginLeft: 10 }}>
       <div id="content_container">
-        <h2>{brain.title}</h2>
+        <h2>{brain.displayName}</h2>
         <span style={{ fontSize: 16 }}>{brain.description}</span>
       </div>
 

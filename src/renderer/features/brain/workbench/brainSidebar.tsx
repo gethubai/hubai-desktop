@@ -16,7 +16,7 @@ function BrainSidebar({
     (brain) =>
       ({
         id: brain.id,
-        name: brain.title,
+        name: brain.displayName,
         fileType: 'File',
         icon: 'bold',
         isLeaf: true,

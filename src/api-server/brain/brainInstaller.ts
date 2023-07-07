@@ -26,7 +26,7 @@ export class BrainInstaller {
         version: packageJson.version,
         main: packageJson.main,
         name: packageJson.brain.name,
-        title: packageJson.brain.title,
+        displayName: packageJson.brain.displayName,
         description: packageJson.brain.description,
         capabilities: packageJson.brain.capabilities as BrainCapability[],
         settingsMap: packageJson.brain.settingsMap,

@@ -25,7 +25,7 @@ export async function loadLocalBrains() {
       const settings = {
         id: brain.id,
         name: brain.name,
-        nameAlias: brain.title,
+        displayName: brain.displayName,
         supportedPromptTypes: getSupportedPromptTypesFromCapabilities(
           brain.capabilities
         ),

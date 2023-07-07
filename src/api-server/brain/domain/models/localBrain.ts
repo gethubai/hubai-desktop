@@ -22,7 +22,7 @@ export enum BrainSettingScope {
 export class LocalBrainSettingMap {
   name: string;
 
-  title: string;
+  displayName: string;
 
   type: BrainSettingType;
 
@@ -38,7 +38,7 @@ export class LocalBrainSettingMap {
 
   constructor(
     name: string,
-    title: string,
+    displayName: string,
     type: string,
     required?: boolean,
     defaultValue?: string,
@@ -47,7 +47,7 @@ export class LocalBrainSettingMap {
     scope?: string
   ) {
     this.name = name;
-    this.title = title;
+    this.displayName = displayName;
     this.type = this.parseBrainSettingType(type);
     this.defaultValue = defaultValue;
     this.enumValues = enumValues;
@@ -94,7 +94,7 @@ export class LocalBrainSettingMap {
 export type LocalBrainModel = {
   id: string;
   name: string;
-  title: string;
+  displayName: string;
   description?: string;
   version: string;
   main: string;

@@ -25,7 +25,7 @@ export class LocalBrainDto extends Realm.Object<LocalBrainModel> {
 
   name!: string;
 
-  title!: string;
+  displayName!: string;
 
   description?: string;
 
@@ -46,7 +46,7 @@ export class LocalBrainDto extends Realm.Object<LocalBrainModel> {
     properties: {
       id: 'string',
       name: { type: 'string', indexed: true },
-      title: { type: 'string', indexed: true },
+      displayName: { type: 'string', indexed: true },
       description: 'string?',
       version: 'string',
       main: 'string',
@@ -62,7 +62,7 @@ export class LocalBrainDto extends Realm.Object<LocalBrainModel> {
     return {
       id: this.id,
       name: this.name,
-      title: this.title,
+      displayName: this.displayName,
       description: this.description,
       version: this.version,
       main: this.main,
@@ -77,7 +77,7 @@ export class LocalBrainDto extends Realm.Object<LocalBrainModel> {
 class LocalBrainSettingMapDto extends Realm.Object<LocalBrainSettingMap> {
   name!: string;
 
-  title!: string;
+  displayName!: string;
 
   type!: BrainSettingType;
 
@@ -96,7 +96,7 @@ class LocalBrainSettingMapDto extends Realm.Object<LocalBrainSettingMap> {
     embedded: true,
     properties: {
       name: 'string',
-      title: 'string',
+      displayName: 'string',
       type: 'string',
       enumValues: 'string[]',
       defaultValue: 'string?',
@@ -109,7 +109,7 @@ class LocalBrainSettingMapDto extends Realm.Object<LocalBrainSettingMap> {
   get values(): LocalBrainSettingMap {
     return {
       name: this.name,
-      title: this.title,
+      displayName: this.displayName,
       type: this.type,
       enumValues: Array.from(this.enumValues ?? []),
       defaultValue: this.defaultValue,

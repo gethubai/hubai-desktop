@@ -10,7 +10,7 @@ export interface IBrainSettings {
   id: string;
   name: string;
   /* The name that will appear for user */
-  nameAlias: string;
+  displayName: string;
   supportedPromptTypes: PromptType[];
 }
 
