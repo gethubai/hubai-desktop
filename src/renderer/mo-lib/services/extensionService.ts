@@ -205,7 +205,7 @@ class ExtensionService implements IExtensionService {
     const languagesExts: IExtension[] = [];
     const others: IExtension[] = [];
     extensions.forEach((ext) => {
-      if (ext.contributes?.languages) {
+      if (ext.contributes?.languages && ext.contributes?.languages.length > 0) {
         languagesExts.push(ext);
       } else {
         others.push(ext);
