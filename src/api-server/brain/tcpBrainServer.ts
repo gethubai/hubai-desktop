@@ -162,11 +162,11 @@ export default class TcpBrainServer implements IBrainServer {
   }
 
   private getMessageReply(message: ChatMessageModel): SendChatMessageModel {
-    const { id, nameAlias } = this.getSettings();
+    const { id, displayName } = this.getSettings();
 
     return new SendChatMessageModel(
       message.chat,
-      nameAlias,
+      displayName,
       id,
       'brain',
       message.senderId

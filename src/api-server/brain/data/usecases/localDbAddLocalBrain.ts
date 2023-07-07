@@ -5,6 +5,7 @@ import {
 import { AddLocalBrain } from 'api-server/brain/domain/usecases/addLocalBrain';
 import { ILocalBrainRepository } from 'data/brain/localBrainRepository';
 import generateUniqueId from 'renderer/common/uniqueIdGenerator';
+import { getCurrentUtcDate } from 'utils/dateUtils';
 
 export default class LocalDbAddLocalBrain implements AddLocalBrain {
   constructor(private readonly repository: ILocalBrainRepository) {}
@@ -28,12 +29,13 @@ export default class LocalDbAddLocalBrain implements AddLocalBrain {
     }
 
     const brainWithName = await this.repository.getBrainByName(brain.name);
+    const displayName = brain.displayName ?? brain.name;
 
     if (brainWithName) {
       // Update brain
       const result = await this.repository.update({
         ...brainWithName,
-        title: brain.nameAlias ?? brain.name,
+        displayName,
         description: brain.description,
         main: brain.main,
         version: brain.version,
@@ -46,9 +48,9 @@ export default class LocalDbAddLocalBrain implements AddLocalBrain {
     const result = await this.repository.add({
       ...brain,
       id: generateUniqueId(),
-      title: brain.nameAlias ?? brain.name,
+      displayName,
       capabilities: brain.capabilities as BrainCapability[],
-      installationDate: new Date(), // TODO: Convert to UTC
+      installationDate: getCurrentUtcDate(),
     });
     return result;
   };

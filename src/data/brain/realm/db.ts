@@ -5,7 +5,6 @@ import path from 'path';
 import {
   BrainCapability,
   BrainSettingScope,
-  BrainSettingType,
   LocalBrainModel,
   LocalBrainSettingMap,
 } from 'api-server/brain/domain/models/localBrain';
@@ -14,6 +13,7 @@ import {
   getAppDatabaseStoragePath,
 } from 'utils/pathUtils';
 import keyStore from 'data/keyStore';
+import { SettingType } from 'api-server/models/settingMap';
 
 /*
 Realm supports the following primitive data types:
@@ -79,7 +79,7 @@ class LocalBrainSettingMapDto extends Realm.Object<LocalBrainSettingMap> {
 
   displayName!: string;
 
-  type!: BrainSettingType;
+  type!: SettingType;
 
   enumValues?: string[];
 

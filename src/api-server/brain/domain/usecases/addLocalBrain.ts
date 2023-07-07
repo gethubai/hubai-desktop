@@ -7,7 +7,7 @@ export interface AddLocalBrain {
 export namespace AddLocalBrain {
   export type Params = {
     name: string;
-    nameAlias?: string;
+    displayName?: string;
     description: string;
     version: string;
     main: string;

@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import { LocalBrainModel } from 'api-server/brain/domain/models/localBrain';
 import { LoadLocalBrains } from 'api-server/brain/domain/usecases/loadLocalBrains';
 import { ILocalBrainRepository } from 'data/brain/localBrainRepository';
