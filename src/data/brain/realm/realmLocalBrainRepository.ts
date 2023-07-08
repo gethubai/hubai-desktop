@@ -62,7 +62,7 @@ export class RealmLocalBrainRepository implements ILocalBrainRepository {
       .objects(LocalBrainDto)
       .filtered(`name == $0`, name);
 
-    if (brain.length > 0) return brain[0] as LocalBrainModel;
+    if (brain.length > 0) return brain[0].values as LocalBrainModel;
 
     return undefined;
   };
