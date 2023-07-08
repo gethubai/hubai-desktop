@@ -8,10 +8,7 @@ import {
 } from 'api-server/chat/domain/models/chatMessage';
 import { container } from 'tsyringe';
 import { ChatMessagesContext } from 'api-server/chat/domain/models/chatContext';
-import {
-  BrainManagementService,
-  IBrainManagementService,
-} from 'renderer/features/brain/services/brainManagement';
+import { IBrainManagementService } from 'renderer/features/brain/services/brainManagement';
 import { Component } from '@hubai/core/esm/react';
 import {
   ChatWindowMessage,
@@ -38,7 +35,7 @@ export class ChatWindowService
 
   constructor(private readonly chat: ChatModel) {
     super();
-    this.brainService = container.resolve(BrainManagementService);
+    this.brainService = container.resolve('IBrainManagementService');
     this.state = new ChatWindowStateModel(
       [],
       this.brainService.getBrains(),

@@ -10,11 +10,11 @@ import {
   INotificationService,
   INotificationItem,
 } from '@hubai/core';
-import { container, inject, injectable } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 import generateUniqueId from 'renderer/common/uniqueIdGenerator';
 import { openZipFileSelector } from 'renderer/common/fileUtils';
 import { IBrainController } from './type';
-import { BrainManagementService } from '../services/brainManagement';
+import { type IBrainManagementService } from '../services/brainManagement';
 import BrainSidebar from '../workbench/brainSidebar';
 import { BrainEvent, LocalBrainViewModel } from '../models/brain';
 import LocalBrainWindow from '../workbench/localBrainWindow';
@@ -26,18 +26,17 @@ export default class BrainController
   extends Controller
   implements IBrainController
 {
-  private readonly brainService: BrainManagementService;
-
   constructor(
     @inject('ISidebarService') private sideBarService: ISidebarService,
     @inject('IActivityBarService')
     private activityBarService: IActivityBarService,
     @inject('IEditorService') private editorService: IEditorService,
     @inject('INotificationService')
-    private notificationService: INotificationService
+    private notificationService: INotificationService,
+    @inject('IBrainManagementService')
+    private brainService: IBrainManagementService
   ) {
     super();
-    this.brainService = container.resolve(BrainManagementService);
   }
 
   public initView(): void {

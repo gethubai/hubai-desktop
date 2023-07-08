@@ -7,13 +7,10 @@ import {
   type IActivityBarItem,
 } from '@hubai/core';
 
-import { container, injectable, inject } from 'tsyringe';
+import { injectable, inject } from 'tsyringe';
 import { ChatModel } from 'api-server/chat/domain/models/chat';
 import { CreateChat } from 'api-server/chat/domain/usecases/createChat';
-import {
-  BrainManagementService,
-  IBrainManagementService,
-} from 'renderer/features/brain/services/brainManagement';
+import { type IBrainManagementService } from 'renderer/features/brain/services/brainManagement';
 import { type ILocalUserService } from 'renderer/features/user/services/userService';
 import type { IBuiltinService } from 'mo/services/builtinService';
 import ChatSidebar from '../workbench/chatSidebar';
@@ -31,8 +28,6 @@ export default class ChatController
   extends Controller
   implements IChatController
 {
-  private readonly brainService: IBrainManagementService;
-
   constructor(
     @inject('IChatService') private chatService: IChatService,
     @inject('ISidebarService') private sideBarService: ISidebarService,
@@ -40,10 +35,11 @@ export default class ChatController
     private activityBarService: IActivityBarService,
     @inject('IEditorService') private editorService: IEditorService,
     @inject('IBuiltinService') private builtinService: IBuiltinService,
-    @inject('ILocalUserService') private localUserService: ILocalUserService
+    @inject('ILocalUserService') private localUserService: ILocalUserService,
+    @inject('IBrainManagementService')
+    private brainService: IBrainManagementService
   ) {
     super();
-    this.brainService = container.resolve(BrainManagementService);
   }
 
   public initView(): void {
