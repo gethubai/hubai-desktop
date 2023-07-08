@@ -18,7 +18,7 @@ function BrainSidebar({
         id: brain.id,
         name: brain.displayName,
         fileType: 'File',
-        icon: 'bold',
+        icon: 'hubot',
         isLeaf: true,
         brain,
       } as ICollapseItem)
