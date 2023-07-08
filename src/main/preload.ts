@@ -1,6 +1,7 @@
 // In the app, if window.isElectron is defined and true, we know we're running in Electron
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 import brainRendererApi from 'api-server/brain/ipc/rendererApi';
+import extensionRendererApi from 'api-server/extensions/ipc/rendererApi';
 import userSettingsRendererApi from './ipc/userSettings/rendererApi';
 import mediaAccessRendererApi from './ipc/mediaAccess/rendererApi';
 
@@ -30,6 +31,7 @@ const electronHandler = {
   userSettings: userSettingsRendererApi,
   brain: brainRendererApi,
   mediaAccess: mediaAccessRendererApi,
+  extension: extensionRendererApi,
 };
 
 contextBridge.exposeInMainWorld('electron', electronHandler);

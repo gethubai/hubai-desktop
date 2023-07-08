@@ -7,7 +7,7 @@ import { Workbench } from 'mo/workbench/workbench';
 import '@hubai/core/esm/style/mo.css';
 import './mo-lib/style/styles.scss';
 import InstanceService from 'mo/services/instanceService';
-import loadExtensions from './extensions';
+import loadExtensions from './features/extensions/extensionLoader';
 
 export default function App() {
   const [moInstance, setMoInstance] = useState<InstanceService | null>(null);

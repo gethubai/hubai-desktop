@@ -99,6 +99,20 @@ import {
   LocalUserService,
 } from './features/user/services/userService';
 import { ILocalUser, LocalUserModel } from './features/user/models/user';
+import {
+  ExtensionListStateModel,
+  type IExtensionListState,
+} from './features/extensions/models/extension';
+import {
+  BrainManagementService,
+  IBrainManagementService,
+} from './features/brain/services/brainManagement';
+import {
+  ExtensionManagementService,
+  IExtensionManagementService,
+} from './features/extensions/services/extensionManagement';
+import { IExtensionListController } from './features/extensions/controllers/type';
+import ExtensionListController from './features/extensions/controllers/extensionList';
 
 container.registerSingleton<ISideBarController>(
   'ISidebarController',
@@ -194,6 +208,11 @@ container.registerSingleton<IBrainController>(
   BrainController
 );
 
+container.registerSingleton<IExtensionListController>(
+  'IExtensionListController',
+  ExtensionListController
+);
+
 container.registerSingleton<ILocalUserService>(
   'ILocalUserService',
   LocalUserService
@@ -201,6 +220,14 @@ container.registerSingleton<ILocalUserService>(
 
 container.registerSingleton<IBuiltinService>('IBuiltinService', BuiltinService);
 container.registerSingleton<IChatService>('IChatService', ChatService);
+container.registerSingleton<IBrainManagementService>(
+  'IBrainManagementService',
+  BrainManagementService
+);
+container.registerSingleton<IExtensionManagementService>(
+  'IExtensionManagementService',
+  ExtensionManagementService
+);
 container.registerSingleton<ISidebarService>('ISidebarService', SidebarService);
 container.registerSingleton<IActivityBarService>(
   'IActivityBarService',
@@ -260,12 +287,17 @@ container.registerSingleton<ILocaleService>('ILocaleService', LocaleService);
 
 container.registerSingleton<IMonacoService>('IMonacoService', MonacoService);
 
+/* Models */
 container.register<IChatState>(ChatStateModel, {
   useValue: new ChatStateModel(),
 });
 
 container.register<IBrainState>(BrainStateModel, {
   useValue: new BrainStateModel(),
+});
+
+container.register<IExtensionListState>(ExtensionListStateModel, {
+  useValue: new ExtensionListStateModel(),
 });
 
 // TODO: Get user from settings

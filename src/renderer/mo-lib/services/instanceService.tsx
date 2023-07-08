@@ -92,6 +92,7 @@ export default class InstanceService
         'IStatusBarController',
         'IChatController',
         'IBrainController',
+        'IExtensionListController',
       ];
 
       // resolve all controllers, and call `initView` to inject initial values into services

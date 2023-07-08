@@ -24,9 +24,10 @@ import { generateSecureRandom64ByteKey } from 'utils/securityUtils';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
-import 'api-server/brain/ipc/mainApi';
 import './ipc/userSettings/mainApi';
 import './ipc/mediaAccess/mainApi';
+import 'api-server/brain/ipc/mainApi';
+import 'api-server/extensions/ipc/mainApi';
 
 const isDebug =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
