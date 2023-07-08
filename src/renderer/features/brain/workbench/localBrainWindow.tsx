@@ -18,11 +18,11 @@ function buildProperties(settingsMap: LocalBrainSettingMap[]) {
   const properties = {} as any;
 
   settingsMap.forEach((setting) => {
-    const { name, title, type, defaultValue, enumValues, description } =
+    const { name, displayName, type, defaultValue, enumValues, description } =
       setting;
     const property = {
       type,
-      title,
+      title: displayName,
       default: defaultValue,
       enum: enumValues && enumValues.length > 0 ? enumValues : undefined,
       description,
