@@ -1,21 +1,32 @@
-import React, { useState, useRef, useEffect } from 'react';
+/* eslint-disable jsx-a11y/role-supports-aria-props */
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable jsx-a11y/anchor-has-content */
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+} from 'react';
 import './styles.scss';
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import { AudioRecorder } from 'react-audio-voice-recorder';
 import 'react-h5-audio-player/lib/styles.css';
-import { MessageBox, MessageList } from 'react-chat-elements';
-import {
-  AttachmentButton,
-  MessageInput,
-  SendButton,
-} from '@chatscope/chat-ui-kit-react';
+import { Icon, Pane, SplitPane } from '@hubai/core/esm/components';
+import { editor as monaco } from '@hubai/core/esm/monaco';
+import { IColors } from '@hubai/core';
 import { IChatWindowController } from '../controllers/type';
 import { IChatWindowState } from '../models/chatWindow';
 import BrainSelector from './components/brainSelector';
+import { Chat, Message } from './components/chat';
+import { ChatAction, ChatMessageViewModel } from './components/chat/types';
+import { ChatInputApi } from './components/chat/chatInput';
 
 export interface IChatWindowProps
   extends IChatWindowController,
-    IChatWindowState {}
+    IChatWindowState {
+  getCurrentThemeColors: () => IColors;
+}
 
 function ChatWindow({
   messages: newMessages,
@@ -24,51 +35,45 @@ function ChatWindow({
   onSendTextMessage,
   onSendVoiceMessage,
   onCapabilityBrainChanged,
+  getCurrentThemeColors,
+  getChat,
 }: IChatWindowProps) {
-  const inputRef = useRef();
+  const id = useMemo(() => getChat().id, [getChat]);
   const [micStatus, setMicStatus] = useState('idle');
-  const [msgInputValue, setMsgInputValue] = useState('');
+  const chatInputRef = useRef<ChatInputApi>();
 
-  const addAudioElement = async (blob: Blob) => {
-    /* const context = new AudioContext();
-    const buffer = await blob.arrayBuffer();
-    const audio = await context.decodeAudioData(buffer);
+  const [splitPanePos, setSplitPanePos] = useState(['75%', 'auto']);
 
-    context.close();
+  const colors = useMemo(
+    () => getCurrentThemeColors(),
+    [getCurrentThemeColors]
+  );
 
-    console.log(audio.duration); */
-    onSendVoiceMessage?.(blob);
-  };
+  const messages = useMemo(
+    () =>
+      newMessages.map((message) => {
+        const isSelf = message.senderType === 'user';
+        const msg = {
+          id: message.id,
+          textContent: message.text?.body,
+          voiceContent: message.voice
+            ? {
+                audioSrc: `msg://audio/${message.id}.wav`,
+                mimeType: message.voice.mimeType,
+              }
+            : undefined,
+          messageContentType: message.messageType,
+          sentAt: message.sendDate,
+          senderDisplayName: message.sender,
+          messageType: isSelf ? 'request' : 'response',
+          status: message.status,
+          avatarIcon: isSelf ? 'account' : 'octoface',
+        } as ChatMessageViewModel;
 
-  const handleSendMessage = (message: string) => {
-    onSendTextMessage?.(message);
-
-    setMsgInputValue('');
-    inputRef.current?.focus();
-  };
-
-  const messages = newMessages.map((message) => {
-    const content: string = message.text?.body ?? '';
-    const msg = {
-      message: content,
-      messageType: message.messageType,
-      sentTime: message.sendDate,
-      sender: message.sender,
-      direction: message.senderType === 'user' ? 'right' : 'left',
-      id: message.id,
-      status: message.status,
-    } as any;
-
-    if (msg.messageType === 'voice') {
-      msg.messageType = 'audio';
-      msg.data = {
-        audioURL: `msg://audio/${message.id}.wav`,
-        audioType: message.voice?.mimeType,
-      };
-    }
-
-    return msg;
-  });
+        return msg;
+      }) as ChatMessageViewModel[],
+    [newMessages, newMessages.length]
+  );
 
   useEffect(() => {
     window.electron.mediaAccess
@@ -92,89 +97,110 @@ function ChatWindow({
       });
   }, []);
 
+  const sendMessage = useCallback(() => {
+    const value = chatInputRef.current?.getValue();
+    if (!value || value?.trim().length === 0) return;
+
+    onSendTextMessage?.(value);
+    chatInputRef?.current?.setValue('');
+  }, [chatInputRef, onSendTextMessage]);
+
+  const onChatAction = useCallback(
+    (action: ChatAction, editor: monaco.ICodeEditor) => {
+      if (action === ChatAction.sendMessage) {
+        sendMessage();
+      }
+    },
+    [sendMessage]
+  );
+
+  const setApiRef = useCallback((api: ChatInputApi) => {
+    chatInputRef.current = api;
+  }, []);
+
   return (
-    <div style={{ position: 'relative', height: '500px' }}>
+    <div style={{ position: 'relative', height: '100%' }}>
       <BrainSelector
         availableBrains={availableBrains}
         selectedBrains={selectedBrains}
         onCapabilityBrainChanged={onCapabilityBrainChanged}
       />
-      <div>
-        <MessageList
-          dataSource={[]}
-          lockable={false}
-          toBottomHeight="100%"
-          isShowChild
-          customProps={{ style: { flexDirection: 'column' } }}
+      <div className="chat-container">
+        <SplitPane
+          sizes={splitPanePos}
+          showSashes
+          split="horizontal"
+          onChange={setSplitPanePos}
         >
-          {messages.map((message) => (
-            <MessageBox
-              key={message.id}
-              position={message.direction}
-              audioProps={{ preload: 'metadata' }}
-              title={message.sender}
-              type={message.messageType}
-              text={message.message}
-              data={message.data}
-              date={message.sentTime}
-              notch={false}
-              avatar="https://img.freepik.com/premium-vector/male-avatar-icon-unknown-anonymous-person-default-avatar-profile-icon-social-media-user-business-man-man-profile-silhouette-isolated-white-background-vector-illustration_735449-120.jpg"
-              replyButton
-            />
-          ))}
-        </MessageList>
+          <Pane minSize="40%" maxSize="75">
+            <Chat.List messagesCount={messages.length}>
+              {messages.map((message) => (
+                <Message.Root
+                  key={message.id}
+                  messageType={message.messageType}
+                >
+                  <Message.Header>
+                    <Message.Sender>
+                      <Message.AvatarIcon iconName={message.avatarIcon} />
+                      <Message.SenderName>
+                        {message.senderDisplayName}
+                      </Message.SenderName>
+                    </Message.Sender>
 
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            borderTop: '1px dashed #d1dbe4',
-            backgroundColor: '#ffff',
-            color: '#000',
-          }}
-        >
-          <MessageInput
-            ref={inputRef}
-            onChange={(msg) => setMsgInputValue(msg)}
-            value={msgInputValue}
-            sendButton={false}
-            attachButton={false}
-            onSend={handleSendMessage}
-            placeholder="Type message here"
-            style={{
-              flexGrow: 1,
-              borderTop: 0,
-              flexShrink: 'initial',
-            }}
-          />
-          <SendButton
-            onClick={() => handleSendMessage(msgInputValue)}
-            disabled={msgInputValue.length === 0}
-            style={{
-              fontSize: '1.2em',
-              marginLeft: 0,
-              paddingLeft: '0.2em',
-              paddingRight: '0.2em',
-            }}
-          />
+                    {/* <Message.Actions>
+                      <Message.Action
+                        onClick={() => {
+                          console.log('Not available');
+                        }}
+                      />
+                      </Message.Actions> */}
+                  </Message.Header>
 
-          <AttachmentButton
-            style={{
-              fontSize: '1.2em',
-              paddingLeft: '0.2em',
-              paddingRight: '0.2em',
-            }}
-          />
+                  <Message.Content>
+                    {!!message.voiceContent && (
+                      <Message.Voice
+                        audioSrc={message.voiceContent.audioSrc}
+                        barColor={colors['chat.messageAudioBarColor']}
+                        barPlayedColor={
+                          colors['chat.messageAudioBarPlayedColor']
+                        }
+                      />
+                    )}
+                    {!!message.textContent && (
+                      <Message.Text>{message.textContent}</Message.Text>
+                    )}
+                  </Message.Content>
+                </Message.Root>
+              ))}
+            </Chat.List>
+          </Pane>
 
-          <AudioRecorder
-            onRecordingComplete={(blob) => addAudioElement(blob)}
-            audioTrackConstraints={{
-              noiseSuppression: true,
-              echoCancellation: true,
-            }}
-            downloadFileExtension="wav"
-          />
-        </div>
+          <Pane minSize="25%" maxSize="60%">
+            <Chat.InteractionContainer>
+              <Chat.Input
+                id={id}
+                onAction={onChatAction}
+                onApiRef={setApiRef}
+              />
+              <Chat.Actions>
+                <Chat.Action className="send-button" onClick={sendMessage}>
+                  <Icon type="send" />
+                </Chat.Action>
+
+                <Chat.Action className="voice-button">
+                  <AudioRecorder
+                    onRecordingComplete={onSendVoiceMessage}
+                    audioTrackConstraints={{
+                      noiseSuppression: true,
+                      echoCancellation: true,
+                    }}
+                    downloadFileExtension="wav"
+                  />
+                </Chat.Action>
+              </Chat.Actions>
+            </Chat.InteractionContainer>
+          </Pane>
+        </SplitPane>
       </div>
       MicStatus: {micStatus}
     </div>

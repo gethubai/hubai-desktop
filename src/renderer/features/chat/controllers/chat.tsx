@@ -5,6 +5,8 @@ import {
   type ISidebarService,
   react,
   type IActivityBarItem,
+  type IColorThemeService,
+  IColors,
 } from '@hubai/core';
 
 import { injectable, inject } from 'tsyringe';
@@ -13,6 +15,7 @@ import { CreateChat } from 'api-server/chat/domain/usecases/createChat';
 import { type IBrainManagementService } from 'renderer/features/brain/services/brainManagement';
 import { type ILocalUserService } from 'renderer/features/user/services/userService';
 import type { IBuiltinService } from 'mo/services/builtinService';
+import { getThemeData } from 'mo/services/theme/helper';
 import ChatSidebar from '../workbench/chatSidebar';
 import { IChatController } from './type';
 import { IChatItem } from '../models/chat';
@@ -28,6 +31,8 @@ export default class ChatController
   extends Controller
   implements IChatController
 {
+  chatColors!: IColors;
+
   constructor(
     @inject('IChatService') private chatService: IChatService,
     @inject('ISidebarService') private sideBarService: ISidebarService,
@@ -37,7 +42,9 @@ export default class ChatController
     @inject('IBuiltinService') private builtinService: IBuiltinService,
     @inject('ILocalUserService') private localUserService: ILocalUserService,
     @inject('IBrainManagementService')
-    private brainService: IBrainManagementService
+    private brainService: IBrainManagementService,
+    @inject('IColorThemeService')
+    private readonly themeService: IColorThemeService
   ) {
     super();
   }
@@ -77,6 +84,18 @@ export default class ChatController
     });
     this.sideBarService.add(chatGroupSideBar, true);
     this.activityBarService.add(activityBar, true);
+    this.setChatColors();
+    this.themeService.onChange(() => this.setChatColors());
+  }
+
+  private setChatColors(): void {
+    this.chatColors = {};
+    const theme = getThemeData(this.themeService.getColorTheme());
+    Object.keys(theme.colors).forEach((key: string) => {
+      if (key.startsWith('chat')) {
+        this.chatColors[key] = theme.colors[key];
+      }
+    });
   }
 
   private async openNewChatWindow(): Promise<void> {
@@ -105,7 +124,9 @@ export default class ChatController
     if (!this.editorService.isOpened(chat.id)) {
       const chatInstance = await this.chatService.getChat(chat.id);
       const ChatViewWindow = this.createChatWindow(chatInstance);
-      renderPane = () => <ChatViewWindow />;
+      renderPane = () => (
+        <ChatViewWindow getCurrentThemeColors={() => this.chatColors} />
+      );
     }
     this.editorService.open({
       id: chat.id,

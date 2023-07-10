@@ -124,4 +124,8 @@ export default class ChatWindowController
 
     return brainChat;
   }
+
+  public getChat = () => {
+    return this.chat;
+  };
 }

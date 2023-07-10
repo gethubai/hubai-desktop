@@ -1,20 +1,6 @@
-.rce-mbox {
-  background-color: #3c3c3c;
-  max-width: 80%;
-}
-.rce-mbox-body {
-  // background-color: #3c3c3c;
-}
 
-.rce-container-mbox {
-  display: table;
-}
-
-.rce-container-mlist {
-  max-height: 600px;
-  overflow-y: auto;
-}
-
-.rce-mbox-title {
-  color: #fff;
+.chat-container {
+  display: flex;
+  height: 100%;
+  width: 100%;
 }
