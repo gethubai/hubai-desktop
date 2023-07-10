@@ -30,7 +30,7 @@ type ChatInputProps = {
 
 export function ChatInput({ onAction, id, onApiRef }: ChatInputProps) {
   const editor = useRef<monaco.IStandaloneCodeEditor>(null);
-  const modelUri = useMemo(() => Uri.parse(`chat://model/${id}`), [id]);
+  const modelUri = useMemo(() => Uri.parse(`inmemory://model/${id}`), [id]);
   const monacoModel = useMemo(
     () =>
       monaco.getModel(modelUri) ??
