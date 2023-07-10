@@ -12,10 +12,7 @@ import { searchById, colorLightOrDark } from '@hubai/core/esm/common/utils';
 import { GlobalEvent } from '@hubai/core/esm/common/event';
 import { injectable } from 'tsyringe';
 import { IColorThemeService } from '@hubai/core';
-import {
-  getThemeData,
-  convertToCSSVars,
-} from '@hubai/core/esm/services/theme/helper';
+import { convertToCSSVars, getThemeData } from './helper';
 
 /**
  * @ignore
@@ -90,6 +87,7 @@ class ColorThemeService extends GlobalEvent implements IColorThemeService {
   }
 
   public setTheme(id: string) {
+    console.log(`Setting theme: ${id}`);
     const prevTheme = this.getColorTheme();
     const theme = this.getThemeById(id);
     if (theme) {
