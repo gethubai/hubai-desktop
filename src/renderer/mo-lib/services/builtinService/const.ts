@@ -321,14 +321,15 @@ export const modules = {
       name: 'Problems',
     } as IStatusBarItem),
 
-  builtInPanelProblems: () =>
-    ({
+  builtInPanelProblems: () => null,
+  /* ({
       id: constants.PANEL_PROBLEMS,
       name: localize(constants.PANEL_PROBLEMS, 'problems'),
       data: null,
       sortIndex: 1,
       closable: false,
-    } as IPanelItem),
+      active: false,
+    } as IPanelItem), */
 
   NOTIFICATION_CLEAR_ALL: () =>
     ({
@@ -453,14 +454,14 @@ export const modules = {
       },
     ] as IActionBarItemProps[],
 
-  builtInOutputPanel: () =>
-    ({
+  builtInOutputPanel: () => null,
+  /* ({
       id: constants.PANEL_OUTPUT,
       name: localize(constants.PANEL_OUTPUT, 'output'),
       data: '',
       sortIndex: 2,
       closable: false,
-    } as IOutput),
+    } as IOutput), */
 
   builtInPanelToolboxResize: () =>
     ({

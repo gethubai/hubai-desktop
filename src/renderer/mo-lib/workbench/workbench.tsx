@@ -19,7 +19,7 @@ import SidebarView from './sidebar/sidebarView';
 import ActivityBarView from './activityBar/activityBarView';
 import { MenuBarView } from './menuBar/menuBarView';
 import { EditorView } from './editor/editorView';
-import { PanelView } from './panel/panelView';
+// import { PanelView } from './panel/panelView';
 import { AuxiliaryBar, AuxiliaryBarTab } from './auxiliaryBar';
 import StatusBarView from './statusBar/statusBarView';
 
@@ -148,7 +148,10 @@ export function WorkbenchView(props: IWorkbench & ILayout & ILayoutController) {
             <Pane minSize={170} maxSize="80%">
               <SidebarView />
             </Pane>
-            <SplitPane
+            <Pane minSize="100%" maxSize="100%">
+              <EditorView />
+            </Pane>
+            {/* Uncomment to enable the Problems and output panels again <SplitPane
               sizes={getSizes()}
               showSashes={!panel.hidden && !panel.panelMaximized}
               allowResize={[true, false]}
@@ -159,7 +162,7 @@ export function WorkbenchView(props: IWorkbench & ILayout & ILayoutController) {
                 <EditorView />
               </Pane>
               <PanelView />
-            </SplitPane>
+  </SplitPane> */}
             <Pane minSize={100} maxSize="80%">
               <AuxiliaryBar />
             </Pane>
