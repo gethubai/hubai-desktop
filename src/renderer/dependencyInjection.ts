@@ -85,6 +85,7 @@ import MonacoService from 'mo/monaco/monacoService';
 import StatusBarController, {
   IStatusBarController,
 } from 'mo/controllers/statusBar';
+import { registerChatCompletionProvider } from 'mo/monaco/registerChatCompletionProvider';
 import { ChatStateModel, IChatState } from './features/chat/models/chat';
 import { BrainStateModel, IBrainState } from './features/brain/models/brain';
 import { ChatService } from './features/chat/services/chat';
@@ -304,5 +305,7 @@ container.register<IExtensionListState>(ExtensionListStateModel, {
 container.register<ILocalUser>(LocalUserModel, {
   useValue: new LocalUserModel('123456abc', 'You', []),
 });
+
+registerChatCompletionProvider();
 
 console.log('Services have been registered');
