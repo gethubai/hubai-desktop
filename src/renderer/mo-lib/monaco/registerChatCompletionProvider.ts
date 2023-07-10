@@ -64,7 +64,8 @@ export function registerChatCompletionProvider() {
               label: '/prompt developer',
               range,
               kind: languages.CompletionItemKind.Function,
-              insertText: 'You are a developer and blablabla',
+              insertText:
+                'You are a ${1:language} and you have ${2:years} years of experience. Now blabla $0',
               insertTextRules:
                 languages.CompletionItemInsertTextRule.InsertAsSnippet,
             },
@@ -72,8 +73,13 @@ export function registerChatCompletionProvider() {
               label: '/prompt documentation',
               kind: languages.CompletionItemKind.Snippet,
               range,
-              insertText:
-                'Youre a developer creating documentation. Now do blabla',
+              insertText: [
+                'if (${1:condition}) {',
+                '\t$0',
+                '} else {',
+                '\t',
+                '}',
+              ].join('\n'),
               insertTextRules:
                 languages.CompletionItemInsertTextRule.InsertAsSnippet,
             },
