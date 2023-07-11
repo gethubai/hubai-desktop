@@ -1,6 +1,5 @@
 import { Socket } from 'socket.io-client';
-import { ClientToServerEvents } from '../events/clientEvents';
-import { ServerToClientEvents } from '../events/serverEvents';
+import { ClientToServerEvents, ServerToClientEvents } from '../events';
 
 export type ChatClientSocket = Socket<
   ServerToClientEvents,

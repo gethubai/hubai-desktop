@@ -17,6 +17,18 @@ import { type ILocalUserService } from 'renderer/features/user/services/userServ
 import { ChatServerConfigs } from 'api-server/consts';
 import { ChatClientSocket } from 'api-server/chat/chatTcpServer/models/serverClient';
 import {
+  ChatCreatedEvent,
+  ChatListEvent,
+  MessageReceivedEvent,
+  MessageSentEvent,
+  MessageUpdatedEvent,
+  CreateChatEvent,
+  GetChatEvent,
+  JoinChatEvent,
+  SendMessageEvent,
+  UpdateChatBrainsEvent,
+} from 'api-server/chat/chatTcpServer/events';
+import {
   ChatStateModel,
   IChatGroup,
   IChatItem,
@@ -65,28 +77,22 @@ export class ChatService extends Component<IChatState> implements IChatService {
       },
     });
 
-    this.socket?.on(
-      ChatServerConfigs.events.messageSent,
-      (message: ChatMessageModel) => {
-        if (this.subscribers[message.chat]) {
-          this.subscribers[message.chat].onMessageSent(message);
-        }
+    this.socket?.on(MessageSentEvent.Name, (message: ChatMessageModel) => {
+      if (this.subscribers[message.chat]) {
+        this.subscribers[message.chat].onMessageSent(message);
       }
-    );
+    });
+
+    this.socket?.on(MessageUpdatedEvent.Name, ({ prevMessage, message }) => {
+      if (this.subscribers[message.chat]) {
+        this.subscribers[message.chat].onMessageUpdated(prevMessage, message);
+      }
+    });
 
     this.socket?.on(
-      ChatServerConfigs.events.messageUpdated,
-      ({ prevMessage, message }) => {
-        if (this.subscribers[message.chat]) {
-          this.subscribers[message.chat].onMessageUpdated(prevMessage, message);
-        }
-      }
-    );
-
-    this.socket?.on(
-      ChatServerConfigs.events.messageReceived,
+      MessageReceivedEvent.Name,
       (message: ChatMessageModel, callback) => {
-        // this.socket?.emit(ChatServerConfigs.endpoints.messageReceivedAck, { messages: [message] });
+        // this.socket?.emit(MessagesReceivedAckEvent.Name, { messages: [message] });
         if (this.subscribers[message.chat]) {
           this.subscribers[message.chat].onMessageReceived(message);
         }
@@ -94,11 +100,11 @@ export class ChatService extends Component<IChatState> implements IChatService {
       }
     );
 
-    this.socket?.on(ChatServerConfigs.endpoints.chatList, ({ chats }) => {
+    this.socket?.on(ChatListEvent.Name, ({ chats }) => {
       this.onListUpdated(chats.map((c) => c.chat));
     });
 
-    this.socket?.on(ChatServerConfigs.events.chatCreated, (chat) => {
+    this.socket?.on(ChatCreatedEvent.Name, (chat) => {
       this.onListUpdated([chat]);
     });
   }
@@ -109,7 +115,7 @@ export class ChatService extends Component<IChatState> implements IChatService {
   ): void {
     this.subscribers[chatId] = subscriber;
     this.socket?.emit(
-      ChatServerConfigs.endpoints.join,
+      JoinChatEvent.Name,
       { chatId },
       (response: ChatMessagesContext) => {
         if (this.subscribers[chatId]) {
@@ -160,7 +166,7 @@ export class ChatService extends Component<IChatState> implements IChatService {
   async createChat(options: CreateChat.Params): Promise<ChatModel | undefined> {
     return new Promise((resolve, reject) => {
       this.socket?.emit(
-        ChatServerConfigs.endpoints.createChat,
+        CreateChatEvent.Name,
         options,
         (response: ChatModel) => {
           if (!response) {
@@ -176,7 +182,7 @@ export class ChatService extends Component<IChatState> implements IChatService {
   sendChatMessage(options: SendChatMessageModel): Promise<ChatMessageModel> {
     return new Promise((resolve, reject) => {
       this.socket?.emit(
-        ChatServerConfigs.endpoints.sendMessage,
+        SendMessageEvent.Name,
         options,
         (response: ChatMessageModel) => {
           if (!response) {
@@ -192,7 +198,7 @@ export class ChatService extends Component<IChatState> implements IChatService {
   updateChatBrains(options: UpdateChatBrains.Params): Promise<ChatModel> {
     return new Promise((resolve, reject) => {
       this.socket?.emit(
-        ChatServerConfigs.endpoints.updateChatBrains,
+        UpdateChatBrainsEvent.Name,
         options,
         (response: ChatModel) => {
           if (!response) {
@@ -207,17 +213,13 @@ export class ChatService extends Component<IChatState> implements IChatService {
 
   getChat(id: string): Promise<ChatModel> {
     return new Promise((resolve, reject) => {
-      this.socket?.emit(
-        ChatServerConfigs.endpoints.getChat,
-        id,
-        (response: ChatModel) => {
-          if (!response) {
-            reject(new Error('Chat could not be found'));
-          } else {
-            resolve(response);
-          }
+      this.socket?.emit(GetChatEvent.Name, id, (response: ChatModel) => {
+        if (!response) {
+          reject(new Error('Chat could not be found'));
+        } else {
+          resolve(response);
         }
-      );
+      });
     });
   }
 }

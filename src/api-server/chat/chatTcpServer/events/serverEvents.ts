@@ -1,9 +1,10 @@
 import { ChatModel } from 'api-server/chat/domain/models/chat';
 import { ChatMessagesContext } from 'api-server/chat/domain/models/chatContext';
 import { ChatMessageModel } from 'api-server/chat/domain/models/chatMessage';
-import { ChatServerConfigs } from 'api-server/consts';
 
 export namespace ChatListEvent {
+  export const Name = 'list';
+
   export type Params = {
     chats: ChatMessagesContext[];
   };
@@ -12,12 +13,15 @@ export namespace ChatListEvent {
 }
 
 export namespace ChatCreatedEvent {
+  export const Name = 'events:created';
   export type Params = ChatModel;
 
   export type Emitter = (params: Params) => void;
 }
 
 export namespace MessageUpdatedEvent {
+  export const Name = 'events:message:updated';
+
   export type Params = {
     prevMessage: ChatMessageModel;
     message: ChatMessageModel;
@@ -27,6 +31,7 @@ export namespace MessageUpdatedEvent {
 }
 
 export namespace MessageReceivedEvent {
+  export const Name = 'events:message:received';
   export type Params = ChatMessageModel;
 
   export type Callback = () => void;
@@ -34,23 +39,24 @@ export namespace MessageReceivedEvent {
 }
 
 export namespace MessageTranscribedEvent {
+  export const Name = 'events:message:transcribed';
   export type Params = ChatMessageModel;
 
   export type Emitter = (params: Params) => void;
 }
 
 export namespace MessageSentEvent {
+  export const Name = 'events:message:sent';
   export type Params = ChatMessageModel;
 
   export type Emitter = (params: Params) => void;
 }
 
 export interface ServerToClientEvents {
-  [ChatServerConfigs.endpoints.chatList]: ChatListEvent.Emitter;
-  [ChatServerConfigs.events.chatCreated]: ChatCreatedEvent.Emitter;
-  [ChatServerConfigs.events.messageUpdated]: MessageUpdatedEvent.Emitter;
-  [ChatServerConfigs.events.messageReceived]: MessageReceivedEvent.Emitter;
-  [ChatServerConfigs.events.messageSent]: MessageSentEvent.Emitter;
-  [ChatServerConfigs.events
-    .messageTranscribed]: MessageTranscribedEvent.Emitter;
+  [ChatListEvent.Name]: ChatListEvent.Emitter;
+  [ChatCreatedEvent.Name]: ChatCreatedEvent.Emitter;
+  [MessageUpdatedEvent.Name]: MessageUpdatedEvent.Emitter;
+  [MessageReceivedEvent.Name]: MessageReceivedEvent.Emitter;
+  [MessageSentEvent.Name]: MessageSentEvent.Emitter;
+  [MessageTranscribedEvent.Name]: MessageTranscribedEvent.Emitter;
 }
