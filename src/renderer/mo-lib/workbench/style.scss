@@ -19,7 +19,8 @@
 
 #{$workbench} {
   bottom: 0;
-  height: calc(100% - 22px);
+  // height: calc(100% - 22px); Disables StatusBar height
+  height: 100%;
   left: 0;
   position: absolute;
   right: 0;
