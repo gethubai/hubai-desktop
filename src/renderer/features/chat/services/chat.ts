@@ -4,7 +4,7 @@ import { container, inject, injectable } from 'tsyringe';
 
 import generateUniqueId from 'renderer/common/uniqueIdGenerator';
 import { ChatModel } from 'api-server/chat/domain/models/chat';
-import { io, Socket } from 'socket.io-client';
+import { io } from 'socket.io-client';
 import {
   ChatMessageModel,
   SendChatMessageModel,
@@ -15,6 +15,7 @@ import { UpdateChatBrains } from 'api-server/chat/domain/usecases/updateChatBrai
 import { Component } from '@hubai/core/esm/react';
 import { type ILocalUserService } from 'renderer/features/user/services/userService';
 import { ChatServerConfigs } from 'api-server/consts';
+import { ChatClientSocket } from 'api-server/chat/chatTcpServer/models/serverClient';
 import {
   ChatStateModel,
   IChatGroup,
@@ -37,7 +38,7 @@ export interface IChatMessageSubscriber {
 export class ChatService extends Component<IChatState> implements IChatService {
   protected state: IChatState;
 
-  private socket: Socket | undefined;
+  private socket: ChatClientSocket | undefined;
 
   private subscribers: Record<string, IChatMessageSubscriber> = {};
 
@@ -50,7 +51,7 @@ export class ChatService extends Component<IChatState> implements IChatService {
     this.initServer();
   }
 
-  getServer(): Socket | undefined {
+  getServer(): ChatClientSocket | undefined {
     return this.socket;
   }
 

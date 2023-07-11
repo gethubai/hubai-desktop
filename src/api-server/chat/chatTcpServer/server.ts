@@ -1,41 +1,38 @@
-import { Namespace, Socket } from 'socket.io';
+import { BroadcastOperator } from 'socket.io';
 import { makeChatRepository } from 'data/chat/factory';
 import { ChatServerConfigs } from 'api-server/consts';
+import { EventNames, EventParams } from 'socket.io/dist/typed-events';
 import {
   ChatMessageModel,
   ChatMessageStatus,
   SendChatMessageModel,
-} from './domain/models/chatMessage';
-import makeSendChatMessage from './factories/usecases/sendChatTextMessageFactory';
-import makeLoadMessagesForRecipient from './factories/usecases/loadMessagesForRecipientFactory';
-import makeUpdateMessageStatus from './factories/usecases/updateMessageStatusFactory';
-import { ChatMessagesContext } from './domain/models/chatContext';
-import makeCreateChat from './factories/usecases/createChatFactory';
-import { ChatBrain, ChatModel } from './domain/models/chat';
-import makeSetVoiceMessageTranscription from './factories/usecases/setVoiceMessageTranscriptionFactory';
-import { CreateChat } from './domain/usecases/createChat';
-import makeUpdateChatBrains from './factories/usecases/updateChatBrainsFactory';
-import { UpdateChatBrains } from './domain/usecases/updateChatBrains';
-
-type MessagesReceivedAckEvent = {
-  messages: ChatMessageModel[];
-};
-
-type TranscribeVoiceMessageEvent = {
-  message: ChatMessageModel;
-  transcription: string;
-};
+} from '../domain/models/chatMessage';
+import makeSendChatMessage from '../factories/usecases/sendChatTextMessageFactory';
+import makeLoadMessagesForRecipient from '../factories/usecases/loadMessagesForRecipientFactory';
+import makeUpdateMessageStatus from '../factories/usecases/updateMessageStatusFactory';
+import { ChatMessagesContext } from '../domain/models/chatContext';
+import makeCreateChat from '../factories/usecases/createChatFactory';
+import { ChatBrain, ChatModel } from '../domain/models/chat';
+import makeSetVoiceMessageTranscription from '../factories/usecases/setVoiceMessageTranscriptionFactory';
+import { CreateChat } from '../domain/usecases/createChat';
+import makeUpdateChatBrains from '../factories/usecases/updateChatBrainsFactory';
+import { UpdateChatBrains } from '../domain/usecases/updateChatBrains';
+import { ServerToClientEvents } from './events/serverEvents';
+import {
+  MessagesReceivedAckEvent,
+  TranscribeVoiceMessageEvent,
+} from './events/clientEvents';
+import { ChatNamespace, ChatSocket } from './models/server';
 
 class ChatServer {
-  private server: Namespace | undefined;
+  private server: ChatNamespace | undefined;
 
-  public startServer(server: Namespace) {
+  public startServer(server: ChatNamespace) {
     this.server = server;
-
     server.on('connection', this.onClientConnected.bind(this));
   }
 
-  private async onClientConnected(socket: Socket): Promise<void> {
+  private async onClientConnected(socket: ChatSocket): Promise<void> {
     const { id } = socket.handshake.query;
 
     if (!id) {
@@ -56,7 +53,7 @@ class ChatServer {
     });
   }
 
-  private onChatClientConnected(socket: Socket): void {
+  private onChatClientConnected(socket: ChatSocket): void {
     console.log(`new client connected: ${socket.id}`);
     socket.on(
       ChatServerConfigs.endpoints.join,
@@ -89,7 +86,9 @@ class ChatServer {
       ChatServerConfigs.endpoints.getMessages,
       async ({ recipientId }, callback) => {
         const loadMessagesUseCase = await makeLoadMessagesForRecipient();
-        const messages = await loadMessagesUseCase.loadMessages(recipientId);
+        const messages = await loadMessagesUseCase.loadMessages({
+          recipientId,
+        });
         callback(messages);
       }
     );
@@ -111,7 +110,7 @@ class ChatServer {
 
     socket.on(
       ChatServerConfigs.endpoints.transcribeVoiceMessage,
-      async (event: TranscribeVoiceMessageEvent, callback) => {
+      async (event: TranscribeVoiceMessageEvent.Params, callback) => {
         const setMessageTranscription =
           await makeSetVoiceMessageTranscription();
         const result = await setMessageTranscription.setTranscription({
@@ -122,13 +121,10 @@ class ChatServer {
 
         const chat = await this.getChat(event.message.chat);
 
-        this.sendToChatParticipants(
-          chat.id,
-          ChatServerConfigs.events.messageTranscribed,
-          result,
-          undefined,
-          (brain) => brain.handleMessageType === 'text' // We notify the text brains about the transcription
-        );
+        this.broadcastToChatParticipants(
+          chat,
+          (brain) => brain.handleMessageType === 'text'
+        )?.emit(ChatServerConfigs.events.messageTranscribed, result);
 
         callback?.();
       }
@@ -152,12 +148,12 @@ class ChatServer {
     );
 
     socket.on('disconnect', (reason) => {
-      console.log(`client disconnected: ${socket.id}`);
+      console.log(`client disconnected: ${socket.id}, reason: ${reason}`);
     });
   }
 
   private onMessagesReceivedAck = async (
-    event: MessagesReceivedAckEvent
+    event: MessagesReceivedAckEvent.Params
   ): Promise<void> => {
     const { messages } = event;
 
@@ -174,12 +170,11 @@ class ChatServer {
     });
   };
 
-  private notifyMessageUpdate(
+  private async notifyMessageUpdate(
     prevMessage: ChatMessageModel,
     message: ChatMessageModel
-  ): void {
-    this.sendToChatParticipants(
-      message.chat,
+  ): Promise<void> {
+    this.broadcastToChatParticipants(await this.getChat(message.chat))?.emit(
       ChatServerConfigs.events.messageUpdated,
       {
         prevMessage,
@@ -215,38 +210,28 @@ class ChatServer {
     this.sendToClient(id, ChatServerConfigs.events.messageSent, message);
   }
 
-  public async sendToChatParticipants(
-    chatId: string,
-    event: string,
-    data: any,
-    callback = undefined,
+  public broadcastToChatParticipants(
+    chat: ChatModel,
     brainFilter: (brain: ChatBrain) => boolean = () => true
-  ): Promise<void> {
-    const chat = await this.getChat(chatId);
-
+  ): BroadcastOperator<ServerToClientEvents, any> | undefined {
     if (!chat) {
-      console.error(
-        `Could not send message ${event} to chat ${chatId} because it does not exist`
-      );
-      return;
+      console.error(`Could not send message to chat because it does not exist`);
+      return undefined;
     }
 
     const brainIds = chat.brains
       .filter(brainFilter)
       .map((brain) => this.getClientRoom(brain.id));
 
-    this.server
-      ?.to([this.getChatRoom(chatId), ...brainIds])
-      .emit(event, data, callback);
+    return this.server?.to([this.getChatRoom(chat.id), ...brainIds]);
   }
 
-  public sendToClient(
+  public sendToClient<Ev extends EventNames<ServerToClientEvents>>(
     id: string,
-    event: string,
-    data: any,
-    callback: any = undefined
+    ev: Ev,
+    ...args: EventParams<ServerToClientEvents, Ev>
   ): void {
-    this.server?.to(this.getClientRoom(id)).emit(event, data, callback);
+    this.server?.to(this.getClientRoom(id)).emit(ev, ...args);
   }
 
   private getClientRoom(id: string): string {

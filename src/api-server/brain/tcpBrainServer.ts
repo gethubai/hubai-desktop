@@ -1,10 +1,10 @@
 import { io } from 'socket.io-client';
-import { Socket } from 'socket.io';
 import {
   ChatMessageModel,
   SendChatMessageModel,
 } from 'api-server/chat/domain/models/chatMessage';
 import { ChatServerConfigs } from 'api-server/consts';
+import { ChatClientSocket } from 'api-server/chat/chatTcpServer/models/serverClient';
 import { IBrainServer } from './brainServer';
 import {
   IAudioTranscriberBrainService,
@@ -15,7 +15,7 @@ import {
 import { IBrainSettings } from './brainSettings';
 
 export default class TcpBrainServer implements IBrainServer {
-  private socket!: Socket;
+  private socket!: ChatClientSocket;
 
   private userSettingsResult?: SetUserSettingsResult;
 

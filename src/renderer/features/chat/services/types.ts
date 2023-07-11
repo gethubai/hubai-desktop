@@ -6,7 +6,7 @@ import {
   ChatMessageModel,
   SendChatMessageModel,
 } from 'api-server/chat/domain/models/chatMessage';
-import { Socket } from 'socket.io-client';
+import { ChatClientSocket } from 'api-server/chat/chatTcpServer/models/serverClient';
 import { IChatState } from '../models/chat';
 
 export interface IChatService extends Component<IChatState> {
@@ -15,7 +15,7 @@ export interface IChatService extends Component<IChatState> {
     options: UpdateChatBrains.Params
   ): Promise<ChatModel | undefined>;
   sendChatMessage(options: SendChatMessageModel): Promise<ChatMessageModel>;
-  getServer(): Socket<any, any> | undefined;
+  getServer(): ChatClientSocket | undefined;
   getChatCount(): number;
   getChat(id: string): Promise<ChatModel>;
 }

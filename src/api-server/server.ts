@@ -6,7 +6,7 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import brainRoutes from './brain/routes';
-import chatServer from './chat/chatServer';
+import chatServer from './chat/chatTcpServer/server';
 import { ChatServerConfigs, ServerPort } from './consts';
 import { loadLocalBrains } from './brain/brainLoader';
 
