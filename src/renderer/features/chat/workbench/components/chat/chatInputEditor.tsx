@@ -16,6 +16,7 @@ function ChatInputEditor({ model, editorInstanceRef }: ChatInputEditorProps) {
       readOnly: false,
       automaticLayout: true,
       lineNumbers: 'off',
+      wordWrap: 'on',
       minimap: {
         enabled: false,
       },
