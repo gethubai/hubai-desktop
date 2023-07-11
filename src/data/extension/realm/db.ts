@@ -20,15 +20,7 @@ import {
   getAppDatabaseStoragePath,
 } from 'utils/pathUtils';
 import keyStore from 'data/keyStore';
-
-const dictionaryToObject = (dictionary: Realm.Dictionary<any>) => {
-  if (!dictionary) return dictionary;
-
-  return Object.entries(dictionary).reduce((obj, [key, value]) => {
-    obj[key] = value;
-    return obj;
-  }, {});
-};
+import { dictionaryToObject } from 'data/realm/helpers';
 
 export class LocalExtensionDto extends Realm.Object<LocalExtensionModel> {
   id!: string;
