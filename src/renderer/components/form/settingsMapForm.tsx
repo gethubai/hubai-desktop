@@ -8,7 +8,7 @@ type SettingsMapFormProps = Omit<
   FormProps,
   'onSubmit' | 'schema' | 'validator'
 > & {
-  settingsMap: ISettingMap[];
+  settingsMap?: ISettingMap[];
   currentSettings: any;
   onSubmit: (e: any) => void;
   children?: React.ReactNode;
