@@ -6,6 +6,7 @@ import {
   LocalBrainModel,
 } from 'api-server/brain/domain/models/localBrain';
 import { ChatBrain } from 'api-server/chat/domain/models/chat';
+import { Option, Select } from '@hubai/core/esm/components';
 import { getTextMessageTypeForBrainCapability } from '../../utils/messageUtils';
 
 type BrainSelectorProps = {
@@ -22,13 +23,9 @@ const BrainSelector: React.FC<BrainSelectorProps> = ({
   selectedBrains,
   onCapabilityBrainChanged,
 }) => {
-  const handleBrainChange = (
-    e: React.ChangeEvent<HTMLSelectElement>,
-    capability: BrainCapability
-  ) => {
-    const brainId = e.target.value;
+  const handleBrainChange = (brainId: string, capability: BrainCapability) => {
     const selectedBrain = availableBrains.find((b) => b.id === brainId);
-    onCapabilityBrainChanged(selectedBrain, capability);
+    onCapabilityBrainChanged(selectedBrain!, capability);
   };
 
   // group the brains by type
@@ -40,11 +37,19 @@ const BrainSelector: React.FC<BrainSelectorProps> = ({
     );
   });
 
-  const getCapabilityName = (capability: string) => {
+  const getCapabilityViewModel = (
+    capability: string
+  ): { name: string; icon: string } => {
     const capabilities = {
-      [BrainCapability.CONVERSATION]: 'Conversation',
-      [BrainCapability.IMAGE_RECOGNITION]: 'Image Recognition',
-      [BrainCapability.VOICE_TRANSCRIPTION]: 'Voice Transcription',
+      [BrainCapability.CONVERSATION]: { name: 'Conversation', icon: 'comment' },
+      [BrainCapability.IMAGE_RECOGNITION]: {
+        name: 'Image Recognition',
+        icon: 'device-camera',
+      },
+      [BrainCapability.VOICE_TRANSCRIPTION]: {
+        name: 'Voice Transcription',
+        icon: 'record',
+      },
     };
 
     return capabilities[capability];
@@ -60,33 +65,39 @@ const BrainSelector: React.FC<BrainSelectorProps> = ({
     );
 
   return (
-    <div>
+    <div className="brain-selector">
       {Object.keys(brainsByType).map((capability) => {
+        const selectedBrain = getSelectedBrainForCapability(
+          capability as BrainCapability
+        );
+
+        const capabilityModel = getCapabilityViewModel(
+          capability as BrainCapability
+        );
+
         return (
-          <div key={capability}>
+          <div key={capability} className="brain-capability-selector">
             <label htmlFor={`brain-selector-${capability}`}>
-              {getCapabilityName(capability as BrainCapability)} AI:
+              {capabilityModel.name}
             </label>
-            <select
-              id={`brain-selector-${capability}`}
-              value={
-                getSelectedBrainForCapability(capability as BrainCapability)
-                  ?.id ?? ''
+            <Select
+              value={selectedBrain?.id ?? ''}
+              onSelect={(e, option) =>
+                handleBrainChange(option?.value!, capability as BrainCapability)
               }
-              onChange={(e) =>
-                handleBrainChange(e, capability as BrainCapability)
-              }
+              placeholder={`${capabilityModel.name} Brain`}
             >
-              <option value="">Select a brain</option>
               {brainsByType[capability].map((brain) => (
-                <option
+                <Option
                   key={`option-${capability}-${brain.id}`}
                   value={brain.id}
+                  name={brain.displayName}
+                  description={`Use ${brain.displayName} for ${capabilityModel.name}`}
                 >
                   {brain.displayName}
-                </option>
+                </Option>
               ))}
-            </select>
+            </Select>
           </div>
         );
       })}
