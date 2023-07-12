@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   BrainCapability,
   LocalBrainModel,
@@ -18,4 +19,8 @@ export interface IChatWindowController extends Partial<Controller> {
     capability: BrainCapability
   ) => void;
   getChat(): ChatModel;
+  getBrainChatSettings(brain: LocalBrainModel): any;
+
+  AuxiliaryBarTabs: React.ComponentType;
+  AuxiliaryBar: React.ComponentType;
 }

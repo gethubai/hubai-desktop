@@ -37,12 +37,23 @@ function ChatWindow({
   onCapabilityBrainChanged,
   getCurrentThemeColors,
   getChat,
+  getBrainChatSettings,
+  AuxiliaryBarTabs,
+  AuxiliaryBar,
+  auxiliaryBarView,
 }: IChatWindowProps) {
   const id = useMemo(() => getChat().id, [getChat]);
   const [micStatus, setMicStatus] = useState('idle');
   const chatInputRef = useRef<ChatInputApi>();
 
-  const [splitPanePos, setSplitPanePos] = useState(['75%', 'auto']);
+  const [splitPanePos, setSplitPanePos] = useState<string[] | number[]>([
+    '75%',
+    'auto',
+  ]);
+  const [contentPanePos, setContentPanePos] = useState<string[] | number[]>([
+    '80%',
+    'auto',
+  ]);
 
   const colors = useMemo(
     () => getCurrentThemeColors(),
@@ -74,6 +85,12 @@ function ChatWindow({
       }) as ChatMessageViewModel[],
     [newMessages, newMessages.length]
   );
+
+  const getContentSize = () => {
+    if (!auxiliaryBarView.hidden) return contentPanePos;
+
+    return [contentPanePos[0], 0];
+  };
 
   useEffect(() => {
     window.electron.mediaAccess
@@ -118,89 +135,129 @@ function ChatWindow({
     chatInputRef.current = api;
   }, []);
 
+  useEffect(() => {
+    chatInputRef.current?.triggerResize();
+  }, [auxiliaryBarView.hidden]);
+
   return (
     <div style={{ position: 'relative', height: '100%' }}>
-      <BrainSelector
-        availableBrains={availableBrains}
-        selectedBrains={selectedBrains}
-        onCapabilityBrainChanged={onCapabilityBrainChanged}
-      />
-      <div className="chat-container">
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          height: 'inherit',
+        }}
+      >
         <SplitPane
-          sizes={splitPanePos}
-          showSashes
-          split="horizontal"
-          onChange={setSplitPanePos}
+          split="vertical"
+          sizes={getContentSize()}
+          showSashes={!auxiliaryBarView.hidden}
+          onChange={setContentPanePos}
         >
-          <Pane minSize="40%" maxSize="75">
-            <Chat.List messagesCount={messages.length}>
-              {messages.map((message) => (
-                <Message.Root
-                  key={message.id}
-                  messageType={message.messageType}
+          <Pane minSize="60%" maxSize="100%">
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                height: 'inherit',
+                width: '100%',
+              }}
+            >
+              <BrainSelector
+                availableBrains={availableBrains}
+                selectedBrains={selectedBrains}
+                onCapabilityBrainChanged={onCapabilityBrainChanged}
+                getBrainChatSettings={getBrainChatSettings}
+              />
+              <div className="chat-container">
+                <SplitPane
+                  sizes={splitPanePos}
+                  split="horizontal"
+                  onChange={setSplitPanePos}
                 >
-                  <Message.Header>
-                    <Message.Sender>
-                      <Message.AvatarIcon iconName={message.avatarIcon} />
-                      <Message.SenderName>
-                        {message.senderDisplayName}
-                      </Message.SenderName>
-                    </Message.Sender>
+                  <Pane minSize="40%" maxSize="75">
+                    <Chat.List messagesCount={messages.length}>
+                      {messages.map((message) => (
+                        <Message.Root
+                          key={message.id}
+                          messageType={message.messageType}
+                        >
+                          <Message.Header>
+                            <Message.Sender>
+                              <Message.AvatarIcon
+                                iconName={message.avatarIcon}
+                              />
+                              <Message.SenderName>
+                                {message.senderDisplayName}
+                              </Message.SenderName>
+                            </Message.Sender>
 
-                    {/* <Message.Actions>
+                            {/* <Message.Actions>
                       <Message.Action
                         onClick={() => {
                           console.log('Not available');
                         }}
                       />
                       </Message.Actions> */}
-                  </Message.Header>
+                          </Message.Header>
 
-                  <Message.Content>
-                    {!!message.voiceContent && (
-                      <Message.Voice
-                        audioSrc={message.voiceContent.audioSrc}
-                        barColor={colors['chat.messageAudioBarColor']}
-                        barPlayedColor={
-                          colors['chat.messageAudioBarPlayedColor']
-                        }
+                          <Message.Content>
+                            {!!message.voiceContent && (
+                              <Message.Voice
+                                audioSrc={message.voiceContent.audioSrc}
+                                barColor={colors['chat.messageAudioBarColor']}
+                                barPlayedColor={
+                                  colors['chat.messageAudioBarPlayedColor']
+                                }
+                              />
+                            )}
+                            {!!message.textContent && (
+                              <Message.Text>{message.textContent}</Message.Text>
+                            )}
+                          </Message.Content>
+                        </Message.Root>
+                      ))}
+                    </Chat.List>
+                  </Pane>
+
+                  <Pane minSize="25%" maxSize="60%">
+                    <Chat.InteractionContainer>
+                      <Chat.Input
+                        id={id}
+                        onAction={onChatAction}
+                        onApiRef={setApiRef}
                       />
-                    )}
-                    {!!message.textContent && (
-                      <Message.Text>{message.textContent}</Message.Text>
-                    )}
-                  </Message.Content>
-                </Message.Root>
-              ))}
-            </Chat.List>
+                      <Chat.Actions>
+                        <Chat.Action
+                          className="send-button"
+                          onClick={sendMessage}
+                        >
+                          <Icon type="send" />
+                        </Chat.Action>
+
+                        <Chat.Action className="voice-button">
+                          <AudioRecorder
+                            onRecordingComplete={onSendVoiceMessage}
+                            audioTrackConstraints={{
+                              noiseSuppression: true,
+                              echoCancellation: true,
+                            }}
+                            downloadFileExtension="wav"
+                          />
+                        </Chat.Action>
+                      </Chat.Actions>
+                    </Chat.InteractionContainer>
+                  </Pane>
+                </SplitPane>
+              </div>
+            </div>
           </Pane>
 
-          <Pane minSize="25%" maxSize="60%">
-            <Chat.InteractionContainer>
-              <Chat.Input
-                id={id}
-                onAction={onChatAction}
-                onApiRef={setApiRef}
-              />
-              <Chat.Actions>
-                <Chat.Action className="send-button" onClick={sendMessage}>
-                  <Icon type="send" />
-                </Chat.Action>
-
-                <Chat.Action className="voice-button">
-                  <AudioRecorder
-                    onRecordingComplete={onSendVoiceMessage}
-                    audioTrackConstraints={{
-                      noiseSuppression: true,
-                      echoCancellation: true,
-                    }}
-                    downloadFileExtension="wav"
-                  />
-                </Chat.Action>
-              </Chat.Actions>
-            </Chat.InteractionContainer>
+          <Pane minSize={100} maxSize="80%">
+            <AuxiliaryBar />
           </Pane>
         </SplitPane>
+        <AuxiliaryBarTabs />
       </div>
       MicStatus: {micStatus}
     </div>

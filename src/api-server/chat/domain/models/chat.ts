@@ -1,8 +1,13 @@
 import { ChatMessageModel, ChatMessageType } from './chatMessage';
 
+export interface IBrainScopedSettings {
+  [settingId: string]: any;
+}
+
 export type ChatBrain = {
   id: string;
   handleMessageType: ChatMessageType;
+  scopedSettings?: IBrainScopedSettings;
 };
 
 export type ChatModel = {

@@ -32,6 +32,7 @@ function LocalBrainWindow({
       {showSettings && (
         <div id="settings_container" style={{ marginTop: 20 }}>
           <SettingsMapForm
+            title="Brain Settings"
             settingsMap={settingsMap}
             currentSettings={currentSettings}
             onSubmit={onSubmit}

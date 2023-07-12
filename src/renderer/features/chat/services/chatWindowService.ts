@@ -21,6 +21,7 @@ export interface IChatWindowService extends Component<IChatWindowState> {
   setMessages(messages: ChatWindowMessage[]): void;
   sendMessage(message: SendChatMessageModel): Promise<void>;
   updateChatBrains(brains: ChatBrain[]): Promise<void>;
+  setAuxiliaryBarView(view: boolean): void;
 }
 
 export class ChatWindowService
@@ -43,6 +44,10 @@ export class ChatWindowService
     );
     this.chatService = container.resolve(ChatService);
     this.initServer();
+  }
+
+  setAuxiliaryBarView(view: boolean): void {
+    this.setState({ auxiliaryBarView: { hidden: view } });
   }
 
   private async initServer(): Promise<void> {

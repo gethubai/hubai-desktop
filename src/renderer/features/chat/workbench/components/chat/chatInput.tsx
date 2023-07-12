@@ -20,6 +20,7 @@ function ChatInteractionContainer({ children }: ChatInputContainerProps) {
 export type ChatInputApi = {
   getValue: () => string | undefined;
   setValue: (value: string) => void;
+  triggerResize: () => void;
 };
 
 type ChatInputProps = {
@@ -64,6 +65,7 @@ export function ChatInput({ onAction, id, onApiRef }: ChatInputProps) {
     onApiRef?.({
       getValue: () => editor.current?.getValue(),
       setValue: (value: string) => editor.current?.setValue(value),
+      triggerResize: () => editor.current?.layout({}),
     });
   }, [onApiRef]);
 

@@ -37,6 +37,7 @@ function LocalExtensionWindow({
       {showSettings && (
         <div id="settings_container" style={{ marginTop: 20 }}>
           <SettingsMapForm
+            title="Extension Settings"
             settingsMap={settingsMap}
             currentSettings={currentSettings}
             onSubmit={onSubmit}

@@ -10,7 +10,7 @@ import makeSaveLocalBrainSettings from '../factories/usecases/makeSaveLocalBrain
 
 export interface IBrainManagementService extends Component<IBrainState> {
   getBrains(): LocalBrainModel[];
-  getBrainSettings(brainId: string): any;
+  getBrainSettings(brainName: string): any;
   onBrainSettingsUpdated(
     callback: (brain: LocalBrainModel, settings: any) => void
   ): void;

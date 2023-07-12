@@ -10,6 +10,7 @@ import {
   VoiceMessage,
 } from 'api-server/chat/domain/models/chatMessage';
 import keyStore from 'data/keyStore';
+import { dictionaryToObject } from 'data/realm/helpers';
 import path from 'path';
 import Realm from 'realm';
 import {
@@ -60,12 +61,15 @@ export class ChatBrainDto extends Realm.Object {
 
   handleMessageType!: ChatMessageType;
 
+  scopedSettings?: object;
+
   static schema = {
     name: 'ChatBrain',
     embedded: true,
     properties: {
       id: 'string',
       handleMessageType: 'string',
+      scopedSettings: '{}',
     },
   };
 
@@ -73,6 +77,7 @@ export class ChatBrainDto extends Realm.Object {
     return {
       id: this.id,
       handleMessageType: this.handleMessageType,
+      scopedSettings: dictionaryToObject(this.scopedSettings as any),
     } as ChatBrain;
   }
 }
