@@ -9,8 +9,6 @@ import type {
   IEditorOptions,
   IEditorTab,
   IExplorerPanelItem,
-  IOutput,
-  IPanelItem,
   IStatusBarItem,
 } from '@hubai/core';
 import { localize } from '@hubai/core';
@@ -721,13 +719,14 @@ export const modules = {
 
   activityBarData: () =>
     [
-      {
+      /* {
         id: constants.ACTIVITY_BAR_GLOBAL_ACCOUNT,
         name: localize('menu.account', 'Account'),
         title: localize('menu.account', 'Account'),
         icon: 'account',
         type: 'global',
-      },
+        contextMenu: getAccountContextMenu(),
+      }, */
       {
         id: constants.ACTIVITY_BAR_GLOBAL_SETTINGS,
         name: localize('menu.settings', 'Settings'),

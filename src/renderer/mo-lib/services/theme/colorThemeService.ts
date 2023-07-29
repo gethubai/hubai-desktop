@@ -87,7 +87,6 @@ class ColorThemeService extends GlobalEvent implements IColorThemeService {
   }
 
   public setTheme(id: string) {
-    console.log(`Setting theme: ${id}`);
     const prevTheme = this.getColorTheme();
     const theme = this.getThemeById(id);
     if (theme) {

@@ -36,9 +36,7 @@ function SearchPanel({
   onChange,
   toggleMode,
 }: ISearchPaneToolBar) {
-  const onClick = (e, item) => {
-    console.log('onClick:', e, item);
-  };
+  const onClick = (e, item) => {};
 
   const handleSearchChange = (values: SearchValues = []) => {
     const [searchVal, replaceVal] = values;

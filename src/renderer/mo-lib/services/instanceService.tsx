@@ -90,6 +90,7 @@ export default class InstanceService
         'ISettingsController',
         'ISidebarController',
         'IStatusBarController',
+        'IAuthController',
         'IChatController',
         'IBrainController',
         'IExtensionListController',

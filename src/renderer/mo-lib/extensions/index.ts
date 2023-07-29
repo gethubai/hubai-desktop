@@ -9,6 +9,9 @@ import { ExtendsLocales } from './locales-defaults';
 // import { githubPlusExtension } from './github-plus-theme-master';
 import ExtendsEditor from './editor';
 import { ExtendsActivityBar } from './activityBar';
+import { defaultColorThemeExtension } from './themes/theme-defaults';
+// import { githubPlusExtension } from './themes/github-plus-theme-master';
+// import { webStormIntelliJExtension } from './themes/vscode-intellij-darcula-theme-master';
 
 /**
  * Default extensions
@@ -20,7 +23,7 @@ export const defaultExtensions = [
   ExtendsExplorer,
   ExtendsEditorTree,
   ExtendsLocales,
-  // defaultColorThemeExtension,
+  defaultColorThemeExtension,
   // monokaiColorThemeExtension,
   // paleNightColorThemeExtension,
   // webStormIntelliJExtension,
