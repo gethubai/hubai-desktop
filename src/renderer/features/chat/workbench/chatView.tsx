@@ -15,6 +15,7 @@ import 'react-h5-audio-player/lib/styles.css';
 import { Icon, Pane, SplitPane } from '@hubai/core/esm/components';
 import { editor as monaco } from '@hubai/core/esm/monaco';
 import { IColors } from '@hubai/core';
+import Markdown from 'renderer/components/markdown';
 import { IChatWindowController } from '../controllers/type';
 import { IChatWindowState } from '../models/chatWindow';
 import BrainSelector from './components/brainSelector';
@@ -200,7 +201,6 @@ function ChatWindow({
                       />
                       </Message.Actions> */}
                           </Message.Header>
-
                           <Message.Content>
                             {!!message.voiceContent && (
                               <Message.Voice
@@ -212,7 +212,9 @@ function ChatWindow({
                               />
                             )}
                             {!!message.textContent && (
-                              <Message.Text>{message.textContent}</Message.Text>
+                              <Message.Text>
+                                <Markdown>{message.textContent}</Markdown>
+                              </Message.Text>
                             )}
                           </Message.Content>
                         </Message.Root>
