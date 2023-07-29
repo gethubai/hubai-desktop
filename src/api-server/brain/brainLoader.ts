@@ -3,7 +3,7 @@
 import url from 'url';
 import IsDevelopment from 'utils/isDevelopment';
 import { IBrainServer } from './brainServer';
-import TcpBrainServer from './tcpBrainServer';
+import BrainChatClient from './brainChatClient';
 import makeLoadLocalBrains from './factories/usecases/loadLocalBrainsFactory';
 import { getSupportedPromptTypesFromCapabilities } from './brainSettings';
 import brainServerManager from './brainServerManager';
@@ -31,7 +31,7 @@ export async function loadLocalBrains() {
         ),
       };
 
-      const brainServer: IBrainServer = new TcpBrainServer(
+      const brainServer: IBrainServer = new BrainChatClient(
         IsDevelopment() ? brainService.default : brainService.default?.default,
         settings
       );

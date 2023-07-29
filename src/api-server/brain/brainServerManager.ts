@@ -1,7 +1,7 @@
 import userSettingsStorage from 'data/user/mainStorage';
 import { ChatServerConfigs } from 'api-server/consts';
 import { IBrainServer } from './brainServer';
-import { SetUserSettingsResult } from './brainService';
+import { BrainSettingsValidationResult } from './brainService';
 import { IBrainSettings } from './brainSettings';
 
 class BrainClientManager {
@@ -34,7 +34,7 @@ class BrainClientManager {
     const brainSetting = brainsSettings[settings.name];
     if (brainSetting) {
       try {
-        client.setUserSettingsResult(brain.setUserSettings(brainSetting));
+        client.setUserSettings(brainSetting);
       } catch (e) {
         console.error('Error on setting brain user settings: ', {
           brain,
@@ -48,16 +48,17 @@ class BrainClientManager {
   updateClientSettings(
     clientId: string,
     newSettings: any
-  ): SetUserSettingsResult {
+  ): BrainSettingsValidationResult {
     const client = this.getClient(clientId);
 
     if (!client) {
-      return SetUserSettingsResult.createError('Brain client not found');
+      return BrainSettingsValidationResult.createError(
+        'Brain client not found'
+      );
     }
 
-    const result = client.getService().setUserSettings(newSettings);
-    client.setUserSettingsResult(result);
-    return result;
+    client.setUserSettings(newSettings);
+    return new BrainSettingsValidationResult();
   }
 
   isConnected(client: IBrainServer): boolean {
