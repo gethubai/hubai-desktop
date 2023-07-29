@@ -20,7 +20,7 @@ import { IChatWindowController } from '../controllers/type';
 import { IChatWindowState } from '../models/chatWindow';
 import BrainSelector from './components/brainSelector';
 import { Chat, Message } from './components/chat';
-import { ChatAction, ChatMessageViewModel } from './components/chat/types';
+import { ChatAction } from './components/chat/types';
 import { ChatInputApi } from './components/chat/chatInput';
 
 export interface IChatWindowProps
@@ -30,20 +30,18 @@ export interface IChatWindowProps
 }
 
 function ChatWindow({
-  messages: newMessages,
+  messages,
   availableBrains,
   selectedBrains,
   onSendTextMessage,
   onSendVoiceMessage,
   onCapabilityBrainChanged,
   getCurrentThemeColors,
-  getChat,
-  getBrainChatSettings,
   AuxiliaryBarTabs,
   AuxiliaryBar,
   auxiliaryBarView,
+  id,
 }: IChatWindowProps) {
-  const id = useMemo(() => getChat().id, [getChat]);
   const [micStatus, setMicStatus] = useState('idle');
   const chatInputRef = useRef<ChatInputApi>();
 
@@ -60,33 +58,6 @@ function ChatWindow({
     () => getCurrentThemeColors(),
     [getCurrentThemeColors]
   );
-
-  const messages = useMemo(
-    () =>
-      newMessages.map((message) => {
-        const isSelf = message.senderType === 'user';
-        const msg = {
-          id: message.id,
-          textContent: message.text?.body,
-          voiceContent: message.voice
-            ? {
-                audioSrc: `msg://audio/${message.id}.wav`,
-                mimeType: message.voice.mimeType,
-              }
-            : undefined,
-          messageContentType: message.messageType,
-          sentAt: message.sendDate,
-          senderDisplayName: message.sender,
-          messageType: isSelf ? 'request' : 'response',
-          status: message.status,
-          avatarIcon: isSelf ? 'account' : 'octoface',
-        } as ChatMessageViewModel;
-
-        return msg;
-      }) as ChatMessageViewModel[],
-    [newMessages, newMessages.length]
-  );
-
   const getContentSize = () => {
     if (!auxiliaryBarView.hidden) return contentPanePos;
 
@@ -167,8 +138,7 @@ function ChatWindow({
               <BrainSelector
                 availableBrains={availableBrains}
                 selectedBrains={selectedBrains}
-                onCapabilityBrainChanged={onCapabilityBrainChanged}
-                getBrainChatSettings={getBrainChatSettings}
+                onCapabilityBrainChanged={onCapabilityBrainChanged!}
               />
               <div className="chat-container">
                 <SplitPane

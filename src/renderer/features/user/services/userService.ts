@@ -1,5 +1,6 @@
 import { Component } from '@hubai/core/esm/react';
 import { container } from 'tsyringe';
+import { IUser } from 'api-server/user/models/user';
 import { ILocalUser, LocalUserModel } from '../models/user';
 
 export interface ILocalUserService extends Component<ILocalUser> {
@@ -15,6 +16,10 @@ export class LocalUserService
   constructor() {
     super();
     this.state = container.resolve(LocalUserModel);
+
+    window.electron.ipcRenderer.on('set-current-user', (user: IUser) => {
+      this.setState({ id: user.id, name: user.profile.name });
+    });
   }
 
   getUser(): ILocalUser {

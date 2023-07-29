@@ -10,12 +10,17 @@ import {
 } from '@hubai/core';
 
 import { injectable, inject } from 'tsyringe';
-import { ChatModel } from 'api-server/chat/domain/models/chat';
+import {
+  ChatUser,
+  ChatMemberType,
+  ChatModel,
+} from 'api-server/chat/domain/models/chat';
 import { CreateChat } from 'api-server/chat/domain/usecases/createChat';
 import { type IBrainManagementService } from 'renderer/features/brain/services/brainManagement';
 import { type ILocalUserService } from 'renderer/features/user/services/userService';
 import type { IBuiltinService } from 'mo/services/builtinService';
 import { getThemeData } from 'mo/services/theme/helper';
+import { IDisposable } from '@hubai/core/esm/monaco/common';
 import ChatSidebar from '../workbench/chatSidebar';
 import { IChatController } from './type';
 import { IChatItem } from '../models/chat';
@@ -108,6 +113,7 @@ export default class ChatController
       name: `New chat ${index}`,
       initiator: user.id,
       brains: [],
+      members: [{ id: user.id, memberType: ChatMemberType.user } as ChatUser],
     };
 
     const result = await this.chatService.createChat(createOptions);
@@ -121,22 +127,30 @@ export default class ChatController
 
   private async selectOrOpenChatWindow(chat: ChatModel): Promise<void> {
     let renderPane;
+    let disposables: IDisposable[];
     if (!this.editorService.isOpened(chat.id)) {
       const chatInstance = await this.chatService.getChat(chat.id);
-      const ChatViewWindow = this.createChatWindow(chatInstance);
+      const { Component, service, controller } =
+        this.createChatWindow(chatInstance);
       renderPane = () => (
-        <ChatViewWindow getCurrentThemeColors={() => this.chatColors} />
+        <Component getCurrentThemeColors={() => this.chatColors} />
       );
+      disposables = [service, controller];
     }
     this.editorService.open({
       id: chat.id,
       name: chat.name,
       icon: 'comment',
       renderPane,
+      disposables,
     });
   }
 
-  private createChatWindow(chat: ChatModel): React.ComponentType<any> {
+  private createChatWindow(chat: ChatModel): {
+    Component: React.ComponentType<any>;
+    controller: ChatWindowController;
+    service: ChatWindowService;
+  } {
     const service = new ChatWindowService(chat);
     const controller = new ChatWindowController(
       service,
@@ -145,7 +159,11 @@ export default class ChatController
     );
     controller.initView();
 
-    return connect(service, ChatView, controller);
+    return {
+      Component: connect(service, ChatView, controller),
+      controller,
+      service,
+    };
   }
 
   public onChatClick = (item: IChatItem) => {

@@ -10,7 +10,7 @@ import makeSaveLocalBrainSettings from '../factories/usecases/makeSaveLocalBrain
 
 export interface IBrainManagementService extends Component<IBrainState> {
   getBrains(): LocalBrainModel[];
-  getBrainSettings(brainName: string): any;
+  getBrainSettings(brainId: string): any;
   onBrainSettingsUpdated(
     callback: (brain: LocalBrainModel, settings: any) => void
   ): void;
@@ -43,10 +43,14 @@ export class BrainManagementService
     return this.state.brains;
   }
 
-  getBrainSettings(brainName: string) {
+  getBrainSettings(brainId: string) {
+    const brain = this.getBrains().find((b) => b.id === brainId);
+    if (!brain)
+      throw new Error(`Brain with id ${brainId} not found in brains list`);
+
     const settings = this.settingsService.getSettings();
 
-    return settings.brain[brainName];
+    return settings.brain[brain?.name];
   }
 
   async saveBrainSettings(brain: LocalBrainModel, newSettings: any) {

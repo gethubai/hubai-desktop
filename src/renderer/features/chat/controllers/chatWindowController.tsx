@@ -1,7 +1,12 @@
 import { Controller, connect } from '@hubai/core/esm/react';
-import { ChatBrain, ChatModel } from 'api-server/chat/domain/models/chat';
+import {
+  ChatMemberType,
+  ChatModel,
+  ChatUser,
+} from 'api-server/chat/domain/models/chat';
 import {
   ChatMessageType,
+  IRecipientSettings,
   SendChatMessageModel,
 } from 'api-server/chat/domain/models/chatMessage';
 import {
@@ -15,6 +20,8 @@ import { type IBrainManagementService } from 'renderer/features/brain/services/b
 import React from 'react';
 import AuxiliaryBarTab from 'mo/workbench/auxiliaryBar/auxiliaryBarTab';
 import AuxiliaryBar from 'mo/workbench/auxiliaryBar/auxiliaryBar';
+import { IDisposable } from '@hubai/core/esm/monaco/common';
+import { Uri, editor as monaco } from '@hubai/core/esm/monaco';
 import { IChatWindowController } from './type';
 import { IChatWindowService } from '../services/chatWindowService';
 import { getTextMessageTypeForBrainCapability } from '../utils/messageUtils';
@@ -22,27 +29,9 @@ import ChatAuxiliaryBarService from '../services/chatAuxiliaryBarService';
 import { ChatAuxiliaryBarController } from './chatAuxiliaryBarController';
 import { ChatBrainSettings } from '../workbench/chatBrainSettings';
 
-function blobToByteArray(blob: Blob): Promise<Uint8Array> {
-  return new Promise<Uint8Array>((resolve, reject) => {
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      const arrayBuffer = reader.result as ArrayBuffer;
-      const byteArray = new Uint8Array(arrayBuffer);
-      resolve(byteArray);
-    };
-
-    reader.onerror = () => {
-      reject(reader.error);
-    };
-
-    reader.readAsArrayBuffer(blob);
-  });
-}
-
 export default class ChatWindowController
   extends Controller
-  implements IChatWindowController
+  implements IChatWindowController, IDisposable
 {
   private brainService: IBrainManagementService;
 
@@ -108,25 +97,26 @@ export default class ChatWindowController
   }
 
   public onSendTextMessage = (message: string) => {
-    const model = this.createMessageToSend('text');
-
+    const model = this.createMessageToSend();
     model.setText({ body: message });
 
-    this.chatWindowService.sendMessage(model);
+    this.chatWindowService.getSessionServer().sendMessage({
+      text: { body: message },
+      brainsSettings: model.recipientSettings,
+    });
   };
 
-  public onSendVoiceMessage = (audioBlob: Blob) => {
-    blobToByteArray(audioBlob)
-      .then((data: Uint8Array) => {
-        const model = this.createMessageToSend('voice');
+  public onSendVoiceMessage = async (audioBlob: Blob) => {
+    const model = this.createMessageToSend();
+    const sessionServer = this.chatWindowService.getSessionServer();
 
-        model.setVoice({ data, mimeType: 'audio/wav' });
+    const voiceFile = await sessionServer.sendAudio({
+      data: audioBlob,
+      mimeType: 'audio/wav',
+    });
 
-        this.chatWindowService.sendMessage(model);
-      })
-      .catch((err: any) => {
-        console.error('@@@@ AUDIO ERROR:', err);
-      });
+    model.setVoice(voiceFile);
+    sessionServer.sendMessage(model);
   };
 
   public onCapabilityBrainChanged = (
@@ -135,38 +125,49 @@ export default class ChatWindowController
   ) => {
     const { selectedBrains } = this.chatWindowService.getState();
     const chatMessageType = getTextMessageTypeForBrainCapability(capability);
-    const chatBrain = {
+    const chatMember = {
       id: brain.id,
-      handleMessageType: chatMessageType,
-    } as ChatBrain;
+      memberType: ChatMemberType.brain,
+      handleMessageTypes: [chatMessageType],
+    } as ChatUser;
 
     const newSelectedBrains = [...selectedBrains];
-    const brainIndex = newSelectedBrains.findIndex(
-      (b) => b.handleMessageType === chatMessageType
+    const currentBrain = newSelectedBrains.find((b) => b.id === brain.id);
+    const brainWithSelectedCapability = selectedBrains.find((b) =>
+      b.handleMessageTypes?.includes(chatMessageType)
     );
 
-    if (brainIndex === -1) {
-      newSelectedBrains.push(chatBrain);
-    } else {
-      newSelectedBrains[brainIndex] = chatBrain;
+    if (brainWithSelectedCapability) {
+      brainWithSelectedCapability.handleMessageTypes =
+        brainWithSelectedCapability.handleMessageTypes?.filter(
+          (b) => b !== chatMessageType
+        );
+
+      if (brainWithSelectedCapability.handleMessageTypes?.length === 0) {
+        // remove brain from chat if it doesn't have any capabilities selected
+        this.chatWindowService
+          .getSessionServer()
+          .removeMember(brainWithSelectedCapability.id);
+      } else {
+        // Update brain with new capabilities
+        this.chatWindowService
+          .getSessionServer()
+          .addMember(brainWithSelectedCapability);
+      }
     }
 
-    this.chatWindowService.updateChatBrains(newSelectedBrains);
+    currentBrain?.handleMessageTypes?.push(chatMessageType);
+
+    this.chatWindowService
+      .getSessionServer()
+      .addMember(currentBrain || chatMember);
   };
 
-  private createMessageToSend(
-    messageType: ChatMessageType
-  ): SendChatMessageModel {
+  private createMessageToSend(): SendChatMessageModel {
     const sender = this.getSender();
-    const brain = this.getBrain(messageType);
+    const model = new SendChatMessageModel(this.chat.id, sender.id);
 
-    const model = new SendChatMessageModel(
-      this.chat.id,
-      sender.name,
-      sender.id,
-      'user',
-      brain.id
-    );
+    model.setRecipientSettings(this.getRecipientSettingsForMessage(model));
 
     return model;
   }
@@ -196,15 +197,17 @@ export default class ChatWindowController
         chatBrainSettings[setting.name] = settings[setting.name];
     });
 
-    chatBrain.scopedSettings = chatBrainSettings;
+    chatBrain.settings = chatBrainSettings;
 
-    this.chatWindowService.updateChatBrains(selectedBrains);
+    this.chatWindowService.getSessionServer().addMember(chatBrain);
   };
 
-  private getBrain(messageType: ChatMessageType): ChatBrain {
+  private getBrain(messageType: ChatMessageType): ChatUser {
     const brainChat = this.chatWindowService
       .getState()
-      .selectedBrains.find((brain) => brain.handleMessageType === messageType);
+      .selectedBrains.find((brain) =>
+        brain.handleMessageTypes?.includes(messageType)
+      );
 
     if (!brainChat)
       throw new Error(`No brain found for message type ${messageType}`);
@@ -216,14 +219,43 @@ export default class ChatWindowController
     return this.chat;
   };
 
+  public getRecipientSettingsForMessage = (
+    message: SendChatMessageModel
+  ): IRecipientSettings => {
+    const settings: IRecipientSettings = {};
+    // settings[message.to] = this.getBrainChatSettingsById(message.to);
+
+    // TODO: Refactor this
+    return settings;
+  };
+
   public getBrainChatSettings = (brain: LocalBrainModel) => {
-    const brainSettings = this.brainService.getBrainSettings(brain.name);
+    return this.getBrainChatSettingsById(brain.id);
+  };
+
+  private getBrainChatSettingsById = (brainId: string) => {
+    const brainSettings = this.brainService.getBrainSettings(brainId);
     const chatBrain = this.chatWindowService
       .getState()
-      .selectedBrains.find((b) => b.id === brain.id);
+      .selectedBrains.find((b) => b.id === brainId);
 
-    const mergedSettings = { ...brainSettings, ...chatBrain?.scopedSettings };
+    if (!chatBrain) {
+      return undefined;
+    }
+
+    const mergedSettings = { ...brainSettings, ...chatBrain?.settings };
 
     return mergedSettings;
   };
+
+  dispose(): void {
+    const monacoEditor = monaco.getModel(
+      Uri.parse(`inmemory://model/${this.chat.id}`)
+    );
+
+    // Dispose the monacoEditor instance when the chat window is closed (this is the text input)
+    if (monacoEditor && !monacoEditor.isDisposed()) {
+      monacoEditor.dispose();
+    }
+  }
 }

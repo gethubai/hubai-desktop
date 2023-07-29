@@ -1,48 +1,54 @@
 /* eslint-disable react/no-unused-state */
 /* eslint-disable react/sort-comp */
 /* eslint-disable react/no-unused-class-component-methods */
-import { ChatBrain, ChatModel } from 'api-server/chat/domain/models/chat';
-import {
-  ChatMessageModel,
-  SendChatMessageModel,
-} from 'api-server/chat/domain/models/chatMessage';
+import { ChatMemberType, ChatModel } from 'api-server/chat/domain/models/chat';
+import { ChatMessageModel } from 'api-server/chat/domain/models/chatMessage';
 import { container } from 'tsyringe';
 import { ChatMessagesContext } from 'api-server/chat/domain/models/chatContext';
 import { IBrainManagementService } from 'renderer/features/brain/services/brainManagement';
 import { Component } from '@hubai/core/esm/react';
-import {
-  ChatWindowMessage,
-  ChatWindowStateModel,
-  IChatWindowState,
-} from '../models/chatWindow';
-import { ChatService, IChatMessageSubscriber } from './chat';
+import { MessageUpdatedEvent } from 'api-server/chat/chatTcpServer/events/serveSessionEvents';
+import { IDisposable } from '@hubai/core/esm/monaco/common';
+import { ILocalUserService } from 'renderer/features/user/services/userService';
+import { ChatWindowStateModel, IChatWindowState } from '../models/chatWindow';
+import { IChatSessionServer } from '../sdk/contracts';
+import { IChatService } from './types';
+import { ChatMessageViewModel } from '../workbench/components/chat/types';
 
-export interface IChatWindowService extends Component<IChatWindowState> {
-  setMessages(messages: ChatWindowMessage[]): void;
-  sendMessage(message: SendChatMessageModel): Promise<void>;
-  updateChatBrains(brains: ChatBrain[]): Promise<void>;
+export interface IChatWindowService
+  extends Component<IChatWindowState>,
+    IDisposable {
+  setMessages(messages: ChatMessageViewModel[]): void;
   setAuxiliaryBarView(view: boolean): void;
+
+  getSessionServer(): IChatSessionServer;
 }
 
 export class ChatWindowService
   extends Component<IChatWindowState>
-  implements IChatWindowService, IChatMessageSubscriber
+  implements IChatWindowService
 {
   protected state: IChatWindowState;
 
-  private chatService: ChatService;
-
   private brainService: IBrainManagementService;
+
+  private chatSessionServer!: IChatSessionServer;
+
+  private chatService: IChatService;
 
   constructor(private readonly chat: ChatModel) {
     super();
     this.brainService = container.resolve('IBrainManagementService');
+    const userService =
+      container.resolve<ILocalUserService>('ILocalUserService');
     this.state = new ChatWindowStateModel(
+      chat.id,
+      userService.getUser().id,
       [],
       this.brainService.getBrains(),
-      chat.brains
+      chat.members.filter((m) => m.memberType === ChatMemberType.brain)
     );
-    this.chatService = container.resolve(ChatService);
+    this.chatService = container.resolve('IChatService');
     this.initServer();
   }
 
@@ -51,54 +57,111 @@ export class ChatWindowService
   }
 
   private async initServer(): Promise<void> {
-    this.chatService.addChatSubscriber(this.chat.id, this);
+    this.chatSessionServer = this.chatService.getClient().session(this.chat.id);
+    this.chatSessionServer.onMessageReceived(this.onMessageReceived.bind(this));
+    this.chatSessionServer.onMessageUpdated(this.onMessageUpdated.bind(this));
+    this.chatSessionServer.onChatUpdated(this.onChatUpdated.bind(this));
+
+    await this.chatSessionServer.watch();
+
+    const messages = await this.chatSessionServer.messages();
+    this.onMessagesLoaded(messages);
   }
 
-  onMessagesLoaded(messages: ChatMessagesContext): void {
-    this.setMessages(messages.messages as ChatWindowMessage[]);
+  onChatUpdated(chat: ChatModel): void {
+    const { members } = chat;
+    this.setState({
+      selectedBrains: members.filter(
+        (m) => m.memberType === ChatMemberType.brain
+      ),
+    });
   }
 
-  onMessageSent(message: ChatMessageModel): void {
-    const { state } = this;
-    state.addMessage(message);
-    this.setState(state);
+  onMessagesLoaded(ctx: ChatMessagesContext): void {
+    this.setState({ users: ctx.users ?? {} });
+    this.setMessages(
+      ctx.messages?.filter((m) => !m.hidden)?.map(this.mapMessage) ?? []
+    );
   }
 
   onMessageReceived(message: ChatMessageModel): void {
-    const { state } = this;
-    state.addMessage(message);
-    this.setState(state);
+    if (message.hidden) return;
+    this.addMessage(message);
   }
 
-  onMessageUpdated(
-    prevMessage: ChatMessageModel,
-    message: ChatMessageModel
-  ): void {
-    const { state } = this;
+  async onMessageUpdated({
+    prevMessage,
+    message,
+  }: MessageUpdatedEvent.Params): Promise<void> {
+    this.updateMessage(message);
 
-    state.updateMessage(message);
-    this.setState(state);
+    // message transcribed
+    if (
+      message.text &&
+      !prevMessage?.text &&
+      message.senderId === this.state.userId &&
+      message.messageType === 'voice'
+    ) {
+      // Send a hidden message to the chat with the transcription. This message will be used by the text brain to generate a response.
+      await this.chatSessionServer.sendMessage({
+        text: message.text,
+        hidden: true,
+      });
+    }
   }
 
-  setMessages(messages: ChatWindowMessage[]): void {
-    const { state } = this;
-    messages.forEach((message) => {
-      state.addMessage(message);
-    });
+  mapMessage = (message: ChatMessageModel): ChatMessageViewModel => {
+    const { users } = this.state;
+    const isSelf = message.senderId === this.state.userId;
+    return {
+      id: message.id,
+      textContent: message.text?.body,
+      voiceContent: message.voice
+        ? {
+            audioSrc: message.voice?.file,
+            mimeType: message.voice.mimeType,
+          }
+        : undefined,
+      messageContentType: message.messageType,
+      sentAt: message.sendDate,
+      senderDisplayName: users[message.senderId]?.name ?? 'Unknown',
+      messageType: isSelf ? 'request' : 'response',
+      status: message.status,
+      avatarIcon: isSelf ? 'account' : 'octoface',
+    };
+  };
 
-    this.setState(state);
+  setMessages(messages: ChatMessageViewModel[]): void {
+    this.setState({ messages: messages || [] });
   }
 
-  async sendMessage(message: SendChatMessageModel): Promise<void> {
-    await this.chatService.sendChatMessage(message);
+  addMessage(message: ChatMessageModel) {
+    const { messages } = this.state;
+    // check if message already exists
+    const index = messages.findIndex((m) => m.id === message.id);
+    if (index === -1) {
+      messages.push(this.mapMessage(message));
+    }
+    this.setMessages(messages);
   }
 
-  async updateChatBrains(brains: ChatBrain[]): Promise<void> {
-    const updatedChat = await this.chatService.updateChatBrains({
-      chatId: this.chat.id,
-      brains,
-    });
+  updateMessage(message: ChatMessageModel) {
+    const { messages } = this.state;
 
-    this.setState({ selectedBrains: updatedChat.brains });
+    const index = messages.findIndex((m) => m.id === message.id);
+    if (index !== -1) {
+      messages[index] = this.mapMessage(message);
+    }
+    this.setMessages(messages);
+  }
+
+  getSessionServer() {
+    return this.chatSessionServer;
+  }
+
+  dispose(): void {
+    this.state = null;
+    this.chatSessionServer.dispose();
+    this.chatSessionServer = null;
   }
 }

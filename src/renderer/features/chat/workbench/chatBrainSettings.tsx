@@ -4,12 +4,12 @@ import {
   BrainSettingScope,
   LocalBrainModel,
 } from 'api-server/brain/domain/models/localBrain';
-import { ChatBrain } from 'api-server/chat/domain/models/chat';
+import { ChatUser } from 'api-server/chat/domain/models/chat';
 import { ChatBrainSettingsForm } from './components/chatBrainSettingsForm';
 
 type ChatBrainSettingsProps = {
   availableBrains: LocalBrainModel[];
-  selectedBrains: ChatBrain[];
+  selectedBrains: ChatUser[];
   onSettingChanged: (brain: LocalBrainModel, newSettings: any) => void;
   getBrainChatSettings: (brain: LocalBrainModel) => any;
 };

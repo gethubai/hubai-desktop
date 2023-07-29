@@ -51,9 +51,10 @@ export function ChatInput({ onAction, id, onApiRef }: ChatInputProps) {
       },
     });
     return () => {
-      if (editor.current) {
-        editor.current.dispose();
-      }
+      // we should dispose this but for some reason it bugs when other chat windows is opened
+      // if (editor.current) {
+      //     editor.current.dispose();
+      // }
     };
   }, [onAction]);
 

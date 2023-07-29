@@ -5,13 +5,13 @@ import {
   BrainCapability,
   LocalBrainModel,
 } from 'api-server/brain/domain/models/localBrain';
-import { ChatBrain } from 'api-server/chat/domain/models/chat';
 import { Option, Select } from '@hubai/core/esm/components';
+import { ChatUser } from 'api-server/chat/domain/models/chat';
 import { getTextMessageTypeForBrainCapability } from '../../utils/messageUtils';
 
 type BrainSelectorProps = {
   availableBrains: LocalBrainModel[];
-  selectedBrains: ChatBrain[];
+  selectedBrains: ChatUser[];
   onCapabilityBrainChanged: (
     brain: LocalBrainModel,
     capability: BrainCapability
@@ -57,11 +57,11 @@ const BrainSelector: React.FC<BrainSelectorProps> = ({
 
   const getSelectedBrainForCapability = (
     capability: BrainCapability
-  ): ChatBrain | undefined =>
-    selectedBrains.find(
-      (brain) =>
-        brain.handleMessageType ===
+  ): ChatUser | undefined =>
+    selectedBrains.find((brain) =>
+      brain.handleMessageTypes?.includes(
         getTextMessageTypeForBrainCapability(capability)
+      )
     );
 
   return (

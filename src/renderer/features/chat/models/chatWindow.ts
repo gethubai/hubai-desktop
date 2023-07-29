@@ -1,51 +1,48 @@
 import { ViewVisibility } from '@hubai/core/esm/model/workbench/layout';
 import { LocalBrainModel } from 'api-server/brain/domain/models/localBrain';
-import { ChatBrain } from 'api-server/chat/domain/models/chat';
-import { ChatMessageModel } from 'api-server/chat/domain/models/chatMessage';
-
-export type ChatWindowMessage = ChatMessageModel & {};
+import { ChatUser } from 'api-server/chat/domain/models/chat';
+import { ChatContextUser } from 'api-server/chat/domain/models/chatContext';
+import { ChatMessageViewModel } from '../workbench/components/chat/types';
 
 export interface IChatWindowState {
-  messages: ChatWindowMessage[];
+  id: string;
+  messages: ChatMessageViewModel[];
+  users: Record<string, ChatContextUser>;
   availableBrains: LocalBrainModel[];
-  selectedBrains: ChatBrain[];
+  selectedBrains: ChatUser[];
   auxiliaryBarView: ViewVisibility;
-  addMessage(message: ChatWindowMessage): void;
-  updateMessage(message: ChatMessageModel): void;
+  userId: string;
 }
 
 export class ChatWindowStateModel implements IChatWindowState {
-  messages: ChatWindowMessage[];
+  id: string;
+
+  messages: ChatMessageViewModel[];
 
   availableBrains: LocalBrainModel[];
 
-  selectedBrains: ChatBrain[] = [];
+  selectedBrains: ChatUser[] = [];
 
   auxiliaryBarView: ViewVisibility;
 
+  users: Record<string, ChatContextUser>;
+
+  userId: string;
+
   constructor(
-    messages: ChatWindowMessage[] = [],
+    id: string,
+    userId: string,
+    messages: ChatMessageViewModel[] = [],
     availableBrains: LocalBrainModel[] = [],
-    selectedBrains: ChatBrain[] = []
+    selectedBrains: ChatUser[] = [],
+    users: Record<string, ChatContextUser> | undefined = undefined
   ) {
+    this.id = id;
+    this.userId = userId;
     this.messages = messages;
     this.availableBrains = availableBrains;
     this.selectedBrains = selectedBrains;
     this.auxiliaryBarView = { hidden: true };
-  }
-
-  addMessage(message: ChatWindowMessage) {
-    // check if message already exists
-    const index = this.messages.findIndex((m) => m.id === message.id);
-    if (index === -1) {
-      this.messages.push(message);
-    }
-  }
-
-  updateMessage(message: ChatMessageModel) {
-    const index = this.messages.findIndex((m) => m.id === message.id);
-    if (index !== -1) {
-      this.messages[index] = message;
-    }
+    this.users = users || {};
   }
 }
