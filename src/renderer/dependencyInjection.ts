@@ -114,6 +114,17 @@ import {
 } from './features/extensions/services/extensionManagement';
 import { IExtensionListController } from './features/extensions/controllers/type';
 import ExtensionListController from './features/extensions/controllers/extensionList';
+import AuthController, {
+  IAuthController,
+} from './features/authentication/controllers/authController';
+import {
+  AuthenticationService,
+  type IAuthService,
+} from './features/authentication/services/authService';
+import {
+  AuthStateModel,
+  IAuthState,
+} from './features/authentication/models/auth';
 
 container.registerSingleton<ISideBarController>(
   'ISidebarController',
@@ -214,6 +225,8 @@ container.registerSingleton<IExtensionListController>(
   ExtensionListController
 );
 
+container.registerSingleton<IAuthController>('IAuthController', AuthController);
+
 container.registerSingleton<ILocalUserService>(
   'ILocalUserService',
   LocalUserService
@@ -288,6 +301,11 @@ container.registerSingleton<ILocaleService>('ILocaleService', LocaleService);
 
 container.registerSingleton<IMonacoService>('IMonacoService', MonacoService);
 
+container.registerSingleton<IAuthService>(
+  'IAuthService',
+  AuthenticationService
+);
+
 /* Models */
 container.register<IChatState>(ChatStateModel, {
   useValue: new ChatStateModel(),
@@ -303,7 +321,8 @@ container.register<IExtensionListState>(ExtensionListStateModel, {
 
 // TODO: Get user from settings
 container.register<ILocalUser>(LocalUserModel, {
-  useValue: new LocalUserModel('123456abc', 'You', []),
+container.register<IAuthState>('IAuthState', {
+  useValue: new AuthStateModel(),
 });
 
 registerChatCompletionProvider();

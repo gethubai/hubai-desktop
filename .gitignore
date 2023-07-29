@@ -29,3 +29,7 @@ npm-debug.log.*
 *.scss.d.ts
 
 chatdb.*
+
+src/renderer/mo-lib/extensions/themes
+
+env-variables.json

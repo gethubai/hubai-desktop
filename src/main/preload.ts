@@ -4,10 +4,11 @@ import brainRendererApi from 'api-server/brain/ipc/rendererApi';
 import extensionRendererApi from 'api-server/extensions/ipc/rendererApi';
 import userSettingsRendererApi from './ipc/userSettings/rendererApi';
 import mediaAccessRendererApi from './ipc/mediaAccess/rendererApi';
+import authRendererApi from '../api-server/authentication/ipc/rendererApi';
 
 Object.defineProperty(window, 'isRenderer', { get: () => true });
 
-export type Channels = 'ipc-example';
+export type Channels = 'logged-out' | 'logged-in' | 'set-current-user';
 
 const electronHandler = {
   restart: () => ipcRenderer.send('restart-app'),
@@ -32,6 +33,7 @@ const electronHandler = {
   brain: brainRendererApi,
   mediaAccess: mediaAccessRendererApi,
   extension: extensionRendererApi,
+  auth: authRendererApi,
 };
 
 contextBridge.exposeInMainWorld('electron', electronHandler);

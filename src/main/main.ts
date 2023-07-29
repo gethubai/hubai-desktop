@@ -21,6 +21,7 @@ import {
 } from 'utils/pathUtils';
 import keyStore from 'data/keyStore';
 import { generateSecureRandom64ByteKey } from 'utils/securityUtils';
+import makeAuthClient from 'api-server/authentication/factories/authClientFactory';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
@@ -28,6 +29,7 @@ import './ipc/userSettings/mainApi';
 import './ipc/mediaAccess/mainApi';
 import 'api-server/brain/ipc/mainApi';
 import 'api-server/extensions/ipc/mainApi';
+import '../api-server/authentication/ipc/mainApi';
 
 const isDebug =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
@@ -185,6 +187,8 @@ app
   .whenReady()
   .then(async () => {
     createSplashScreen();
+
+    await makeAuthClient().attemptCachedLogin();
     // Generate key if not exists
     if (!keyStore.isSet()) keyStore.set(generateSecureRandom64ByteKey());
 
