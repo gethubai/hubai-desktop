@@ -58,6 +58,8 @@ class EditorService extends Component<IEditor> implements IEditorService {
     const arr = Array.isArray(tabs) ? tabs : [tabs];
     arr.forEach((tab) => {
       MonacoEditor.getModel(Uri.parse(tab.id!.toString()))?.dispose();
+      if (Array.isArray(tab.disposables))
+        tab.disposables.forEach((disposable) => disposable.dispose());
     });
   }
 
