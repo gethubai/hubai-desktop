@@ -14,7 +14,6 @@ import deleteSourceMaps from '../scripts/delete-source-maps';
 
 checkNodeEnv('production');
 deleteSourceMaps();
-
 const configuration: webpack.Configuration = {
   devtool: 'source-map',
 
@@ -22,6 +21,22 @@ const configuration: webpack.Configuration = {
 
   target: 'electron-main',
 
+  /* Temp workaround to fix https://github.com/mqttjs/MQTT.js/issues/1233 */
+  module: {
+    rules: [
+      {
+        test: /\.[jt]s$/,
+        include: path.resolve(__dirname, '../../', 'node_modules', 'mqtt'),
+        use: {
+          loader: 'string-replace-loader',
+          options: {
+            search: /const IS_BROWSER =.*\n/,
+            replace: 'const IS_BROWSER = false;\n',
+          },
+        },
+      },
+    ],
+  },
   entry: {
     main: path.join(webpackPaths.srcMainPath, 'main.ts'),
     preload: path.join(webpackPaths.srcMainPath, 'preload.ts'),

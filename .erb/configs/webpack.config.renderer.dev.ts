@@ -16,8 +16,6 @@ const { ModuleFederationPlugin } = webpack.container;
 
 const moduleFederationConfig = require('./moduleFederation');
 
-console.log('moduleFederationConfig', moduleFederationConfig);
-
 // When an ESLint server is running, we can't set the NODE_ENV so we'll check if it's
 // at the dev webpack config is not accidentally run in a production environment
 if (process.env.NODE_ENV === 'production') {
@@ -156,6 +154,10 @@ const configuration: webpack.Configuration = {
 
     new ReactRefreshWebpackPlugin(),
     new MonacoWebpackPlugin(),
+
+    new webpack.ProvidePlugin({ Buffer: ['buffer', 'Buffer'] }),
+    new webpack.ProvidePlugin({ process: 'process' }),
+    new webpack.ProvidePlugin({ url: 'url' }),
 
     new HtmlWebpackPlugin({
       filename: path.join('index.html'),

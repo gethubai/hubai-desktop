@@ -125,6 +125,10 @@ const configuration: webpack.Configuration = {
       analyzerPort: 8889,
     }),
     new MonacoWebpackPlugin(),
+    // Fix mqtt client
+    new webpack.ProvidePlugin({ Buffer: ['buffer', 'Buffer'] }),
+    new webpack.ProvidePlugin({ process: 'process' }),
+    new webpack.ProvidePlugin({ url: 'url' }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: path.join(webpackPaths.srcRendererPath, 'index.ejs'),
