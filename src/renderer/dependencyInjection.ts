@@ -319,8 +319,11 @@ container.register<IExtensionListState>(ExtensionListStateModel, {
   useValue: new ExtensionListStateModel(),
 });
 
-// TODO: Get user from settings
+const currentUser = window.electron.currentUser.get();
 container.register<ILocalUser>(LocalUserModel, {
+  useValue: new LocalUserModel(currentUser.id, currentUser.profile.name, []),
+});
+
 container.register<IAuthState>('IAuthState', {
   useValue: new AuthStateModel(),
 });

@@ -9,6 +9,7 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import path from 'path';
+import '../data/realm/app';
 import { app, BrowserWindow, shell, ipcMain, protocol } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
@@ -30,6 +31,7 @@ import './ipc/mediaAccess/mainApi';
 import 'api-server/brain/ipc/mainApi';
 import 'api-server/extensions/ipc/mainApi';
 import '../api-server/authentication/ipc/mainApi';
+import '../api-server/user/ipc/mainApi';
 
 const isDebug =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
@@ -128,6 +130,7 @@ const createWindow = async () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
+
     // splash.close();
     splash.destroy();
     if (process.env.START_MINIMIZED) {

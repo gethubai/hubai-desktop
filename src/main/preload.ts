@@ -2,6 +2,7 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 import brainRendererApi from 'api-server/brain/ipc/rendererApi';
 import extensionRendererApi from 'api-server/extensions/ipc/rendererApi';
+import currentUserRendererApi from 'api-server/user/ipc/rendererApi';
 import userSettingsRendererApi from './ipc/userSettings/rendererApi';
 import mediaAccessRendererApi from './ipc/mediaAccess/rendererApi';
 import authRendererApi from '../api-server/authentication/ipc/rendererApi';
@@ -34,6 +35,7 @@ const electronHandler = {
   mediaAccess: mediaAccessRendererApi,
   extension: extensionRendererApi,
   auth: authRendererApi,
+  currentUser: currentUserRendererApi,
 };
 
 contextBridge.exposeInMainWorld('electron', electronHandler);
