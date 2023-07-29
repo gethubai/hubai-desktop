@@ -1,5 +1,6 @@
 import Realm from 'realm';
 import { ChatModel } from 'api-server/chat/domain/models/chat';
+import app from 'data/realm/app';
 import { IChatRepository } from '../chatRepository';
 import { ChatDto } from './db';
 
@@ -9,7 +10,11 @@ export class RealmChatRepository implements IChatRepository {
   add = async (model: ChatModel): Promise<ChatModel> => {
     let createdModel: ChatModel | undefined;
     this.database.write(() => {
-      createdModel = this.database.create(ChatDto, model).values;
+      createdModel = this.database.create(ChatDto, {
+        ...model,
+        _id: model.id,
+        owner_id: app.currentUser?.id,
+      }).values;
     });
 
     if (!createdModel) throw new Error('Failed to add chat into the database');
@@ -28,24 +33,23 @@ export class RealmChatRepository implements IChatRepository {
             )
           );
         }
-
-        dto.brains = model.brains;
         dto.name = model.name;
-        dto.messages = model.messages;
+        dto.members = model.members;
         resolve(dto.values);
-        return dto;
       });
     });
   };
 
-  getAll = async (): Promise<ChatModel[]> => {
-    const models = this.database.objects(ChatDto);
+  list = async (userId?: string): Promise<ChatModel[]> => {
+    let models = this.database.objects(ChatDto);
+
+    if (userId) models = models.filtered(`members.id == $0`, userId);
+
     return models.map((item) => item.values);
   };
 
   get = async (id: string): Promise<ChatModel | undefined> => {
     const model = this.getDto(id);
-
     return model?.values;
   };
 

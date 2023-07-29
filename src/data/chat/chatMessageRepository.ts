@@ -4,6 +4,7 @@ export type ChatMessageFilter = {
   ids?: string[];
   to?: string;
   status?: string;
+  chatId?: string;
 };
 
 export interface IChatMessageRepository {

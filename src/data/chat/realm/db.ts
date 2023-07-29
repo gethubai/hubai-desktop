@@ -1,8 +1,13 @@
 /* eslint-disable max-classes-per-file */
-import { ChatBrain, ChatModel } from 'api-server/chat/domain/models/chat';
+import {
+  ChatUser,
+  ChatMemberType,
+  ChatModel,
+  ChatUserRole,
+} from 'api-server/chat/domain/models/chat';
 import {
   ChatMessageModel,
-  ChatMessageSenderType,
+  ChatMessageRecipient,
   ChatMessageStatus,
   ChatMessageType,
   ImageMessage,
@@ -19,7 +24,7 @@ import {
 } from 'utils/pathUtils';
 
 export class ChatDto extends Realm.Object<ChatModel> {
-  id!: string;
+  _id!: string;
 
   name!: string;
 
@@ -29,20 +34,31 @@ export class ChatDto extends Realm.Object<ChatModel> {
 
   messages?: ChatMessageModel[];
 
-  brains!: ChatBrain[];
+  members!: ChatUser[];
+
+  owner_id?: string;
 
   public static schema: Realm.ObjectSchema = {
     name: 'Chat',
-    primaryKey: 'id',
+    primaryKey: '_id',
     properties: {
-      id: 'string',
+      _id: 'string',
       name: { type: 'string', indexed: true },
       initiator: { type: 'string', indexed: true },
-      brains: { type: 'list', objectType: 'ChatBrain' },
+      members: { type: 'list', objectType: 'ChatUser' },
       createdDate: 'date',
       messages: 'ChatMessage[]',
+      owner_id: 'string?',
     },
   };
+
+  get id(): string {
+    return this._id;
+  }
+
+  set id(value: string) {
+    this._id = value;
+  }
 
   get values(): ChatModel {
     return {
@@ -50,35 +66,42 @@ export class ChatDto extends Realm.Object<ChatModel> {
       name: this.name,
       initiator: this.initiator,
       createdDate: this.createdDate,
-      messages: this.messages?.map((item) => (item as any).values),
-      brains: this.brains?.map((item) => (item as any).values),
+      members: this.members?.map((item) => (item as any).values),
     } as ChatModel;
   }
 }
 
-export class ChatBrainDto extends Realm.Object {
+export class ChatUserDto extends Realm.Object<ChatUser> {
   id!: string;
 
-  handleMessageType!: ChatMessageType;
+  memberType!: ChatMemberType;
 
-  scopedSettings?: object;
+  settings?: object;
+
+  handleMessageTypes?: ChatMessageType[];
+
+  role?: ChatUserRole;
 
   static schema = {
-    name: 'ChatBrain',
+    name: 'ChatUser',
     embedded: true,
     properties: {
       id: 'string',
-      handleMessageType: 'string',
-      scopedSettings: '{}',
+      memberType: 'string',
+      settings: '{}',
+      handleMessageTypes: 'string[]',
+      role: 'string?',
     },
   };
 
-  get values(): ChatBrain {
+  get values(): ChatUser {
     return {
       id: this.id,
-      handleMessageType: this.handleMessageType,
-      scopedSettings: dictionaryToObject(this.scopedSettings as any),
-    } as ChatBrain;
+      memberType: this.memberType,
+      settings: dictionaryToObject(this.settings as any),
+      handleMessageTypes: Array.from(this.handleMessageTypes ?? []),
+      role: this.role,
+    } as ChatUser;
   }
 }
 
@@ -148,16 +171,42 @@ export class ChatVoiceMessageDto extends Realm.Object<VoiceMessage> {
   }
 }
 
-export class ChatMessageDto extends Realm.Object<ChatMessageModel> {
+export class ChatMessageRecipientDto extends Realm.Object<ChatMessageRecipient> {
   id!: string;
 
-  sender!: string;
+  status!: ChatMessageStatus;
+
+  receivedDate?: Date;
+
+  seenDate?: Date;
+
+  static schema = {
+    name: 'ChatMessageRecipient',
+    embedded: true,
+    properties: {
+      id: { type: 'string', indexed: true },
+      status: 'string',
+      receivedDate: 'date?',
+      seenDate: 'date?',
+    },
+  };
+
+  get values(): ChatMessageRecipient {
+    return {
+      id: this.id,
+      status: this.status,
+      receivedDate: this.receivedDate,
+      seenDate: this.seenDate,
+    } as ChatMessageRecipient;
+  }
+}
+
+export class ChatMessageDto extends Realm.Object<ChatMessageModel> {
+  _id!: string;
 
   senderId!: string;
 
-  senderType!: ChatMessageSenderType;
-
-  to!: string; // id of the brain that will receive the message
+  recipients!: ChatMessageRecipient[];
 
   sendDate!: Date | string;
 
@@ -173,15 +222,16 @@ export class ChatMessageDto extends Realm.Object<ChatMessageModel> {
 
   chatId!: string;
 
+  hidden?: boolean;
+
+  owner_id?: string;
+
   static schema = {
     name: 'ChatMessage',
-    primaryKey: 'id',
+    primaryKey: '_id',
     properties: {
-      id: 'string',
-      sender: 'string',
+      _id: 'string',
       senderId: { type: 'string', indexed: true },
-      senderType: 'string',
-      to: { type: 'string', indexed: true },
       status: 'string',
       messageType: 'string',
       text: 'ChatTextMessage?',
@@ -189,16 +239,17 @@ export class ChatMessageDto extends Realm.Object<ChatMessageModel> {
       voice: 'ChatVoiceMessage?',
       sendDate: { type: 'date', indexed: true },
       chatId: { type: 'string', indexed: true },
+      recipients: { type: 'list', objectType: 'ChatMessageRecipient' },
+      hidden: 'bool?',
+      owner_id: 'string?',
     },
   };
 
   get values(): ChatMessageModel {
     return {
-      id: this.id,
-      sender: this.sender,
+      id: this._id,
       senderId: this.senderId,
-      senderType: this.senderType,
-      to: this.to,
+      recipients: this.recipients?.map((item) => (item as any).values),
       sendDate: this.sendDate,
       text: (this.text as any)?.values,
       image: (this.image as any)?.values,
@@ -206,6 +257,7 @@ export class ChatMessageDto extends Realm.Object<ChatMessageModel> {
       messageType: this.messageType,
       status: this.status,
       chat: this.chatId,
+      hidden: this.hidden,
     } as ChatMessageModel;
   }
 }
@@ -218,20 +270,44 @@ const dbPath = path.resolve(dbBasePath, 'database.realm');
 const config = {
   schema: [
     ChatDto,
-    ChatBrainDto,
+    ChatUserDto,
+    ChatMessageRecipientDto,
     ChatMessageDto,
     ChatTextMessageDto,
     ChatImageMessageDto,
     ChatVoiceMessageDto,
   ],
-  path: dbPath,
+  // path: dbPath,
 };
 
+/* const behaviorConfiguration: Realm.OpenRealmBehaviorConfiguration = {
+  type: 'openImmediately', // background sync
+}; */
+/* Data Sync might be added later */
 let dbPromise: Promise<Realm>;
 export const getDatabase = async (): Promise<Realm> => {
   if (dbPromise != null) return dbPromise;
+  dbPromise = Realm.open({
+    ...config,
+    encryptionKey: keyStore.getBuffer(),
+    path: dbPath,
+    /* sync: {
+      user: app.currentUser,
+      flexible: true,
+      newRealmFileBehavior: behaviorConfiguration,
+      existingRealmFileBehavior: behaviorConfiguration,
+    }, */
+  });
 
-  dbPromise = Realm.open({ ...config, encryptionKey: keyStore.getBuffer() });
+  /* const db = await dbPromise;
+  db.syncSession?.pause();
+
+  db.subscriptions.update((mutableSubs) => {
+    mutableSubs.add(db.objects('Chat'), { name: 'chatsSubscription' });
+    mutableSubs.add(db.objects('ChatMessage'), {
+      name: 'chatMessagesSubscription',
+    });
+  }); */
 
   return dbPromise;
 };

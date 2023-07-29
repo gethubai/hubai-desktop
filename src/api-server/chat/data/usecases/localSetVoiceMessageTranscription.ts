@@ -24,7 +24,14 @@ export default class LocalSetVoiceMessageTranscription
       );
     }
 
+    if (!transcription) {
+      throw new Error(
+        `Cannot set transcripton for message ${messageId}. Transcription is empty`
+      );
+    }
+
     message.text = { body: transcription };
+
     await this.repository.update(message);
     return message;
   }

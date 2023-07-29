@@ -1,4 +1,4 @@
-import { ChatBrain, ChatModel } from '../models/chat';
+import { ChatUser, ChatModel } from '../models/chat';
 
 export interface CreateChat {
   create: (params: CreateChat.Params) => Promise<CreateChat.Model>;
@@ -7,8 +7,8 @@ export interface CreateChat {
 export namespace CreateChat {
   export type Params = {
     name: string;
+    members: ChatUser[];
     initiator: string;
-    brains: ChatBrain[];
   };
 
   export type Model = ChatModel;

@@ -10,6 +10,7 @@ export interface LoadMessageForRecipient {
 export namespace LoadMessageForRecipient {
   export type Params = {
     recipientId: string;
+    chatId?: string;
     messageStatus?: ChatMessageStatus;
   };
   // Dictionary, where key is chatId and value is array of messages

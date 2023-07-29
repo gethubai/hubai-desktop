@@ -6,14 +6,14 @@ export default class LocalCreateChat implements CreateChat {
   constructor(private readonly repository: IChatRepository) {}
 
   async create(params: CreateChat.Params): Promise<CreateChat.Model> {
-    const { name, initiator, brains } = params;
+    const { name, initiator, members } = params;
     const chat = await this.repository.add({
       id: generateUniqueId(),
       name,
       initiator,
       messages: [],
       createdDate: new Date().toISOString(),
-      brains,
+      members,
     });
     return chat;
   }

@@ -1,14 +1,16 @@
-import { ChatBrain, ChatModel } from '../models/chat';
+import { ChatModel, ChatUser } from '../models/chat';
 
-export interface UpdateChatBrains {
-  update: (params: UpdateChatBrains.Params) => Promise<UpdateChatBrains.Model>;
+export interface UpdateChatMembers {
+  update: (
+    params: UpdateChatMembers.Params
+  ) => Promise<UpdateChatMembers.Model>;
 }
 
-export namespace UpdateChatBrains {
+export namespace UpdateChatMembers {
   // Id of the message
   export type Params = {
     chatId: string;
-    brains: ChatBrain[];
+    members: ChatUser[];
   };
 
   export type Model = ChatModel;

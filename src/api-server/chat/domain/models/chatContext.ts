@@ -1,14 +1,21 @@
 /* eslint-disable import/prefer-default-export */
-import { ChatModel } from './chat';
 import { ChatMessageModel } from './chatMessage';
+
+export type ChatContextUser = {
+  name: string;
+  avatar?: string;
+};
 
 export class ChatMessagesContext {
   messages: ChatMessageModel[];
 
-  chat: ChatModel;
+  users?: Record<string, ChatContextUser>;
 
-  constructor(chat: ChatModel, messages: ChatMessageModel[]) {
+  constructor(
+    messages: ChatMessageModel[],
+    users?: Record<string, ChatContextUser>
+  ) {
     this.messages = messages;
-    this.chat = chat;
+    this.users = users;
   }
 }

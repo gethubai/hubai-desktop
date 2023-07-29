@@ -1,13 +1,25 @@
 import { ChatMessageModel, ChatMessageType } from './chatMessage';
 
-export interface IBrainScopedSettings {
+export interface IChatUserSettings {
   [settingId: string]: any;
 }
 
-export type ChatBrain = {
+export enum ChatMemberType {
+  user = 'user',
+  brain = 'brain',
+}
+
+export enum ChatUserRole {
+  admin = 'admin',
+  member = 'member',
+}
+
+export type ChatUser = {
   id: string;
-  handleMessageType: ChatMessageType;
-  scopedSettings?: IBrainScopedSettings;
+  memberType: ChatMemberType;
+  settings?: IChatUserSettings;
+  handleMessageTypes?: ChatMessageType[];
+  role?: ChatUserRole; // TODO: Refactor this with a RBAC system
 };
 
 export type ChatModel = {
@@ -16,5 +28,5 @@ export type ChatModel = {
   initiator: string;
   createdDate: Date | string;
   messages?: ChatMessageModel[];
-  brains: ChatBrain[];
+  members: ChatUser[];
 };

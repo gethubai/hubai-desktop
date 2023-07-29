@@ -1,19 +1,19 @@
-import { UpdateChatBrains } from 'api-server/chat/domain/usecases/updateChatBrains';
+import { UpdateChatMembers } from 'api-server/chat/domain/usecases/updateChatBrains';
 import { IChatRepository } from 'data/chat/chatRepository';
 
-export default class LocalUpdateChatBrains implements UpdateChatBrains {
+export default class LocalUpdateChatMembers implements UpdateChatMembers {
   constructor(private readonly repository: IChatRepository) {}
 
   async update(
-    params: UpdateChatBrains.Params
-  ): Promise<UpdateChatBrains.Model> {
-    const { chatId, brains } = params;
+    params: UpdateChatMembers.Params
+  ): Promise<UpdateChatMembers.Model> {
+    const { chatId, members } = params;
     const chat = await this.repository.get(chatId);
 
     if (!chat)
-      throw new Error(`Cannot update chat brains. Chat ${chatId} not found`);
+      throw new Error(`Cannot update chat members. Chat ${chatId} not found`);
 
-    chat.brains = brains;
+    chat.members = members;
     return this.repository.update(chat);
   }
 }

@@ -5,8 +5,7 @@ import { IChatRepository } from 'data/chat/chatRepository';
 export default class LocalLoadChatList implements LoadChatList {
   constructor(private readonly repository: IChatRepository) {}
 
-  loadChats = async (): Promise<ChatModel[]> => {
-    const chats = await this.repository.getAll();
-    return chats;
+  loadChats = async (params: LoadChatList.Params): Promise<ChatModel[]> => {
+    return this.repository.list(params.userId);
   };
 }

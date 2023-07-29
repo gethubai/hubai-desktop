@@ -30,58 +30,56 @@ export type VoiceMessage = {
 };
 
 export type RawVoiceMessage = {
-  data: Uint8Array;
+  data: Blob | Buffer;
   mimeType?: string;
+};
+
+export type ChatMessageRecipient = {
+  id: string;
+  status: ChatMessageStatus;
+  receivedDate?: Date;
+  seenDate?: Date;
 };
 
 export type ChatMessageModel = {
   id: string;
-  sender: string;
   senderId: string;
-  senderType: ChatMessageSenderType;
-  to: string; // id of the brain that will receive the message
+  recipients: ChatMessageRecipient[];
   sendDate: Date | string;
   text?: TextMessage;
   image?: ImageMessage;
   voice?: VoiceMessage;
   messageType: ChatMessageType;
   status: ChatMessageStatus;
+  // Message won't show up in the chat window if this is true
+  hidden?: boolean;
   chat: string;
 };
+
+export interface IRecipientSettings {
+  [settingId: string]: any;
+}
 
 export class SendChatMessageModel {
   chatId: string;
 
-  sender: string;
-
   senderId: string;
-
-  senderType: ChatMessageSenderType;
-
-  to: string;
 
   text?: TextMessage;
 
   image?: ImageMessage;
 
-  voice?: RawVoiceMessage;
+  voice?: VoiceMessage;
 
   messageType: ChatMessageType;
 
   status: ChatMessageStatus;
 
-  constructor(
-    chatId: string,
-    sender: string,
-    senderId: string,
-    senderType: ChatMessageSenderType,
-    to: string
-  ) {
+  recipientSettings?: IRecipientSettings;
+
+  constructor(chatId: string, senderId: string) {
     this.chatId = chatId;
-    this.sender = sender;
     this.senderId = senderId;
-    this.senderType = senderType;
-    this.to = to;
     this.status = ChatMessageStatus.WAITING;
     this.messageType = 'text'; // default is text
   }
@@ -96,8 +94,12 @@ export class SendChatMessageModel {
     this.messageType = 'image';
   }
 
-  setVoice(voice: RawVoiceMessage) {
+  setVoice(voice: VoiceMessage) {
     this.voice = voice;
     this.messageType = 'voice';
+  }
+
+  setRecipientSettings(settings: IRecipientSettings) {
+    this.recipientSettings = settings;
   }
 }

@@ -1,5 +1,6 @@
 import Realm from 'realm';
 import { ChatMessageModel } from 'api-server/chat/domain/models/chatMessage';
+import app from 'data/realm/app';
 import {
   ChatMessageFilter,
   IChatMessageRepository,
@@ -28,7 +29,9 @@ export class RealmChatMessageRepository implements IChatMessageRepository {
     this.database.write(() => {
       const newMessage = this.database.create(ChatMessageDto, {
         ...model,
+        _id: model.id,
         chatId: model.chat,
+        owner_id: app.currentUser?.id,
       });
 
       if (!chat.messages) chat.messages = [newMessage as any];
@@ -72,8 +75,13 @@ export class RealmChatMessageRepository implements IChatMessageRepository {
 
   getAll = async (filter?: ChatMessageFilter): Promise<ChatMessageModel[]> => {
     let models = this.database.objects(ChatMessageDto);
+    if (filter?.chatId) models = models.filtered(`chatId == $0`, filter.chatId);
+
     if (filter?.to) {
-      models = models.filtered(`to == $0`, filter.to);
+      models = models.filtered(
+        `senderId == $0 OR ANY recipients.id == $0`,
+        filter.to
+      );
     }
     if (filter?.status) {
       models = models.filtered(`status == $0`, filter.status);
