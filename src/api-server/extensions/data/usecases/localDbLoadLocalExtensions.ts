@@ -10,7 +10,7 @@ export default class LocalDbLoadLocalExtensions implements LoadLocalExtensions {
     // TODO: Should we use the original main path?
     return extensions.map((extension) => ({
       ...extension,
-      main: `${extension.name}-${extension.version}/remoteEntry.js`,
+      main: `${extension.name}-${extension.version}/src/remoteEntry.js`,
     }));
   };
 }

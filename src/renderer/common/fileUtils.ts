@@ -20,10 +20,10 @@ export function openFileSelector(
   fileInput.click();
 }
 
-export function openZipFileSelector(onSelect: (file: File) => void) {
+export function openHextFileSelector(onSelect: (file: File) => void) {
   return openFileSelector((fileInput: HTMLInputElement) => {
     fileInput.setAttribute('type', 'file');
-    fileInput.setAttribute('accept', '.zip'); // accept only zip files
+    fileInput.setAttribute('accept', '.zip, .hext');
     fileInput.setAttribute('multiple', 'false'); // accept only one file
   }, onSelect);
 }

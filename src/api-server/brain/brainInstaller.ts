@@ -18,18 +18,23 @@ export class BrainInstaller {
     try {
       const zip = new StreamZip.async({ file: zipPath });
 
-      const data = await zip.entryData('package.json');
-      const packageJson = JSON.parse(data.toString('utf8'));
+      const data = await zip.entryData('manifest.json');
+      const manifest = JSON.parse(data.toString('utf8'));
+
+      // TODO: Read changeLog and Readme.md files
 
       const localBrain = {
         id: '',
-        version: packageJson.version,
-        main: packageJson.main,
-        name: packageJson.brain.name,
-        displayName: packageJson.brain.displayName,
-        description: packageJson.brain.description,
-        capabilities: packageJson.brain.capabilities as BrainCapability[],
-        settingsMap: packageJson.brain.settingsMap,
+        version: manifest.version,
+        main: manifest.entryPoint,
+        name: manifest.name,
+        displayName: manifest.displayName,
+        description: manifest.description,
+        capabilities: manifest.capabilities as BrainCapability[],
+        settingsMap: manifest.settingsMap,
+        repositoryUrl: manifest.repositoryUrl,
+        icon: manifest.icon,
+        publisher: { id: manifest.publisherId, name: manifest.publisherName },
       };
 
       const extractFolder = getBrainPath(localBrain);

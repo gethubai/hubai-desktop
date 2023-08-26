@@ -12,7 +12,7 @@ import {
 } from '@hubai/core';
 import { inject, injectable } from 'tsyringe';
 import generateUniqueId from 'renderer/common/uniqueIdGenerator';
-import { openZipFileSelector } from 'renderer/common/fileUtils';
+import { openHextFileSelector } from 'renderer/common/fileUtils';
 import { IBrainController } from './type';
 import { type IBrainManagementService } from '../services/brainManagement';
 import BrainSidebar from '../workbench/brainSidebar';
@@ -65,7 +65,7 @@ export default class BrainController
         id: 'addBrain',
         title: 'Add Brain',
         onClick: () => {
-          return openZipFileSelector(
+          return openHextFileSelector(
             this.onSelectLocalBrainToInstall.bind(this)
           );
         },

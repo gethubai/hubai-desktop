@@ -12,7 +12,7 @@ import {
 } from '@hubai/core';
 import { container, inject, injectable } from 'tsyringe';
 import generateUniqueId from 'renderer/common/uniqueIdGenerator';
-import { openZipFileSelector } from 'renderer/common/fileUtils';
+import { openHextFileSelector } from 'renderer/common/fileUtils';
 import { IExtensionListController } from './type';
 import { ExtensionManagementService } from '../services/extensionManagement';
 import ExtensionSidebar from '../workbench/extensionSidebar';
@@ -66,7 +66,7 @@ export default class ExtensionListController
         id: 'addExtension',
         title: 'Add Extension',
         onClick: () => {
-          return openZipFileSelector(
+          return openHextFileSelector(
             this.onSelectLocalExtensionToInstall.bind(this)
           );
         },

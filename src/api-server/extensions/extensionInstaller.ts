@@ -21,19 +21,19 @@ export class ExtensionInstaller {
     try {
       const zip = new StreamZip.async({ file: zipPath });
 
-      const data = await zip.entryData('package.json');
-      const packageJson = JSON.parse(data.toString('utf8'));
+      const data = await zip.entryData('manifest.json');
+      const manifest = JSON.parse(data.toString('utf8'));
 
       const localExtension = {
-        main: packageJson.main,
-        version: packageJson.version,
-        publisher: packageJson.author,
-        name: packageJson.extension.name,
-        displayName: packageJson.extension.displayName,
-        extensionKind: packageJson.extension.extensionKind,
-        contributes: packageJson.extension.contributes,
-        icon: packageJson.extension.icon,
-        description: packageJson.extension.description,
+        main: manifest.entryPoint,
+        version: manifest.version,
+        publisher: manifest.publisherName,
+        name: manifest.name,
+        displayName: manifest.displayName,
+        extensionKind: manifest.extensionKind,
+        contributes: manifest.contributes,
+        icon: manifest.icon,
+        description: manifest.description,
       } as LocalExtensionModel;
 
       const extractFolder = getExtensionPath(localExtension);

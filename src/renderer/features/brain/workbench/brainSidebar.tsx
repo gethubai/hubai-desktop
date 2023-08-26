@@ -45,7 +45,7 @@ function BrainSidebar({
   };
 
   return (
-    <div className="dataSource" style={{ width: '100%', height: '100%' }}>
+    <div className="container" style={{ width: '100%', height: '100%' }}>
       <Header
         title="Installed Brains (IA)"
         toolbar={<Toolbar data={headerToolBar || []} />}
