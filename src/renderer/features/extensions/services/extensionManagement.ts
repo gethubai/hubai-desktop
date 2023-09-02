@@ -1,12 +1,13 @@
 /* eslint-disable react/no-unused-class-component-methods */
 /* eslint-disable react/destructuring-assignment */
-import { type ISettingsService } from '@hubai/core';
+import { IExtensionService, type ISettingsService } from '@hubai/core';
 import { container, inject, injectable, singleton } from 'tsyringe';
 import { Component } from '@hubai/core/esm/react';
 import {
   LocalExtensionModel,
   LocalExtensionSettingMap,
 } from 'api-server/extensions/domain/models/localExtension';
+import { ExtensionUninstallationResult } from 'api-server/extensions/extensionInstaller';
 import {
   ExtensionEvent,
   ExtensionListStateModel,
@@ -21,6 +22,10 @@ export interface IExtensionManagementService
   onExtensionSettingsUpdated(
     callback: (extension: LocalExtensionModel, settings: any) => void
   ): void;
+
+  uninstallExtension(
+    extension: LocalExtensionModel
+  ): ExtensionUninstallationResult;
 }
 
 @singleton()
@@ -32,12 +37,35 @@ export class ExtensionManagementService
   protected state: IExtensionListState;
 
   constructor(
-    @inject('ISettingsService') private settingsService: ISettingsService
+    @inject('ISettingsService') private settingsService: ISettingsService,
+    @inject('IExtensionService') private extensionService: IExtensionService
   ) {
     super();
     this.state = container.resolve(ExtensionListStateModel);
     this.onExtensionSettingsUpdated(this.saveExtensionSettings.bind(this));
     this.loadExtensions();
+  }
+
+  uninstallExtension(
+    extension: LocalExtensionModel
+  ): ExtensionUninstallationResult {
+    const result = window.electron.extension.uninstallExtension(extension);
+
+    if (result.success) {
+      try {
+        this.extensionService.dispose(extension.id);
+      } catch (e: any) {
+        console.error(e);
+        return {
+          success: false,
+          error: new Error(
+            "The extension has been uninstalled but we couldn't dispose it, please restart the app for changes to take effect."
+          ),
+        };
+      }
+    }
+
+    return result;
   }
 
   onExtensionSettingsUpdated(

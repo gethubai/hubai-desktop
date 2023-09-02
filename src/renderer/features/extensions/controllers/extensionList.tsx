@@ -13,6 +13,8 @@ import {
 import { container, inject, injectable } from 'tsyringe';
 import generateUniqueId from 'renderer/common/uniqueIdGenerator';
 import { openHextFileSelector } from 'renderer/common/fileUtils';
+import { IMenuItemProps } from '@hubai/core/esm/components';
+import { ExtensionUninstallationResult } from 'api-server/extensions/extensionInstaller';
 import { IExtensionListController } from './type';
 import { ExtensionManagementService } from '../services/extensionManagement';
 import ExtensionSidebar from '../workbench/extensionSidebar';
@@ -82,6 +84,54 @@ export default class ExtensionListController
 
   public onExtensionClick = (extension: LocalExtensionViewModel) => {
     this.selectOrOpenExtensionWindow(extension);
+  };
+
+  public onContextMenuClick = (
+    menu: IMenuItemProps,
+    item: LocalExtensionViewModel
+  ) => {
+    switch (menu.id) {
+      case 'remove':
+        this.onUninstallExtension(item);
+        break;
+      default:
+        break;
+    }
+  };
+
+  private onUninstallExtension = (extension: LocalExtensionViewModel) => {
+    const result = this.extensionService.uninstallExtension(extension);
+
+    const items = [
+      {
+        id: generateUniqueId(),
+        value: result,
+        render: (item: INotificationItem<ExtensionUninstallationResult>) => {
+          if (item.value.success) {
+            return (
+              <div>
+                <p>{extension.displayName} uninstalled successfully!</p>
+                <p>
+                  <a href="#" onClick={() => window.electron.restart()}>
+                    Restart&nbsp;
+                  </a>
+                  the application for changes to take effect
+                </p>
+              </div>
+            );
+          }
+
+          return (
+            <div>
+              <p>Failed to uninstall the extension:</p>
+              <p>{item.value?.error?.message ?? 'Internal error'}</p>
+            </div>
+          );
+        },
+      } as INotificationItem<ExtensionUninstallationResult>,
+    ];
+    this.notificationService.add(items);
+    this.notificationService.toggleNotification();
   };
 
   public onSaveSettings = (

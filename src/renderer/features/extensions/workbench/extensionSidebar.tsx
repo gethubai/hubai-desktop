@@ -1,7 +1,15 @@
+import React, { useCallback } from 'react';
 import { ICollapseItem } from '@hubai/core/esm/components/collapse';
 import Tree from '@hubai/core/esm/components/tree';
-import { Content, Header } from '@hubai/core/esm/workbench';
-import { Toolbar, Collapse } from '@hubai/core/esm/components';
+import { Content, Header, getEventPosition, localize } from '@hubai/core';
+import {
+  Toolbar,
+  Collapse,
+  useContextViewEle,
+  Menu,
+  type ITreeNodeItemProps,
+  type IMenuItemProps,
+} from '@hubai/core/esm/components';
 import { IExtensionListController } from '../controllers/type';
 import {
   LocalExtensionViewModel,
@@ -16,7 +24,33 @@ function ExtensionSidebar({
   headerToolBar,
   extensions,
   onExtensionClick,
+  onContextMenuClick,
 }: IExtensionSidebarProps) {
+  const contextView = useContextViewEle();
+
+  const openContextMenu = useCallback(
+    (e: React.MouseEvent, selected: ITreeNodeItemProps) => {
+      e.preventDefault();
+      contextView?.show(getEventPosition(e), () => (
+        <Menu
+          role="menu"
+          onClick={(_: any, item: IMenuItemProps) => {
+            contextView?.hide();
+            onContextMenuClick?.(item, selected.extension);
+          }}
+          data={[
+            {
+              id: 'remove',
+              name: localize('packageList.menu.uninstall', 'Uninstall'),
+              icon: 'x',
+            },
+          ]}
+        />
+      ));
+    },
+    [contextView, onContextMenuClick]
+  );
+
   const collapseItems = extensions?.map(
     (extension) =>
       ({
@@ -42,6 +76,7 @@ function ExtensionSidebar({
                 if (!node.isLeaf) return;
                 onExtensionClick?.(node.extension as LocalExtensionViewModel);
               }}
+              onRightClick={openContextMenu}
             />
           );
         },

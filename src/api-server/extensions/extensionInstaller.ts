@@ -7,11 +7,17 @@ import { createDirectoryIfNotExists } from 'utils/pathUtils';
 import { LocalExtensionModel } from './domain/models/localExtension';
 import { getExtensionPath } from './const';
 import makeAddLocalExtension from './factories/usecases/addLocalExtensionFactory';
+import makeRemoveLocalExtension from './factories/usecases/removeLocalExtensionFactory';
 
 export type ExtensionInstallationResult = {
   success?: boolean;
   error?: Error;
   extension?: LocalExtensionModel;
+};
+
+export type ExtensionUninstallationResult = {
+  success: boolean;
+  error?: Error;
 };
 
 export class ExtensionInstaller {
@@ -59,6 +65,30 @@ export class ExtensionInstaller {
       }
     } catch (e: any) {
       console.error('Error installing extension: ', e);
+      return { success: false, error: e };
+    }
+  };
+
+  uninstall = async (
+    extension: LocalExtensionModel
+  ): Promise<ExtensionUninstallationResult> => {
+    try {
+      const deleteUseCase = await makeRemoveLocalExtension();
+      const result = await deleteUseCase.remove({ id: extension.id });
+
+      if (!result.success) {
+        return { success: false, error: new Error(result.error) };
+      }
+
+      const extensionPath = getExtensionPath(extension);
+      this.removeDir(extensionPath);
+
+      console.log(
+        `Extension ${extension.name} uninstalled successfully. Path: ${extensionPath}`
+      );
+      return { success: true };
+    } catch (e: any) {
+      console.error('Error uninstalling extension: ', e);
       return { success: false, error: e };
     }
   };

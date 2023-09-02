@@ -56,6 +56,26 @@ export class RealmLocalExtensionRepository
     return createdExtension;
   };
 
+  remove = async (id: string): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+      let dto = this.database.objectForPrimaryKey(LocalExtensionDto, id);
+
+      if (!dto)
+        reject(
+          new Error(
+            `Cannot remove extension with id ${id} because it does not exist`
+          )
+        );
+
+      this.database.write(() => {
+        this.database.delete(dto);
+        dto = undefined;
+
+        resolve();
+      });
+    });
+  };
+
   getExtensions = async (): Promise<LocalExtensionModel[]> => {
     const extensions = this.database.objects(LocalExtensionDto);
     return extensions.map((item) => item.values);
