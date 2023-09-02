@@ -1,7 +1,7 @@
 $prefix: 'mo';
 
 @function prefix($name, $cusPrefix: $prefix) {
-    @return '.' + $cusPrefix + '-' + $name;
+  @return '.' + $cusPrefix + '-' + $name;
 }
 
 // ============= The Workbench parts =============
@@ -52,10 +52,38 @@ $auxiliaryBar: prefix('auxiliaryBar');
 
 // The Naming of BEM Element
 @function bem-ele($block, $element) {
-    @return $block + '__' + $element;
+  @return $block + '__' + $element;
 }
 
 // The Naming of BEM Modifier
 @function bem-mod($blockOrElement, $modifier) {
-    @return $blockOrElement + '--' + $modifier;
+  @return $blockOrElement + '--' + $modifier;
+}
+
+/* Targets all scrollbars */
+::-webkit-scrollbar {
+  width: 10px; /* Width of vertical scrollbars */
+  height: 10px; /* Height of horizontal scrollbars */
+}
+
+/* Scrollbar thumb (the part you drag) */
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbarSlider-background);
+  border-radius: 10px;
+}
+
+/* Scrollbar thumb hover state */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbarSlider-hoverBackground);
+}
+
+/* Scrollbar track (the background) */
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-background);
+  border-radius: 10px;
+}
+
+/* Scrollbar corner (where horizontal and vertical scrollbars intersect) */
+::-webkit-scrollbar-corner {
+  background: #eee;
 }
