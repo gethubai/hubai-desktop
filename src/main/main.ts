@@ -174,6 +174,33 @@ app.on('window-all-closed', () => {
   }
 });
 
+/* Prevents opening external links inside the application */
+app.on('web-contents-created', (createEvent, contents) => {
+  contents.on('will-attach-webview', (attachEvent) => {
+    console.log("Blocked by 'will-attach-webview'");
+    attachEvent.preventDefault();
+  });
+
+  contents.on('new-window', (newEvent) => {
+    console.log("Blocked by 'new-window'");
+    newEvent.preventDefault();
+  });
+
+  contents.on('will-navigate', (newEvent) => {
+    console.log("Blocked by 'will-navigate'");
+    newEvent.preventDefault();
+  });
+
+  contents.setWindowOpenHandler(({ url }) => {
+    setImmediate(() => {
+      shell.openExternal(url);
+    });
+
+    console.log("Blocked by 'setWindowOpenHandler'");
+    return { action: 'deny' };
+  });
+});
+
 console.log('path:', {
   appData: app.getPath('appData'),
   userData: app.getPath('userData'),
