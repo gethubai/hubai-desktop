@@ -1,4 +1,3 @@
-import { IContribute } from '@hubai/core';
 import { LocalExtensionModel } from 'api-server/extensions/domain/models/localExtension';
 import { AddLocalExtension } from 'api-server/extensions/domain/usecases/addLocalExtension';
 import { ILocalExtensionRepository } from 'data/extension/localExtensionRepository';
@@ -34,11 +33,8 @@ export default class LocalDbAddLocalExtension implements AddLocalExtension {
 
     const displayName = extension.displayName ?? extension.name;
 
-    const contributes = this.sanitizeContributes(extension.contributes);
-
     if (extensionWithName) {
-      // Update extension
-      const result = await this.repository.update({
+      const extModel = {
         ...extensionWithName,
         name: extensionWithName.name.toLowerCase(),
         id: extensionWithName.id,
@@ -47,42 +43,26 @@ export default class LocalDbAddLocalExtension implements AddLocalExtension {
         main: extension.main,
         version: extension.version,
         extensionKind: extension.extensionKind,
-        contributes,
+        contributes: extension.contributes,
         icon: extension.icon,
         iconUrl: extension.iconUrl,
         updatedDateUtc: getCurrentUtcDate(),
-      });
-      return result;
+      } as LocalExtensionModel;
+      // Update extension
+      const result = await this.repository.update(extModel);
+      return { ...extModel, ...result };
     }
 
-    const result = await this.repository.add({
+    const extModel = {
       ...extension,
       id: generateUniqueId(),
       name: extension.name.toLowerCase(),
       displayName,
       installationDateUtc: getCurrentUtcDate(),
       disabled: false,
-      contributes,
-    });
-    return result;
-  };
+    };
 
-  sanitizeContributes = (
-    contributes?: IContribute
-  ): IContribute | undefined => {
-    if (contributes?.themes?.length) {
-      // We don't wanna save the whole theme object in the database, just the most important parts
-      // We will retrieve the full theme object when the extension is loaded
-      contributes.themes = contributes.themes.map((theme) => ({
-        id: theme.id,
-        label: theme.label,
-        uiTheme: theme.uiTheme,
-        description: theme.description,
-        type: theme.type,
-        semanticHighlighting: theme.semanticHighlighting,
-      }));
-    }
-
-    return contributes;
+    const result = await this.repository.add(extModel);
+    return { ...extModel, ...result };
   };
 }

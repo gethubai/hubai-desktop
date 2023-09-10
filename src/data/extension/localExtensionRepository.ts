@@ -1,12 +1,21 @@
 import { LocalExtensionModel } from 'api-server/extensions/domain/models/localExtension';
 
+export interface ILocalExtensionDto {
+  id: string;
+  name: string;
+  displayName: string;
+  version: string;
+  path?: string;
+  disabled?: boolean;
+  installationDateUtc?: Date;
+  updatedDateUtc?: Date;
+}
+
 export interface ILocalExtensionRepository {
-  add: (extension: LocalExtensionModel) => Promise<LocalExtensionModel>;
-  update: (extension: LocalExtensionModel) => Promise<LocalExtensionModel>;
+  add: (extension: LocalExtensionModel) => Promise<ILocalExtensionDto>;
+  update: (extension: LocalExtensionModel) => Promise<ILocalExtensionDto>;
   remove: (id: string) => Promise<void>;
-  getExtensions: () => Promise<LocalExtensionModel[]>;
-  getExtension: (id: string) => Promise<LocalExtensionModel | undefined>;
-  getExtensionByName: (
-    name: string
-  ) => Promise<LocalExtensionModel | undefined>;
+  getExtensions: () => Promise<ILocalExtensionDto[]>;
+  getExtension: (id: string) => Promise<ILocalExtensionDto | undefined>;
+  getExtensionByName: (name: string) => Promise<ILocalExtensionDto | undefined>;
 }

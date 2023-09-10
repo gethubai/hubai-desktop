@@ -1,6 +1,9 @@
 import Realm from 'realm';
 import { LocalExtensionModel } from 'api-server/extensions/domain/models/localExtension';
-import { ILocalExtensionRepository } from '../localExtensionRepository';
+import {
+  ILocalExtensionDto,
+  ILocalExtensionRepository,
+} from '../localExtensionRepository';
 import { LocalExtensionDto } from './db';
 
 export class RealmLocalExtensionRepository
@@ -8,8 +11,8 @@ export class RealmLocalExtensionRepository
 {
   constructor(private readonly database: Realm) {}
 
-  update = (extension: LocalExtensionModel): Promise<LocalExtensionModel> => {
-    return new Promise<LocalExtensionModel>((resolve, reject) => {
+  update = (extension: LocalExtensionModel): Promise<ILocalExtensionDto> => {
+    return new Promise<ILocalExtensionDto>((resolve, reject) => {
       this.database.write(() => {
         const dto = this.database.objectForPrimaryKey(
           LocalExtensionDto,
@@ -25,13 +28,7 @@ export class RealmLocalExtensionRepository
         }
 
         dto.displayName = extension.displayName;
-        dto.description = extension.description;
-        dto.main = extension.main;
         dto.version = extension.version;
-        dto.extensionKind = extension.extensionKind;
-        dto.contributes = extension.contributes;
-        dto.icon = extension.icon;
-        dto.iconUrl = extension.iconUrl;
         dto.updatedDateUtc = extension.updatedDateUtc;
         dto.disabled = extension.disabled;
 
@@ -41,10 +38,8 @@ export class RealmLocalExtensionRepository
     });
   };
 
-  add = async (
-    extension: LocalExtensionModel
-  ): Promise<LocalExtensionModel> => {
-    let createdExtension: LocalExtensionModel | undefined;
+  add = async (extension: LocalExtensionModel): Promise<ILocalExtensionDto> => {
+    let createdExtension: ILocalExtensionDto | undefined;
     this.database.write(() => {
       createdExtension = this.database.create(
         LocalExtensionDto,
@@ -77,14 +72,14 @@ export class RealmLocalExtensionRepository
     });
   };
 
-  getExtensions = async (): Promise<LocalExtensionModel[]> => {
+  getExtensions = async (): Promise<ILocalExtensionDto[]> => {
     const extensions = this.database.objects(LocalExtensionDto);
     return extensions.map((item) => item.values);
   };
 
   getExtension = async (
     id: string
-  ): Promise<LocalExtensionModel | undefined> => {
+  ): Promise<ILocalExtensionDto | undefined> => {
     const extension = this.database.objectForPrimaryKey(LocalExtensionDto, id);
 
     return extension?.values;
@@ -92,12 +87,12 @@ export class RealmLocalExtensionRepository
 
   getExtensionByName = async (
     name: string
-  ): Promise<LocalExtensionModel | undefined> => {
+  ): Promise<ILocalExtensionDto | undefined> => {
     const extension = this.database
       .objects(LocalExtensionDto)
       .filtered(`name == $0`, name);
 
-    if (extension.length > 0) return extension[0].values as LocalExtensionModel;
+    if (extension.length > 0) return extension[0].values;
 
     return undefined;
   };
