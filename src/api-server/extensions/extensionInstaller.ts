@@ -3,22 +3,17 @@
 
 import StreamZip from 'node-stream-zip';
 import fs from 'fs';
+import path from 'path';
 import { createDirectoryIfNotExists } from 'utils/pathUtils';
+import { PackageInstallationState } from 'api-server/packages/model/packageInstallationState';
 import { LocalExtensionModel } from './domain/models/localExtension';
 import { getExtensionPath } from './const';
 import makeAddLocalExtension from './factories/usecases/addLocalExtensionFactory';
 import makeRemoveLocalExtension from './factories/usecases/removeLocalExtensionFactory';
-
-export type ExtensionInstallationResult = {
-  success?: boolean;
-  error?: Error;
-  extension?: LocalExtensionModel;
-};
-
-export type ExtensionUninstallationResult = {
-  success: boolean;
-  error?: Error;
-};
+import {
+  ExtensionInstallationResult,
+  ExtensionUninstallationResult,
+} from './models/installation';
 
 export class ExtensionInstaller {
   installExtension = async (
@@ -33,8 +28,8 @@ export class ExtensionInstaller {
       const localExtension = {
         main: manifest.entryPoint,
         version: manifest.version,
-        publisher: manifest.publisherName,
-        name: manifest.name,
+        publisher: manifest.publisher,
+        name: manifest.name.toLowerCase(),
         displayName: manifest.displayName,
         extensionKind: manifest.extensionKind,
         contributes: manifest.contributes,
@@ -42,7 +37,19 @@ export class ExtensionInstaller {
         description: manifest.description,
       } as LocalExtensionModel;
 
+      if (manifest.capabilities) {
+        throw new Error(
+          'Are you trying to install a brain? Please use the brain installer instead.'
+        );
+      }
+
       const extractFolder = getExtensionPath(localExtension);
+
+      const folderName = path.basename(extractFolder);
+
+      if (localExtension.icon) {
+        localExtension.iconUrl = `plugins://${folderName}/${localExtension.icon}`;
+      }
 
       // delete extractFolder if already exists
       this.removeDir(extractFolder);
@@ -56,7 +63,13 @@ export class ExtensionInstaller {
       try {
         const addExtensionUseCase = await makeAddLocalExtension();
         const extension = await addExtensionUseCase.add(localExtension);
-        return { success: true, extension };
+        return {
+          success: true,
+          extension: {
+            ...extension,
+            installationState: PackageInstallationState.pending_reload,
+          },
+        };
       } catch (e: any) {
         console.error('Error adding extension to database: ', e);
         // delete extractFolder if we failed to add extension to database

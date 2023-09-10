@@ -31,8 +31,9 @@ export class RealmLocalExtensionRepository
         dto.extensionKind = extension.extensionKind;
         dto.contributes = extension.contributes;
         dto.icon = extension.icon;
+        dto.iconUrl = extension.iconUrl;
         dto.updatedDateUtc = extension.updatedDateUtc;
-        dto.disable = extension.disable;
+        dto.disabled = extension.disabled;
 
         resolve(dto.values);
         return dto;

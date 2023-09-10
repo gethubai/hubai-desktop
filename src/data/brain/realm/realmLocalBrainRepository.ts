@@ -26,7 +26,10 @@ export class RealmLocalBrainRepository implements ILocalBrainRepository {
         dto.main = brain.main;
         dto.capabilities = brain.capabilities;
         dto.settingsMap = brain.settingsMap;
-        dto.updatedDate = brain.updatedDate;
+        dto.icon = brain.icon;
+        dto.iconUrl = brain.iconUrl;
+        dto.disabled = brain.disabled;
+        dto.updatedDateUtc = brain.updatedDateUtc;
         resolve(dto.values);
         return dto;
       });
@@ -42,6 +45,26 @@ export class RealmLocalBrainRepository implements ILocalBrainRepository {
     if (!createdBrain)
       throw new Error('Failed to create brain in local database');
     return createdBrain;
+  };
+
+  remove = async (id: string): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+      let dto = this.database.objectForPrimaryKey(LocalBrainDto, id);
+
+      if (!dto)
+        reject(
+          new Error(
+            `Cannot remove brain with id ${id} because it does not exist`
+          )
+        );
+
+      this.database.write(() => {
+        this.database.delete(dto);
+        dto = undefined;
+
+        resolve();
+      });
+    });
   };
 
   getBrains = async (): Promise<LocalBrainModel[]> => {

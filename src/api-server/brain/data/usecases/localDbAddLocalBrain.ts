@@ -28,6 +28,10 @@ export default class LocalDbAddLocalBrain implements AddLocalBrain {
       throw new Error('Brain name cannot be longer than 50 characters');
     }
 
+    if (!brain.capabilities || brain.capabilities.length === 0) {
+      throw new Error('Brain must have at least one capability');
+    }
+
     const brainWithName = await this.repository.getBrainByName(brain.name);
     const displayName = brain.displayName ?? brain.name;
 
@@ -41,6 +45,9 @@ export default class LocalDbAddLocalBrain implements AddLocalBrain {
         version: brain.version,
         capabilities: brain.capabilities as BrainCapability[],
         settingsMap: brain.settingsMap,
+        icon: brain.icon,
+        iconUrl: brain.iconUrl,
+        updatedDateUtc: getCurrentUtcDate(),
       });
       return result;
     }
@@ -50,7 +57,8 @@ export default class LocalDbAddLocalBrain implements AddLocalBrain {
       id: generateUniqueId(),
       displayName,
       capabilities: brain.capabilities as BrainCapability[],
-      installationDate: getCurrentUtcDate(),
+      installationDateUtc: getCurrentUtcDate(),
+      publisher: brain.publisher,
     });
     return result;
   };

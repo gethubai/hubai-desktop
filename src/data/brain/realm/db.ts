@@ -37,9 +37,17 @@ export class LocalBrainDto extends Realm.Object<LocalBrainModel> {
 
   settingsMap?: LocalBrainSettingMap[];
 
-  installationDate?: Date;
+  installationDateUtc?: Date;
 
-  updatedDate?: Date;
+  updatedDateUtc?: Date;
+
+  icon?: string;
+
+  iconUrl?: string;
+
+  publisher?: string;
+
+  disabled?: boolean;
 
   public static schema: Realm.ObjectSchema = {
     name: 'LocalBrain',
@@ -52,8 +60,12 @@ export class LocalBrainDto extends Realm.Object<LocalBrainModel> {
       main: 'string',
       capabilities: 'string[]',
       settingsMap: { type: 'list', objectType: 'LocalBrainSettingMap' },
-      installationDate: 'date',
-      updatedDate: 'date?',
+      installationDateUtc: 'date',
+      updatedDateUtc: 'date?',
+      icon: 'string?',
+      iconUrl: 'string?',
+      publisher: 'string?',
+      disabled: { type: 'bool', default: false },
     },
     primaryKey: 'id',
   };
@@ -68,8 +80,12 @@ export class LocalBrainDto extends Realm.Object<LocalBrainModel> {
       main: this.main,
       capabilities: this.capabilities.map((item) => item as BrainCapability),
       settingsMap: this.settingsMap?.map((item) => (item as any).values),
-      installationDate: this.installationDate,
-      updatedDate: this.updatedDate,
+      installationDateUtc: this.installationDateUtc,
+      updatedDateUtc: this.updatedDateUtc,
+      icon: this.icon,
+      iconUrl: this.iconUrl,
+      publisher: this.publisher,
+      disabled: this.disabled,
     } as LocalBrainModel;
   }
 }

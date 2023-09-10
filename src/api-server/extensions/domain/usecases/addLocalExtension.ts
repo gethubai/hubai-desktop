@@ -18,8 +18,9 @@ export namespace AddLocalExtension {
     extensionKind?: IExtensionType[];
     contributes?: IContribute;
     settingsMap?: LocalExtensionSettingMap[];
-    main?: string;
+    main: string;
     icon?: string;
+    iconUrl?: string;
     description?: string;
     publisher?: string;
     path?: string;

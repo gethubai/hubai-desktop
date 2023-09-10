@@ -3,6 +3,8 @@
 
 import StreamZip from 'node-stream-zip';
 import fs from 'fs';
+import { PackageInstallationState } from 'api-server/packages/model/packageInstallationState';
+import path from 'path';
 import { BrainCapability, LocalBrainModel } from './domain/models/localBrain';
 import makeAddLocalBrain from './factories/usecases/addLocalBrainFactory';
 import { getBrainPath } from './const';
@@ -20,8 +22,6 @@ export class BrainInstaller {
       const data = await zip.entryData('manifest.json');
       const manifest = JSON.parse(data.toString('utf8'));
 
-      // TODO: Read changeLog and Readme.md files
-
       const localBrain = {
         id: '',
         version: manifest.version,
@@ -33,10 +33,16 @@ export class BrainInstaller {
         settingsMap: manifest.settingsMap,
         repositoryUrl: manifest.repositoryUrl,
         icon: manifest.icon,
-        publisher: { id: manifest.publisherId, name: manifest.publisherName },
-      };
+        publisher: manifest.publisher,
+      } as LocalBrainModel;
 
       const extractFolder = getBrainPath(localBrain);
+
+      const folderName = path.basename(extractFolder);
+
+      if (localBrain.icon) {
+        localBrain.iconUrl = `plugins://${folderName}/${localBrain.icon}`;
+      }
 
       // delete extractFolder if already exists
       this.removeDir(extractFolder);
@@ -46,8 +52,15 @@ export class BrainInstaller {
 
       try {
         const addBrainUseCase = await makeAddLocalBrain();
-        const brain = await addBrainUseCase.add(localBrain);
-        return { success: true, brain };
+
+        const brain = await addBrainUseCase.add(localBrain as any);
+        return {
+          success: true,
+          result: {
+            ...brain,
+            installationState: PackageInstallationState.pending_reload,
+          },
+        };
       } catch (e: any) {
         console.error('Error adding brain to database: ', e);
         // delete extractFolder if we failed to add brain to database

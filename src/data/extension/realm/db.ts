@@ -37,9 +37,11 @@ export class LocalExtensionDto extends Realm.Object<LocalExtensionModel> {
 
   contributes?: IContribute;
 
-  main?: string;
+  main!: string;
 
   icon?: string;
+
+  iconUrl?: string;
 
   description?: string;
 
@@ -47,7 +49,7 @@ export class LocalExtensionDto extends Realm.Object<LocalExtensionModel> {
 
   path?: string;
 
-  disable?: boolean;
+  disabled?: boolean;
 
   installationDateUtc?: Date;
 
@@ -64,9 +66,10 @@ export class LocalExtensionDto extends Realm.Object<LocalExtensionModel> {
       extensionKind: 'string[]',
       contributes: 'Contribute?',
       icon: 'string?',
+      iconUrl: 'string?',
       publisher: 'string?',
       path: 'string?',
-      disable: 'bool?',
+      disabled: 'bool?',
       main: 'string',
       installationDateUtc: 'date',
       updatedDateUtc: 'date?',
@@ -84,9 +87,10 @@ export class LocalExtensionDto extends Realm.Object<LocalExtensionModel> {
       extensionKind: Array.from(this.extensionKind ?? []),
       contributes: (this.contributes as any)?.values,
       icon: this.icon,
+      iconUrl: this.iconUrl,
       publisher: this.publisher,
       path: this.path,
-      disable: this.disable,
+      disabled: this.disabled,
       main: this.main,
       installationDateUtc: this.installationDateUtc,
       updatedDateUtc: this.updatedDateUtc,

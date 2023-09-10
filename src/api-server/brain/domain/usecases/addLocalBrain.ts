@@ -13,6 +13,9 @@ export namespace AddLocalBrain {
     main: string;
     capabilities: string[];
     settingsMap?: LocalBrainSettingMap[];
+    icon?: string;
+    iconUrl?: string;
+    publisher?: string;
   };
   export type Model = LocalBrainModel;
 }
