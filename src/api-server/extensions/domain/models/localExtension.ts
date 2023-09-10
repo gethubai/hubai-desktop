@@ -1,5 +1,6 @@
 import { IContribute, IExtensionType } from '@hubai/core';
 import { SettingMap } from 'api-server/models/settingMap';
+import { LocalPackage } from 'api-server/packages/model/package';
 
 export class LocalExtensionSettingMap extends SettingMap {
   constructor(
@@ -23,20 +24,8 @@ export class LocalExtensionSettingMap extends SettingMap {
   }
 }
 
-export type LocalExtensionModel = {
-  id: string;
-  name: string;
-  displayName: string;
-  version: string;
-  // categories?: IExtensionType[];
+export type LocalExtensionModel = LocalPackage & {
   extensionKind?: IExtensionType[];
   contributes?: IContribute;
-  main?: string;
-  icon?: string;
-  description?: string;
-  publisher?: string;
   path?: string;
-  disable?: boolean;
-  installationDateUtc?: Date;
-  updatedDateUtc?: Date;
 };

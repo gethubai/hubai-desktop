@@ -1,4 +1,5 @@
 import { SettingMap } from 'api-server/models/settingMap';
+import { LocalPackage } from 'api-server/packages/model/package';
 
 export enum BrainCapability {
   CONVERSATION = 'conversation',
@@ -53,15 +54,7 @@ export class LocalBrainSettingMap extends SettingMap {
   }
 }
 
-export type LocalBrainModel = {
-  id: string;
-  name: string;
-  displayName: string;
-  description?: string;
-  version: string;
-  main: string;
+export type LocalBrainModel = LocalPackage & {
   capabilities: BrainCapability[];
   settingsMap?: LocalBrainSettingMap[];
-  installationDate?: Date;
-  updatedDate?: Date;
 };
