@@ -14,7 +14,7 @@ import { container, inject, injectable } from 'tsyringe';
 import generateUniqueId from 'renderer/common/uniqueIdGenerator';
 import { openHextFileSelector } from 'renderer/common/fileUtils';
 import { IMenuItemProps } from '@hubai/core/esm/components';
-import { ExtensionUninstallationResult } from 'api-server/extensions/extensionInstaller';
+import { PackageUninstallationResult } from 'renderer/features/packages/models/localPackageManagementService';
 import { IExtensionListController } from './type';
 import { ExtensionManagementService } from '../services/extensionManagement';
 import ExtensionSidebar from '../workbench/extensionSidebar';
@@ -100,13 +100,13 @@ export default class ExtensionListController
   };
 
   private onUninstallExtension = (extension: LocalExtensionViewModel) => {
-    const result = this.extensionService.uninstallExtension(extension);
+    const result = this.extensionService.uninstallPackage(extension);
 
     const items = [
       {
         id: generateUniqueId(),
         value: result,
-        render: (item: INotificationItem<ExtensionUninstallationResult>) => {
+        render: (item: INotificationItem<PackageUninstallationResult>) => {
           if (item.value.success) {
             return (
               <div>
@@ -128,7 +128,7 @@ export default class ExtensionListController
             </div>
           );
         },
-      } as INotificationItem<ExtensionUninstallationResult>,
+      } as INotificationItem<PackageUninstallationResult>,
     ];
     this.notificationService.add(items);
     this.notificationService.toggleNotification();
@@ -186,7 +186,7 @@ export default class ExtensionListController
     const windowId = `EXTENSION_${extension.id}`;
     if (!this.editorService.isOpened(windowId)) {
       const ViewWindow = this.createExtensionWindow(extension);
-      renderPane = () => <ViewWindow />;
+      renderPane = () => <ViewWindow key={windowId} />;
     }
     this.editorService.open({
       id: windowId,
@@ -208,7 +208,7 @@ export default class ExtensionListController
         <LocalExtensionWindow
           extension={extension}
           getCurrentSettings={() =>
-            this.extensionService.getExtensionSettings(extension.name)
+            this.extensionService.getPackageSettings(extension.name)
           }
           {...props}
         />

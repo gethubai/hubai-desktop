@@ -88,6 +88,7 @@ export default class BrainController
   public onSaveSettings = (brain: LocalBrainViewModel, settings: any) => {
     this.emit(BrainEvent.onBrainSettingsUpdated, brain, settings);
   };
+
   public onContextMenuClick = (
     menu: IMenuItemProps,
     item: LocalBrainViewModel
@@ -137,7 +138,7 @@ export default class BrainController
   };
 
   private onSelectLocalBrainToInstall = (file: File) => {
-    const res = window.electron.brain.installBrain(file.path);
+    const res = this.brainService.installPackage(file.path);
 
     const items = [
       {
@@ -147,7 +148,7 @@ export default class BrainController
           if (item.value.success) {
             return (
               <div>
-                <p>{item.value.brain.displayName} installed successfully!</p>
+                <p>{item.value.result.displayName} installed successfully!</p>
                 <p>
                   <a href="#" onClick={() => window.electron.restart()}>
                     Restart&nbsp;
@@ -165,7 +166,7 @@ export default class BrainController
             </div>
           );
         },
-      } as INotificationItem<string>,
+      } as INotificationItem<any>,
     ];
     this.notificationService.add(items);
     this.notificationService.toggleNotification();
@@ -178,7 +179,7 @@ export default class BrainController
     const windowId = `BRAIN_${brain.id}`;
     if (!this.editorService.isOpened(windowId)) {
       const ViewWindow = this.createBrainWindow(brain);
-      renderPane = () => <ViewWindow />;
+      renderPane = () => <ViewWindow key={windowId} />;
     }
     this.editorService.open({
       id: windowId,

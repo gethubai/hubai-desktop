@@ -133,7 +133,10 @@ export default class ChatController
       const { Component, service, controller } =
         this.createChatWindow(chatInstance);
       renderPane = () => (
-        <Component getCurrentThemeColors={() => this.chatColors} />
+        <Component
+          key={chat.id}
+          getCurrentThemeColors={() => this.chatColors}
+        />
       );
       disposables = [service, controller];
     }
