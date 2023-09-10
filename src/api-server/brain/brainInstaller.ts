@@ -6,12 +6,11 @@ import fs from 'fs';
 import { BrainCapability, LocalBrainModel } from './domain/models/localBrain';
 import makeAddLocalBrain from './factories/usecases/addLocalBrainFactory';
 import { getBrainPath } from './const';
-
-export type BrainInstallationResult = {
-  success?: boolean;
-  error?: Error;
-  brain?: LocalBrainModel;
-};
+import {
+  BrainInstallationResult,
+  BrainUninstallationResult,
+} from './models/brainInstallationResult';
+import makeRemoveLocalBrain from './factories/usecases/removeLocalBrainFactory';
 
 export class BrainInstaller {
   installBrain = async (zipPath: string): Promise<BrainInstallationResult> => {
@@ -57,6 +56,30 @@ export class BrainInstaller {
       }
     } catch (e: any) {
       console.error('Error installing brain: ', e);
+      return { success: false, error: e };
+    }
+  };
+
+  uninstall = async (
+    brain: LocalBrainModel
+  ): Promise<BrainUninstallationResult> => {
+    try {
+      const deleteUseCase = await makeRemoveLocalBrain();
+      const result = await deleteUseCase.remove({ id: brain.id });
+
+      if (!result.success) {
+        return { success: false, error: new Error(result.error) };
+      }
+
+      const extensionPath = getBrainPath(brain);
+      this.removeDir(extensionPath);
+
+      console.log(
+        `Brain ${brain.name} uninstalled successfully. Path: ${extensionPath}`
+      );
+      return { success: true };
+    } catch (e: any) {
+      console.error('Error uninstalling extension: ', e);
       return { success: false, error: e };
     }
   };

@@ -6,4 +6,5 @@ export interface ILocalBrainRepository {
   getBrains: () => Promise<LocalBrainModel[]>;
   getBrain: (id: string) => Promise<LocalBrainModel | undefined>;
   getBrainByName: (name: string) => Promise<LocalBrainModel | undefined>;
+  remove: (id: string) => Promise<void>;
 }

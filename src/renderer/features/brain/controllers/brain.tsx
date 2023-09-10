@@ -13,6 +13,8 @@ import {
 import { inject, injectable } from 'tsyringe';
 import generateUniqueId from 'renderer/common/uniqueIdGenerator';
 import { openHextFileSelector } from 'renderer/common/fileUtils';
+import { IMenuItemProps } from '@hubai/core/esm/components';
+import { PackageUninstallationResult } from 'renderer/features/packages/models/localPackageManagementService';
 import { IBrainController } from './type';
 import { type IBrainManagementService } from '../services/brainManagement';
 import BrainSidebar from '../workbench/brainSidebar';
@@ -85,6 +87,53 @@ export default class BrainController
 
   public onSaveSettings = (brain: LocalBrainViewModel, settings: any) => {
     this.emit(BrainEvent.onBrainSettingsUpdated, brain, settings);
+  };
+  public onContextMenuClick = (
+    menu: IMenuItemProps,
+    item: LocalBrainViewModel
+  ) => {
+    switch (menu.id) {
+      case 'remove':
+        this.onUninstall(item);
+        break;
+      default:
+        break;
+    }
+  };
+
+  private onUninstall = (pack: LocalBrainViewModel) => {
+    const result = this.brainService.uninstallPackage(pack);
+
+    const items = [
+      {
+        id: generateUniqueId(),
+        value: result,
+        render: (item: INotificationItem<PackageUninstallationResult>) => {
+          if (item.value.success) {
+            return (
+              <div>
+                <p>{pack.displayName} uninstalled successfully!</p>
+                <p>
+                  <a href="#" onClick={() => window.electron.restart()}>
+                    Restart&nbsp;
+                  </a>
+                  the application for changes to take effect
+                </p>
+              </div>
+            );
+          }
+
+          return (
+            <div>
+              <p>Failed to uninstall the brain:</p>
+              <p>{item.value?.error?.message ?? 'Internal error'}</p>
+            </div>
+          );
+        },
+      } as INotificationItem<PackageUninstallationResult>,
+    ];
+    this.notificationService.add(items);
+    this.notificationService.toggleNotification();
   };
 
   private onSelectLocalBrainToInstall = (file: File) => {
