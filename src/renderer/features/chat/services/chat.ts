@@ -9,6 +9,7 @@ import { ChatMessagesContext } from 'api-server/chat/domain/models/chatContext';
 import { CreateChat } from 'api-server/chat/domain/usecases/createChat';
 import { Component } from '@hubai/core/esm/react';
 import { type ILocalUserService } from 'renderer/features/user/services/userService';
+import { IChatCommandCompletion } from '@hubai/core/esm/model/chat';
 import {
   ChatStateModel,
   IChatGroup,
@@ -35,6 +36,8 @@ export class ChatService extends Component<IChatState> implements IChatService {
 
   private chatClient: IChatClient;
 
+  private chatCommands: IChatCommandCompletion = {};
+
   constructor(
     @inject('ILocalUserService') private localUserService: ILocalUserService
   ) {
@@ -44,6 +47,14 @@ export class ChatService extends Component<IChatState> implements IChatService {
     this.initCommands();
     this.initServer();
   }
+
+  getCompletionCommands(): IChatCommandCompletion {
+    return this.chatCommands;
+  }
+
+  addCompletionCommand = (commands: IChatCommandCompletion): void => {
+    this.chatCommands = { ...this.chatCommands, ...commands };
+  };
 
   private async initCommands(): Promise<void> {}
 

@@ -28,6 +28,8 @@ import { Action2 } from '@hubai/core/esm/monaco/action';
 import { type IColorThemeService } from '@hubai/core/esm/services/theme/colorThemeService';
 import { registerAction2 } from 'mo/monaco/action';
 import { loadComponent } from 'renderer/common/dynamicModule';
+import { type IChatContribute } from '@hubai/core/esm/model/chat';
+import { type IChatService } from 'renderer/features/chat/services/types';
 
 @injectable()
 class ExtensionService implements IExtensionService {
@@ -42,9 +44,11 @@ class ExtensionService implements IExtensionService {
   private _isLoaded: boolean = false;
 
   constructor(
-    @inject('IColorThemeService') private colorThemeService: IColorThemeService,
-    @inject('IMonacoService') private monacoService: IMonacoService,
-    @inject('ILocaleService') private localeService: ILocaleService
+    @inject('IColorThemeService')
+    private readonly colorThemeService: IColorThemeService,
+    @inject('IMonacoService') private readonly monacoService: IMonacoService,
+    @inject('ILocaleService') private readonly localeService: ILocaleService,
+    @inject('IChatService') private readonly chatService: IChatService
   ) {}
 
   public setLoaded(flag?: boolean): void {
@@ -124,6 +128,17 @@ class ExtensionService implements IExtensionService {
           if (!locales) return;
           return this.localeService.addLocales(locales);
         }
+        case IContributeType.Chat: {
+          const chat: IChatContribute | undefined = contributes[type];
+          if (!chat) return;
+
+          if (chat.commands)
+            this.chatService.addCompletionCommand(chat.commands);
+
+          break;
+        }
+        default:
+          break;
       }
     });
   }

@@ -26,13 +26,7 @@ const loadExtensions = async () => {
       res.version = extension.version;
       res.categories = extension.extensionKind;
       res.extensionKind = extension.extensionKind;
-      if (extension.contributes)
-        res.contributes = {
-          ...extension.contributes,
-          // load the themes and iconThemes from the extension, because we don't save this in the database
-          themes: res.contributes?.themes,
-          iconThemes: res.contributes?.iconThemes,
-        };
+      res.contributes = extension.contributes;
       res.main = extension.main;
       res.icon = extension.icon;
       res.description = extension.description;
