@@ -1,0 +1,57 @@
+.package-tree__item {
+  padding-left: 1em;
+  padding-bottom: 1em;
+  padding-top: 1em;
+  display: flex;
+  width: 100%;
+  align-items: center;
+
+  .icon-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    img {
+      width: 42px;
+      height: 42px;
+      padding-right: 14px;
+      flex-shrink: 0;
+      object-fit: contain;
+    }
+  }
+
+  &.disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  .content-container {
+    display: inline-grid;
+    width: 78%;
+  }
+
+  .title {
+    font-weight: bold;
+    font-size: small;
+    width: 100%;
+  }
+
+  .content {
+    color: var(--editor-foreground);
+    width: 100%;
+  }
+
+  .author {
+    text-transform: capitalize;
+  }
+
+  &:hover {
+    background-color: var(--list-hoverBackground);
+  }
+
+  .ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
