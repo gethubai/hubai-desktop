@@ -21,7 +21,7 @@ export class RealmLocalBrainRepository implements ILocalBrainRepository {
         dto.name = brain.name;
         dto.displayName = brain.displayName;
         dto.version = brain.version;
-        dto.disabled = brain.disabled;
+        dto.disabled = brain.disabled ?? false;
         dto.updatedDateUtc = brain.updatedDateUtc;
         resolve(dto.values);
         return dto;
