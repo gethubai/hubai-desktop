@@ -3,6 +3,7 @@ import { LocalBrainModel } from 'api-server/brain/domain/models/localBrain';
 
 export enum BrainEvent {
   onBrainSettingsUpdated = 'brain.onSettingsUpdated',
+  onBrainInstalled = 'brain.onInstalled',
   onBrainUninstalled = 'brain.onUninstalled',
 }
 

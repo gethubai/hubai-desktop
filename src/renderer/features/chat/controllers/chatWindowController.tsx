@@ -234,7 +234,7 @@ export default class ChatWindowController
   };
 
   private getBrainChatSettingsById = (brainId: string) => {
-    const brainSettings = this.brainService.getBrainSettings(brainId);
+    const brainSettings = this.brainService.getPackageSettings(brainId);
     const chatBrain = this.chatWindowService
       .getState()
       .selectedBrains.find((b) => b.id === brainId);

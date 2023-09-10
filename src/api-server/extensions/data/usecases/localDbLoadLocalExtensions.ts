@@ -11,6 +11,7 @@ export default class LocalDbLoadLocalExtensions implements LoadLocalExtensions {
     return extensions.map((extension) => ({
       ...extension,
       main: `${extension.name}-${extension.version}/src/remoteEntry.js`,
+      name: extension.name.toLowerCase(),
     }));
   };
 }

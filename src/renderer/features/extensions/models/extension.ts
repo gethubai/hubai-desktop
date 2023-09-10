@@ -3,6 +3,8 @@ import { LocalExtensionModel } from 'api-server/extensions/domain/models/localEx
 
 export enum ExtensionEvent {
   onExtensionSettingsUpdated = 'extension.onSettingsUpdated',
+  onExtensionUninstalled = 'extension.onUninstalled',
+  onExtensionInstalled = 'extension.onInstalled',
 }
 
 export type LocalExtensionViewModel = LocalExtensionModel & {};

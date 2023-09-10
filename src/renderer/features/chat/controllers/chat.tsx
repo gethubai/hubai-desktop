@@ -85,7 +85,7 @@ export default class ChatController
 
     this.chatService.setState({
       headerToolBar: chatSideBarHeaderToolbar,
-      availableBrains: this.brainService.getBrains(),
+      availableBrains: this.brainService.getPackages(),
     });
     this.sideBarService.add(chatGroupSideBar, true);
     this.activityBarService.add(activityBar, true);

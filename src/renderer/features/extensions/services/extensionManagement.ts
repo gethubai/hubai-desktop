@@ -7,7 +7,12 @@ import {
   LocalExtensionModel,
   LocalExtensionSettingMap,
 } from 'api-server/extensions/domain/models/localExtension';
-import { ExtensionUninstallationResult } from 'api-server/extensions/extensionInstaller';
+import {
+  ILocalPackageManagementService,
+  PackageInstallationResult,
+  PackageUninstallationResult,
+} from 'renderer/features/packages/models/localPackageManagementService';
+import { PackageType } from 'renderer/features/packages/models/package';
 import {
   ExtensionEvent,
   ExtensionListStateModel,
@@ -16,17 +21,8 @@ import {
 import makeLoadLocalExtensions from '../factories/usecases/makeLoadLocalExtensions';
 
 export interface IExtensionManagementService
-  extends Component<IExtensionListState> {
-  getExtensions(): LocalExtensionModel[];
-  getExtensionSettings(extensionId: string): any;
-  onExtensionSettingsUpdated(
-    callback: (extension: LocalExtensionModel, settings: any) => void
-  ): void;
-
-  uninstallExtension(
-    extension: LocalExtensionModel
-  ): ExtensionUninstallationResult;
-}
+  extends Component<IExtensionListState>,
+    ILocalPackageManagementService<LocalExtensionModel> {}
 
 @singleton()
 @injectable()
@@ -36,26 +32,58 @@ export class ExtensionManagementService
 {
   protected state: IExtensionListState;
 
+  public packageType: PackageType = PackageType.Extension;
+
   constructor(
     @inject('ISettingsService') private settingsService: ISettingsService,
     @inject('IExtensionService') private extensionService: IExtensionService
   ) {
     super();
     this.state = container.resolve(ExtensionListStateModel);
-    this.onExtensionSettingsUpdated(this.saveExtensionSettings.bind(this));
+    this.onPackageSettingsUpdated(this.saveExtensionSettings.bind(this));
     this.loadExtensions();
   }
 
-  uninstallExtension(
+  installPackage = (
+    extensionPath: string
+  ): PackageInstallationResult<LocalExtensionModel> => {
+    const result = window.electron.extension.installExtension(extensionPath);
+
+    if (result.success && result.extension) {
+      const packages = this.getPackages();
+
+      const packageIndex = packages.findIndex(
+        (e) => e.name.toLowerCase() === result.extension?.name.toLowerCase()
+      );
+
+      if (packageIndex !== -1) packages[packageIndex] = result.extension;
+      else packages.push(result.extension);
+
+      this.setState({
+        extensions: packages,
+      });
+
+      this.emit(ExtensionEvent.onExtensionInstalled, result.extension);
+    }
+
+    return result;
+  };
+
+  uninstallPackage(
     extension: LocalExtensionModel
-  ): ExtensionUninstallationResult {
+  ): PackageUninstallationResult {
     const result = window.electron.extension.uninstallExtension(extension);
 
     if (result.success) {
       try {
         this.extensionService.dispose(extension.id);
+        this.removeExtensionSettings(extension);
+        this.setState({
+          extensions: this.getPackages().filter((p) => p.id !== extension.id),
+        });
+        this.emit(ExtensionEvent.onExtensionUninstalled, extension);
       } catch (e: any) {
-        console.error(e);
+        console.error('exception on uninstall extension', e);
         return {
           success: false,
           error: new Error(
@@ -68,17 +96,31 @@ export class ExtensionManagementService
     return result;
   }
 
-  onExtensionSettingsUpdated(
+  onPackageInstalled(callback: (extension: LocalExtensionModel) => void) {
+    this.subscribe(ExtensionEvent.onExtensionInstalled, callback);
+  }
+
+  onPackageUninstalled(callback: (extension: LocalExtensionModel) => void) {
+    this.subscribe(ExtensionEvent.onExtensionUninstalled, callback);
+  }
+
+  onPackageSettingsUpdated(
     callback: (extension: LocalExtensionModel, settings: any) => void
   ): void {
     this.subscribe(ExtensionEvent.onExtensionSettingsUpdated, callback);
   }
 
-  getExtensions(): LocalExtensionModel[] {
-    return this.state.extensions;
+  getPackageByName(name: string): LocalExtensionModel | undefined {
+    return this.getPackages().find(
+      (p) => p.name.toLowerCase() === name.toLowerCase()
+    );
   }
 
-  getExtensionSettings(extensionName: string) {
+  getPackages(): LocalExtensionModel[] {
+    return this.state.extensions ?? [];
+  }
+
+  getPackageSettings(extensionName: string) {
     const settings = this.settingsService.getSettings();
 
     return settings.extension[extensionName];
@@ -101,6 +143,13 @@ export class ExtensionManagementService
     }); */
   }
 
+  removeExtensionSettings(extension: LocalExtensionModel) {
+    const settings = this.settingsService.getSettings();
+    delete settings.extension[extension.name];
+    this.settingsService.applySettings(settings);
+    this.settingsService.saveSettings();
+  }
+
   private async loadExtensions(): Promise<void> {
     const getExtensionsUseCase = await makeLoadLocalExtensions();
     const extensions = await getExtensionsUseCase.getExtensions();
@@ -112,7 +161,7 @@ export class ExtensionManagementService
   private loadDefaultExtensionSettings(): void {
     const extensionSettings: any =
       this.settingsService.getSettings().extension || {};
-    const extensions = this.getExtensions();
+    const extensions = this.getPackages();
 
     extensions.forEach((extension) => {
       if (!extensionSettings[extension.name])

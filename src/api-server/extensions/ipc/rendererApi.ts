@@ -1,10 +1,13 @@
 import { ipcRenderer } from 'electron';
 import endpoints from './endpoints';
 import { LocalExtensionModel } from '../domain/models/localExtension';
-import { ExtensionUninstallationResult } from '../extensionInstaller';
+import {
+  ExtensionInstallationResult,
+  ExtensionUninstallationResult,
+} from '../models/installation';
 
 const extensionRendererApi = {
-  installExtension(extensionZipPath: string) {
+  installExtension(extensionZipPath: string): ExtensionInstallationResult {
     return ipcRenderer.sendSync(endpoints.install, extensionZipPath);
   },
   getInstalledExtensions(): LocalExtensionModel[] {

@@ -45,7 +45,7 @@ export class ChatWindowService
       chat.id,
       userService.getUser().id,
       [],
-      this.brainService.getBrains(),
+      this.brainService.getPackages(),
       chat.members.filter((m) => m.memberType === ChatMemberType.brain)
     );
     this.chatService = container.resolve('IChatService');

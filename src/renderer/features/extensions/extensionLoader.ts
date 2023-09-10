@@ -16,12 +16,12 @@ const loadExtensions = async () => {
 
   for (const extension of installedExtensions) {
     // eslint-disable-next-line no-continue
-    if (extension.disable === true || !extension.main) continue;
+    if (extension.disabled === true || !extension.main) continue;
     try {
       const res = await ExtensionService.loadFromSystem(extension.main);
 
       res.id = extension.id;
-      res.name = extension.name;
+      res.name = extension.name.toLowerCase();
       res.displayName = extension.displayName;
       res.version = extension.version;
       res.categories = extension.extensionKind;
@@ -38,7 +38,7 @@ const loadExtensions = async () => {
       res.description = extension.description;
       res.publisher = extension.publisher;
       res.path = extension.path;
-      res.disable = extension.disable;
+      res.disable = extension.disabled;
 
       extensions.push(res);
     } catch (err) {

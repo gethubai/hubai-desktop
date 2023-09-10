@@ -40,6 +40,7 @@ export default class LocalDbAddLocalExtension implements AddLocalExtension {
       // Update extension
       const result = await this.repository.update({
         ...extensionWithName,
+        name: extensionWithName.name.toLowerCase(),
         id: extensionWithName.id,
         displayName,
         description: extension.description,
@@ -48,6 +49,7 @@ export default class LocalDbAddLocalExtension implements AddLocalExtension {
         extensionKind: extension.extensionKind,
         contributes,
         icon: extension.icon,
+        iconUrl: extension.iconUrl,
         updatedDateUtc: getCurrentUtcDate(),
       });
       return result;
@@ -56,9 +58,10 @@ export default class LocalDbAddLocalExtension implements AddLocalExtension {
     const result = await this.repository.add({
       ...extension,
       id: generateUniqueId(),
+      name: extension.name.toLowerCase(),
       displayName,
       installationDateUtc: getCurrentUtcDate(),
-      disable: false,
+      disabled: false,
       contributes,
     });
     return result;

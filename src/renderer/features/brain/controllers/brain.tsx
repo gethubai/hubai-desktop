@@ -201,7 +201,7 @@ export default class BrainController
         <LocalBrainWindow
           brain={brain}
           getCurrentSettings={() =>
-            this.brainService.getBrainSettings(brain.id)
+            this.brainService.getPackageSettings(brain.id)
           }
           {...props}
         />
