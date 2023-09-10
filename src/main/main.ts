@@ -19,6 +19,7 @@ import {
   getExtensionsStoragePath,
   getMessageAudioStoragePath,
   getMessageStoragePath,
+  getPackagesStoragePath,
 } from 'utils/pathUtils';
 import keyStore from 'data/keyStore';
 import { generateSecureRandom64ByteKey } from 'utils/securityUtils';
@@ -248,7 +249,7 @@ app
       const extensionRelativePath =
         request.url.substr(10); /* all urls start with 'plugins://' */
 
-      const pluginUrl = getExtensionsStoragePath(extensionRelativePath);
+      const pluginUrl = getPackagesStoragePath(extensionRelativePath);
 
       try {
         const decodedUrl = decodeURI(pluginUrl); // Decodes the url if it is encoded

@@ -14,11 +14,14 @@ export const getMessageStoragePath = (append: string) =>
 export const getMessageAudioStoragePath = (append: string) =>
   getMessageStoragePath(`audio/${append}`);
 
+export const getPackagesStoragePath = (append: string) =>
+  getAppDataStoragePath(`local-packages/${append}`);
+
 export const getBrainsStoragePath = (append: string) =>
-  getAppDataStoragePath(`brains/${append}`);
+  getPackagesStoragePath(append);
 
 export const getExtensionsStoragePath = (append: string) =>
-  getAppDataStoragePath(`installed-extensions/${append}`);
+  getPackagesStoragePath(append);
 
 export const createDirectoryIfNotExists = (directoryPath: string) => {
   try {
