@@ -16,6 +16,7 @@ export namespace AddLocalBrain {
     icon?: string;
     iconUrl?: string;
     publisher?: string;
+    disabled?: boolean;
   };
   export type Model = LocalBrainModel;
 }

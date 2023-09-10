@@ -1,10 +1,18 @@
-import { LocalBrainModel } from 'api-server/brain/domain/models/localBrain';
+export interface ILocalBrainDto {
+  id: string;
+  name: string;
+  displayName: string;
+  version: string;
+  disabled?: boolean;
+  installationDateUtc?: Date;
+  updatedDateUtc?: Date;
+}
 
 export interface ILocalBrainRepository {
-  add: (brain: LocalBrainModel) => Promise<LocalBrainModel>;
-  update: (brain: LocalBrainModel) => Promise<LocalBrainModel>;
-  getBrains: () => Promise<LocalBrainModel[]>;
-  getBrain: (id: string) => Promise<LocalBrainModel | undefined>;
-  getBrainByName: (name: string) => Promise<LocalBrainModel | undefined>;
+  add: (brain: ILocalBrainDto) => Promise<ILocalBrainDto>;
+  update: (brain: ILocalBrainDto) => Promise<ILocalBrainDto>;
+  getBrains: () => Promise<ILocalBrainDto[]>;
+  getBrain: (id: string) => Promise<ILocalBrainDto | undefined>;
+  getBrainByName: (name: string) => Promise<ILocalBrainDto | undefined>;
   remove: (id: string) => Promise<void>;
 }

@@ -1,9 +1,9 @@
-import {
-  BrainCapability,
-  LocalBrainModel,
-} from 'api-server/brain/domain/models/localBrain';
+import { LocalBrainModel } from 'api-server/brain/domain/models/localBrain';
 import { AddLocalBrain } from 'api-server/brain/domain/usecases/addLocalBrain';
-import { ILocalBrainRepository } from 'data/brain/localBrainRepository';
+import {
+  ILocalBrainDto,
+  ILocalBrainRepository,
+} from 'data/brain/localBrainRepository';
 import generateUniqueId from 'renderer/common/uniqueIdGenerator';
 import { getCurrentUtcDate } from 'utils/dateUtils';
 
@@ -36,30 +36,27 @@ export default class LocalDbAddLocalBrain implements AddLocalBrain {
     const displayName = brain.displayName ?? brain.name;
 
     if (brainWithName) {
-      // Update brain
-      const result = await this.repository.update({
+      const brainModel = {
         ...brainWithName,
         displayName,
-        description: brain.description,
         main: brain.main,
         version: brain.version,
-        capabilities: brain.capabilities as BrainCapability[],
-        settingsMap: brain.settingsMap,
-        icon: brain.icon,
-        iconUrl: brain.iconUrl,
+        disabled: brain.disabled,
         updatedDateUtc: getCurrentUtcDate(),
-      });
-      return result;
+      } as ILocalBrainDto;
+
+      // Update brain
+      const result = await this.repository.update(brainModel);
+      return { ...brain, ...result } as LocalBrainModel;
     }
 
     const result = await this.repository.add({
       ...brain,
       id: generateUniqueId(),
       displayName,
-      capabilities: brain.capabilities as BrainCapability[],
       installationDateUtc: getCurrentUtcDate(),
-      publisher: brain.publisher,
     });
-    return result;
+
+    return { ...brain, ...result } as LocalBrainModel;
   };
 }
