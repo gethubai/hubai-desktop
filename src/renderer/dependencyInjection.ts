@@ -125,6 +125,9 @@ import {
   AuthStateModel,
   IAuthState,
 } from './features/authentication/models/auth';
+import { PackageManagementService } from './features/packages/services/packageManagementService';
+import { IPackageManagementService } from './features/packages/models/managementService';
+
 import './http/registerHttpClients';
 import { ElectronDownloadManager } from './features/downloader/electronDownloadManager';
 
@@ -230,6 +233,11 @@ container.registerSingleton<IExtensionListController>(
 );
 
 container.registerSingleton<IAuthController>('IAuthController', AuthController);
+
+container.registerSingleton<IPackageManagementService>(
+  'IPackageManagementService',
+  PackageManagementService
+);
 
 container.registerSingleton<ILocalUserService>(
   'ILocalUserService',
