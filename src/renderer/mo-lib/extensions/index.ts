@@ -10,6 +10,7 @@ import { ExtendsLocales } from './locales-defaults';
 import ExtendsEditor from './editor';
 import { ExtendsActivityBar } from './activityBar';
 import { defaultColorThemeExtension } from './themes/theme-defaults';
+import packageStoreExtension from './packageStore/extension';
 // import { githubPlusExtension } from './themes/github-plus-theme-master';
 // import { webStormIntelliJExtension } from './themes/vscode-intellij-darcula-theme-master';
 
@@ -24,6 +25,7 @@ export const defaultExtensions = [
   ExtendsEditorTree,
   ExtendsLocales,
   defaultColorThemeExtension,
+  packageStoreExtension,
   // monokaiColorThemeExtension,
   // paleNightColorThemeExtension,
   // webStormIntelliJExtension,
