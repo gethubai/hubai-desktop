@@ -30,7 +30,7 @@ export class RealmLocalExtensionRepository
         dto.displayName = extension.displayName;
         dto.version = extension.version;
         dto.updatedDateUtc = extension.updatedDateUtc;
-        dto.disabled = extension.disabled;
+        dto.disabled = extension.disabled ?? false;
 
         resolve(dto.values);
         return dto;
