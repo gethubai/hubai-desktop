@@ -87,3 +87,11 @@ $auxiliaryBar: prefix('auxiliaryBar');
 ::-webkit-scrollbar-corner {
   background: #eee;
 }
+
+/* Links colors */
+a {
+  color: var(--textLink-foreground);
+}
+a:hover {
+  color: var(--textLink-activeForeground);
+}
