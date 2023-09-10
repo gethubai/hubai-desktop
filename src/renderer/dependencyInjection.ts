@@ -125,6 +125,10 @@ import {
   AuthStateModel,
   IAuthState,
 } from './features/authentication/models/auth';
+import './http/registerHttpClients';
+import { ElectronDownloadManager } from './features/downloader/electronDownloadManager';
+
+import { type IDownloadManager } from './features/downloader/downloadManager';
 
 container.registerSingleton<ISideBarController>(
   'ISidebarController',
@@ -304,6 +308,11 @@ container.registerSingleton<IMonacoService>('IMonacoService', MonacoService);
 container.registerSingleton<IAuthService>(
   'IAuthService',
   AuthenticationService
+);
+
+container.registerSingleton<IDownloadManager>(
+  'IDownloadManager',
+  ElectronDownloadManager
 );
 
 /* Models */

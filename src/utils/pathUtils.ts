@@ -29,3 +29,9 @@ export const createDirectoryIfNotExists = (directoryPath: string) => {
     }
   }
 };
+
+export const getDownloadsPath = () => {
+  const downloadPath = path.normalize(`${app.getPath('temp')}/hubai/downloads`);
+  createDirectoryIfNotExists(downloadPath);
+  return downloadPath;
+};

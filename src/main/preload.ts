@@ -6,10 +6,19 @@ import currentUserRendererApi from 'api-server/user/ipc/rendererApi';
 import userSettingsRendererApi from './ipc/userSettings/rendererApi';
 import mediaAccessRendererApi from './ipc/mediaAccess/rendererApi';
 import authRendererApi from '../api-server/authentication/ipc/rendererApi';
+import downloadRendererApi from './ipc/download/rendererApi';
 
 Object.defineProperty(window, 'isRenderer', { get: () => true });
 
-export type Channels = 'logged-out' | 'logged-in' | 'set-current-user';
+export type Channels =
+  | 'logged-out'
+  | 'logged-in'
+  | 'set-current-user'
+  | 'download-started'
+  | 'download-progress'
+  | 'download-cancelled'
+  | 'download-error'
+  | 'download-completed';
 
 const electronHandler = {
   restart: () => ipcRenderer.send('restart-app'),
@@ -36,6 +45,7 @@ const electronHandler = {
   extension: extensionRendererApi,
   auth: authRendererApi,
   currentUser: currentUserRendererApi,
+  download: downloadRendererApi,
 };
 
 contextBridge.exposeInMainWorld('electron', electronHandler);

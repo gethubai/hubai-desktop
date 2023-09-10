@@ -28,6 +28,7 @@ import { resolveHtmlPath } from './util';
 
 import './ipc/userSettings/mainApi';
 import './ipc/mediaAccess/mainApi';
+import './ipc/download/mainApi';
 import 'api-server/brain/ipc/mainApi';
 import 'api-server/extensions/ipc/mainApi';
 import '../api-server/authentication/ipc/mainApi';
