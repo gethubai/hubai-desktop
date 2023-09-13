@@ -155,9 +155,14 @@ function ChatWindow({
                         >
                           <Message.Header>
                             <Message.Sender>
-                              <Message.AvatarIcon
-                                iconName={message.avatarIcon}
-                              />
+                              {!!message.avatarIcon && !message.avatarSrc && (
+                                <Message.AvatarIcon
+                                  iconName={message.avatarIcon}
+                                />
+                              )}
+                              {!!message.avatarSrc && (
+                                <Message.AvatarImage src={message.avatarSrc} />
+                              )}
                               <Message.SenderName>
                                 {message.senderDisplayName}
                               </Message.SenderName>

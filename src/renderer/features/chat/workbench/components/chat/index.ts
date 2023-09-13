@@ -13,6 +13,7 @@ import MessageHeader, {
   MessageActions,
   MessageSender,
   MessageSenderAvatarIcon,
+  MessageSenderAvatarImage,
   MessageSenderUsername,
 } from './chatMessageHeader';
 import ChatInteractionContainer, { ChatInput } from './chatInput';
@@ -31,6 +32,7 @@ export const Message = {
   Header: MessageHeader,
   Sender: MessageSender,
   AvatarIcon: MessageSenderAvatarIcon,
+  AvatarImage: MessageSenderAvatarImage,
   SenderName: MessageSenderUsername,
   Actions: MessageActions,
   Action: MessageAction,

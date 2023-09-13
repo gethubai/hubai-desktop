@@ -32,8 +32,7 @@ export class SocketIoEventSubscriber<
     ev: Ev | IEvent<Ev>,
     listener: (...args: Parameters<TEventMap[Ev]>) => void
   ): ISubscription {
-    const { name, parsedName } = getEventName<TEventMap, Ev>(ev);
-    console.log(`Subscribed to ${name} -> ${parsedName}`);
+    const { parsedName } = getEventName<TEventMap, Ev>(ev);
     this.socket.on(parsedName, listener as any);
 
     return {
@@ -49,6 +48,5 @@ export class SocketIoEventSubscriber<
     const { parsedName } = getEventName<TEventMap, Ev>(ev);
 
     this.socket.off(parsedName, listener as any);
-    console.log(`Unsubscribed from -> ${parsedName}`);
   }
 }

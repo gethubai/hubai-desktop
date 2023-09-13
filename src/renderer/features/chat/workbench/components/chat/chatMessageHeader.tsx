@@ -26,6 +26,19 @@ export function MessageSenderAvatarIcon({
   );
 }
 
+type MessageSenderAvatarImageProps = {
+  src: string;
+};
+export function MessageSenderAvatarImage({
+  src,
+}: MessageSenderAvatarImageProps) {
+  return (
+    <div className="avatar">
+      <img className="avatar-image" src={src} alt="Sender avatar" />
+    </div>
+  );
+}
+
 type MessageSenderUsernameProps = {
   children: React.ReactNode;
 };

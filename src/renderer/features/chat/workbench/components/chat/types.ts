@@ -25,4 +25,5 @@ export type ChatMessageViewModel = {
   messageType: ChatMessageSendType;
   status: ChatMessageStatus;
   avatarSrc?: string;
+  avatarIcon?: string;
 };

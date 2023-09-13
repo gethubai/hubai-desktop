@@ -43,7 +43,6 @@ export default class BrainChatClient implements IBrainServer {
     });
 
     this.chatClient.onJoinedChat((chat) => {
-      console.log(`${this.getSettings().displayName}: joined chat: ${chat.id}`);
       this.joinChats([chat]);
     });
 
@@ -63,6 +62,8 @@ export default class BrainChatClient implements IBrainServer {
       if (session.isWatching) return;
 
       await session.watch();
+
+      console.log(`${this.getSettings().displayName}: joined chat: ${chat.id}`);
 
       session.onMessageReceived((message) => {
         return this.onMessageReceived(message, session);

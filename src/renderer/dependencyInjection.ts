@@ -132,6 +132,8 @@ import './http/registerHttpClients';
 import { ElectronDownloadManager } from './features/downloader/electronDownloadManager';
 
 import { type IDownloadManager } from './features/downloader/downloadManager';
+import { type IContactService } from './features/contact/models/service';
+import { ContactService } from './features/contact/services/contactService';
 
 container.registerSingleton<ISideBarController>(
   'ISidebarController',
@@ -238,6 +240,8 @@ container.registerSingleton<IPackageManagementService>(
   'IPackageManagementService',
   PackageManagementService
 );
+
+container.registerSingleton<IContactService>('IContactService', ContactService);
 
 container.registerSingleton<ILocalUserService>(
   'ILocalUserService',

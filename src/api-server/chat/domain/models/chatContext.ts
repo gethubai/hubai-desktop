@@ -2,6 +2,7 @@
 import { ChatMessageModel } from './chatMessage';
 
 export type ChatContextUser = {
+  id: string;
   name: string;
   avatar?: string;
 };

@@ -21,3 +21,15 @@ export const getBrainManifest = (brain: LocalBrainModel) => {
 
   return manifest;
 };
+
+export const getBrainAvatarUrl = (
+  brain: LocalBrainModel
+): string | undefined => {
+  const manifest = getBrainManifest(brain);
+
+  if (manifest.icon) {
+    return `plugins://${brain.name}-${brain.version}/${manifest.icon}`;
+  }
+
+  return undefined;
+};

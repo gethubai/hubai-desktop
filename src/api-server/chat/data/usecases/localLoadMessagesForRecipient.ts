@@ -7,8 +7,8 @@ import {
 } from 'api-server/chat/domain/models/chatContext';
 import { IChatMessageRepository } from 'data/chat/chatMessageRepository';
 import { ChatMessageModel } from 'api-server/chat/domain/models/chatMessage';
-import { ILocalBrainRepository } from 'data/brain/localBrainRepository';
-import { ICurrentUserService } from 'api-server/user/models/currentUserService';
+import { GetUserProfile } from 'api-server/chat/domain/usecases/getUserProfile';
+import { IChatRepository } from 'data/chat/chatRepository';
 import { LoadMessageForRecipient } from '../../domain/usecases/loadMessagesForRecipient';
 
 export default class LocalLoadMessagesForRecipient
@@ -16,8 +16,8 @@ export default class LocalLoadMessagesForRecipient
 {
   constructor(
     private readonly messageRepository: IChatMessageRepository,
-    private readonly brainRepository: ILocalBrainRepository,
-    private readonly currentUserService: ICurrentUserService
+    private readonly chatRepository: IChatRepository,
+    private readonly getUserProfile: GetUserProfile
   ) {}
 
   async loadMessages(
@@ -44,40 +44,34 @@ export default class LocalLoadMessagesForRecipient
         return acc;
       }, {});
 
-    const currentUser = await this.currentUserService.get();
     const users: Record<string, ChatContextUser> = {};
 
+    // Horrible code, but it works and I don't have time to refactor it
     for (const chat in groupedMessages) {
       const chatMessages = groupedMessages[chat];
+      const chatModel = await this.chatRepository.get(chat);
       const localUsers: Record<string, ChatContextUser> = {};
 
-      // Horrible code, but it works and I don't have time to refactor it
-      for (const msg of chatMessages) {
-        if (!users[msg.senderId]) {
-          if (msg.senderId === currentUser.id) {
-            // TODO: Refactor this to get profile from user repository
-            users[msg.senderId] = {
-              name: currentUser.profile.name ?? 'You',
-              avatar: currentUser.profile.avatar,
-            };
-          } else {
-            const brain = await this.brainRepository.getBrain(msg.senderId);
-            if (brain) {
-              users[msg.senderId] = {
-                name: brain.displayName,
-                avatar: '',
-              };
-            } else {
-              users[msg.senderId] = {
-                name: 'Unknown',
-                avatar: '',
-              };
-            }
-          }
+      const loadUser = async (userId: string) => {
+        if (!users[userId]) {
+          const profile = await this.getUserProfile.profile({
+            userId,
+          });
+          users[userId] = { ...profile, id: userId };
         }
 
-        if (!localUsers[msg.senderId]) {
-          localUsers[msg.senderId] = users[msg.senderId];
+        if (!localUsers[userId]) {
+          localUsers[userId] = users[userId];
+        }
+      };
+
+      for (const msg of chatMessages) {
+        await loadUser(msg.senderId);
+      }
+
+      if (chatModel) {
+        for (const member of chatModel!.members) {
+          await loadUser(member.id);
         }
       }
 

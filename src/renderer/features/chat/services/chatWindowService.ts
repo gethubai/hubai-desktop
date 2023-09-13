@@ -10,6 +10,7 @@ import { Component } from '@hubai/core/esm/react';
 import { MessageUpdatedEvent } from 'api-server/chat/chatTcpServer/events/serveSessionEvents';
 import { IDisposable } from '@hubai/core/esm/monaco/common';
 import { ILocalUserService } from 'renderer/features/user/services/userService';
+import { IContactService } from 'renderer/features/contact/models/service';
 import { ChatWindowStateModel, IChatWindowState } from '../models/chatWindow';
 import { IChatSessionServer } from '../sdk/contracts';
 import { IChatService } from './types';
@@ -34,16 +35,21 @@ export class ChatWindowService
 
   private chatSessionServer!: IChatSessionServer;
 
+  private contactService: IContactService;
+
   private chatService: IChatService;
+
+  private userService: ILocalUserService;
 
   constructor(private readonly chat: ChatModel) {
     super();
     this.brainService = container.resolve('IBrainManagementService');
-    const userService =
+    this.userService =
       container.resolve<ILocalUserService>('ILocalUserService');
+    this.contactService = container.resolve('IContactService');
     this.state = new ChatWindowStateModel(
       chat.id,
-      userService.getUser().id,
+      this.userService.getUser().id,
       [],
       this.brainService.getPackages(),
       chat.members.filter((m) => m.memberType === ChatMemberType.brain)
@@ -113,6 +119,12 @@ export class ChatWindowService
   mapMessage = (message: ChatMessageModel): ChatMessageViewModel => {
     const { users } = this.state;
     const isSelf = message.senderId === this.state.userId;
+
+    const sender = users[message.senderId] ??
+      this.contactService.get(message.senderId) ?? {
+        name: isSelf ? this.userService.getUser().name : 'Unknown',
+      };
+
     return {
       id: message.id,
       textContent: message.text?.body,
@@ -124,9 +136,10 @@ export class ChatWindowService
         : undefined,
       messageContentType: message.messageType,
       sentAt: message.sendDate,
-      senderDisplayName: users[message.senderId]?.name ?? 'Unknown',
+      senderDisplayName: sender.name,
       messageType: isSelf ? 'request' : 'response',
       status: message.status,
+      avatarSrc: sender.avatar,
       avatarIcon: isSelf ? 'account' : 'octoface',
     };
   };
