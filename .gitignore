@@ -30,6 +30,4 @@ npm-debug.log.*
 
 chatdb.*
 
-src/renderer/mo-lib/extensions/themes
-
 env-variables.json
