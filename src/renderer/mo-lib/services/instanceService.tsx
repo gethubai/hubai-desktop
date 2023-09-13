@@ -86,7 +86,7 @@ export default class InstanceService
         'IOutlineController',
         'IPanelController',
         'IProblemsController',
-        'ISearchController',
+        //   'ISearchController',
         'ISettingsController',
         'ISidebarController',
         'IStatusBarController',
