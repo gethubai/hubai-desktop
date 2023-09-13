@@ -68,6 +68,7 @@ export class ChatSessionServer implements IChatSessionServer, IDisposable {
     this.eventSubscriptions.forEach((s) => s.unsubscribe());
     this.eventSubscriptions = [];
     this.callListeners('unwatch');
+    this.listeners = {};
   }
 
   handleEvent = (event: string, args: any): void => {
