@@ -15,8 +15,8 @@ const httpClientFactory =
   container.resolve<IHttpClientFactory>('IHttpClientFactory');
 
 // TODO: Get from env
-const apiBaseUrl = 'https://localhost:7216/api';
-
+const apiBaseUrl = 'https://api.hubai.dev/api';
+// const apiBaseUrl = 'https://localhost:7216/api';
 httpClientFactory.addHttpClient(
   BuiltInHttpClient.packageApi,
   new AxiosHttpClient({
