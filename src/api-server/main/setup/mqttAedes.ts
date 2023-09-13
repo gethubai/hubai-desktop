@@ -63,11 +63,15 @@ export const setupMqttAedesServer = (httpServer: Server): void => {
   });
 
   aedes.on('subscribe', (subscriptions, client) => {
-    console.log('client subscribed', subscriptions, client.id);
+    const subTopics = subscriptions.map((s) => s.topic).join(', ');
+
+    console.log(`${client.id}: subscribed to: `, subTopics);
   });
 
   aedes.on('unsubscribe', (subscriptions, client) => {
-    console.log('client unsubscribed', subscriptions, client.id);
+    const subTopics = subscriptions.join(', ');
+
+    console.log(`${client.id}: unsubscribed from: `, subTopics);
   });
 
   aedes.on('ack', (message, client) => {
