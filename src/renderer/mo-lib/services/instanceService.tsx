@@ -18,6 +18,7 @@ interface IInstanceServiceProps {
 enum InstanceHookKind {
   beforeInit = 'before.init',
   beforeLoad = 'before.load',
+  afterLoad = 'after.load',
 }
 
 export default class InstanceService
@@ -106,6 +107,7 @@ export default class InstanceService
       this.emit(InstanceHookKind.beforeLoad);
       molecule.extension.load(others);
 
+      this.emit(InstanceHookKind.afterLoad);
       molecule.layout.onWorkbenchDidMount(() => {
         molecule.monacoService.initWorkspace(molecule.layout.container!);
       });
@@ -121,5 +123,9 @@ export default class InstanceService
 
   public onBeforeLoad = (callback: () => void) => {
     this.subscribe(InstanceHookKind.beforeLoad, callback);
+  };
+
+  public onAfterLoad = (callback: () => void) => {
+    this.subscribe(InstanceHookKind.afterLoad, callback);
   };
 }
