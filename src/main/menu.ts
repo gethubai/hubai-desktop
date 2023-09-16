@@ -54,17 +54,17 @@ export default class MenuBuilder {
 
   buildDarwinTemplate(): MenuItemConstructorOptions[] {
     const subMenuAbout: DarwinMenuItemConstructorOptions = {
-      label: 'Electron',
+      label: 'HubAI',
       submenu: [
         {
-          label: 'About ElectronReact',
+          label: 'About HubAI',
           selector: 'orderFrontStandardAboutPanel:',
         },
         { type: 'separator' },
         { label: 'Services', submenu: [] },
         { type: 'separator' },
         {
-          label: 'Hide ElectronReact',
+          label: 'Hide HubAI',
           accelerator: 'Command+H',
           selector: 'hide:',
         },
@@ -157,27 +157,59 @@ export default class MenuBuilder {
         {
           label: 'Learn More',
           click() {
-            shell.openExternal('https://electronjs.org');
+            shell.openExternal('https://hubai.app');
           },
         },
         {
           label: 'Documentation',
           click() {
-            shell.openExternal(
-              'https://github.com/electron/electron/tree/main/docs#readme'
-            );
-          },
-        },
-        {
-          label: 'Community Discussions',
-          click() {
-            shell.openExternal('https://www.electronjs.org/community');
+            shell.openExternal('https://github.com/gethubai/hubai-desktop');
           },
         },
         {
           label: 'Search Issues',
           click() {
-            shell.openExternal('https://github.com/electron/electron/issues');
+            shell.openExternal(
+              'https://github.com/gethubai/hubai-desktop/issues'
+            );
+          },
+        },
+
+        { type: 'separator' },
+        {
+          label: 'Discord',
+          click() {
+            shell.openExternal('https://discord.gg/PUDxddr8cE');
+          },
+        },
+        {
+          label: 'X (Twitter)',
+          click() {
+            shell.openExternal('https://twitter.com/hubaiapp');
+          },
+        },
+        {
+          label: 'Instagram',
+          click() {
+            shell.openExternal('https://instagram.com/hubaiapp');
+          },
+        },
+        {
+          label: 'Facebook',
+          click() {
+            shell.openExternal('https://fb.com/hubaiapp');
+          },
+        },
+        {
+          label: 'YouTube',
+          click() {
+            shell.openExternal('https://youtube.com/@hubaiapp');
+          },
+        },
+        {
+          label: 'Reddit',
+          click() {
+            shell.openExternal('https://www.reddit.com/r/hubai');
           },
         },
       ],
@@ -258,27 +290,56 @@ export default class MenuBuilder {
           {
             label: 'Learn More',
             click() {
-              shell.openExternal('https://electronjs.org');
+              shell.openExternal('https://hubai.app');
             },
           },
           {
             label: 'Documentation',
             click() {
-              shell.openExternal(
-                'https://github.com/electron/electron/tree/main/docs#readme'
-              );
+              shell.openExternal('https://github.com/gethubai/hubai-desktop');
             },
           },
           {
-            label: 'Community Discussions',
+            label: 'GitHub',
             click() {
-              shell.openExternal('https://www.electronjs.org/community');
+              shell.openExternal('https://github.com/gethubai/hubai-desktop');
+            },
+          },
+          { type: 'separator' },
+          {
+            label: 'Discord',
+            click() {
+              shell.openExternal('https://discord.gg/PUDxddr8cE');
             },
           },
           {
-            label: 'Search Issues',
+            label: 'X (Twitter)',
             click() {
-              shell.openExternal('https://github.com/electron/electron/issues');
+              shell.openExternal('https://twitter.com/hubaiapp');
+            },
+          },
+          {
+            label: 'Instagram',
+            click() {
+              shell.openExternal('https://instagram.com/hubaiapp');
+            },
+          },
+          {
+            label: 'Facebook',
+            click() {
+              shell.openExternal('https://fb.com/hubaiapp');
+            },
+          },
+          {
+            label: 'YouTube',
+            click() {
+              shell.openExternal('https://youtube.com/@hubaiapp');
+            },
+          },
+          {
+            label: 'Reddit',
+            click() {
+              shell.openExternal('https://www.reddit.com/r/hubai');
             },
           },
         ],
