@@ -18,6 +18,7 @@ import {
 } from '@hubai/core/esm/common/utils';
 import { GlobalEvent } from '@hubai/core/esm/common/event';
 import { type ILocaleService } from '@hubai/core/esm/i18n';
+import rendererUserSettingsStorage from 'data/user/rendererUserSettingsStorage';
 import { type IBuiltinService } from './builtinService';
 
 @injectable()
@@ -31,7 +32,10 @@ class SettingsService extends GlobalEvent implements ISettingsService {
     @inject('ILocaleService') private localeService: ILocaleService
   ) {
     super();
-    this.settings = this.getBuiltInSettings();
+    this.settings = {
+      ...this.getBuiltInSettings(),
+      ...(rendererUserSettingsStorage.getAll() ?? {}),
+    };
   }
 
   saveSettings(): void {
@@ -44,9 +48,12 @@ class SettingsService extends GlobalEvent implements ISettingsService {
 
   private getBuiltInSettings(): ISettings {
     const { editorOptions } = this.editorService.getState();
-    const theme = this.colorThemeService.getColorTheme();
-    const locale = this.localeService.getCurrentLocale();
-    return new SettingsModel(theme.id, editorOptions!, locale?.id);
+    const theme =
+      this.settings?.colorTheme ?? this.colorThemeService.getColorTheme()?.id;
+    const locale =
+      this.settings?.locale ?? this.localeService.getCurrentLocale()?.id;
+    const model = new SettingsModel(theme, editorOptions!, locale);
+    return model;
   }
 
   public getDefaultSettingsTab(): BuiltInSettingsTabType {
@@ -79,7 +86,8 @@ class SettingsService extends GlobalEvent implements ISettingsService {
     const oldSettings = this.settings;
     const { colorTheme, locale, editor }: ISettings = nextSettings;
     if (colorTheme && colorTheme !== oldSettings.colorTheme) {
-      this.colorThemeService.setTheme(colorTheme);
+      if (colorTheme !== this.colorThemeService.getColorTheme()?.id)
+        this.colorThemeService.setTheme(colorTheme);
     }
     if (locale && locale !== oldSettings.locale) {
       this.localeService.setCurrentLocale(locale);

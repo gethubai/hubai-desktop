@@ -10,6 +10,7 @@ import {
   PackageUninstallationResult,
 } from 'renderer/features/packages/models/localPackageManagementService';
 import { PackageType } from 'renderer/features/packages/models/package';
+import { isEqual } from 'lodash';
 import { BrainEvent, BrainStateModel, type IBrainState } from '../models/brain';
 import makeLoadLocalBrains from '../factories/usecases/makeLoadLocalBrains';
 import makeSaveLocalBrainSettings from '../factories/usecases/makeSaveLocalBrainSettings';
@@ -137,20 +138,27 @@ export class BrainManagementService
   }
 
   private loadDefaultBrainSettings(): void {
-    const brainSettings: any = this.settingsService.getSettings().brain || {};
+    const brainSettings: any = {
+      ...(this.settingsService.getSettings().brain ?? {}),
+    };
     const brains = this.getPackages();
 
     brains.forEach((brain) => {
       if (!brainSettings[brain.name]) brainSettings[brain.name] = {};
 
-      (brain.settingsMap || []).forEach((setting) => {
-        if (!brainSettings[brain.name][setting.name]) {
-          brainSettings[brain.name][setting.name] = setting.defaultValue;
-        }
-      });
+      (brain.settingsMap || [])
+        .filter((s) => s.defaultValue !== undefined)
+        .forEach((setting) => {
+          if (!brainSettings[brain.name][setting.name]) {
+            brainSettings[brain.name][setting.name] = setting.defaultValue;
+          }
+        });
     });
 
-    this.settingsService.update({ brain: brainSettings });
-    this.settingsService.saveSettings();
+    const current = this.settingsService.getSettings().brain;
+    if (!isEqual(current, brainSettings)) {
+      this.settingsService.update({ brain: brainSettings });
+      this.settingsService.saveSettings();
+    }
   }
 }

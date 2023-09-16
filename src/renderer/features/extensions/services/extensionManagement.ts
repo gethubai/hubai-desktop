@@ -2,6 +2,7 @@
 /* eslint-disable react/destructuring-assignment */
 import { IExtensionService, type ISettingsService } from '@hubai/core';
 import { container, inject, injectable, singleton } from 'tsyringe';
+import { isEqual } from 'lodash';
 import { Component } from '@hubai/core/esm/react';
 import {
   LocalExtensionModel,
@@ -159,8 +160,9 @@ export class ExtensionManagementService
   }
 
   private loadDefaultExtensionSettings(): void {
-    const extensionSettings: any =
-      this.settingsService.getSettings().extension || {};
+    const extensionSettings: any = {
+      ...(this.settingsService.getSettings().extension ?? {}),
+    };
     const extensions = this.getPackages();
 
     extensions.forEach((extension) => {
@@ -169,15 +171,20 @@ export class ExtensionManagementService
       const settingsMap = extension.contributes
         ?.configuration as LocalExtensionSettingMap[];
 
-      (settingsMap || []).forEach((setting) => {
-        if (!extensionSettings[extension.name][setting.name]) {
-          extensionSettings[extension.name][setting.name] =
-            setting.defaultValue;
-        }
-      });
+      (settingsMap || [])
+        .filter((s) => s.defaultValue !== undefined)
+        .forEach((setting) => {
+          if (!extensionSettings[extension.name][setting.name]) {
+            extensionSettings[extension.name][setting.name] =
+              setting.defaultValue;
+          }
+        });
     });
 
-    this.settingsService.update({ extension: extensionSettings });
-    this.settingsService.saveSettings();
+    const current = this.settingsService.getSettings().extension;
+    if (!isEqual(current, extensionSettings)) {
+      this.settingsService.update({ extension: extensionSettings });
+      this.settingsService.saveSettings();
+    }
   }
 }
