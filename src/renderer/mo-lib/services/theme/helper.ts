@@ -128,8 +128,13 @@ export function getThemeData(
     }
   });
 
+  let base = 'vs';
+  const themeNormalized = theme.uiTheme?.toLowerCase();
+  if (themeNormalized === 'hubai-dark') base = 'vs-dark';
+  else if (themeNormalized === 'hc-black') base = themeNormalized;
+
   return {
-    base: theme.uiTheme as any,
+    base: base as any,
     rules,
     inherit: true,
     colors: convertColors,

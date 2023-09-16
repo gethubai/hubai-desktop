@@ -222,10 +222,10 @@ const defaultHc = {
 
 export function getBuiltInColors(theme: IColorTheme) {
   switch (theme.uiTheme) {
-    case 'vs-dark': {
+    case 'hubai-dark': {
       return { ...defaultDark };
     }
-    case 'vs': {
+    case 'hubai': {
       return { ...defaultVS };
     }
     default: {

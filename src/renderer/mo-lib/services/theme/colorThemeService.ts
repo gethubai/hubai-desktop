@@ -21,7 +21,7 @@ export const BuiltInColorTheme: IColorTheme = {
   id: 'Default Dark+',
   name: 'Default Dark+',
   label: 'Default Dark+',
-  uiTheme: 'vs-dark',
+  uiTheme: 'hubai-dark',
 };
 /**
  * @ignore
