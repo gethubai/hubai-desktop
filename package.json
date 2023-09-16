@@ -96,7 +96,7 @@
     "@chatscope/chat-ui-kit-react": "^1.10.1",
     "@chatscope/chat-ui-kit-styles": "^1.4.0",
     "@dtinsight/dt-utils": "^1.1.2",
-    "@hubai/core": "^0.0.11",
+    "@hubai/core": "^0.0.12",
     "@rjsf/core": "^5.8.2",
     "@rjsf/utils": "^5.8.2",
     "@rjsf/validator-ajv8": "^5.8.2",
