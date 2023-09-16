@@ -121,12 +121,14 @@ class ExtensionService implements IExtensionService {
         case IContributeType.Themes: {
           const themes: IColorTheme[] | undefined = contributes[type];
           if (!themes) return;
-          return this.colorThemeService.addThemes(themes);
+          this.colorThemeService.addThemes(themes);
+          break;
         }
         case IContributeType.Languages: {
           const locales: ILocale[] | undefined = contributes[type];
           if (!locales) return;
-          return this.localeService.addLocales(locales);
+          this.localeService.addLocales(locales);
+          break;
         }
         case IContributeType.Chat: {
           const chat: IChatContribute | undefined = contributes[type];

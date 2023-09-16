@@ -36,9 +36,11 @@ class ColorThemeService extends GlobalEvent implements IColorThemeService {
 
   constructor() {
     super();
+    /*
+    Theme is setted on App.tsx
     if (this.colorTheme) {
       this.setTheme(this.colorTheme.id);
-    }
+    } */
   }
 
   public addThemes(themes: IColorTheme | IColorTheme[]): void {
