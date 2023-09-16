@@ -24,7 +24,7 @@ module.exports = {
     '@hubai/core': {
       eager: true,
       singleton: true,
-      strictVersion: true,
+      strictVersion: false,
       requiredVersion: dependencies['@hubai/core'],
     },
     'monaco-editor': {

@@ -11,9 +11,10 @@ import ExtendsEditor from './editor';
 import { ExtendsActivityBar } from './activityBar';
 import { defaultColorThemeExtension } from './themes/theme-defaults';
 import packageStoreExtension from './packageStore/extension';
+import devExtensions from '../../../devExtensions/index';
+
 // import { githubPlusExtension } from './themes/github-plus-theme-master';
 // import { webStormIntelliJExtension } from './themes/vscode-intellij-darcula-theme-master';
-
 /**
  * Default extensions
  */
@@ -31,4 +32,5 @@ export const defaultExtensions = [
   // webStormIntelliJExtension,
   // githubPlusExtension,
   ExtendsFolderTree,
+  ...(devExtensions ?? []),
 ];
