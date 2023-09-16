@@ -31,3 +31,5 @@ npm-debug.log.*
 chatdb.*
 
 env-variables.json
+
+src/devExtensions/*/*
