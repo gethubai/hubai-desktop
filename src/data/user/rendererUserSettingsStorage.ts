@@ -2,7 +2,7 @@ import { IUserSettingsStorage } from './userSettingsStorage';
 
 class RendererUserSettingsStorage implements IUserSettingsStorage {
   get(key: string): any {
-    window.electron.userSettings.get(key);
+    return window.electron.userSettings.get(key);
   }
 
   getAll(): any {
