@@ -67,6 +67,10 @@ ipcMain.on('restart-app', () => {
   app.exit();
 });
 
+ipcMain.on('get-app-version', (event) => {
+  event.returnValue = app.getVersion();
+});
+
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
   sourceMapSupport.install();

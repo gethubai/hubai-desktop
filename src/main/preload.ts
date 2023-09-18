@@ -48,6 +48,7 @@ const electronHandler = {
   currentUser: currentUserRendererApi,
   download: downloadRendererApi,
   contacts: contactRendererApi,
+  getAppVersion: () => ipcRenderer.sendSync('get-app-version'),
 };
 
 contextBridge.exposeInMainWorld('electron', electronHandler);

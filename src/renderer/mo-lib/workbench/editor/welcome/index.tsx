@@ -5,12 +5,14 @@ import { prefixClaName } from '@hubai/core/esm/common/className';
 import useGetKeys from './hooks';
 import Logo from './logo';
 
+const appVersion = window.electron.getAppVersion();
+
 export default function Welcome() {
   const keys = useGetKeys();
 
   return (
     <div className={prefixClaName('welcome')}>
-      <Logo className="logo" />
+      <Logo className="logo" />v{appVersion}
       <div className="keybindings">
         <ul>
           {keys.map((item) => {
