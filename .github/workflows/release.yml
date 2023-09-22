@@ -1,8 +1,8 @@
 name: Release new version
-
-on: 
-  push:
-    branches: ["main"]
+# disabled until fix npm install
+#on: 
+  #push:
+    #branches: ["main"]
     #paths-ignore:
      # - "**.md"
       #- "**.yml"
