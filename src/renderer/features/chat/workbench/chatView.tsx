@@ -9,7 +9,6 @@ import React, {
   useMemo,
 } from 'react';
 import './styles.scss';
-import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import { AudioRecorder } from 'react-audio-voice-recorder';
 import 'react-h5-audio-player/lib/styles.css';
 import { Icon, Pane, SplitPane } from '@hubai/core/esm/components';
