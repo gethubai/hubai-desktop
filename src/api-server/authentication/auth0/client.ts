@@ -10,7 +10,11 @@ const tokenStorage = new SafeKeyStore(
   'pls-dont-hack-me' // This is just to obfuscate the key in the file system, it's not intended to be secure
 );
 
-const { auth0: auth0Settings } = require('../../../../env-variables.json');
+const auth0Settings = {
+  domain: process.env.AUTH0_DOMAIN,
+  clientId: process.env.AUTH0_CLIENT_ID,
+  audience: process.env.AUTH0_AUDIENCE,
+};
 
 const auth0 = auth0Login({
   // Get these values from your Auth0 application console

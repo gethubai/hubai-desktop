@@ -14,8 +14,7 @@ container.registerSingleton<IHttpClientFactory>(
 const httpClientFactory =
   container.resolve<IHttpClientFactory>('IHttpClientFactory');
 
-// TODO: Get from env
-const apiBaseUrl = 'https://api.hubai.dev/api';
+const apiBaseUrl = process.env.API_BASE_URL;
 // const apiBaseUrl = 'https://localhost:7216/api';
 httpClientFactory.addHttpClient(
   BuiltInHttpClient.packageApi,

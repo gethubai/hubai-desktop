@@ -6,6 +6,7 @@ import path from 'path';
 import webpack from 'webpack';
 import { merge } from 'webpack-merge';
 import TerserPlugin from 'terser-webpack-plugin';
+import Dotenv from 'dotenv-webpack';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import baseConfig from './webpack.config.base';
 import webpackPaths from './webpack.paths';
@@ -73,12 +74,17 @@ const configuration: webpack.Configuration = {
      * NODE_ENV should be production so that modules do not perform certain
      * development checks
      */
+    new Dotenv({
+      path: path.join(webpackPaths.rootPath, '.env'),
+      safe: false, // If true, load '.env.example' to verify the '.env' variables are all set. Can also be a string to a different file.
+      silent: false, // If true, all warnings will be suppressed
+      defaults: false, // Adds support for dotenv-defaults. If set to true, uses ./.env.defaults. If a string, uses that location for a defaults file
+    }),
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'production',
       DEBUG_PROD: false,
       START_MINIMIZED: false,
     }),
-
     new webpack.DefinePlugin({
       'process.type': '"browser"',
     }),

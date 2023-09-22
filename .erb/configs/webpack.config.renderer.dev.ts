@@ -4,6 +4,7 @@ import fs from 'fs';
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MonacoWebpackPlugin from 'monaco-editor-webpack-plugin';
+import Dotenv from 'dotenv-webpack';
 import chalk from 'chalk';
 import { merge } from 'webpack-merge';
 import { execSync, spawn } from 'child_process';
@@ -131,6 +132,12 @@ const configuration: webpack.Configuration = {
         ]),
 
     new webpack.NoEmitOnErrorsPlugin(),
+    new Dotenv({
+      path: path.join(webpackPaths.rootPath, 'renderer.env'),
+      safe: false, // If true, load '.env.example' to verify the '.env' variables are all set. Can also be a string to a different file.
+      silent: false, // If true, all warnings will be suppressed
+      defaults: false, // Adds support for dotenv-defaults. If set to true, uses ./.env.defaults. If a string, uses that location for a defaults file
+    }),
 
     /**
      * Create global constants which can be configured at compile time.
