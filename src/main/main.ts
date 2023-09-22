@@ -221,9 +221,28 @@ console.log('path:', {
   exe: app.getPath('exe'),
 });
 
+const startInstrumentation = () => {
+  // TODO: Ask for permission to send data
+  if (process.env.APP_INSIGHTS_INSTRUMENTATION_KEY) {
+    const appInsights = require('applicationinsights');
+    appInsights
+      .setup(process.env.APP_INSIGHTS_INSTRUMENTATION_KEY)
+      .setAutoDependencyCorrelation(true)
+      .setAutoCollectRequests(true)
+      .setAutoCollectPerformance(true)
+      .setAutoCollectExceptions(true)
+      .setAutoCollectDependencies(true)
+      .setAutoCollectConsole(true, true)
+      .setUseDiskRetryCaching(true)
+      .start();
+    console.log('Instrumentation has been started');
+  }
+};
+
 app
   .whenReady()
   .then(async () => {
+    startInstrumentation();
     createSplashScreen();
 
     await makeAuthClient().attemptCachedLogin();
