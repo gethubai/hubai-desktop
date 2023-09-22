@@ -5,6 +5,7 @@ import { PackageStoreItem } from '../models/packageStoreItem';
 export type ActionButtonState = {
   text: string;
   action: () => void;
+  hasCaptcha?: boolean;
   disabled?: boolean;
 };
 
@@ -12,6 +13,7 @@ export interface PackageState {
   actionButtons: ActionButtonState[];
   item: PackageStoreItem;
   error?: string;
+  captchaToken?: string;
 }
 
 export default class PackageService
@@ -52,6 +54,7 @@ export default class PackageService
       actionButtons: [],
       item: {} as PackageStoreItem,
       error: undefined,
+      captchaToken: undefined,
     };
   }
 }

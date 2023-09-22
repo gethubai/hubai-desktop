@@ -21,10 +21,12 @@ export class PackageController extends Controller implements IDisposable {
       install: {
         text: 'Install',
         action: this.onInstall,
+        hasCaptcha: true,
       },
       update: {
         text: 'Update',
         action: this.onInstall,
+        hasCaptcha: true,
       },
       uninstall: {
         text: 'Uninstall',
@@ -77,6 +79,10 @@ export class PackageController extends Controller implements IDisposable {
       this.updateActionButtonWhenInstalledPackageChanges
     );
   }
+
+  onCaptchaToken = (token: string) => {
+    this.packageService.setState({ captchaToken: token });
+  };
 
   updateActionButtonWhenInstalledPackageChanges = (
     hubaiPackage: HubAIPackage
@@ -137,11 +143,15 @@ export class PackageController extends Controller implements IDisposable {
   };
 
   onInstall = async () => {
-    const { item } = this.packageService.getState();
+    const { item, captchaToken } = this.packageService.getState();
 
     this.clearErrors();
 
-    const result = await this.packageManagementService.installPackage(item);
+    const result = await this.packageManagementService.installPackage(
+      item,
+      undefined,
+      captchaToken
+    );
 
     if (!result.success) {
       this.updateActionButton();

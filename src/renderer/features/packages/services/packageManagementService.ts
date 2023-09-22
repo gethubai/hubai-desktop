@@ -66,7 +66,8 @@ export class PackageManagementService implements IPackageManagementService {
 
   startPackageDownload = async (
     hubaiPackage: HubAIPackage,
-    version?: string | undefined
+    version?: string | undefined,
+    captchaToken?: string
   ): Promise<PackageDownloadResult> => {
     return new Promise((resolve, reject) => {
       this.packageApiHttpClient
@@ -75,7 +76,7 @@ export class PackageManagementService implements IPackageManagementService {
           expiresAtUtc: Date;
           version: string;
         }>(`/download/${hubaiPackage.id}`, {
-          params: { version: version ?? 'latest' },
+          params: { version: version ?? 'latest', captchaToken },
         })
         .then((downloadUrl) => {
           if (!downloadUrl.success) {
@@ -160,7 +161,8 @@ export class PackageManagementService implements IPackageManagementService {
 
   installPackage = async (
     hubaiPackage: HubAIPackage,
-    version?: string | undefined
+    version?: string | undefined,
+    captchaToken?: string
   ): Promise<PackageInstallationResult> => {
     this.eventEmitter.emit(
       PackageEvents.PackageInstallationStarted,
@@ -171,7 +173,8 @@ export class PackageManagementService implements IPackageManagementService {
 
     const downloadResult = await this.startPackageDownload(
       hubaiPackage,
-      version
+      version,
+      captchaToken
     );
 
     let installationResult: any = null;

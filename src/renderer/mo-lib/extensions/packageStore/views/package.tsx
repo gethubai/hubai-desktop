@@ -1,5 +1,6 @@
 /* eslint-disable promise/catch-or-return */
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { component, localize } from '@hubai/core';
 import { Icon, Tooltip } from '@hubai/core/esm/components';
 import Markdown from 'renderer/components/markdown';
@@ -10,8 +11,18 @@ const { Button } = component;
 
 export type Props = PackageController & PackageState & {};
 
-function PackageView({ item, actionButtons, error }: Props) {
+function PackageView({ item, actionButtons, error, onCaptchaToken }: Props) {
   const [content, setContent] = useState('Loading content...');
+  const [onVerifyCallback, setOnVerifyCallback] = useState<() => void>();
+  const captchaRef = useRef(null);
+
+  const onCaptchaVerify = useCallback(
+    (token: string) => {
+      onCaptchaToken(token);
+      onVerifyCallback?.();
+    },
+    [onVerifyCallback, onCaptchaToken]
+  );
 
   const fetchContent = useCallback(async () => {
     const latestVersion = item.versions[0];
@@ -31,6 +42,11 @@ function PackageView({ item, actionButtons, error }: Props) {
     setContent(fetchedContent);
   }, [item]);
 
+  const onActionWithCaptcha = useCallback(async (action: () => void) => {
+    captchaRef.current?.execute();
+    setOnVerifyCallback(() => action);
+  }, []);
+
   useEffect(() => {
     fetchContent();
   }, [item.id, fetchContent]);
@@ -39,6 +55,13 @@ function PackageView({ item, actionButtons, error }: Props) {
 
   return (
     <div className="package-container">
+      <HCaptcha
+        sitekey={process.env.HCAPTCHA_SITE_KEY}
+        onVerify={onCaptchaVerify}
+        ref={captchaRef}
+        size="invisible"
+        host="hubai.app"
+      />
       <div className="package-header">
         <div className="package-icon">
           <img src={item.icon} alt="package icon" />
@@ -61,7 +84,11 @@ function PackageView({ item, actionButtons, error }: Props) {
             {actionButtons.map((actionButton) => (
               <Button
                 key={`action-button-${actionButton.text}`}
-                onClick={actionButton.action}
+                onClick={
+                  actionButton.hasCaptcha
+                    ? () => onActionWithCaptcha(actionButton.action)
+                    : actionButton.action
+                }
                 disabled={actionButton.disabled}
               >
                 {actionButton.text}

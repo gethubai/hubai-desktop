@@ -26,7 +26,8 @@ export enum PackageEvents {
 export interface IPackageManagementService {
   startPackageDownload(
     hubaiPackage: HubAIPackage,
-    version?: string
+    version?: string,
+    captchaToken?: string
   ): Promise<PackageDownloadResult>;
 
   isPackageInstalled(hubaiPackage: HubAIPackage): boolean;
@@ -35,7 +36,8 @@ export interface IPackageManagementService {
   getInstalledPackage(name: string): HubAIPackage | undefined;
   installPackage(
     hubaiPackage: HubAIPackage,
-    version?: string
+    version?: string,
+    captchaToken?: string
   ): Promise<PackageInstallationResult>;
   uninstallPackage(
     hubaiPackage: HubAIPackage
