@@ -1,7 +1,7 @@
 name: Release new version
 on: 
-  push:
-    branches: ["main"]
+  release:
+    types: [created]
     paths-ignore:
       - "**.md"
       - "**.yml"
