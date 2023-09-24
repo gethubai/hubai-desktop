@@ -10,7 +10,7 @@
  */
 import path from 'path';
 import '../data/realm/app';
-import { app, BrowserWindow, shell, ipcMain, protocol } from 'electron';
+import { app, BrowserWindow, shell, ipcMain, protocol, dialog } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import {
@@ -24,6 +24,7 @@ import {
 import keyStore from 'data/keyStore';
 import { generateSecureRandom64ByteKey } from 'utils/securityUtils';
 import makeAuthClient from 'api-server/authentication/factories/authClientFactory';
+import userSettingsStorage from 'data/user/mainStorage';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
@@ -221,9 +222,37 @@ console.log('path:', {
   exe: app.getPath('exe'),
 });
 
-const startInstrumentation = () => {
-  // TODO: Ask for permission to send data
-  if (process.env.APP_INSIGHTS_INSTRUMENTATION_KEY) {
+const startInstrumentation = async () => {
+  let canSendTelemetryData = userSettingsStorage.get('sendTelemetryData');
+
+  if (canSendTelemetryData === undefined) {
+    const options = {
+      type: 'question',
+      buttons: ['Yes, please', 'No, thanks'],
+      defaultId: 0,
+      cancelId: 1,
+      title: 'Collect Anonymous Telemetry Data',
+      message: 'Help Improve Our App!',
+      detail:
+        'We’d like to collect anonymous telemetry data to better understand how our app is used and identify areas for improvement.\n This data is entirely anonymous, strictly used for improvement purposes, and does not include any personal or sensitive information.',
+    };
+
+    const result = await dialog.showMessageBox(null, options);
+
+    canSendTelemetryData = result.response === 0;
+    userSettingsStorage.setSetting('sendTelemetryData', canSendTelemetryData);
+
+    if (canSendTelemetryData) {
+      console.log('User agreed to send telemetry data');
+    } else {
+      console.log('User declined to send telemetry data');
+    }
+  }
+
+  if (
+    process.env.APP_INSIGHTS_INSTRUMENTATION_KEY &&
+    canSendTelemetryData === true
+  ) {
     const appInsights = require('applicationinsights');
     appInsights
       .setup(process.env.APP_INSIGHTS_INSTRUMENTATION_KEY)
@@ -233,16 +262,20 @@ const startInstrumentation = () => {
       .setAutoCollectExceptions(true)
       .setAutoCollectDependencies(true)
       .setAutoCollectConsole(true, true)
-      .setUseDiskRetryCaching(true)
-      .start();
-    console.log('Instrumentation has been started');
+      .setUseDiskRetryCaching(true);
+
+    appInsights.start();
+    console.log(
+      'Instrumentation has been started',
+      appInsights.defaultClient.context.tags
+    );
   }
 };
 
 app
   .whenReady()
   .then(async () => {
-    startInstrumentation();
+    await startInstrumentation();
     createSplashScreen();
 
     await makeAuthClient().attemptCachedLogin();
