@@ -79,7 +79,7 @@ class SettingsService extends GlobalEvent implements ISettingsService {
 
   public getSettings(): ISettings {
     const builtInSettings = this.getBuiltInSettings();
-    return { ...this.settings, ...builtInSettings };
+    return { ...builtInSettings, ...this.settings };
   }
 
   public applySettings(nextSettings: ISettings) {
