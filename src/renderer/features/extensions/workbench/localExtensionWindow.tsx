@@ -1,4 +1,5 @@
 import SettingsMapForm from 'renderer/components/form/settingsMapForm';
+import { Button } from '@hubai/core/esm/components';
 import { IExtensionListController } from '../controllers/type';
 import {
   IExtensionListState,
@@ -43,7 +44,7 @@ function LocalExtensionWindow({
             onSubmit={onSubmit}
           >
             <div>
-              <button type="submit">Save Settings</button>
+              <Button type="submit">Save Settings</Button>
             </div>
           </SettingsMapForm>
         </div>

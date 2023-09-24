@@ -1,8 +1,41 @@
 import React, { useCallback, useMemo } from 'react';
 import validator from '@rjsf/validator-ajv8';
 import Form, { FormProps } from '@rjsf/core';
-import { RJSFSchema } from '@rjsf/utils';
+import './style.scss';
+import { RJSFSchema, FieldTemplateProps } from '@rjsf/utils';
 import { ISettingMap } from 'api-server/models/settingMap';
+import { defaultWidgets } from './form-widgets';
+
+function CustomFieldTemplate(props: FieldTemplateProps) {
+  const {
+    id,
+    classNames,
+    style,
+    label,
+    rawDescription,
+    required,
+    schema,
+    errors,
+    children,
+  } = props;
+  return (
+    <div className={`${classNames ?? ''} field-container`} style={style}>
+      <div className="field-header">
+        <label htmlFor={id} style={{ lineHeight: 1 }}>
+          <b>
+            {label}
+            {required ? ' *' : null}
+          </b>
+        </label>
+        {!!rawDescription && schema.type !== 'boolean' && (
+          <p>{rawDescription}</p>
+        )}
+      </div>
+      {children}
+      {errors}
+    </div>
+  );
+}
 
 type SettingsMapFormProps = Omit<
   FormProps,
@@ -19,10 +52,17 @@ type SettingsMapFormProps = Omit<
 export function MapSettingToSchema(setting: ISettingMap): RJSFSchema {
   const { name, displayName, type, defaultValue, enumValues, description } =
     setting;
+
+  let defaultValueParsed: string | boolean | undefined = defaultValue;
+
+  if (type === 'boolean' && typeof defaultValue === 'string') {
+    defaultValueParsed = defaultValue === 'true';
+  }
+
   const property = {
     type,
     title: displayName,
-    default: defaultValue,
+    default: defaultValueParsed,
     enum: enumValues && enumValues.length > 0 ? enumValues : undefined,
     description,
     originalName: name,
@@ -84,11 +124,14 @@ function SettingsMapForm({
 
   return (
     <Form
+      className="settings-form"
       schema={schema}
       formData={currentSettings}
       validator={validator}
       onSubmit={onSubmitInternal}
       noValidate
+      widgets={defaultWidgets}
+      templates={{ FieldTemplate: CustomFieldTemplate }}
       {...rest}
     >
       {children}

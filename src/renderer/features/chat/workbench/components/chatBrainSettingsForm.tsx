@@ -8,6 +8,7 @@ import SettingsMapForm, {
 } from 'renderer/components/form/settingsMapForm';
 import { RJSFSchema } from '@rjsf/utils';
 import { IChangeEvent } from '@rjsf/core';
+import { Button } from '@hubai/core/esm/components';
 
 type ChatBrainSettingsFormProps = {
   brain: LocalBrainModel;
@@ -56,9 +57,9 @@ export function ChatBrainSettingsForm({
             onSubmit={onSubmit}
             schema={schema}
           >
-            <button type="submit" style={{ display: 'none' }}>
-              save
-            </button>
+            <Button type="submit" style={{ display: 'none' }}>
+              Save
+            </Button>
           </SettingsMapForm>
         </div>
       ) : (

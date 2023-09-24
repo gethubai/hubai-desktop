@@ -1,4 +1,5 @@
 import SettingsMapForm from 'renderer/components/form/settingsMapForm';
+import { Button } from '@hubai/core/esm/components';
 import { IBrainController } from '../controllers/type';
 import { IBrainState, LocalBrainViewModel } from '../models/brain';
 
@@ -38,7 +39,7 @@ function LocalBrainWindow({
             onSubmit={onSubmit}
           >
             <div>
-              <button type="submit">Save Settings</button>
+              <Button type="submit">Save Settings</Button>
             </div>
           </SettingsMapForm>
         </div>
