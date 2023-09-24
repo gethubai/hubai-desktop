@@ -62,6 +62,11 @@ const configuration: webpack.Configuration = {
       NODE_ENV: 'development',
     }),
 
+    // Ignore @vscode/codicons module to fix the "Module not found error" that was happening during postinstall script
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^@vscode\/codicons$/,
+    }),
+
     new webpack.LoaderOptionsPlugin({
       debug: true,
       options: {
