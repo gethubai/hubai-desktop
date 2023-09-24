@@ -1,11 +1,10 @@
 name: Release new version
-# disabled until fix npm install
-#on: 
-  #push:
-    #branches: ["main"]
-    #paths-ignore:
-     # - "**.md"
-      #- "**.yml"
+on: 
+  push:
+    branches: ["main"]
+    paths-ignore:
+      - "**.md"
+      - "**.yml"
 
 jobs:
   release:
