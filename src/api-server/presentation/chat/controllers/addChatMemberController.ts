@@ -1,7 +1,7 @@
 import { IChatRepository } from 'data/chat/chatRepository';
 import { ChatUser } from 'api-server/chat/domain/models/chat';
-import { UpdateChatMembers } from 'api-server/chat/domain/usecases/updateChatBrains';
 import chatServer from 'api-server/chat/chatTcpServer/server';
+import { UpdateChat } from 'api-server/chat/domain/usecases/updateChat';
 import { Controller } from '../../../main/protocols/controller';
 import { HttpResponse } from '../../../main/protocols/http';
 import { badRequest, ok } from '../../helpers';
@@ -10,7 +10,7 @@ import { IRequest } from '../../../main/protocols/requestContext';
 export class AddChatMemberController implements Controller {
   constructor(
     private readonly chatRepository: IChatRepository,
-    private readonly updateChatMembers: UpdateChatMembers
+    private readonly updateChat: UpdateChat
   ) {}
 
   handle = async (
@@ -28,8 +28,8 @@ export class AddChatMemberController implements Controller {
       currentMember.settings = request.member.settings;
     }
 
-    this.updateChatMembers.update({
-      chatId: chat.id,
+    this.updateChat.execute({
+      id: chat.id,
       members: chat.members,
     });
 

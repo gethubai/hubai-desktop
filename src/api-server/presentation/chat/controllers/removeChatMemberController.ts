@@ -1,6 +1,6 @@
 import { IChatRepository } from 'data/chat/chatRepository';
-import { UpdateChatMembers } from 'api-server/chat/domain/usecases/updateChatBrains';
 import chatServer from 'api-server/chat/chatTcpServer/server';
+import { UpdateChat } from 'api-server/chat/domain/usecases/updateChat';
 import { Controller } from '../../../main/protocols/controller';
 import { HttpResponse } from '../../../main/protocols/http';
 import { badRequest, ok } from '../../helpers';
@@ -9,7 +9,7 @@ import { IRequest } from '../../../main/protocols/requestContext';
 export class RemoveChatMemberController implements Controller {
   constructor(
     private readonly chatRepository: IChatRepository,
-    private readonly updateChatMembers: UpdateChatMembers
+    private readonly updateChat: UpdateChat
   ) {}
 
   handle = async (
@@ -21,8 +21,8 @@ export class RemoveChatMemberController implements Controller {
 
     chat.members = chat.members.filter((m) => m.id !== request.memberId);
 
-    const updated = await this.updateChatMembers.update({
-      chatId: chat.id,
+    const updated = await this.updateChat.execute({
+      id: chat.id,
       members: chat.members,
     });
 
