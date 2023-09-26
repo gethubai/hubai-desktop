@@ -1,0 +1,76 @@
+.chat-tree__item {
+  padding-left: 1em;
+  padding-bottom: 0em;
+  padding-top: 1em;
+  display: flex;
+  width: 100%;
+  align-items: center;
+
+  .avatar-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+    margin-right: 0.3rem;
+    justify-content: space-around;
+    align-content: space-around;
+    width: 42px;
+    height: 42px;
+
+    img {
+      width: 48%; /* Approximately half of the container’s width, accounting for spacing */
+      aspect-ratio: 1 / 1; /* Ensures that the images remain square */
+      border-radius: 50%;
+      object-fit: cover;
+    }
+  }
+
+  /* One element */
+  .avatar-container:has(> :last-child:nth-child(1)) {
+    img {
+      width: 100%;
+    }
+  }
+
+  &.disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  .content-container {
+    display: inline-grid;
+    width: 75%;
+  }
+
+  .title {
+    font-weight: bold;
+    font-size: small;
+    width: 100%;
+    margin-bottom: 0.3rem;
+  }
+
+  .content {
+    color: var(--descriptionForeground);
+    width: 100%;
+    font-size: small;
+    margin-bottom: 0.3rem;
+  }
+
+  .text-footer {
+    text-transform: capitalize;
+    font-size: x-small;
+    color: var(--descriptionForeground);
+    justify-content: center;
+    text-align: end;
+    padding-right: 1em;
+  }
+
+  &:hover {
+    background-color: var(--list-hoverBackground);
+  }
+
+  .ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

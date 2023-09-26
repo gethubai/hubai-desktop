@@ -85,7 +85,6 @@ export default class ChatController
 
     this.chatService.setState({
       headerToolBar: chatSideBarHeaderToolbar,
-      availableBrains: this.brainService.getPackages(),
     });
     this.sideBarService.add(chatGroupSideBar, true);
     this.activityBarService.add(activityBar, true);
@@ -112,24 +111,23 @@ export default class ChatController
     const createOptions: CreateChat.Params = {
       name: `New chat ${index}`,
       initiator: user.id,
-      brains: [],
       members: [{ id: user.id, memberType: ChatMemberType.user } as ChatUser],
     };
 
     const result = await this.chatService.createChat(createOptions);
     if (result) {
-      this.selectOrOpenChatWindow(result);
+      this.selectOrOpenChatWindow(this.chatService.parseChat(result));
     } else {
       // TODO: Show error message
       console.error('Failed to create chat');
     }
   }
 
-  private async selectOrOpenChatWindow(chat: ChatModel): Promise<void> {
+  private async selectOrOpenChatWindow(chat: IChatItem): Promise<void> {
     let renderPane;
     let disposables: IDisposable[];
     if (!this.editorService.isOpened(chat.id)) {
-      const chatInstance = await this.chatService.getChat(chat.id);
+      const chatInstance = await this.chatService.getChat(chat.id as any);
       const { Component, service, controller } =
         this.createChatWindow(chatInstance);
       renderPane = () => (
@@ -142,7 +140,7 @@ export default class ChatController
     }
     this.editorService.open({
       id: chat.id,
-      name: chat.name,
+      name: chat.displayName,
       icon: 'comment',
       renderPane,
       disposables,
@@ -170,6 +168,6 @@ export default class ChatController
   }
 
   public onChatClick = (item: IChatItem) => {
-    this.selectOrOpenChatWindow(item as ChatModel);
+    this.selectOrOpenChatWindow(item);
   };
 }

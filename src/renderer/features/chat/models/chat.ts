@@ -14,8 +14,10 @@ export type SendChatMessageOptions = {
 
 export interface IChatItem {
   id: UniqueId;
-  name: string;
-  createdDate: Date;
+  displayName: string;
+  lastActivityText?: string;
+  lastActivityDate: Date;
+  avatars?: string[];
 }
 
 export interface IChatGroup {
@@ -27,24 +29,24 @@ export interface IChatGroup {
 
 export interface IChatState {
   headerToolBar?: IActionBarItemProps[];
-  groups?: IChatGroup[];
-  activeGroup?: IChatGroup;
+  chats: IChatItem[];
+  activeItem?: IChatItem;
 }
 
 export class ChatStateModel implements IChatState {
-  groups: IChatGroup[] = [];
-
   headerToolBar?: IActionBarItemProps<any>[];
 
-  activeGroup?: IChatGroup | undefined;
+  chats: IChatItem[] = [];
+
+  activeItem?: IChatItem | undefined;
 
   constructor(
-    groups: IChatGroup[] = [],
     headerToolBar: IActionBarItemProps<any>[] = [],
-    activeGroup: IChatGroup | undefined = undefined
+    chats: IChatItem[] = [],
+    activeItem: IChatItem | undefined = undefined
   ) {
-    this.groups = groups;
     this.headerToolBar = headerToolBar;
-    this.activeGroup = activeGroup;
+    this.chats = chats;
+    this.activeItem = activeItem;
   }
 }

@@ -2,7 +2,6 @@
 /* eslint-disable react/no-unused-class-component-methods */
 import { container, inject, injectable } from 'tsyringe';
 
-import generateUniqueId from 'renderer/common/uniqueIdGenerator';
 import { ChatMemberType, ChatModel } from 'api-server/chat/domain/models/chat';
 import { ChatMessageModel } from 'api-server/chat/domain/models/chatMessage';
 import { ChatMessagesContext } from 'api-server/chat/domain/models/chatContext';
@@ -10,12 +9,9 @@ import { CreateChat } from 'api-server/chat/domain/usecases/createChat';
 import { Component } from '@hubai/core/esm/react';
 import { type ILocalUserService } from 'renderer/features/user/services/userService';
 import { IChatCommandCompletion } from '@hubai/core/esm/model/chat';
-import {
-  ChatStateModel,
-  IChatGroup,
-  IChatItem,
-  IChatState,
-} from '../models/chat';
+import { type IContactService } from 'renderer/features/contact/models/service';
+import { Contact } from 'api-server/contact/domain/models/contact';
+import { ChatStateModel, IChatItem, IChatState } from '../models/chat';
 import { IChatService } from './types';
 import { ChatClient } from '../sdk/chatClient';
 import { IChatClient } from '../sdk/contracts';
@@ -39,7 +35,9 @@ export class ChatService extends Component<IChatState> implements IChatService {
   private chatCommands: IChatCommandCompletion = {};
 
   constructor(
-    @inject('ILocalUserService') private localUserService: ILocalUserService
+    @inject('ILocalUserService')
+    private readonly localUserService: ILocalUserService,
+    @inject('IContactService') private readonly contactService: IContactService
   ) {
     super();
     this.state = container.resolve(ChatStateModel);
@@ -66,49 +64,96 @@ export class ChatService extends Component<IChatState> implements IChatService {
       type: ChatMemberType.user,
     });
 
-    const chatList = await this.chatClient.chats();
-    this.onListUpdated(chatList);
-    this.chatClient.onChatCreated((chat) => {
-      this.onListUpdated([chat]);
+    this.refreshChatList();
+
+    this.chatClient.onChatCreated(() => {
+      this.refreshChatList();
     });
+  }
+
+  refreshChatList(): void {
+    this.chatClient
+      .chats()
+      .then(this.onListUpdated.bind(this))
+      .catch((err) => {
+        // TODO: Display error
+        console.error('Could not refresh chatlist', err);
+      });
+  }
+
+  getContactsDictionary(): Record<string, Contact> {
+    return this.contactService.list().reduce((acc, obj) => {
+      acc[obj.id] = obj;
+      return acc;
+    }, {} as Record<string, Contact>);
+  }
+
+  /*
+    Receives an array of names like "jose", "maria" and format it to string:
+    ["jose", "maria"] => "jose and maria"
+    ["jose", "maria", "pedro"] => "jose, maria and pedro"
+    ["jose"] => "jose"
+    [] => ""
+  */
+  formatNames(names?: string[], andText: string = 'and'): string {
+    if (!names) return '';
+    const { length } = names;
+
+    if (length === 0) return '';
+    if (length === 1) return names[0];
+    if (length === 2) return `${names[0]} ${andText} ${names[1]}`;
+
+    const allButLast = names.slice(0, length - 1).join(', ');
+    const last = names[length - 1];
+    return `${allButLast} ${andText} ${last}`;
+  }
+
+  parseChat(chat: ChatModel, contacts?: Record<string, Contact>): IChatItem {
+    if (!contacts) {
+      // eslint-disable-next-line no-param-reassign
+      contacts = this.getContactsDictionary();
+    }
+    const brains = chat.members.filter(
+      (m) => m.memberType === ChatMemberType.brain
+    );
+
+    return {
+      id: chat.id,
+      displayName:
+        this.formatNames(
+          brains.map((m) => contacts?.[m.id]?.name ?? 'Unknown')
+        ) || 'New Chat',
+      lastActivityText: '', // TODO
+      lastActivityDate: chat.createdDate, // TODO - use last activity date and format
+      members: chat.members,
+      avatars:
+        brains.length === 0
+          ? ['']
+          : brains.map((m) => contacts?.[m.id]?.avatar ?? ''),
+    } as IChatItem;
   }
 
   onListUpdated(chats: ChatModel[]): void {
-    const groups: IChatGroup[] = this.state.groups || [];
-    const user = this.localUserService.getUser();
-    chats.forEach((chat) => {
-      let groupName = chat.initiator;
+    const contacts: Record<string, Contact> = this.getContactsDictionary();
 
-      if (chat.initiator === user.id) {
-        groupName = 'Your chats';
-      }
+    const parseDate = (date: string | Date): Date => {
+      return typeof date === 'string' ? new Date(date) : date;
+    };
 
-      const group = groups.find((g) => g.name === groupName);
-      const chatListItem = {
-        id: chat.id,
-        name: chat.name,
-        createdDate: chat.createdDate,
-        members: chat.members,
-      } as IChatItem;
+    // TODO: Change to use last activity date
+    const chatsParsed = chats
+      .sort(
+        (a, b) =>
+          parseDate(b.createdDate).getTime() -
+          parseDate(a.createdDate).getTime()
+      )
+      .map((chat) => this.parseChat(chat, contacts));
 
-      if (group) {
-        if (group.items.findIndex((i) => i.id === chat.id) === -1)
-          group.items.push(chatListItem);
-      } else {
-        groups.push({
-          id: generateUniqueId(),
-          name: groupName,
-          items: [chatListItem],
-        });
-      }
-    });
-
-    this.setState({ groups });
+    this.setState({ chats: chatsParsed });
   }
 
   getChatCount(): number {
-    const { groups } = this.state;
-    return groups?.reduce((p, c) => p + c.items.length, 0) || 0;
+    return this.getState().chats.length;
   }
 
   async createChat(options: CreateChat.Params): Promise<ChatModel | undefined> {

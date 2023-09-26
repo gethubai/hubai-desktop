@@ -1,55 +1,12 @@
-import React from 'react';
-import { Collapse, ICollapseItem } from '@hubai/core/esm/components/collapse';
-import Tree from '@hubai/core/esm/components/tree';
 import { Content, Header } from '@hubai/core/esm/workbench';
 import { Toolbar } from '@hubai/core/esm/components';
+import { ChatTree } from 'renderer/components/chatTree';
 import { IChatController } from '../controllers/type';
-import { IChatItem, IChatState } from '../models/chat';
+import { IChatState } from '../models/chat';
 
 export interface IChatSidebarProps extends IChatController, IChatState {}
 
-function ChatSidebar({
-  headerToolBar,
-  groups,
-  onChatClick,
-}: IChatSidebarProps) {
-  const collapseItems = groups?.map(
-    (group) =>
-      ({
-        id: group.id,
-        name: group.name,
-        fileType: 'Folder',
-        icon: 'comment',
-        children: group.items?.map((item) => ({
-          id: item.id,
-          name: item.name,
-          icon: 'comment-discussion',
-          fileType: 'File',
-          isLeaf: true,
-        })),
-      } as ICollapseItem)
-  );
-
-  const renderCollapse = (): ICollapseItem[] => {
-    return [
-      {
-        id: 'ChatGroupsList',
-        name: 'Active Chats',
-        renderPanel: () => {
-          return (
-            <Tree
-              data={collapseItems}
-              onSelect={(node) => {
-                if (!node.isLeaf) return;
-                onChatClick?.({ id: node.id, name: node.name } as IChatItem);
-              }}
-            />
-          );
-        },
-      },
-    ];
-  };
-
+function ChatSidebar({ headerToolBar, chats, onChatClick }: IChatSidebarProps) {
   return (
     <div className="dataSource" style={{ width: '100%', height: '100%' }}>
       <Header
@@ -57,9 +14,20 @@ function ChatSidebar({
         toolbar={<Toolbar data={headerToolBar || []} />}
       />
       <Content>
-        <Collapse
-          data={renderCollapse()}
-          activePanelKeys={['ChatGroupsList']}
+        <ChatTree
+          data={
+            chats.map((chat) => ({
+              id: chat.id,
+              displayName: chat.displayName,
+              shortDescription: chat.lastActivityText,
+              footerText: chat.lastActivityDate,
+              disabled: false,
+              avatars: chat.avatars,
+              onClick: () => {
+                onChatClick?.(chat);
+              },
+            })) as any
+          }
         />
       </Content>
     </div>
