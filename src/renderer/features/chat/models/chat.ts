@@ -12,11 +12,17 @@ export type SendChatMessageOptions = {
   sender: string;
 };
 
+export interface IChatLastActivityViewModel {
+  senderName: string;
+  text: string;
+  date: string;
+}
+
 export interface IChatItem {
   id: UniqueId;
   displayName: string;
-  lastActivityText?: string;
-  lastActivityDate: Date;
+  lastActivity: IChatLastActivityViewModel;
+  createdDate: string;
   avatars?: string[];
 }
 

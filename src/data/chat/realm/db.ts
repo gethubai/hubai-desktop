@@ -4,6 +4,8 @@ import {
   ChatMemberType,
   ChatModel,
   ChatUserRole,
+  ChatActivity,
+  ChatActivityKind,
 } from 'api-server/chat/domain/models/chat';
 import {
   ChatMessageModel,
@@ -34,6 +36,8 @@ export class ChatDto extends Realm.Object<ChatModel> {
 
   messages?: ChatMessageModel[];
 
+  lastActivity?: ChatActivity;
+
   members!: ChatUser[];
 
   owner_id?: string;
@@ -48,6 +52,7 @@ export class ChatDto extends Realm.Object<ChatModel> {
       members: { type: 'list', objectType: 'ChatUser' },
       createdDate: 'date',
       messages: 'ChatMessage[]',
+      lastActivity: 'ChatActivity?',
       owner_id: 'string?',
     },
   };
@@ -67,6 +72,7 @@ export class ChatDto extends Realm.Object<ChatModel> {
       initiator: this.initiator,
       createdDate: this.createdDate,
       members: this.members?.map((item) => (item as any).values),
+      lastActivity: (this.lastActivity as any)?.values,
     } as ChatModel;
   }
 }
@@ -102,6 +108,36 @@ export class ChatUserDto extends Realm.Object<ChatUser> {
       handleMessageTypes: Array.from(this.handleMessageTypes ?? []),
       role: this.role,
     } as ChatUser;
+  }
+}
+
+export class ChatActivityDto extends Realm.Object<ChatActivity> {
+  executorId!: string;
+
+  value?: string;
+
+  dateUtc!: Date | string;
+
+  kind!: ChatActivityKind;
+
+  static schema = {
+    name: 'ChatActivity',
+    embedded: true,
+    properties: {
+      executorId: 'string',
+      value: 'string?',
+      dateUtc: 'date',
+      kind: 'string',
+    },
+  };
+
+  get values(): ChatActivity {
+    return {
+      executorId: this.executorId,
+      value: this.value,
+      dateUtc: this.dateUtc,
+      kind: this.kind,
+    } as ChatActivity;
   }
 }
 
@@ -271,12 +307,14 @@ const config = {
   schema: [
     ChatDto,
     ChatUserDto,
+    ChatActivityDto,
     ChatMessageRecipientDto,
     ChatMessageDto,
     ChatTextMessageDto,
     ChatImageMessageDto,
     ChatVoiceMessageDto,
   ],
+  schemaVersion: 2,
   // path: dbPath,
 };
 

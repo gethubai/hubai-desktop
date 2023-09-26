@@ -35,7 +35,8 @@ export class RealmChatRepository implements IChatRepository {
         }
         dto.name = model.name;
         dto.members = model.members;
-        resolve(dto.values);
+        dto.lastActivity = model.lastActivity;
+        return resolve(dto.values);
       });
     });
   };

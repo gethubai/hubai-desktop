@@ -19,8 +19,10 @@ function ChatSidebar({ headerToolBar, chats, onChatClick }: IChatSidebarProps) {
             chats.map((chat) => ({
               id: chat.id,
               displayName: chat.displayName,
-              shortDescription: chat.lastActivityText,
-              footerText: chat.lastActivityDate,
+              shortDescription: chat.lastActivity
+                ? `${chat.lastActivity.senderName}: ${chat.lastActivity.text}`
+                : '',
+              footerText: chat.lastActivity?.date ?? chat.createdDate,
               disabled: false,
               avatars: chat.avatars,
               onClick: () => {

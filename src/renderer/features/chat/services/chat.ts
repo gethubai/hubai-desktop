@@ -2,7 +2,11 @@
 /* eslint-disable react/no-unused-class-component-methods */
 import { container, inject, injectable } from 'tsyringe';
 
-import { ChatMemberType, ChatModel } from 'api-server/chat/domain/models/chat';
+import {
+  ChatActivityKind,
+  ChatMemberType,
+  ChatModel,
+} from 'api-server/chat/domain/models/chat';
 import { ChatMessageModel } from 'api-server/chat/domain/models/chatMessage';
 import { ChatMessagesContext } from 'api-server/chat/domain/models/chatContext';
 import { CreateChat } from 'api-server/chat/domain/usecases/createChat';
@@ -11,7 +15,12 @@ import { type ILocalUserService } from 'renderer/features/user/services/userServ
 import { IChatCommandCompletion } from '@hubai/core/esm/model/chat';
 import { type IContactService } from 'renderer/features/contact/models/service';
 import { Contact } from 'api-server/contact/domain/models/contact';
-import { ChatStateModel, IChatItem, IChatState } from '../models/chat';
+import {
+  ChatStateModel,
+  IChatItem,
+  IChatLastActivityViewModel,
+  IChatState,
+} from '../models/chat';
 import { IChatService } from './types';
 import { ChatClient } from '../sdk/chatClient';
 import { IChatClient } from '../sdk/contracts';
@@ -69,6 +78,26 @@ export class ChatService extends Component<IChatState> implements IChatService {
     this.chatClient.onChatCreated(() => {
       this.refreshChatList();
     });
+
+    this.chatClient.onChatUpdated((chat) => {
+      const { chats } = this.getState();
+
+      // Check if the chat is already in the list
+      const index = chats.findIndex((c) => c.id === chat.id);
+
+      if (index >= 0) {
+        chats[index] = this.parseChat(chat);
+
+        // Remove the updated chat from its current position
+        const updatedChat = chats.splice(index, 1)[0];
+
+        // Insert the updated chat at the first position
+        chats.unshift(updatedChat);
+
+        this.setState({ chats });
+      }
+      // TODO: Should we add the chat if it's not in the list?
+    });
   }
 
   refreshChatList(): void {
@@ -117,15 +146,38 @@ export class ChatService extends Component<IChatState> implements IChatService {
       (m) => m.memberType === ChatMemberType.brain
     );
 
+    let lastActivity: IChatLastActivityViewModel | undefined;
+
+    if (chat.lastActivity) {
+      const senderName =
+        contacts?.[chat.lastActivity?.executorId]?.name ?? 'You';
+      let text = `${chat.lastActivity?.value ?? ''}`;
+
+      if (chat.lastActivity.kind === 'voiceMessage') {
+        text = '🎤 Voice';
+      }
+
+      if (chat.lastActivity.kind === ChatActivityKind.imageMessage) {
+        text = '📷 Image';
+      }
+
+      const date =
+        chat.lastActivity.dateUtc instanceof Date
+          ? chat.lastActivity.dateUtc.toISOString()
+          : chat.lastActivity.dateUtc;
+
+      lastActivity = { senderName, text, date };
+    }
+
     return {
       id: chat.id,
       displayName:
         this.formatNames(
           brains.map((m) => contacts?.[m.id]?.name ?? 'Unknown')
         ) || 'New Chat',
-      lastActivityText: '', // TODO
-      lastActivityDate: chat.createdDate, // TODO - use last activity date and format
+      lastActivity,
       members: chat.members,
+      createdDate: chat.createdDate.toString(),
       avatars:
         brains.length === 0
           ? ['']
@@ -144,8 +196,8 @@ export class ChatService extends Component<IChatState> implements IChatService {
     const chatsParsed = chats
       .sort(
         (a, b) =>
-          parseDate(b.createdDate).getTime() -
-          parseDate(a.createdDate).getTime()
+          parseDate(b.lastActivity?.dateUtc ?? b.createdDate).getTime() -
+          parseDate(a.lastActivity?.dateUtc ?? a.createdDate).getTime()
       )
       .map((chat) => this.parseChat(chat, contacts));
 

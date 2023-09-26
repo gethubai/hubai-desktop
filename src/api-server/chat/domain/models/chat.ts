@@ -22,6 +22,21 @@ export type ChatUser = {
   role?: ChatUserRole; // TODO: Refactor this with a RBAC system
 };
 
+export enum ChatActivityKind {
+  textMessage = 'textMessage',
+  voiceMessage = 'voiceMessage',
+  imageMessage = 'imageMessage',
+  fileMessage = 'fileMessage',
+}
+
+export type ChatActivity = {
+  /* The id of the user that performed the activity */
+  executorId: string;
+  value?: string;
+  dateUtc: Date | string;
+  kind: ChatActivityKind;
+};
+
 export type ChatModel = {
   id: string;
   name: string;
@@ -29,4 +44,5 @@ export type ChatModel = {
   createdDate: Date | string;
   messages?: ChatMessageModel[];
   members: ChatUser[];
+  lastActivity?: ChatActivity;
 };
