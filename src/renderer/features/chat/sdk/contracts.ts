@@ -79,6 +79,7 @@ export interface IChatClient {
   session(sessionId: string): IChatSessionServer;
   removeSession(session: IChatSessionServer): void;
   onChatCreated(listener: (params: ChatCreatedEvent.Params) => void): void;
+  onChatUpdated(listener: (chat: ChatModel) => void): void;
   onJoinedChat(listener: (chat: ChatModel) => void): void;
   onLeftChat(listener: (chat: ChatModel) => void): void;
   newChat(options: CreateChat.Params): Promise<ChatModel>;

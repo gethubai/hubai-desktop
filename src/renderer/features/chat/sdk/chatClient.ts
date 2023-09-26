@@ -6,6 +6,7 @@ import { IServerEventSubscriber } from 'api-server/chat/chatTcpServer/pubsub/mod
 import { IClientEventEmitter } from 'api-server/chat/chatTcpServer/pubsub/models/eventEmitter';
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import {
+  ChatUpdatedEvent,
   JoinChatEvent,
   LeftChatEvent,
 } from 'api-server/chat/chatTcpServer/events/serveSessionEvents';
@@ -60,6 +61,17 @@ export class ChatClient implements IChatClient {
     this.subscriber.subscribeToUserEvent(LeftChatEvent.Name, (params) => {
       this.callListeners(LeftChatEvent.Name, params);
     });
+
+    this.subscriber.subscribe(
+      {
+        name: ChatUpdatedEvent.Name,
+        user: this.user.id,
+        chatId: '+', // wildcard to match all chats
+      },
+      (params) => {
+        this.callListeners(ChatUpdatedEvent.Name, params);
+      }
+    );
   };
 
   initMqtt = async (): Promise<void> => {
@@ -109,6 +121,10 @@ export class ChatClient implements IChatClient {
   onChatCreated = (listener: (params: ChatModel) => void): void => {
     this.addListener(ChatCreatedEvent.Name, listener);
   };
+
+  onChatUpdated(listener: (params: ChatModel) => void): void {
+    this.addListener(ChatUpdatedEvent.Name, listener);
+  }
 
   onJoinedChat = (listener: (params: ChatModel) => void): void => {
     this.addListener(JoinChatEvent.Name, listener);
