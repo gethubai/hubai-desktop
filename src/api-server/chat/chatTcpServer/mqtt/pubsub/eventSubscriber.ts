@@ -1,4 +1,5 @@
 import { MqttClient } from 'mqtt';
+import { parse } from 'regexparam';
 import { getEventName } from '../../pubsub/utils';
 import {
   IEventSubscriber,
@@ -16,11 +17,41 @@ export class MqttEventSubscriber<TEventMap extends EventsMap>
     private readonly userId?: string
   ) {
     client.on('message', (topic, message) => {
-      const listener = this.subscriptions[topic];
-      if (listener) {
-        listener(JSON.parse(message.toString()));
-      }
+      // get subscriptions that match the topic with wildcards, for example:
+      // topic: chat/1234/messages should match subscriptions that has the key: chat/+/messages
+
+      // eslint-disable-next-line no-restricted-syntax
+      Object.keys(this.subscriptions).forEach((subscriptionKey) => {
+        if (subscriptionKey === topic) {
+          this.callListeners(subscriptionKey, message);
+          return;
+        }
+
+        if (!subscriptionKey.includes('#') && !subscriptionKey.includes('+')) {
+          return;
+        }
+
+        // Replace MQTT wildcard characters with regex equivalents
+        const transformedKey = subscriptionKey
+          .replace('+', '[^/]+')
+          .replace('#', '.*');
+
+        // Use regexparam to create a RegExp pattern
+        const { pattern } = parse(transformedKey);
+
+        // If the pattern matches the topic, call the listener
+        if (pattern.test(topic)) {
+          this.callListeners(subscriptionKey, message);
+        }
+      });
     });
+  }
+
+  callListeners(name: string, message: Buffer) {
+    const listener = this.subscriptions[name];
+    if (listener) {
+      listener(JSON.parse(message.toString()));
+    }
   }
 
   subscribeToUserEvent<Ev extends EventNames<TEventMap>>(
@@ -43,6 +74,8 @@ export class MqttEventSubscriber<TEventMap extends EventsMap>
     this.client.subscribe(parsedName as string);
 
     this.subscriptions[parsedName as string] = listener;
+
+    console.log('@@ SUBSCRIBED', parsedName);
 
     return {
       name: parsedName,
