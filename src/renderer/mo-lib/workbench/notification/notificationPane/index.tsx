@@ -1,6 +1,5 @@
 import React, { memo } from 'react';
 import { INotification } from '@hubai/core/esm/model/notification';
-import { INotificationController } from '@hubai/core/esm/controller/notification';
 import {
   classNames,
   getBEMElement,
@@ -11,6 +10,7 @@ import { ActionBar } from '@hubai/core/esm/components/actionBar';
 import { shadowClassName } from '@hubai/core/esm/components/contextView/base';
 import { Icon } from '@hubai/core/esm/components/icon';
 import { localize } from '@hubai/core/esm/i18n/localize';
+import { type INotificationController } from 'mo/controllers';
 
 export const defaultNotificationClassName = prefixClaName('notification');
 const notificationHeaderClassName = getBEMElement(

@@ -3,9 +3,9 @@ import SplitPane from '@hubai/core/esm/components/split';
 import Pane from '@hubai/core/esm/components/split/pane';
 import { IEditor, IEditorGroup } from '@hubai/core/esm/model';
 
-import { IEditorController } from '@hubai/core/esm/controller/editor';
 import type { UniqueId } from '@hubai/core/esm/common/types';
 import { ILayout } from '@hubai/core/esm/model/workbench/layout';
+import { type IEditorController } from 'mo/controllers';
 import Welcome from './welcome';
 import { EditorGroup } from './group';
 import { defaultEditorClassName } from './base';

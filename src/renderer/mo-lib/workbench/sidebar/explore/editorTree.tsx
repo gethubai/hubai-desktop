@@ -1,5 +1,4 @@
 import React, { useLayoutEffect, useRef } from 'react';
-import { IEditorTreeController } from '@hubai/core/esm/controller';
 import { IEditor, IEditorGroup } from '@hubai/core';
 import {
   IActionBarItemProps,
@@ -22,6 +21,7 @@ import {
 } from '@hubai/core/esm/components/collapse';
 import type { UniqueId } from '@hubai/core/esm/common/types';
 import { constants } from 'mo/services/builtinService/const';
+import { type IEditorTreeController } from 'mo/controllers';
 import {
   editorTreeActiveItemClassName,
   editorTreeClassName,

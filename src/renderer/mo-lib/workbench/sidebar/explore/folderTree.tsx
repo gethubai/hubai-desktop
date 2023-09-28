@@ -6,11 +6,11 @@ import { select, getEventPosition } from '@hubai/core/esm/common/dom';
 import Tree, { type ITreeProps } from '@hubai/core/esm/components/tree';
 import { type IMenuItemProps, Menu } from '@hubai/core/esm/components/menu';
 import { Button } from '@hubai/core/esm/components/button';
-import type { IFolderTreeController } from '@hubai/core/esm/controller/explorer/folderTree';
 import { useContextMenu } from '@hubai/core/esm/components/contextMenu';
 import { classNames } from '@hubai/core/esm/common/className';
 import { Scrollbar, useContextViewEle } from '@hubai/core/esm/components';
 import { type ICollapseItem } from '@hubai/core/esm/components/collapse';
+import { type IFolderTreeController } from 'mo/controllers';
 import {
   folderTreeClassName,
   folderTreeEditClassName,

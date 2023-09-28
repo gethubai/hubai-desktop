@@ -1,8 +1,8 @@
 import React from 'react';
 import { classNames } from '@hubai/core/esm/common/className';
 import { IStatusBarItem } from '@hubai/core/esm/model/workbench/statusBar';
-import { IStatusBarController } from '@hubai/core/esm/controller/statusBar';
 import { getDataAttributionsFromProps } from '@hubai/core/esm/common/dom';
+import { type IStatusBarController } from 'mo/controllers';
 import { itemClassName } from './base';
 
 export function StatusItem(props: IStatusBarItem & IStatusBarController) {

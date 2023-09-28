@@ -6,7 +6,7 @@ import { Search } from '@hubai/core/esm/components/search';
 import type { SearchValues } from '@hubai/core/esm/components/search';
 import { ISearchProps } from '@hubai/core/esm/model/workbench/search';
 import { localize } from '@hubai/core/esm/i18n/localize';
-import { ISearchController } from '@hubai/core/esm/controller';
+import { type ISearchController } from 'mo/controllers';
 import SearchTree from './searchTree';
 import {
   deleteSearchValueClassName,
