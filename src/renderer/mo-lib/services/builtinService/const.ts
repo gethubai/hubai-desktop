@@ -487,7 +487,7 @@ export const modules = {
 
   builtInMenuBarData: () =>
     [
-      {
+      /* {
         id: 'File',
         name: localize('menu.file', 'File'),
         data: [
@@ -528,7 +528,7 @@ export const modules = {
             name: localize('menu.copyLineUp', 'Copy Line Up'),
           },
         ],
-      },
+      }, */
       {
         id: 'View',
         name: localize('menu.view', 'View'),
@@ -596,7 +596,7 @@ export const modules = {
           },
         ],
       },
-      {
+      /*{
         id: 'Run',
         name: localize('menu.run', 'Run'),
         data: [
@@ -605,7 +605,7 @@ export const modules = {
             name: localize('menu.runTask', 'Run Task'),
           },
         ],
-      },
+      }, */
       {
         id: 'Help',
         name: localize('menu.help', 'Help'),
