@@ -154,6 +154,13 @@ class EditorController extends Controller implements IEditorController {
   };
 
   public onMoveTab = (updateTabs: IEditorTab<any>[], groupId: UniqueId) => {
+    if (updateTabs.length > 0 && !updateTabs[0]) {
+      console.warn(
+        'Temp fix for bug that happens when dragging tab into another group'
+      );
+      return;
+    }
+
     this.editorService.updateGroup(groupId, {
       data: updateTabs,
     });
