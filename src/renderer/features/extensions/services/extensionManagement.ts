@@ -45,6 +45,14 @@ export class ExtensionManagementService
     this.loadExtensions();
   }
 
+  getPackagesAsync = async (): Promise<LocalExtensionModel[]> => {
+    if (this.state.extensions && this.state.extensions.length > 0)
+      return Promise.resolve(this.state.extensions);
+
+    const getExtensionsUseCase = await makeLoadLocalExtensions();
+    return getExtensionsUseCase.getExtensions();
+  };
+
   installPackage = (
     extensionPath: string
   ): PackageInstallationResult<LocalExtensionModel> => {
@@ -152,8 +160,7 @@ export class ExtensionManagementService
   }
 
   private async loadExtensions(): Promise<void> {
-    const getExtensionsUseCase = await makeLoadLocalExtensions();
-    const extensions = await getExtensionsUseCase.getExtensions();
+    const extensions = await this.getPackagesAsync();
     this.setState({ extensions });
 
     this.loadDefaultExtensionSettings();

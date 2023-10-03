@@ -12,14 +12,27 @@ export class GetChatsController implements Controller {
   ): Promise<HttpResponse> => {
     if (!request.context.userId) return unauthorized();
 
-    const chats = await this.chatList.loadChats({
-      userId: request.context.userId,
-    });
+    const userIds = [request.context.userId];
 
+    if (request.userId) {
+      if (Array.isArray(request.userId)) {
+        userIds.push(...request.userId);
+      } else {
+        userIds.push(request.userId);
+      }
+    }
+
+    const chats = await this.chatList.loadChats({
+      userId: userIds,
+      isDirect: request.isDirect,
+    });
     return ok(chats);
   };
 }
 
 export namespace GetChatsController {
-  export type Request = IRequest & {};
+  export type Request = IRequest & {
+    userId?: string | string[];
+    isDirect?: boolean;
+  };
 }

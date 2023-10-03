@@ -5,8 +5,8 @@ import { classNames } from '@hubai/core';
 
 export type ChatTreeItemProps = {
   id: string;
-  displayName: string;
-  shortDescription: string;
+  title: string;
+  content: string;
   avatars?: string[];
   footerText?: string;
   onClick?: () => void;
@@ -16,8 +16,8 @@ export type ChatTreeItemProps = {
 
 export function ChatTreeItem({
   id,
-  displayName,
-  shortDescription,
+  title,
+  content,
   avatars,
   footerText,
   onClick,
@@ -50,11 +50,12 @@ export function ChatTreeItem({
       </div>
       <div className="content-container">
         <div className="title ellipsis">
-          <span>{displayName}</span>
+          <span>{title}</span>
         </div>
-        {!!shortDescription && (
+
+        {!!content && (
           <div className="content ellipsis">
-            <span>{shortDescription}</span>
+            <span>{content}</span>
           </div>
         )}
         {!!footerText && (

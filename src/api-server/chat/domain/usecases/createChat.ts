@@ -9,6 +9,7 @@ export namespace CreateChat {
     name: string;
     members: ChatUser[];
     initiator: string;
+    isDirect?: boolean;
   };
 
   export type Model = ChatModel;

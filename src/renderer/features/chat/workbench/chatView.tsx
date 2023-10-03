@@ -40,6 +40,7 @@ function ChatWindow({
   AuxiliaryBar,
   auxiliaryBarView,
   id,
+  isGroupChat,
 }: IChatWindowProps) {
   const [micStatus, setMicStatus] = useState('idle');
   const chatInputRef = useRef<ChatInputApi>();
@@ -134,11 +135,13 @@ function ChatWindow({
                 width: '100%',
               }}
             >
-              <BrainSelector
-                availableBrains={availableBrains}
-                selectedBrains={selectedBrains}
-                onCapabilityBrainChanged={onCapabilityBrainChanged!}
-              />
+              {isGroupChat && (
+                <BrainSelector
+                  availableBrains={availableBrains}
+                  selectedBrains={selectedBrains}
+                  onCapabilityBrainChanged={onCapabilityBrainChanged!}
+                />
+              )}
               <div className="chat-container">
                 <SplitPane
                   sizes={splitPanePos}

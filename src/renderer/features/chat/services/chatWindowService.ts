@@ -12,8 +12,7 @@ import { IDisposable } from '@hubai/core/esm/monaco/common';
 import { ILocalUserService } from 'renderer/features/user/services/userService';
 import { IContactService } from 'renderer/features/contact/models/service';
 import { ChatWindowStateModel, IChatWindowState } from '../models/chatWindow';
-import { IChatSessionServer } from '../sdk/contracts';
-import { IChatService } from './types';
+import { type IChatClient, IChatSessionServer } from '../sdk/contracts';
 import { ChatMessageViewModel } from '../workbench/components/chat/types';
 
 export interface IChatWindowService
@@ -37,7 +36,7 @@ export class ChatWindowService
 
   private contactService: IContactService;
 
-  private chatService: IChatService;
+  private chatClient: IChatClient;
 
   private userService: ILocalUserService;
 
@@ -52,9 +51,11 @@ export class ChatWindowService
       this.userService.getUser().id,
       [],
       this.brainService.getPackages(),
-      chat.members.filter((m) => m.memberType === ChatMemberType.brain)
+      chat.members.filter((m) => m.memberType === ChatMemberType.brain),
+      undefined,
+      !chat.isDirect
     );
-    this.chatService = container.resolve('IChatService');
+    this.chatClient = container.resolve<IChatClient>('IChatClient');
     this.initServer();
   }
 
@@ -63,7 +64,7 @@ export class ChatWindowService
   }
 
   private async initServer(): Promise<void> {
-    this.chatSessionServer = this.chatService.getClient().session(this.chat.id);
+    this.chatSessionServer = this.chatClient.session(this.chat.id);
     this.chatSessionServer.onMessageReceived(this.onMessageReceived.bind(this));
     this.chatSessionServer.onMessageUpdated(this.onMessageUpdated.bind(this));
     this.chatSessionServer.onChatUpdated(this.onChatUpdated.bind(this));
@@ -75,7 +76,9 @@ export class ChatWindowService
   }
 
   onChatUpdated(chat: ChatModel): void {
-    const { members } = chat;
+    const { members, isDirect } = chat;
+    if (isDirect) return;
+
     this.setState({
       selectedBrains: members.filter(
         (m) => m.memberType === ChatMemberType.brain

@@ -17,6 +17,7 @@ export class CreateChatController implements Controller {
       name: request.name,
       members: request.members as ChatUser[],
       initiator: request.context.userId,
+      isDirect: request.isDirect,
     });
 
     // I'm not sure if this should be here or not... maybe it should be in the usecase?
@@ -33,5 +34,6 @@ export namespace CreateChatController {
       memberType: string;
       handleMessageTypes?: string[];
     }[];
+    isDirect?: boolean;
   };
 }

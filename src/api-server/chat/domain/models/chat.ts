@@ -45,4 +45,6 @@ export type ChatModel = {
   messages?: ChatMessageModel[];
   members: ChatUser[];
   lastActivity?: ChatActivity;
+  /* 1-1 chats only */
+  isDirect?: boolean;
 };

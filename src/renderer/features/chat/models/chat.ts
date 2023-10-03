@@ -33,11 +33,7 @@ export interface IChatGroup {
   activeItem?: IChatItem;
 }
 
-export interface IChatState {
-  headerToolBar?: IActionBarItemProps[];
-  chats: IChatItem[];
-  activeItem?: IChatItem;
-}
+export interface IChatState {}
 
 export class ChatStateModel implements IChatState {
   headerToolBar?: IActionBarItemProps<any>[];

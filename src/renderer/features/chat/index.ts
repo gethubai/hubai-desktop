@@ -1,4 +1,4 @@
 import { container } from 'tsyringe';
-import { ChatService, IChatService } from './services/chat';
+import { type IChatService } from './services/types';
 
-export const chat = container.resolve<IChatService>(ChatService);
+export const chat = container.resolve<IChatService>('IChatService');

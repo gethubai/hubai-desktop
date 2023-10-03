@@ -134,6 +134,8 @@ import { ElectronDownloadManager } from './features/downloader/electronDownloadM
 import { type IDownloadManager } from './features/downloader/downloadManager';
 import { type IContactService } from './features/contact/models/service';
 import { ContactService } from './features/contact/services/contactService';
+import { IChatClient } from './features/chat/sdk/contracts';
+import { ChatClient } from './features/chat/sdk/chatClient';
 
 container.registerSingleton<ISideBarController>(
   'ISidebarController',
@@ -250,6 +252,7 @@ container.registerSingleton<ILocalUserService>(
 
 container.registerSingleton<IBuiltinService>('IBuiltinService', BuiltinService);
 container.registerSingleton<IChatService>('IChatService', ChatService);
+container.registerSingleton<IChatClient>('IChatClient', ChatClient);
 container.registerSingleton<IBrainManagementService>(
   'IBrainManagementService',
   BrainManagementService

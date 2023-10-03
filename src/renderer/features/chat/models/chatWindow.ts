@@ -12,6 +12,7 @@ export interface IChatWindowState {
   selectedBrains: ChatUser[];
   auxiliaryBarView: ViewVisibility;
   userId: string;
+  isGroupChat: boolean;
 }
 
 export class ChatWindowStateModel implements IChatWindowState {
@@ -29,13 +30,16 @@ export class ChatWindowStateModel implements IChatWindowState {
 
   userId: string;
 
+  isGroupChat: boolean;
+
   constructor(
     id: string,
     userId: string,
     messages: ChatMessageViewModel[] = [],
     availableBrains: LocalBrainModel[] = [],
     selectedBrains: ChatUser[] = [],
-    users: Record<string, ChatContextUser> | undefined = undefined
+    users: Record<string, ChatContextUser> | undefined = undefined,
+    isGroupChat: boolean = false
   ) {
     this.id = id;
     this.userId = userId;
@@ -44,5 +48,6 @@ export class ChatWindowStateModel implements IChatWindowState {
     this.selectedBrains = selectedBrains;
     this.auxiliaryBarView = { hidden: true };
     this.users = users || {};
+    this.isGroupChat = isGroupChat;
   }
 }

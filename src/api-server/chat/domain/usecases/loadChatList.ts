@@ -6,7 +6,8 @@ export interface LoadChatList {
 
 export namespace LoadChatList {
   export type Params = {
-    userId?: string;
+    userId?: string | string[];
+    isDirect?: boolean;
   };
 
   export type Model = ChatModel;

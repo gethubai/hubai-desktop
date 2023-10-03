@@ -62,6 +62,13 @@ export interface IChatSessionServer {
   id: string;
 }
 
+export type ChatListFilters = {
+  /* Chat that contains this userId as a member */
+  userId?: string | string[];
+  /* If true, return only direct chats (1-1) */
+  isDirect?: boolean;
+};
+
 export interface IChatClient {
   connect(user: ChatClientUser): Promise<void>;
 
@@ -84,7 +91,7 @@ export interface IChatClient {
   onLeftChat(listener: (chat: ChatModel) => void): void;
   newChat(options: CreateChat.Params): Promise<ChatModel>;
 
-  chats(): Promise<ChatModel[]>;
+  chats(filters?: ChatListFilters): Promise<ChatModel[]>;
   chat(id: string): Promise<ChatModel>;
   currentUser(): ChatClientUser;
 }

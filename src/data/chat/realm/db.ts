@@ -40,6 +40,8 @@ export class ChatDto extends Realm.Object<ChatModel> {
 
   members!: ChatUser[];
 
+  isDirect?: boolean;
+
   owner_id?: string;
 
   public static schema: Realm.ObjectSchema = {
@@ -53,6 +55,7 @@ export class ChatDto extends Realm.Object<ChatModel> {
       createdDate: 'date',
       messages: 'ChatMessage[]',
       lastActivity: 'ChatActivity?',
+      isDirect: 'bool?',
       owner_id: 'string?',
     },
   };
@@ -73,6 +76,7 @@ export class ChatDto extends Realm.Object<ChatModel> {
       createdDate: this.createdDate,
       members: this.members?.map((item) => (item as any).values),
       lastActivity: (this.lastActivity as any)?.values,
+      isDirect: this.isDirect,
     } as ChatModel;
   }
 }
@@ -314,7 +318,7 @@ const config = {
     ChatImageMessageDto,
     ChatVoiceMessageDto,
   ],
-  schemaVersion: 2,
+  schemaVersion: 3,
   // path: dbPath,
 };
 

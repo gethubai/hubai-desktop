@@ -11,7 +11,12 @@ import {
 } from 'renderer/features/packages/models/localPackageManagementService';
 import { PackageType } from 'renderer/features/packages/models/package';
 import { isEqual } from 'lodash';
-import { BrainEvent, BrainStateModel, type IBrainState } from '../models/brain';
+import {
+  BrainEvent,
+  BrainStateModel,
+  LocalBrainViewModel,
+  type IBrainState,
+} from '../models/brain';
 import makeLoadLocalBrains from '../factories/usecases/makeLoadLocalBrains';
 import makeSaveLocalBrainSettings from '../factories/usecases/makeSaveLocalBrainSettings';
 
@@ -37,6 +42,16 @@ export class BrainManagementService
     this.onPackageSettingsUpdated(this.saveBrainSettings.bind(this));
     this.loadBrains();
   }
+
+  getPackagesAsync = async (): Promise<LocalBrainModel[]> => {
+    if (this.state.brains && this.state.brains.length > 0)
+      return Promise.resolve(this.state.brains);
+
+    const getBrainsUseCase = await makeLoadLocalBrains();
+    const brains = await getBrainsUseCase.getBrains();
+
+    return brains;
+  };
 
   onPackageInstalled(callback: (brain: LocalBrainModel) => void): void {
     this.subscribe(BrainEvent.onBrainInstalled, callback);
@@ -95,9 +110,9 @@ export class BrainManagementService
     );
   }
 
-  getPackages(): LocalBrainModel[] {
+  getPackages = (): LocalBrainModel[] => {
     return this.state.brains ?? [];
-  }
+  };
 
   getPackageSettings(brainId: string) {
     const brain = this.getPackages().find((b) => b.id === brainId);
@@ -129,13 +144,13 @@ export class BrainManagementService
     });
   }
 
-  private async loadBrains(): Promise<void> {
-    const getBrainsUseCase = await makeLoadLocalBrains();
-    const brains = await getBrainsUseCase.getBrains();
+  private loadBrains = async (): Promise<LocalBrainViewModel[]> => {
+    const brains = await this.getPackagesAsync();
     this.setState({ brains });
 
     this.loadDefaultBrainSettings();
-  }
+    return brains;
+  };
 
   private loadDefaultBrainSettings(): void {
     const brainSettings: any = {

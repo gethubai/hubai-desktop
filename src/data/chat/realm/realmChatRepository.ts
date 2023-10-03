@@ -1,7 +1,7 @@
 import Realm from 'realm';
 import { ChatModel } from 'api-server/chat/domain/models/chat';
 import app from 'data/realm/app';
-import { IChatRepository } from '../chatRepository';
+import { ChatListFilters, IChatRepository } from '../chatRepository';
 import { ChatDto } from './db';
 
 export class RealmChatRepository implements IChatRepository {
@@ -41,10 +41,25 @@ export class RealmChatRepository implements IChatRepository {
     });
   };
 
-  list = async (userId?: string): Promise<ChatModel[]> => {
+  list = async (filters?: ChatListFilters): Promise<ChatModel[]> => {
     let models = this.database.objects(ChatDto);
 
-    if (userId) models = models.filtered(`members.id == $0`, userId);
+    if (filters?.userId) {
+      if (Array.isArray(filters.userId)) {
+        models = models.filtered(
+          `ALL {${filters.userId
+            .map((_, i) => `$${i}`)
+            .join(', ')}} IN ANY members.id`,
+          ...filters.userId
+        );
+      } else {
+        models = models.filtered(`members.id == $0`, filters.userId);
+      }
+    }
+
+    if (filters?.isDirect !== undefined) {
+      models = models.filtered(`isDirect == $0`, filters.isDirect);
+    }
 
     return models.map((item) => item.values);
   };

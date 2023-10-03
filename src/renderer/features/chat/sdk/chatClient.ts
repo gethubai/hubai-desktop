@@ -13,7 +13,12 @@ import {
 import { MqttClientEventEmitter } from 'api-server/chat/chatTcpServer/mqtt/pubsub/clientEventEmitter';
 import { MqttServerEventSubscriber } from 'api-server/chat/chatTcpServer/mqtt/pubsub/serverEventSubscriber';
 import { connect } from 'mqtt';
-import { ChatClientUser, IChatClient, IChatSessionServer } from './contracts';
+import {
+  ChatClientUser,
+  ChatListFilters,
+  IChatClient,
+  IChatSessionServer,
+} from './contracts';
 import { ChatSessionServer } from './chatSessionServer';
 import { isBlobWebAPI, isBuffer, isFileWebAPI } from './fileUtils';
 
@@ -138,11 +143,12 @@ export class ChatClient implements IChatClient {
     return this.post<ChatModel>(`/chats`, {
       name: options.name,
       members: options.members,
+      isDirect: options.isDirect,
     });
   };
 
-  chats = (): Promise<ChatModel[]> => {
-    return this.get<ChatModel[]>(`/chats`);
+  chats = (filters?: ChatListFilters): Promise<ChatModel[]> => {
+    return this.get<ChatModel[]>(`/chats`, filters);
   };
 
   chat = (id: string): Promise<ChatModel> => {

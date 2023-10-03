@@ -24,3 +24,7 @@ export interface IChatWindowController
   AuxiliaryBarTabs: React.ComponentType;
   AuxiliaryBar: React.ComponentType;
 }
+
+export interface IChatListController extends Partial<Controller> {
+  onChatClick?: (item: IChatItem) => void;
+}

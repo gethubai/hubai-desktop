@@ -7,14 +7,23 @@ export default class LocalCreateChat implements CreateChat {
 
   async create(params: CreateChat.Params): Promise<CreateChat.Model> {
     const { name, initiator, members } = params;
-    const chat = await this.repository.add({
+
+    const isDirect = params.isDirect === undefined ? false : params.isDirect;
+
+    if (isDirect && members.length !== 2) {
+      throw new Error('Direct chat must have exactly 2 members');
+    }
+
+    const opt = {
       id: generateUniqueId(),
       name,
       initiator,
       messages: [],
       createdDate: new Date().toISOString(),
       members,
-    });
-    return chat;
+      isDirect,
+    };
+
+    return await this.repository.add(opt);
   }
 }

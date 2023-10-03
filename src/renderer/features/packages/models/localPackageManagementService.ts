@@ -14,6 +14,7 @@ export type PackageUninstallationResult = {
 
 export interface ILocalPackageManagementService<TPackage extends LocalPackage> {
   getPackages(): TPackage[];
+  getPackagesAsync(): Promise<TPackage[]>;
   packageType: PackageType;
   getPackageByName(name: string): TPackage | undefined;
   getPackageSettings(packageId: string): any;
