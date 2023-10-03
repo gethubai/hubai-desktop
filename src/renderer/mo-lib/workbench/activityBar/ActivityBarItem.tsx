@@ -4,7 +4,7 @@ import { IActivityBarItem } from '@hubai/core/esm/model/workbench/activityBar';
 import { IMenuItemProps, Menu } from '@hubai/core/esm/components/menu';
 import { IActivityBarController } from '@hubai/core';
 
-import { Icon, useContextViewEle } from '@hubai/core/esm/components';
+import { Icon, Tooltip, useContextViewEle } from '@hubai/core/esm/components';
 import { KeybindingHelper } from '@hubai/core/esm/services/keybinding';
 import {
   indicatorClassName,
@@ -87,7 +87,9 @@ export function ActivityBarItem(
       )}
       data-id={data.id}
     >
-      {content}
+      <Tooltip overlay={title} key={id} placement="right">
+        {content}
+      </Tooltip>
       {checked ? <div className={indicatorClassName} /> : null}
     </li>
   );

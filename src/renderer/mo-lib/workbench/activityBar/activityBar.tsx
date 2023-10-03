@@ -1,23 +1,24 @@
 /* eslint-disable no-unused-expressions */
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import {
   IActivityBar,
   IActivityBarController,
   IActivityBarItem,
+  IActivityMenuItemProps,
   type UniqueId,
 } from '@hubai/core';
 import { ID_ACTIVITY_BAR } from '@hubai/core/esm/common/id';
 import {
   IMenuItemProps,
   Menu,
-  Scrollbar,
   useContextViewEle,
 } from '@hubai/core/esm/components';
 import {
   containerClassName,
   defaultClassName,
   globalItemsClassName,
+  groupContainerClassName,
   itemClassName,
   normalItemsClassName,
 } from './base';
@@ -33,21 +34,39 @@ export function ActivityBar(props: IActivityBar & IActivityBarController) {
     onContextMenuClick,
   } = props;
 
-  const onClickBar = (key: UniqueId, item: IActivityBarItem) => {
-    if (onClick) onClick(key, item);
-    if (onChange) {
-      // only normal item trigger onChange event
-      if (item.type !== 'global') {
-        onChange(selected, key);
+  const onClickBar = useCallback(
+    (key: UniqueId, item: IActivityBarItem) => {
+      if (onClick) onClick(key, item);
+      if (onChange) {
+        // only normal item trigger onChange event
+        if (item.type !== 'global') {
+          onChange(selected, key);
+        }
       }
-    }
-  };
-
-  const normalBarItems = data.filter(
-    (item) => item.type !== 'global' && !item.hidden
+    },
+    [onClick, onChange, selected]
   );
-  const globalBarItems = data.filter(
-    (item) => item.type === 'global' && !item.hidden
+
+  const groupedItems = useMemo(
+    () =>
+      data
+        .filter(
+          (item: IActivityBarItem) => item.type !== 'global' && !item.hidden
+        )
+        .reduce((acc: any, item: IActivityBarItem) => {
+          const type = item.type ?? 'default';
+          (acc[type] ??= []).push(item);
+          return acc;
+        }, {}),
+    [data]
+  );
+
+  const globalBarItems = useMemo(
+    () =>
+      data.filter(
+        (item: IActivityBarItem) => item.type === 'global' && !item.hidden
+      ),
+    [data]
   );
 
   const renderItems = (item: IActivityBarItem, index: number) => {
@@ -77,44 +96,51 @@ export function ActivityBar(props: IActivityBar & IActivityBarController) {
     [contextMenu, onContextMenuClick, contextView]
   );
 
-  const handleRightClick = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!contextView) return;
-    const doms = document.elementsFromPoint(e.pageX, e.pageY);
-    const itemDom = doms.find((dom) => dom.classList.contains(itemClassName));
-    if (itemDom) {
-      const rect = itemDom.getBoundingClientRect();
-      const extraContextMenu = contextMenu.concat();
-      const targetContextMenu = contextMenu.find(
-        (menu) => menu.id === itemDom?.id
-      );
-      targetContextMenu &&
-        extraContextMenu.unshift(
-          ...([
-            {
-              id: itemDom.id,
-              icon: 'check',
-              name: targetContextMenu.name,
-            },
-            {
-              type: 'divider',
-            },
-          ] as IActivityMenuItemProps[])
+  const handleRightClick = useCallback(
+    (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!contextView) return;
+      const doms = document.elementsFromPoint(e.pageX, e.pageY);
+      const itemDom = doms.find((dom) => dom.classList.contains(itemClassName));
+      if (itemDom) {
+        const rect = itemDom.getBoundingClientRect();
+        const extraContextMenu = contextMenu.concat();
+        const targetContextMenu = contextMenu.find(
+          (menu) => menu.id === itemDom?.id
         );
-      contextView.show(
-        {
-          x: rect.x + rect.width / 2,
-          y: rect.y + rect.height,
-        },
-        () => (
-          <Menu role="menu" onClick={onClickMenuItem} data={extraContextMenu} />
-        )
-      );
-    } else {
-      contextView.show({ x: e.pageX, y: e.pageY });
-    }
-  };
+        targetContextMenu &&
+          extraContextMenu.unshift(
+            ...([
+              {
+                id: itemDom.id,
+                icon: 'check',
+                name: targetContextMenu.name,
+              },
+              {
+                type: 'divider',
+              },
+            ] as IActivityMenuItemProps[])
+          );
+        contextView.show(
+          {
+            x: rect.x + rect.width / 2,
+            y: rect.y + rect.height,
+          },
+          () => (
+            <Menu
+              role="menu"
+              onClick={onClickMenuItem}
+              data={extraContextMenu}
+            />
+          )
+        );
+      } else {
+        contextView.show({ x: e.pageX, y: e.pageY });
+      }
+    },
+    [contextMenu, contextView, onClickMenuItem]
+  );
 
   return (
     <div
@@ -123,12 +149,20 @@ export function ActivityBar(props: IActivityBar & IActivityBarController) {
       id={ID_ACTIVITY_BAR}
     >
       <div className={containerClassName}>
-        <Scrollbar className={normalItemsClassName}>
-          <ul>{normalBarItems.map(renderItems)}</ul>
-        </Scrollbar>
-        <ul className={globalItemsClassName}>
-          {globalBarItems.map(renderItems)}
-        </ul>
+        <div className={groupContainerClassName}>
+          {Object.keys(groupedItems).map((key) => {
+            const items = groupedItems[key];
+            return (
+              <div className={normalItemsClassName} key={key}>
+                <ul>{items.map(renderItems)}</ul>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className={globalItemsClassName}>
+          <ul>{globalBarItems.map(renderItems)}</ul>
+        </div>
       </div>
     </div>
   );
