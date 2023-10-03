@@ -6,6 +6,7 @@ export const adaptRoute = (controller: Controller) => {
     const request = {
       ...(req.body || {}),
       ...(req.params || {}),
+      ...(req.query || {}),
       file: req.file,
       context: { userId: req.headers['user-id'] },
     };
