@@ -28,4 +28,5 @@ export type LocalExtensionModel = LocalPackage & {
   extensionKind?: IExtensionType[];
   contributes?: IContribute;
   path?: string;
+  remoteUrl?: string;
 };

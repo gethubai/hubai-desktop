@@ -24,6 +24,7 @@ export namespace AddLocalExtension {
     description?: string;
     publisher?: string;
     path?: string;
+    remoteUrl?: string;
   };
   export type Model = LocalExtensionModel;
 }

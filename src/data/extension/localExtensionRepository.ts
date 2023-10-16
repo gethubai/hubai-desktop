@@ -9,6 +9,7 @@ export interface ILocalExtensionDto {
   disabled?: boolean;
   installationDateUtc?: Date;
   updatedDateUtc?: Date;
+  remoteUrl?: string;
 }
 
 export interface ILocalExtensionRepository {

@@ -46,6 +46,7 @@ export default class LocalDbAddLocalExtension implements AddLocalExtension {
         contributes: extension.contributes,
         icon: extension.icon,
         iconUrl: extension.iconUrl,
+        remoteUrl: extension.remoteUrl,
         updatedDateUtc: getCurrentUtcDate(),
       } as LocalExtensionModel;
       // Update extension

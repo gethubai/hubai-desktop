@@ -11,7 +11,11 @@ ipcMain.on(endpoints.getAll, async (event) => {
 });
 
 ipcMain.on(endpoints.install, async (event, extensionZipPath: string) => {
-  const result = await extensionInstaller.installExtension(extensionZipPath);
+  let result;
+  if (extensionZipPath.startsWith('http'))
+    // TODO: Improve this by checking if its a valid url
+    result = await extensionInstaller.installRemoteExtension(extensionZipPath);
+  else result = await extensionInstaller.installExtension(extensionZipPath);
   event.returnValue = result;
 });
 

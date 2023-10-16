@@ -74,11 +74,11 @@ class ExtensionService implements IExtensionService {
   public static async loadFromSystem(
     extensionName: string
   ): Promise<IExtension> {
-    const res = await loadComponent(
-      `plugins://${extensionName}`,
-      'my-plugin',
-      './Module'
-    )();
+    const extensionUrl = extensionName.startsWith('http')
+      ? extensionName
+      : `plugins://${extensionName}`;
+
+    const res = await loadComponent(extensionUrl, 'my-plugin', './Module')();
 
     return res.default;
   }

@@ -11,7 +11,6 @@ import ExtendsEditor from './editor';
 import { ExtendsActivityBar } from './activityBar';
 import { defaultColorThemeExtension } from './themes/theme-defaults';
 import packageStoreExtension from './packageStore/extension';
-import devExtensions from '../../../devExtensions/index';
 import { BrainChats } from './brainChats';
 
 // import { githubPlusExtension } from './themes/github-plus-theme-master';
@@ -34,5 +33,4 @@ export const defaultExtensions = [
   // webStormIntelliJExtension,
   // githubPlusExtension,
   ExtendsFolderTree,
-  ...(devExtensions ?? []),
 ];

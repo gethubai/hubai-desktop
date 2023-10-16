@@ -82,6 +82,60 @@ export class ExtensionInstaller {
     }
   };
 
+  installRemoteExtension = async (
+    extensionBaseUrl: string
+  ): Promise<ExtensionInstallationResult> => {
+    try {
+      const data = await fetch(`${extensionBaseUrl}/manifest.json`);
+      const manifest = await data.json();
+
+      const localExtension = {
+        main: manifest.entryPoint,
+        version: manifest.version,
+        publisher: manifest.publisher,
+        name: manifest.name.toLowerCase(),
+        displayName: manifest.displayName,
+        extensionKind: manifest.extensionKind,
+        contributes: manifest.contributes,
+        icon: manifest.icon,
+        description: manifest.description,
+        remoteUrl: extensionBaseUrl,
+      } as LocalExtensionModel;
+
+      if (manifest.capabilities) {
+        throw new Error(
+          'Are you trying to install a brain? Please use the brain installer instead.'
+        );
+      }
+
+      const extractFolder = getExtensionPath(localExtension);
+
+      if (localExtension.icon) {
+        localExtension.iconUrl = `${extensionBaseUrl}/${localExtension.icon}`;
+      }
+
+      try {
+        const addExtensionUseCase = await makeAddLocalExtension();
+        const extension = await addExtensionUseCase.add(localExtension);
+        return {
+          success: true,
+          extension: {
+            ...extension,
+            installationState: PackageInstallationState.pending_reload,
+          },
+        };
+      } catch (e: any) {
+        console.error('Error adding extension to database: ', e);
+        // delete extractFolder if we failed to add extension to database
+        this.removeDir(extractFolder);
+        return { success: false, error: e };
+      }
+    } catch (e: any) {
+      console.error('Error installing extension: ', e);
+      return { success: false, error: e };
+    }
+  };
+
   uninstall = async (
     extension: LocalExtensionModel
   ): Promise<ExtensionUninstallationResult> => {

@@ -31,6 +31,7 @@ export class RealmLocalExtensionRepository
         dto.version = extension.version;
         dto.updatedDateUtc = extension.updatedDateUtc;
         dto.disabled = extension.disabled ?? false;
+        dto.remoteUrl = extension.remoteUrl;
 
         resolve(dto.values);
         return dto;

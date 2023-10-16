@@ -1,0 +1,32 @@
+.install-extension-container {
+  padding: 15px;
+  margin-top: -30px;
+
+  .install-mode-select {
+    margin-bottom: 10px;
+  }
+
+  .text-center {
+    text-align: center;
+    font-weight: bold;
+    font-size: large;
+  }
+
+  .form {
+    margin-top: 2rem;
+    input {
+      margin-top: 0.5rem;
+    }
+  }
+
+  .actions-container {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    button {
+      max-width: 200px;
+    }
+  }
+}

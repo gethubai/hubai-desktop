@@ -26,6 +26,8 @@ export class LocalExtensionDto extends Realm.Object<LocalExtensionModel> {
 
   updatedDateUtc?: Date;
 
+  remoteUrl?: string;
+
   public static schema: Realm.ObjectSchema = {
     name: 'LocalExtension',
     properties: {
@@ -37,6 +39,7 @@ export class LocalExtensionDto extends Realm.Object<LocalExtensionModel> {
       disabled: 'bool?',
       installationDateUtc: 'date',
       updatedDateUtc: 'date?',
+      remoteUrl: 'string?',
     },
     primaryKey: 'id',
   };
@@ -51,6 +54,7 @@ export class LocalExtensionDto extends Realm.Object<LocalExtensionModel> {
       disabled: this.disabled,
       installationDateUtc: this.installationDateUtc,
       updatedDateUtc: this.updatedDateUtc,
+      remoteUrl: this.remoteUrl,
     } as ILocalExtensionDto;
   }
 }
@@ -63,6 +67,7 @@ const dbPath = path.resolve(dbBasePath, 'database.realm');
 const config = {
   schema: [LocalExtensionDto],
   path: dbPath,
+  schemaVersion: 2,
 };
 
 let dbPromise: Promise<Realm>;

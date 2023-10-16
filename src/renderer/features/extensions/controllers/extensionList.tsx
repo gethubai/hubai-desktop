@@ -12,7 +12,6 @@ import {
 } from '@hubai/core';
 import { container, inject, injectable } from 'tsyringe';
 import generateUniqueId from 'renderer/common/uniqueIdGenerator';
-import { openHextFileSelector } from 'renderer/common/fileUtils';
 import { IMenuItemProps } from '@hubai/core/esm/components';
 import { PackageUninstallationResult } from 'renderer/features/packages/models/localPackageManagementService';
 import { IExtensionListController } from './type';
@@ -20,6 +19,7 @@ import { ExtensionManagementService } from '../services/extensionManagement';
 import ExtensionSidebar from '../workbench/extensionSidebar';
 import { ExtensionEvent, LocalExtensionViewModel } from '../models/extension';
 import LocalExtensionWindow from '../workbench/localExtensionWindow';
+import { InstallLocalExtensionWindow } from '../workbench/installExtensionWindow';
 
 const { connect } = react;
 
@@ -68,9 +68,7 @@ export default class ExtensionListController
         id: 'addExtension',
         title: 'Add Extension',
         onClick: () => {
-          return openHextFileSelector(
-            this.onSelectLocalExtensionToInstall.bind(this)
-          );
+          this.selectOrOpenInstallExtensionWindow();
         },
       },
     ];
@@ -141,7 +139,7 @@ export default class ExtensionListController
     this.emit(ExtensionEvent.onExtensionSettingsUpdated, extension, settings);
   };
 
-  private onSelectLocalExtensionToInstall = (file: File) => {
+  /* private onSelectLocalExtensionToInstall = (file: File) => {
     // TODO: Make a usecase for this
     const res = window.electron.extension.installExtension(file.path);
 
@@ -177,7 +175,32 @@ export default class ExtensionListController
     ];
     this.notificationService.add(items);
     this.notificationService.toggleNotification();
-  };
+  }; */
+
+  private selectOrOpenInstallExtensionWindow(): void {
+    let renderPane;
+    const windowId = `extensions.installExtension`;
+    if (!this.editorService.isOpened(windowId)) {
+      const ViewWindow = connect(
+        this.extensionService,
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        (props) => (
+          <InstallLocalExtensionWindow
+            {...props}
+            installPackage={this.extensionService.installPackage}
+          />
+        )
+      );
+
+      renderPane = () => <ViewWindow key={windowId} />;
+    }
+    this.editorService.open({
+      id: windowId,
+      name: `Install Extension`,
+      icon: 'extensions',
+      renderPane,
+    });
+  }
 
   private async selectOrOpenExtensionWindow(
     extension: LocalExtensionViewModel
