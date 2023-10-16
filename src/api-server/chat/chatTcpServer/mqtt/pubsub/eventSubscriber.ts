@@ -75,8 +75,6 @@ export class MqttEventSubscriber<TEventMap extends EventsMap>
 
     this.subscriptions[parsedName as string] = listener;
 
-    console.log('@@ SUBSCRIBED', parsedName);
-
     return {
       name: parsedName,
       unsubscribe: () => this.unsubscribe(parsedName, listener),
