@@ -1,4 +1,5 @@
 import {
+  AttachmentType,
   ChatMessageStatus,
   ChatMessageType,
 } from 'api-server/chat/domain/models/chatMessage';
@@ -15,10 +16,20 @@ export type ChatVoiceMessageContent = {
   mimeType?: string;
 };
 
+export type ChatMessageAttachment = {
+  id: string;
+  fileSrc: string;
+  attachmentType: AttachmentType;
+  mimeType: string;
+  size: string;
+  name: string;
+};
+
 export type ChatMessageViewModel = {
   id: string;
   textContent?: string;
   voiceContent?: ChatVoiceMessageContent;
+  attachments?: ChatMessageAttachment[];
   messageContentType: ChatMessageType;
   sentAt: Date;
   senderDisplayName: string;

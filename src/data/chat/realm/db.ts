@@ -13,6 +13,7 @@ import {
   ChatMessageStatus,
   ChatMessageType,
   ImageMessage,
+  MessageAttachment,
   TextMessage,
   VoiceMessage,
 } from 'api-server/chat/domain/models/chatMessage';
@@ -241,6 +242,48 @@ export class ChatMessageRecipientDto extends Realm.Object<ChatMessageRecipient> 
   }
 }
 
+export class ChatMessageAttachmentDto extends Realm.Object<MessageAttachment> {
+  id!: string;
+
+  originalFileName!: string;
+
+  file!: string;
+
+  mimeType!: string;
+
+  attachmentType!: string;
+
+  caption?: string;
+
+  size!: number;
+
+  static schema = {
+    name: 'ChatMessageAttachment',
+    embedded: true,
+    properties: {
+      id: { type: 'string', indexed: true },
+      file: 'string',
+      originalFileName: 'string',
+      mimeType: 'string',
+      attachmentType: 'string',
+      size: 'int',
+      caption: 'string?',
+    },
+  };
+
+  get values(): MessageAttachment {
+    return {
+      id: this.id,
+      originalFileName: this.originalFileName,
+      file: this.file,
+      mimeType: this.mimeType,
+      attachmentType: this.attachmentType,
+      caption: this.caption,
+      size: this.size,
+    } as MessageAttachment;
+  }
+}
+
 export class ChatMessageDto extends Realm.Object<ChatMessageModel> {
   _id!: string;
 
@@ -255,6 +298,8 @@ export class ChatMessageDto extends Realm.Object<ChatMessageModel> {
   image?: ImageMessage;
 
   voice?: VoiceMessage;
+
+  attachments?: MessageAttachment[];
 
   messageType!: ChatMessageType;
 
@@ -280,6 +325,7 @@ export class ChatMessageDto extends Realm.Object<ChatMessageModel> {
       sendDate: { type: 'date', indexed: true },
       chatId: { type: 'string', indexed: true },
       recipients: { type: 'list', objectType: 'ChatMessageRecipient' },
+      attachments: { type: 'list', objectType: 'ChatMessageAttachment' },
       hidden: 'bool?',
       owner_id: 'string?',
     },
@@ -294,6 +340,7 @@ export class ChatMessageDto extends Realm.Object<ChatMessageModel> {
       text: (this.text as any)?.values,
       image: (this.image as any)?.values,
       voice: (this.voice as any)?.values,
+      attachments: this.attachments?.map((item) => (item as any).values),
       messageType: this.messageType,
       status: this.status,
       chat: this.chatId,
@@ -317,8 +364,9 @@ const config = {
     ChatTextMessageDto,
     ChatImageMessageDto,
     ChatVoiceMessageDto,
+    ChatMessageAttachmentDto,
   ],
-  schemaVersion: 3,
+  schemaVersion: 6,
   // path: dbPath,
 };
 

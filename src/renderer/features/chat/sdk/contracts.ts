@@ -33,6 +33,8 @@ export type SendMessage = {
 
   voice?: VoiceMessage;
 
+  attachments?: File[];
+
   brainsSettings?: IRecipientSettings;
 
   hidden?: boolean;

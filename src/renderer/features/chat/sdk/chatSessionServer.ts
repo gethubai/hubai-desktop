@@ -93,7 +93,7 @@ export class ChatSessionServer implements IChatSessionServer, IDisposable {
 
   sendAudio = async (audio: RawVoiceMessage): Promise<VoiceMessage> => {
     const result = await this.client.sendFile<VoiceMessage>(
-      this.getSessionUrl('/upload/audio'),
+      this.getSessionUrl('/upload/file'),
       audio.data,
       'audio_file',
       audio.mimeType
@@ -126,14 +126,29 @@ export class ChatSessionServer implements IChatSessionServer, IDisposable {
     image,
     voice,
     hidden,
+    attachments,
   }: SendMessage): Promise<void> => {
-    await this.client.post<ChatMessageModel>(this.getSessionUrl('/messages'), {
+    const formData = new FormData();
+
+    const request = {
       chatId: this.id,
       text,
       image,
       voice,
       hidden,
+      attachments,
+    };
+
+    formData.append('jsonData', JSON.stringify(request));
+
+    attachments?.forEach((a) => {
+      formData.append('files', a);
     });
+
+    await this.client.post<ChatMessageModel>(
+      this.getSessionUrl('/messages'),
+      formData
+    );
   };
 
   addMember = (user: ChatUser): void => {

@@ -5,6 +5,7 @@ export enum BrainCapability {
   CONVERSATION = 'conversation',
   VOICE_TRANSCRIPTION = 'voice_transcription',
   IMAGE_RECOGNITION = 'image_recognition',
+  IMAGE_GENERATION = 'image_generation',
 }
 
 export enum BrainSettingScope {

@@ -23,6 +23,7 @@ export interface IChatWindowController
   getBrainChatSettings(brain: LocalBrainModel): any;
   AuxiliaryBarTabs: React.ComponentType;
   AuxiliaryBar: React.ComponentType;
+  removeAttachedFile(fileId: string): void;
 }
 
 export interface IChatListController extends Partial<Controller> {

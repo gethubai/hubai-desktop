@@ -18,7 +18,10 @@ export const getSupportedPromptTypesFromCapabilities = (
   capabilities: BrainCapability[]
 ) => {
   const supportedPromptTypes: PromptType[] = capabilities.map((capability) => {
-    if (capability === BrainCapability.CONVERSATION) {
+    if (
+      capability === BrainCapability.CONVERSATION ||
+      capability === BrainCapability.IMAGE_GENERATION
+    ) {
       return PromptType.text;
     }
 

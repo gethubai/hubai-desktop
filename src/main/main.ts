@@ -18,6 +18,8 @@ import {
   getBrainsStoragePath,
   getExtensionsStoragePath,
   getMessageAudioStoragePath,
+  getMessageFilesStoragePath,
+  getMessageMediaStoragePath,
   getMessageStoragePath,
   getPackagesStoragePath,
 } from 'utils/pathUtils';
@@ -284,6 +286,8 @@ app
 
     createDirectoryIfNotExists(getMessageStoragePath(''));
     createDirectoryIfNotExists(getMessageAudioStoragePath(''));
+    createDirectoryIfNotExists(getMessageFilesStoragePath(''));
+    createDirectoryIfNotExists(getMessageMediaStoragePath(''));
     createDirectoryIfNotExists(getExtensionsStoragePath(''));
     createDirectoryIfNotExists(getBrainsStoragePath(''));
 

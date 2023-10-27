@@ -8,8 +8,8 @@ import { makeSendMessageController } from '../factories/chat/controllers/sendMes
 import { makeAddChatMemberController } from '../factories/chat/controllers/addChatMemberControllerFactory';
 import { makeRemoveChatMemberController } from '../factories/chat/controllers/removeChatMemberControllerFactory';
 import { makeCreateChatController } from '../factories/chat/controllers/createChatControllerFactory';
-import { makeSendAudioController } from '../factories/chat/controllers/sendAudioControllerFactory';
 import { makeSetVoiceMessageTranscriptionController } from '../factories/chat/controllers/setVoiceMessageTranscriptionControllerFactory';
+import { makeSendChatFileController } from '../factories/chat/controllers/sendChatFileControllerFactory';
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -23,6 +23,7 @@ export default (router: Router): void => {
     );
     router.post(
       '/chats/:chatId/messages',
+      upload.any(),
       adaptRoute(await makeSendMessageController())
     );
     router.put(
@@ -30,9 +31,9 @@ export default (router: Router): void => {
       adaptRoute(await makeSetVoiceMessageTranscriptionController())
     );
     router.post(
-      '/chats/:chatId/upload/audio',
+      '/chats/:chatId/upload/file',
       upload.single('file'),
-      adaptRoute(await makeSendAudioController())
+      adaptRoute(await makeSendChatFileController())
     );
     router.post(
       '/chats/:chatId/members',

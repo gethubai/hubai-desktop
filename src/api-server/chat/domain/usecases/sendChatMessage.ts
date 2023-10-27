@@ -4,6 +4,7 @@ import {
   ChatMessageType,
   IRecipientSettings,
   ImageMessage,
+  RawMessageAttachment,
   TextMessage,
   VoiceMessage,
 } from '../models/chatMessage';
@@ -15,6 +16,7 @@ export namespace SendChatMessage {
     text?: TextMessage;
     image?: ImageMessage;
     voice?: VoiceMessage;
+    attachments?: RawMessageAttachment[];
     messageType: ChatMessageType;
     status: ChatMessageStatus;
     recipientSettings?: IRecipientSettings;

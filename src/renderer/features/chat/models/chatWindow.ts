@@ -2,7 +2,16 @@ import { ViewVisibility } from '@hubai/core/esm/model/workbench/layout';
 import { LocalBrainModel } from 'api-server/brain/domain/models/localBrain';
 import { ChatUser } from 'api-server/chat/domain/models/chat';
 import { ChatContextUser } from 'api-server/chat/domain/models/chatContext';
+import { ISubMenuProps } from '@hubai/core/esm/components';
 import { ChatMessageViewModel } from '../workbench/components/chat/types';
+
+export type AttachedFile = {
+  id: string;
+  name: string;
+  size: string;
+  previewUrl: string;
+  file: File;
+};
 
 export interface IChatWindowState {
   id: string;
@@ -13,6 +22,8 @@ export interface IChatWindowState {
   auxiliaryBarView: ViewVisibility;
   userId: string;
   isGroupChat: boolean;
+  plusButtonActions?: ISubMenuProps[];
+  files: AttachedFile[];
 }
 
 export class ChatWindowStateModel implements IChatWindowState {
@@ -32,6 +43,8 @@ export class ChatWindowStateModel implements IChatWindowState {
 
   isGroupChat: boolean;
 
+  files: AttachedFile[];
+
   constructor(
     id: string,
     userId: string,
@@ -39,7 +52,8 @@ export class ChatWindowStateModel implements IChatWindowState {
     availableBrains: LocalBrainModel[] = [],
     selectedBrains: ChatUser[] = [],
     users: Record<string, ChatContextUser> | undefined = undefined,
-    isGroupChat: boolean = false
+    isGroupChat: boolean = false,
+    files: AttachedFile[] = []
   ) {
     this.id = id;
     this.userId = userId;
@@ -49,5 +63,6 @@ export class ChatWindowStateModel implements IChatWindowState {
     this.auxiliaryBarView = { hidden: true };
     this.users = users || {};
     this.isGroupChat = isGroupChat;
+    this.files = files;
   }
 }

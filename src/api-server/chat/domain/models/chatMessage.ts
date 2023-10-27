@@ -18,6 +18,26 @@ export enum ChatMessageEvent {
 export type TextMessage = {
   body: string;
 };
+
+export type AttachmentType = 'image' | 'video' | 'audio' | 'document' | 'file';
+
+export type MessageAttachment = {
+  id: string;
+  file: string;
+  originalFileName: string;
+  mimeType: string;
+  attachmentType: AttachmentType;
+  caption?: string;
+  size: number;
+};
+
+export type RawMessageAttachment = {
+  data: Buffer;
+  mimeType: string;
+  originalFileName: string;
+  caption?: string;
+};
+
 export type ImageMessage = {
   file: string;
   mimeType?: string;
@@ -49,6 +69,7 @@ export type ChatMessageModel = {
   text?: TextMessage;
   image?: ImageMessage;
   voice?: VoiceMessage;
+  attachments?: MessageAttachment[];
   messageType: ChatMessageType;
   status: ChatMessageStatus;
   // Message won't show up in the chat window if this is true

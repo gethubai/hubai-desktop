@@ -1,3 +1,4 @@
+/* eslint-disable promise/catch-or-return */
 import { Controller, connect } from '@hubai/core/esm/react';
 import {
   ChatMemberType,
@@ -5,7 +6,6 @@ import {
   ChatUser,
 } from 'api-server/chat/domain/models/chat';
 import {
-  ChatMessageType,
   IRecipientSettings,
   SendChatMessageModel,
 } from 'api-server/chat/domain/models/chatMessage';
@@ -22,6 +22,7 @@ import AuxiliaryBarTab from 'mo/workbench/auxiliaryBar/auxiliaryBarTab';
 import AuxiliaryBar from 'mo/workbench/auxiliaryBar/auxiliaryBar';
 import { IDisposable } from '@hubai/core/esm/monaco/common';
 import { Uri, editor as monaco } from '@hubai/core/esm/monaco';
+import { openFileSelector } from 'renderer/common/fileUtils';
 import { IChatWindowController } from './type';
 import { IChatWindowService } from '../services/chatWindowService';
 import { getTextMessageTypeForBrainCapability } from '../utils/messageUtils';
@@ -94,16 +95,50 @@ export default class ChatWindowController
 
       this.chatWindowService.setAuxiliaryBarView(!tab);
     });
+
+    this.chatWindowService.setState({
+      plusButtonActions: [
+        {
+          id: 'media',
+          name: 'Photos & Videos',
+          icon: 'device-camera',
+          onClick: () => this.openFileSelectorDialog('image/*,video/*'),
+        },
+        {
+          id: 'document',
+          name: 'Documents',
+          icon: 'file',
+          onClick: () => this.openFileSelectorDialog('application/pdf'),
+        },
+      ],
+    });
   }
+
+  public openFileSelectorDialog = (fileType: string) => {
+    openFileSelector((file) => {
+      this.chatWindowService.attachFile(file);
+    }, fileType);
+  };
+
+  public removeAttachedFile = (fileId: string) => {
+    this.chatWindowService.removeAttachedFile(fileId);
+  };
 
   public onSendTextMessage = (message: string) => {
     const model = this.createMessageToSend();
     model.setText({ body: message });
 
-    this.chatWindowService.getSessionServer().sendMessage({
-      text: { body: message },
-      brainsSettings: model.recipientSettings,
-    });
+    const { files } = this.chatWindowService.getState();
+
+    const sessionServer = this.chatWindowService.getSessionServer();
+
+    sessionServer
+      .sendMessage({
+        text: { body: message },
+        attachments: files?.map((f) => f.file),
+        brainsSettings: model.recipientSettings,
+      })
+      .finally(() => this.chatWindowService.setState({ files: [] }));
   };
 
   public onSendVoiceMessage = async (audioBlob: Blob) => {
@@ -116,7 +151,9 @@ export default class ChatWindowController
     });
 
     model.setVoice(voiceFile);
-    sessionServer.sendMessage(model);
+    sessionServer
+      .sendMessage(model)
+      .finally(() => this.chatWindowService.setState({ files: [] }));
   };
 
   public onCapabilityBrainChanged = (
@@ -201,19 +238,6 @@ export default class ChatWindowController
 
     this.chatWindowService.getSessionServer().addMember(chatBrain);
   };
-
-  private getBrain(messageType: ChatMessageType): ChatUser {
-    const brainChat = this.chatWindowService
-      .getState()
-      .selectedBrains.find((brain) =>
-        brain.handleMessageTypes?.includes(messageType)
-      );
-
-    if (!brainChat)
-      throw new Error(`No brain found for message type ${messageType}`);
-
-    return brainChat;
-  }
 
   public getChat = () => {
     return this.chat;

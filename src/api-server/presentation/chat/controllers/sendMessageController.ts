@@ -7,6 +7,7 @@ import {
   ChatMessageStatus,
   IRecipientSettings,
   ChatMessageModel,
+  RawMessageAttachment,
 } from 'api-server/chat/domain/models/chatMessage';
 import { SendMessage } from 'api-server/chat/domain/usecases/sendChatMessage';
 import chatServer from 'api-server/chat/chatTcpServer/server';
@@ -18,6 +19,7 @@ import {
   ChatMemberType,
 } from 'api-server/chat/domain/models/chat';
 import { UpdateChat } from 'api-server/chat/domain/usecases/updateChat';
+import { Express } from 'express';
 import { Controller } from '../../../main/protocols/controller';
 import { HttpResponse } from '../../../main/protocols/http';
 import { badRequest, ok } from '../../helpers';
@@ -50,6 +52,14 @@ export class SendMessageController implements Controller {
       ChatMemberType.brain
     );
 
+    const attachments = request.files?.map((f) => ({
+      data: f.buffer,
+      mimeType: f.mimetype,
+      originalFileName: f.originalname,
+    })) as RawMessageAttachment[];
+
+    // TODO: Validate attachments
+
     const addedMessage = await this.sendChatMessage.send({
       chatId: request.chatId,
       senderId,
@@ -57,6 +67,7 @@ export class SendMessageController implements Controller {
       image: request.image,
       voice: request.voice,
       hidden: request.hidden,
+      attachments,
       messageType,
       status: ChatMessageStatus.SENT,
       recipients: recipients || [],
@@ -106,7 +117,9 @@ export namespace SendMessageController {
     text?: TextMessage;
     image?: ImageMessage;
     voice?: VoiceMessage;
+    attachments?: RawMessageAttachment[];
     recipientSettings: IRecipientSettings;
     hidden?: boolean;
+    files?: Express.Multer.File[];
   };
 }

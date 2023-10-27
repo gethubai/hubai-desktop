@@ -1,4 +1,4 @@
-import { IBrainService } from './brainService';
+import { IBrainService } from '@hubai/brain-sdk';
 import { IBrainSettings } from './brainSettings';
 
 export interface IBrainServer {

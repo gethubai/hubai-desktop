@@ -11,8 +11,26 @@ export const getAppDatabaseStoragePath = (append: string) =>
 export const getMessageStoragePath = (append: string) =>
   getAppDataStoragePath(`chat/messages/${append}`);
 
+/*
+ * Receives an url like msg://media/1.png and returns the path to the file
+ * @param url - The url to the file
+ * @returns The absolute path to the file
+ * */
+export const getMessageStoragePathFromUrl = (url: string) => {
+  // msg://media/1.png
+  const urlParts = url.split('://');
+  const storagePath = urlParts[1];
+  return getMessageStoragePath(storagePath);
+};
+
 export const getMessageAudioStoragePath = (append: string) =>
   getMessageStoragePath(`audio/${append}`);
+
+export const getMessageMediaStoragePath = (append: string) =>
+  getMessageStoragePath(`media/${append}`);
+
+export const getMessageFilesStoragePath = (append: string) =>
+  getMessageStoragePath(`file/${append}`);
 
 export const getPackagesStoragePath = (append: string) =>
   getAppDataStoragePath(`local-packages/${append}`);

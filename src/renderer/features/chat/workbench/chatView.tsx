@@ -11,16 +11,24 @@ import React, {
 import './styles.scss';
 import { AudioRecorder } from 'react-audio-voice-recorder';
 import 'react-h5-audio-player/lib/styles.css';
-import { Icon, Pane, SplitPane } from '@hubai/core/esm/components';
+import {
+  DropDown,
+  Icon,
+  Menu,
+  Pane,
+  SplitPane,
+} from '@hubai/core/esm/components';
 import { editor as monaco } from '@hubai/core/esm/monaco';
-import { IColors } from '@hubai/core';
+import { IColors, IMenuBarItem } from '@hubai/core';
 import Markdown from 'renderer/components/markdown';
+import { DropDownRef } from '@hubai/core/esm/components/dropdown';
 import { IChatWindowController } from '../controllers/type';
 import { IChatWindowState } from '../models/chatWindow';
 import BrainSelector from './components/brainSelector';
 import { Chat, Message } from './components/chat';
 import { ChatAction } from './components/chat/types';
 import { ChatInputApi } from './components/chat/chatInput';
+import FileMosaic from './components/files-ui/fileMosaic';
 
 export interface IChatWindowProps
   extends IChatWindowController,
@@ -41,6 +49,9 @@ function ChatWindow({
   auxiliaryBarView,
   id,
   isGroupChat,
+  plusButtonActions,
+  files,
+  removeAttachedFile,
 }: IChatWindowProps) {
   const [micStatus, setMicStatus] = useState('idle');
   const chatInputRef = useRef<ChatInputApi>();
@@ -58,6 +69,22 @@ function ChatWindow({
     () => getCurrentThemeColors(),
     [getCurrentThemeColors]
   );
+
+  const childRef = useRef<DropDownRef>(null);
+
+  const handlePlusButtonClick = () => {
+    childRef.current!.dispose();
+  };
+
+  const plusButtonMenu = (
+    <Menu
+      role="menu"
+      onClick={handlePlusButtonClick}
+      style={{ width: 200 }}
+      data={plusButtonActions}
+    />
+  );
+
   const getContentSize = () => {
     if (!auxiliaryBarView.hidden) return contentPanePos;
 
@@ -169,14 +196,6 @@ function ChatWindow({
                                 {message.senderDisplayName}
                               </Message.SenderName>
                             </Message.Sender>
-
-                            {/* <Message.Actions>
-                      <Message.Action
-                        onClick={() => {
-                          console.log('Not available');
-                        }}
-                      />
-                      </Message.Actions> */}
                           </Message.Header>
                           <Message.Content>
                             {!!message.voiceContent && (
@@ -193,13 +212,31 @@ function ChatWindow({
                                 <Markdown>{message.textContent}</Markdown>
                               </Message.Text>
                             )}
+
+                            {!!message.attachments?.length && (
+                              <Message.Attachments
+                                data={message.attachments!}
+                              />
+                            )}
                           </Message.Content>
                         </Message.Root>
                       ))}
                     </Chat.List>
                   </Pane>
 
-                  <Pane minSize="25%" maxSize="60%">
+                  <Pane minSize="30%" maxSize="60%">
+                    {!!files?.length && (
+                      <FileMosaic
+                        files={files.map((f) => ({
+                          id: f.id,
+                          title: f.name,
+                          image: f.previewUrl,
+                          description: f.size,
+                        }))}
+                        onRemove={(f) => removeAttachedFile(f.id)}
+                      />
+                    )}
+
                     <Chat.InteractionContainer>
                       <Chat.Input
                         id={id}
@@ -223,6 +260,17 @@ function ChatWindow({
                             }}
                             downloadFileExtension="wav"
                           />
+                        </Chat.Action>
+
+                        <Chat.Action className="plus-button">
+                          <DropDown
+                            ref={childRef}
+                            trigger="click"
+                            placement="right"
+                            overlay={plusButtonMenu}
+                          >
+                            <Icon type="add" />
+                          </DropDown>
                         </Chat.Action>
                       </Chat.Actions>
                     </Chat.InteractionContainer>

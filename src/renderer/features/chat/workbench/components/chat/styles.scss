@@ -13,9 +13,7 @@
   }
 
   .interactive-request {
-    background-color: var(
-      --chat-messageSenderBackground
-    );
+    background-color: var(--chat-messageSenderBackground);
     border-bottom: 1px solid var(--chat-messageBorder);
     border-top: 1px solid var(--chat-messageBorder);
   }
@@ -66,8 +64,6 @@
         }
       }
 
-
-
       .icon {
         font-size: 22px;
       }
@@ -88,6 +84,35 @@
         cursor: pointer;
         border: 0;
       }
+    }
+
+    .gallery {
+      display: flex;
+      flex-flow: wrap;
+    }
+
+    .gallery-item {
+      flex-grow: 1;
+      min-width: 150px;
+      align-items: center;
+      justify-content: flex-start;
+      display: flex;
+    }
+
+    .gallery-item-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .gallery-item:before {
+      content: '';
+      display: block;
+    }
+
+    .gallery-item__image {
+      max-height: 300px;
     }
 
     .value {
@@ -142,7 +167,7 @@ $input-bg: var(--chat-inputBackground);
     }
 
     .interactive-execute-toolbar {
-     // width: 100%;
+      // width: 100%;
       display: flex;
       width: 100px;
       justify-content: center;
@@ -159,10 +184,31 @@ $input-bg: var(--chat-inputBackground);
         margin-right: 20px;
       }
     }
+
+    .plus-button {
+      span {
+        font-size: 30px;
+        margin-left: 10px;
+        margin-right: 20px;
+      }
+    }
   }
 
   .interactive-input-editor {
     width: 100%;
     height: 100%;
+  }
+}
+
+.attachment-modal-content {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  img {
+    margin: 1rem;
+    display: flex;
+    max-width: 50%;
   }
 }

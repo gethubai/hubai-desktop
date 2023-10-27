@@ -1,7 +1,7 @@
 import userSettingsStorage from 'data/user/mainStorage';
 import { ChatServerConfigs } from 'api-server/consts';
+import { BrainSettingsValidationResult } from '@hubai/brain-sdk';
 import { IBrainServer } from './brainServer';
-import { BrainSettingsValidationResult } from './brainService';
 import { IBrainSettings } from './brainSettings';
 
 class BrainClientManager {

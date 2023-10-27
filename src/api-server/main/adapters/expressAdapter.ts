@@ -3,11 +3,14 @@ import { Controller } from '../protocols/controller';
 
 export const adaptRoute = (controller: Controller) => {
   return async (req: Request, res: Response) => {
+    const jsonData = req.body?.jsonData ? JSON.parse(req.body.jsonData) : {};
     const request = {
       ...(req.body || {}),
+      ...jsonData,
       ...(req.params || {}),
       ...(req.query || {}),
       file: req.file,
+      files: req.files,
       context: { userId: req.headers['user-id'] },
     };
     const httpResponse = await controller.handle(request);

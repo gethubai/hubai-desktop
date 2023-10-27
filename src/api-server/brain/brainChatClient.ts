@@ -5,15 +5,16 @@ import {
 } from 'renderer/features/chat/sdk/contracts';
 import { ChatClient } from 'renderer/features/chat/sdk/chatClient';
 import { ChatMemberType, ChatModel } from 'api-server/chat/domain/models/chat';
-import path from 'path';
-import { getMessageAudioStoragePath } from 'utils/pathUtils';
-import { IBrainServer } from './brainServer';
+import { getMessageStoragePathFromUrl } from 'utils/pathUtils';
 import {
+  FileAttachment,
   IAudioTranscriberBrainService,
   IBrainPromptContext,
   IBrainService,
   ITextBrainService,
-} from './brainService';
+  TextBrainPrompt,
+} from '@hubai/brain-sdk';
+import { IBrainServer } from './brainServer';
 import { IBrainSettings } from './brainSettings';
 
 export default class BrainChatClient implements IBrainServer {
@@ -119,8 +120,8 @@ export default class BrainChatClient implements IBrainServer {
       throw new Error('No voice file found in message');
     }
 
-    const name = path.basename(message.voice.file);
-    const audioFilePath = getMessageAudioStoragePath(name);
+    // todo: replace with the way above
+    const audioFilePath = getMessageStoragePathFromUrl(message.voice.file);
 
     if (transcriberService) {
       return transcriberService
@@ -172,11 +173,31 @@ export default class BrainChatClient implements IBrainServer {
     if (textService) {
       // const result = await brain.sendTextPrompt(prompts);
       // res.send({ brainId: brain.getSettings().id, result: result.result });
+
+      const messages = await session.messages();
+
+      const prompts = messages.messages
+        .filter((m) => m.messageType === 'text' && m.text?.body)
+        .map(
+          (m) =>
+            ({
+              role: m.senderId === message.senderId ? 'user' : 'brain',
+              message: m.text!.body,
+              attachments: m.attachments?.map(
+                (a) =>
+                  ({
+                    id: a.id,
+                    path: getMessageStoragePathFromUrl(a.file),
+                    mimeType: a.mimeType,
+                    originalFileName: a.originalFileName,
+                    size: a.size,
+                  } as FileAttachment)
+              ),
+            } as TextBrainPrompt)
+        );
+
       return textService
-        .sendTextPrompt(
-          [{ role: 'user', message: message.text!.body }],
-          context
-        )
+        .sendTextPrompt(prompts, context)
         .then((promptResult) => {
           if (promptResult.validationResult?.success === false) {
             session.sendMessage({

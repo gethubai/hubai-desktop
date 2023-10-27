@@ -1,6 +1,7 @@
 import { ChatList } from './chatList';
 import ChatMessage from './chatMessage';
 import {
+  Attachments,
   MessageContent,
   TextMessage,
   VoiceMessage,
@@ -40,4 +41,5 @@ export const Message = {
   Content: MessageContent,
   Voice: VoiceMessage,
   Text: TextMessage,
+  Attachments,
 };

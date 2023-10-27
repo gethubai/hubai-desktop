@@ -1,4 +1,4 @@
-export function openFileSelector(
+export function openFileSelectorInt(
   changeInput: (fileInput: HTMLInputElement) => void,
   onSelect: (file: File) => void
 ) {
@@ -20,10 +20,38 @@ export function openFileSelector(
   fileInput.click();
 }
 
-export function openHextFileSelector(onSelect: (file: File) => void) {
-  return openFileSelector((fileInput: HTMLInputElement) => {
+export function openFileSelector(
+  onSelect: (file: File) => void,
+  acceptFileTypes: string,
+  multiple: boolean = false
+) {
+  return openFileSelectorInt((fileInput: HTMLInputElement) => {
     fileInput.setAttribute('type', 'file');
-    fileInput.setAttribute('accept', '.zip, .hext');
-    fileInput.setAttribute('multiple', 'false'); // accept only one file
+    fileInput.setAttribute('accept', acceptFileTypes);
+    fileInput.setAttribute('multiple', multiple ? 'true' : 'false'); // accept only one file
   }, onSelect);
+}
+
+export function openImageFileSelector(
+  onSelect: (file: File) => void,
+  multiple: boolean = false
+) {
+  return openFileSelector(onSelect, 'image/*', multiple);
+}
+
+export function openHextFileSelector(onSelect: (file: File) => void) {
+  return openFileSelector(onSelect, '.zip, .hext', false);
+}
+
+export function prettifyFileSize(size: number): string {
+  if (size < 1024) {
+    return `${size} Bytes`;
+  }
+  if (size < 1048576) {
+    return `${(size / 1024).toFixed(2)} KB`;
+  }
+  if (size < 1073741824) {
+    return `${(size / 1048576).toFixed(2)} MB`;
+  }
+  return `${(size / 1073741824).toFixed(2)} GB`;
 }
