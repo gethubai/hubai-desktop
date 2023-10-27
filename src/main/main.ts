@@ -12,6 +12,8 @@ import path from 'path';
 import '../data/realm/app';
 import { app, BrowserWindow, shell, ipcMain, protocol, dialog } from 'electron';
 import { autoUpdater } from 'electron-updater';
+import contextMenu from 'electron-context-menu';
+
 import log from 'electron-log';
 import {
   createDirectoryIfNotExists,
@@ -48,6 +50,10 @@ protocol.registerSchemesAsPrivileged([
     privileges: { supportFetchAPI: true, stream: true },
   },
 ]);
+
+contextMenu({
+  showSaveImageAs: true,
+});
 
 if (!isDebug) {
   console.log = log.log;
@@ -193,12 +199,12 @@ app.on('web-contents-created', (createEvent, contents) => {
   });
 
   contents.on('new-window', (newEvent) => {
-    console.log("Blocked by 'new-window'");
+    console.log("Blocked by 'new-window'", newEvent);
     newEvent.preventDefault();
   });
 
   contents.on('will-navigate', (newEvent) => {
-    console.log("Blocked by 'will-navigate'");
+    console.log("Blocked by 'will-navigate'", newEvent);
     newEvent.preventDefault();
   });
 
@@ -207,7 +213,7 @@ app.on('web-contents-created', (createEvent, contents) => {
       shell.openExternal(url);
     });
 
-    console.log("Blocked by 'setWindowOpenHandler'");
+    console.log("Blocked by 'setWindowOpenHandler'", url);
     return { action: 'deny' };
   });
 });
