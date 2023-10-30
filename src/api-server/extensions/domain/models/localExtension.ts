@@ -10,7 +10,8 @@ export class LocalExtensionSettingMap extends SettingMap {
     required?: boolean,
     defaultValue?: string,
     enumValues?: string[],
-    description?: string
+    description?: string,
+    isSecret?: boolean
   ) {
     super(
       name,
@@ -19,7 +20,8 @@ export class LocalExtensionSettingMap extends SettingMap {
       required,
       defaultValue,
       enumValues,
-      description
+      description,
+      isSecret
     );
   }
 }

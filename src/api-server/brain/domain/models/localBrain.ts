@@ -19,6 +19,8 @@ export enum BrainSettingScope {
 export class LocalBrainSettingMap extends SettingMap {
   scope: BrainSettingScope;
 
+  capabilities?: BrainCapability[];
+
   constructor(
     name: string,
     displayName: string,
@@ -27,7 +29,9 @@ export class LocalBrainSettingMap extends SettingMap {
     defaultValue?: string,
     enumValues?: string[],
     description?: string,
-    scope?: string
+    isSecret?: boolean,
+    scope?: string,
+    capabilities?: BrainCapability[]
   ) {
     super(
       name,
@@ -36,11 +40,14 @@ export class LocalBrainSettingMap extends SettingMap {
       required,
       defaultValue,
       enumValues,
-      description
+      description,
+      isSecret
     );
     this.scope = scope
       ? this.parseBrainSettingScope(scope)
       : BrainSettingScope.APPLICATION;
+
+    this.capabilities = capabilities;
   }
 
   parseBrainSettingScope(scopeString: string): BrainSettingScope {

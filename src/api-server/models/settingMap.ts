@@ -19,6 +19,7 @@ export interface ISettingMap {
   required: boolean;
 
   description?: string;
+  isSecret?: boolean;
 }
 
 export class SettingMap implements ISettingMap {
@@ -36,6 +37,8 @@ export class SettingMap implements ISettingMap {
 
   description?: string;
 
+  isSecret?: boolean;
+
   constructor(
     name: string,
     displayName: string,
@@ -43,7 +46,8 @@ export class SettingMap implements ISettingMap {
     required?: boolean,
     defaultValue?: string,
     enumValues?: string[],
-    description?: string
+    description?: string,
+    isSecret?: boolean
   ) {
     this.name = name;
     this.displayName = displayName;
@@ -52,6 +56,7 @@ export class SettingMap implements ISettingMap {
     this.enumValues = enumValues;
     this.required = required === undefined ? false : required;
     this.description = description;
+    this.isSecret = isSecret;
 
     // TODO: Apply validation:
     // If the type is enum, the enumValues must be set
