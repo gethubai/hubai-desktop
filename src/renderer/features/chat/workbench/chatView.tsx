@@ -17,17 +17,18 @@ import {
   Menu,
   Pane,
   SplitPane,
+  Chat,
+  Message,
 } from '@hubai/core/esm/components';
 import { editor as monaco } from '@hubai/core/esm/monaco';
-import { IColors, IMenuBarItem } from '@hubai/core';
+import { IColors } from '@hubai/core';
 import Markdown from 'renderer/components/markdown';
 import { DropDownRef } from '@hubai/core/esm/components/dropdown';
+import { ChatInputApi } from '@hubai/core/esm/components/chat/chatInput';
+import { ChatAction } from '@hubai/core/esm/components/chat/types';
 import { IChatWindowController } from '../controllers/type';
 import { IChatWindowState } from '../models/chatWindow';
 import BrainSelector from './components/brainSelector';
-import { Chat, Message } from './components/chat';
-import { ChatAction } from './components/chat/types';
-import { ChatInputApi } from './components/chat/chatInput';
 import FileMosaic from './components/files-ui/fileMosaic';
 
 export interface IChatWindowProps
@@ -122,7 +123,7 @@ function ChatWindow({
   }, [chatInputRef, onSendTextMessage]);
 
   const onChatAction = useCallback(
-    (action: ChatAction, editor: monaco.ICodeEditor) => {
+    (action: ChatAction, _: monaco.ICodeEditor) => {
       if (action === ChatAction.sendMessage) {
         sendMessage();
       }

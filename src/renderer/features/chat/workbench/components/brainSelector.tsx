@@ -16,12 +16,15 @@ type BrainSelectorProps = {
     brain: LocalBrainModel,
     capability: BrainCapability
   ) => void;
+  /* If true, it won't show the selector for capabilities that don't have any available brains */
+  hideEmpty?: boolean;
 };
 
 const BrainSelector: React.FC<BrainSelectorProps> = ({
   availableBrains,
   selectedBrains,
   onCapabilityBrainChanged,
+  hideEmpty,
 }) => {
   const handleBrainChange = (brainId: string, capability: BrainCapability) => {
     const selectedBrain = availableBrains.find((b) => b.id === brainId);
@@ -50,6 +53,10 @@ const BrainSelector: React.FC<BrainSelectorProps> = ({
         name: 'Voice Transcription',
         icon: 'record',
       },
+      [BrainCapability.IMAGE_GENERATION]: {
+        name: 'Image Generation',
+        icon: 'device-camera',
+      },
     };
 
     return capabilities[capability];
@@ -74,6 +81,10 @@ const BrainSelector: React.FC<BrainSelectorProps> = ({
         const capabilityModel = getCapabilityViewModel(
           capability as BrainCapability
         );
+
+        if (hideEmpty && brainsByType[capability].length === 0) {
+          return null;
+        }
 
         return (
           <div key={capability} className="brain-capability-selector">
