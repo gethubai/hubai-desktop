@@ -6,9 +6,11 @@ export interface IBrainServer {
 
   disconnect(): Promise<void>;
 
-  getSettings(): IBrainSettings;
+  getBrain(): IBrainSettings;
 
   getService(): IBrainService;
+
+  getUserSettings(): any | undefined;
 
   setUserSettings(settings: any): void;
 }

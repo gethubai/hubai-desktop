@@ -12,7 +12,7 @@ class BrainClientManager {
   }
 
   async addClient(client: IBrainServer) {
-    const settings = client.getSettings();
+    const settings = client.getBrain();
     if (this.isConnected(client)) {
       console.error('client already connected: ', settings.name);
       client.disconnect();
@@ -62,11 +62,11 @@ class BrainClientManager {
   }
 
   isConnected(client: IBrainServer): boolean {
-    return this.getClient(client.getSettings().id) !== undefined;
+    return this.getClient(client.getBrain().id) !== undefined;
   }
 
   getClient(clientId: string): IBrainServer | undefined {
-    return this.connectedClients.find((c) => c.getSettings().id === clientId);
+    return this.connectedClients.find((c) => c.getBrain().id === clientId);
   }
 }
 

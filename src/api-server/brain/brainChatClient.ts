@@ -32,7 +32,7 @@ export default class BrainChatClient implements IBrainServer {
 
     await this.chatClient.connect({
       id: this.getClientId(),
-      name: this.getSettings().displayName,
+      name: this.getBrain().displayName,
       type: ChatMemberType.brain,
     });
 
@@ -48,7 +48,7 @@ export default class BrainChatClient implements IBrainServer {
     });
 
     this.chatClient.onLeftChat((chat) => {
-      console.log(`${this.getSettings().displayName}: left chat: ${chat.id}`);
+      console.log(`${this.getBrain().displayName}: left chat: ${chat.id}`);
 
       const session = this.chatClient.session(chat.id);
       if (session?.isWatching) {
@@ -64,7 +64,7 @@ export default class BrainChatClient implements IBrainServer {
 
       await session.watch();
 
-      console.log(`${this.getSettings().displayName}: joined chat: ${chat.id}`);
+      console.log(`${this.getBrain().displayName}: joined chat: ${chat.id}`);
 
       session.onMessageReceived((message) => {
         return this.onMessageReceived(message, session);
@@ -73,7 +73,7 @@ export default class BrainChatClient implements IBrainServer {
   }
 
   getClientId(): string {
-    return this.getSettings().id;
+    return this.getBrain().id;
   }
 
   getService(): IBrainService {
@@ -96,7 +96,7 @@ export default class BrainChatClient implements IBrainServer {
 
     const context = {
       id: message.id,
-      chatId: message.chat,
+      conversationId: message.chat,
       senderId: message.senderId,
       settings,
     } as IBrainPromptContext<any>;
@@ -226,11 +226,11 @@ export default class BrainChatClient implements IBrainServer {
     return Promise.resolve();
   }
 
-  public getSettings(): IBrainSettings {
+  public getBrain(): IBrainSettings {
     return this.defaultBrainSettings;
   }
 
-  private getUserSettings(): any {
+  public getUserSettings(): any {
     return this.userSettings;
   }
 
