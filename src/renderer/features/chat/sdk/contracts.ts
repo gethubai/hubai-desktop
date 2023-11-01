@@ -92,6 +92,7 @@ export interface IChatClient {
   onJoinedChat(listener: (chat: ChatModel) => void): void;
   onLeftChat(listener: (chat: ChatModel) => void): void;
   newChat(options: CreateChat.Params): Promise<ChatModel>;
+  removeChat(id: string): Promise<void>;
 
   chats(filters?: ChatListFilters): Promise<ChatModel[]>;
   chat(id: string): Promise<ChatModel>;

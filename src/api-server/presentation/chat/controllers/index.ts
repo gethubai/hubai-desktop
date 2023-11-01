@@ -7,3 +7,4 @@ export * from './removeChatMemberController';
 export * from './sendMessageController';
 export * from './setVoiceMessageTranscriptionController';
 export * from './sendChatFileController';
+export * from './removeChatController';

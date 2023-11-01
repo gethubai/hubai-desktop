@@ -64,6 +64,26 @@ export class RealmChatRepository implements IChatRepository {
     return models.map((item) => item.values);
   };
 
+  remove = async (id: string): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+      let dto = this.database.objectForPrimaryKey(ChatDto, id);
+
+      if (!dto)
+        reject(
+          new Error(
+            `Cannot remove chat with id ${id} because it does not exist`
+          )
+        );
+
+      this.database.write(() => {
+        this.database.delete(dto);
+        dto = undefined;
+
+        resolve();
+      });
+    });
+  };
+
   get = async (id: string): Promise<ChatModel | undefined> => {
     const model = this.getDto(id);
     return model?.values;

@@ -28,4 +28,5 @@ export interface IChatWindowController
 
 export interface IChatListController extends Partial<Controller> {
   onChatClick?: (item: IChatItem) => void;
+  onContextMenuClick?: (menuId: string, item: IChatItem) => void;
 }

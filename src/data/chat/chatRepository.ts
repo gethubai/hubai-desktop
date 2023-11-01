@@ -11,4 +11,5 @@ export interface IChatRepository {
   update: (model: ChatModel) => Promise<ChatModel>;
   list: (filters?: ChatListFilters) => Promise<ChatModel[]>;
   get: (id: string) => Promise<ChatModel | undefined>;
+  remove: (id: string) => Promise<void>;
 }

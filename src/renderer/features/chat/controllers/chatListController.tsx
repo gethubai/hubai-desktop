@@ -255,6 +255,20 @@ export default class ChatListController
     this.selectOrOpenChatWindow(item);
   };
 
+  public onContextMenuClick = (menuId: string, chat: IChatItem) => {
+    if (menuId === 'delete') {
+      // eslint-disable-next-line promise/catch-or-return
+      this.chatClient
+        .removeChat(chat.id as string)
+        .catch((e) => {
+          console.error('Failed to remove chat', e);
+        })
+        .finally(() => {
+          this.refreshChatList();
+        });
+    }
+  };
+
   private setChatColors(): void {
     if (ChatListController.chatColors) return;
     ChatListController.chatColors = {};

@@ -1,7 +1,13 @@
-import React, { useMemo } from 'react';
-import { Content, Header } from '@hubai/core';
+import React, { useMemo, useCallback } from 'react';
+import {
+  Content,
+  Header,
+  component,
+  localize,
+  getEventPosition,
+} from '@hubai/core';
 import { ChatTree, ChatTreeItemProps } from 'renderer/components/chatTree';
-import { Toolbar } from '@hubai/core/esm/components';
+import { Menu, Toolbar, useContextViewEle } from '@hubai/core/esm/components';
 import { IChatListController } from '../../controllers/type';
 import { IChatListState } from '../../services/chatListService';
 import { IChatItem } from '../../models/chat';
@@ -18,7 +24,33 @@ function ChatListSidebar({
   onChatClick,
   title,
   mapChatItem,
+  onContextMenuClick,
 }: IChatListSidebarProps) {
+  const contextView = useContextViewEle();
+
+  const openContextMenu = useCallback(
+    (e: React.MouseEvent, chat: IChatItem) => {
+      e.preventDefault();
+      contextView?.show(getEventPosition(e), () => (
+        <Menu
+          role="menu"
+          onClick={(_: any, item: component.IMenuItemProps) => {
+            contextView?.hide();
+            onContextMenuClick?.(item.id as any, chat);
+          }}
+          data={[
+            {
+              id: 'delete',
+              name: localize('chatList.delete', 'Delete'),
+              icon: 'x',
+            },
+          ]}
+        />
+      ));
+    },
+    [contextView, onContextMenuClick]
+  );
+
   const data = useMemo(
     () =>
       chats.map((chat) => ({
@@ -33,15 +65,18 @@ function ChatListSidebar({
         onClick: () => {
           onChatClick?.(chat);
         },
+        onRightClick: (e: React.MouseEvent) => {
+          openContextMenu(e, chat);
+        },
         ...{ ...mapChatItem?.(chat) },
       })) as any,
-    [chats, mapChatItem, onChatClick]
+    [chats, mapChatItem, onChatClick, openContextMenu]
   );
 
   return (
     <div className="dataSource" style={{ width: '100%', height: '100%' }}>
       <Header
-        title={title ?? 'Chat List'}
+        title={title ?? 'Chats'}
         toolbar={<Toolbar data={headerToolBar || []} />}
       />
       <Content>

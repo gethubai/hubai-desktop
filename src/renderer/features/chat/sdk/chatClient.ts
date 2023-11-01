@@ -147,6 +147,10 @@ export class ChatClient implements IChatClient {
     });
   };
 
+  removeChat(id: string): Promise<void> {
+    return this.delete<void>(`/chats/${id}`);
+  }
+
   chats = (filters?: ChatListFilters): Promise<ChatModel[]> => {
     return this.get<ChatModel[]>(`/chats`, filters);
   };

@@ -10,6 +10,7 @@ import { makeRemoveChatMemberController } from '../factories/chat/controllers/re
 import { makeCreateChatController } from '../factories/chat/controllers/createChatControllerFactory';
 import { makeSetVoiceMessageTranscriptionController } from '../factories/chat/controllers/setVoiceMessageTranscriptionControllerFactory';
 import { makeSendChatFileController } from '../factories/chat/controllers/sendChatFileControllerFactory';
+import { makeRemoveChatController } from '../factories/chat/controllers/removeChatControllerFactory';
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -40,6 +41,10 @@ export default (router: Router): void => {
       adaptRoute(await makeAddChatMemberController())
     );
     router.post('/chats', adaptRoute(await makeCreateChatController()));
+    router.delete(
+      '/chats/:chatId',
+      adaptRoute(await makeRemoveChatController())
+    );
     router.delete(
       '/chats/:chatId/members/:memberId',
       adaptRoute(await makeRemoveChatMemberController())
