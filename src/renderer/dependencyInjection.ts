@@ -20,6 +20,7 @@ import type {
   IExtensionService,
   IColorThemeService,
   ILocaleService,
+  IBrainClientManager,
 } from '@hubai/core';
 
 import SidebarService from 'mo/services/workbench/sidebarService';
@@ -136,6 +137,7 @@ import { type IContactService } from './features/contact/models/service';
 import { ContactService } from './features/contact/services/contactService';
 import { IChatClient } from './features/chat/sdk/contracts';
 import { ChatClient } from './features/chat/sdk/chatClient';
+import { BrainClientManager } from './features/brain/services/brainClientManager';
 
 container.registerSingleton<ISideBarController>(
   'ISidebarController',
@@ -256,6 +258,10 @@ container.registerSingleton<IChatClient>('IChatClient', ChatClient);
 container.registerSingleton<IBrainManagementService>(
   'IBrainManagementService',
   BrainManagementService
+);
+container.registerSingleton<IBrainClientManager>(
+  'IBrainClientManager',
+  BrainClientManager
 );
 container.registerSingleton<IExtensionManagementService>(
   'IExtensionManagementService',

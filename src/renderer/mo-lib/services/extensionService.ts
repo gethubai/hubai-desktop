@@ -16,6 +16,7 @@ import {
   ISettingsService,
   ILayoutService,
   IAuxiliaryBarService,
+  IBrainClientManager,
 } from '@hubai/core';
 import { IColorTheme } from '@hubai/core/esm/model/colorTheme';
 import { type ILocaleService, ILocale } from '@hubai/core/esm/i18n';
@@ -184,7 +185,8 @@ class ExtensionService implements IExtensionService {
       container.resolve<ISettingsService>('ISettingsService'),
       container.resolve<IExtensionService>('IExtensionService'),
       container.resolve<ILayoutService>('ILayoutService'),
-      container.resolve<IAuxiliaryBarService>('IAuxiliaryBarService')
+      container.resolve<IAuxiliaryBarService>('IAuxiliaryBarService'),
+      container.resolve<IBrainClientManager>('IBrainClientManager')
     );
     return new AppContext(services);
   }
