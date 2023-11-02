@@ -53,6 +53,7 @@ function ChatWindow({
   plusButtonActions,
   files,
   removeAttachedFile,
+  users,
 }: IChatWindowProps) {
   const [micStatus, setMicStatus] = useState('idle');
   const chatInputRef = useRef<ChatInputApi>();
@@ -139,6 +140,7 @@ function ChatWindow({
     chatInputRef.current?.triggerResize();
   }, [auxiliaryBarView.hidden]);
 
+  const usersTyping = Object.values(users).filter((u) => u.isTyping);
   return (
     <div style={{ position: 'relative', height: '100%' }}>
       <div
@@ -223,6 +225,16 @@ function ChatWindow({
                         </Message.Root>
                       ))}
                     </Chat.List>
+                    <div className="typing-container">
+                      {usersTyping.map((u) => (
+                        <div className="typing" key={`typing-${u.id}`}>
+                          <p>
+                            <b>{u.name}</b> is typing
+                          </p>
+                          <div className="typewriter" />
+                        </div>
+                      ))}
+                    </div>
                   </Pane>
 
                   <Pane minSize="30%" maxSize="60%">

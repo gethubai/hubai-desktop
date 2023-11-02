@@ -1,4 +1,7 @@
-import { ChatModel } from 'api-server/chat/domain/models/chat';
+import {
+  ChatMemberStatus,
+  ChatModel,
+} from 'api-server/chat/domain/models/chat';
 import { ChatMessageModel } from 'api-server/chat/domain/models/chatMessage';
 
 export namespace MessageUpdatedEvent {
@@ -66,6 +69,14 @@ export namespace JoinChatEvent {
   export type Emitter = (params: Params) => void;
 }
 
+export namespace ChatMemberStatusChangedEvent {
+  export const Name = ':user/chat/:chatId/statusChanged';
+  export type Params = { userId: string; status: ChatMemberStatus };
+
+  export type Callback = () => void;
+  export type Emitter = (params: Params) => void;
+}
+
 export interface SessionServerToClientEvents {
   [MessageUpdatedEvent.Name]: MessageUpdatedEvent.Emitter;
   [MessageReceivedEvent.Name]: MessageReceivedEvent.Emitter;
@@ -74,4 +85,5 @@ export interface SessionServerToClientEvents {
   [ChatUpdatedEvent.Name]: ChatUpdatedEvent.Emitter;
   [LeftChatEvent.Name]: LeftChatEvent.Emitter;
   [JoinChatEvent.Name]: JoinChatEvent.Emitter;
+  [ChatMemberStatusChangedEvent.Name]: ChatMemberStatusChangedEvent.Emitter;
 }

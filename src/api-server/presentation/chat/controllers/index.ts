@@ -8,3 +8,4 @@ export * from './sendMessageController';
 export * from './setVoiceMessageTranscriptionController';
 export * from './sendChatFileController';
 export * from './removeChatController';
+export * from './updateUserStatusController';

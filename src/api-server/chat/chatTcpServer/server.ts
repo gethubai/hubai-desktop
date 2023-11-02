@@ -1,4 +1,4 @@
-import { ChatModel } from '../domain/models/chat';
+import { ChatMemberStatus, ChatModel } from '../domain/models/chat';
 import { ChatCreatedEvent } from './events';
 import { MessagesReceivedAckEvent } from './events/clientSessionEvents';
 import {
@@ -13,6 +13,7 @@ import {
   LeftChatEvent,
   MessageReceivedEvent,
   MessageUpdatedEvent,
+  ChatMemberStatusChangedEvent,
 } from './events/serveSessionEvents';
 import { IChatTransport } from './models/chatTransport';
 import { IChatServerClient } from './models/chatServerClient';
@@ -124,6 +125,23 @@ class ChatServer {
       this.eventEmitter.publish(
         { name: ChatCreatedEvent.Name, user: member.id },
         chat
+      );
+    });
+  }
+
+  public notifyUserStatusUpdated(
+    chat: ChatModel,
+    userId: string,
+    status: ChatMemberStatus
+  ): void {
+    chat.members.forEach((member) => {
+      this.eventEmitter.publish(
+        {
+          name: ChatMemberStatusChangedEvent.Name,
+          user: member.id,
+          chatId: chat.id,
+        },
+        { userId, status }
       );
     });
   }

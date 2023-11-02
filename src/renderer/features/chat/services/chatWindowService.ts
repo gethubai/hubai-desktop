@@ -7,7 +7,10 @@ import { container } from 'tsyringe';
 import { ChatMessagesContext } from 'api-server/chat/domain/models/chatContext';
 import { IBrainManagementService } from 'renderer/features/brain/services/brainManagement';
 import { Component } from '@hubai/core/esm/react';
-import { MessageUpdatedEvent } from 'api-server/chat/chatTcpServer/events/serveSessionEvents';
+import {
+  ChatMemberStatusChangedEvent,
+  MessageUpdatedEvent,
+} from 'api-server/chat/chatTcpServer/events/serveSessionEvents';
 import { IDisposable } from '@hubai/core/esm/monaco/common';
 import { ILocalUserService } from 'renderer/features/user/services/userService';
 import { IContactService } from 'renderer/features/contact/models/service';
@@ -74,6 +77,10 @@ export class ChatWindowService
     this.chatSessionServer.onMessageUpdated(this.onMessageUpdated.bind(this));
     this.chatSessionServer.onChatUpdated(this.onChatUpdated.bind(this));
 
+    this.chatSessionServer.onMemberStatusChanged(
+      this.onMemberStatusChanged.bind(this)
+    );
+
     await this.chatSessionServer.watch();
 
     const messages = await this.chatSessionServer.messages();
@@ -121,6 +128,28 @@ export class ChatWindowService
         text: message.text,
         hidden: true,
       });
+    }
+  }
+
+  onMemberStatusChanged({
+    userId,
+    status,
+  }: ChatMemberStatusChangedEvent.Params): void {
+    const { users } = this.state;
+
+    if (!users[userId]) {
+      users[userId] = this.contactService.get(userId) ?? {
+        id: '',
+        name: 'Unknown',
+      };
+    }
+
+    if (
+      status.isTyping !== users[userId].isTyping &&
+      status.isTyping !== undefined
+    ) {
+      users[userId].isTyping = status.isTyping;
+      this.setState({ users });
     }
   }
 

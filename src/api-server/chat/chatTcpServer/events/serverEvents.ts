@@ -1,5 +1,6 @@
 import { ChatModel } from 'api-server/chat/domain/models/chat';
 import {
+  ChatMemberStatusChangedEvent,
   ChatUpdatedEvent,
   JoinChatEvent,
   LeftChatEvent,
@@ -32,6 +33,7 @@ const serverToClientEventsKeys: KeysEnum<ServerToClientEvents> = {
   [ChatUpdatedEvent.Name]: true,
   [LeftChatEvent.Name]: true,
   [JoinChatEvent.Name]: true,
+  [ChatMemberStatusChangedEvent.Name]: true,
 };
 
 export const ServerToClientEventsName = Object.keys(serverToClientEventsKeys);

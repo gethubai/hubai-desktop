@@ -1,4 +1,5 @@
 import {
+  ChatMemberStatusChangedEvent,
   MessageReceivedEvent,
   MessageUpdatedEvent,
 } from 'api-server/chat/chatTcpServer/events/serveSessionEvents';
@@ -48,9 +49,13 @@ export interface IChatSessionServer {
   onMessageReceived(
     listener: (data: MessageReceivedEvent.Params) => void
   ): void;
+  onMemberStatusChanged(
+    listener: (data: ChatMemberStatusChangedEvent.Params) => void
+  ): void;
   sendMessage(options: SendMessage): Promise<void>;
   sendAudio(audio: RawVoiceMessage): Promise<VoiceMessage>;
   sendTranscription(messageId: string, text: TextMessage): Promise<void>;
+  sendTyping(isTyping: boolean): Promise<void>;
   messages(): Promise<ChatMessagesContext>;
   addMember(user: ChatUser): void;
   removeMember(id: string): void;

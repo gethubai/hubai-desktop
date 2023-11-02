@@ -1,4 +1,5 @@
 import {
+  ChatMemberStatusChangedEvent,
   ChatUpdatedEvent,
   MessageReceivedEvent,
   MessageSentEvent,
@@ -58,6 +59,7 @@ export class ChatSessionServer implements IChatSessionServer, IDisposable {
       addEventSubscription(MessageTranscribedEvent.Name),
       addEventSubscription(MessageSentEvent.Name),
       addEventSubscription(ChatUpdatedEvent.Name),
+      addEventSubscription(ChatMemberStatusChangedEvent.Name),
     ];
 
     return Promise.resolve();
@@ -91,6 +93,12 @@ export class ChatSessionServer implements IChatSessionServer, IDisposable {
     this.addListener(MessageReceivedEvent.Name, listener);
   };
 
+  onMemberStatusChanged = (
+    listener: (data: ChatMemberStatusChangedEvent.Params) => void
+  ): void => {
+    this.addListener(ChatMemberStatusChangedEvent.Name, listener);
+  };
+
   sendAudio = async (audio: RawVoiceMessage): Promise<VoiceMessage> => {
     const result = await this.client.sendFile<VoiceMessage>(
       this.getSessionUrl('/upload/file'),
@@ -117,6 +125,12 @@ export class ChatSessionServer implements IChatSessionServer, IDisposable {
       { messageId, transcription: transcription.body }
     );
   };
+
+  sendTyping(isTyping: boolean): Promise<void> {
+    return this.client.put(this.getSessionUrl('/memberStatus'), {
+      isTyping,
+    });
+  }
 
   getSessionUrl = (append?: string): string =>
     `/chats/${this.id}${append ?? ''}`;

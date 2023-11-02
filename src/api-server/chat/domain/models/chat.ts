@@ -14,6 +14,10 @@ export enum ChatUserRole {
   member = 'member',
 }
 
+export type ChatMemberStatus = {
+  isTyping?: boolean;
+};
+
 export type ChatUser = {
   id: string;
   memberType: ChatMemberType;

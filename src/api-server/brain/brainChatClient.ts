@@ -196,6 +196,7 @@ export default class BrainChatClient implements IBrainServer {
             } as TextBrainPrompt)
         );
 
+      await session.sendTyping(true);
       return textService
         .sendTextPrompt(prompts, context)
         .then((promptResult) => {
@@ -215,6 +216,9 @@ export default class BrainChatClient implements IBrainServer {
               body: `An error occurred while sending text prompt:\n ${err.message}`,
             },
           });
+        })
+        .finally(async () => {
+          await session.sendTyping(false);
         });
     }
 

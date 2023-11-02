@@ -11,6 +11,7 @@ import { makeCreateChatController } from '../factories/chat/controllers/createCh
 import { makeSetVoiceMessageTranscriptionController } from '../factories/chat/controllers/setVoiceMessageTranscriptionControllerFactory';
 import { makeSendChatFileController } from '../factories/chat/controllers/sendChatFileControllerFactory';
 import { makeRemoveChatController } from '../factories/chat/controllers/removeChatControllerFactory';
+import { makeUpdateChatMemberStatusController } from '../factories/chat/controllers/updateChatMemberStatusControllerFactory';
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -30,6 +31,10 @@ export default (router: Router): void => {
     router.put(
       '/chats/:chatId/messages/:messageId/transcription',
       adaptRoute(await makeSetVoiceMessageTranscriptionController())
+    );
+    router.put(
+      '/chats/:chatId/memberStatus',
+      adaptRoute(await makeUpdateChatMemberStatusController())
     );
     router.post(
       '/chats/:chatId/upload/file',

@@ -5,6 +5,7 @@ export type ChatContextUser = {
   id: string;
   name: string;
   avatar?: string;
+  isTyping?: boolean;
 };
 
 export class ChatMessagesContext {
