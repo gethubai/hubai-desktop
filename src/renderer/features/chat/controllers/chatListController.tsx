@@ -255,8 +255,18 @@ export default class ChatListController
     this.selectOrOpenChatWindow(item);
   };
 
+  public closeAllTabsWithId = (id: string) => {
+    let tabGroup = this.editorService.getGroupIdByTab(id);
+    while (tabGroup) {
+      this.editorService.closeTab(id, tabGroup);
+      tabGroup = this.editorService.getGroupIdByTab(id);
+    }
+  };
+
   public onContextMenuClick = (menuId: string, chat: IChatItem) => {
     if (menuId === 'delete') {
+      this.closeAllTabsWithId(chat.id as string);
+
       // eslint-disable-next-line promise/catch-or-return
       this.chatClient
         .removeChat(chat.id as string)
