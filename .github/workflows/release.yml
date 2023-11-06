@@ -40,4 +40,4 @@ jobs:
           CSC_INSTALLER_KEY_PASSWORD: ${{ secrets.APPLE_CSC_INSTALLER_KEY_PASSWORD }}
 
         run: |
-          npm run release-debug
+          npm run release
