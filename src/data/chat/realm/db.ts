@@ -93,14 +93,14 @@ export class ChatUserDto extends Realm.Object<ChatUser> {
 
   role?: ChatUserRole;
 
-  static schema = {
+  static schema: Realm.ObjectSchema = {
     name: 'ChatUser',
     embedded: true,
     properties: {
       id: 'string',
       memberType: 'string',
-      settings: '{}',
-      handleMessageTypes: 'string[]',
+      settings: 'mixed{}',
+      handleMessageTypes: { type: 'list', objectType: 'string' },
       role: 'string?',
     },
   };
@@ -125,7 +125,7 @@ export class ChatActivityDto extends Realm.Object<ChatActivity> {
 
   kind!: ChatActivityKind;
 
-  static schema = {
+  static schema: Realm.ObjectSchema = {
     name: 'ChatActivity',
     embedded: true,
     properties: {
@@ -149,7 +149,7 @@ export class ChatActivityDto extends Realm.Object<ChatActivity> {
 export class ChatTextMessageDto extends Realm.Object<TextMessage> {
   body!: string;
 
-  static schema = {
+  static schema: Realm.ObjectSchema = {
     name: 'ChatTextMessage',
     embedded: true,
     properties: {
@@ -171,7 +171,7 @@ export class ChatImageMessageDto extends Realm.Object<ImageMessage> {
 
   caption?: string;
 
-  static schema = {
+  static schema: Realm.ObjectSchema = {
     name: 'ChatImageMessage',
     embedded: true,
     properties: {
@@ -195,7 +195,7 @@ export class ChatVoiceMessageDto extends Realm.Object<VoiceMessage> {
 
   mimeType?: string;
 
-  static schema = {
+  static schema: Realm.ObjectSchema = {
     name: 'ChatVoiceMessage',
     embedded: true,
     properties: {
@@ -221,7 +221,7 @@ export class ChatMessageRecipientDto extends Realm.Object<ChatMessageRecipient> 
 
   seenDate?: Date;
 
-  static schema = {
+  static schema: Realm.ObjectSchema = {
     name: 'ChatMessageRecipient',
     embedded: true,
     properties: {
@@ -257,7 +257,7 @@ export class ChatMessageAttachmentDto extends Realm.Object<MessageAttachment> {
 
   size!: number;
 
-  static schema = {
+  static schema: Realm.ObjectSchema = {
     name: 'ChatMessageAttachment',
     embedded: true,
     properties: {
@@ -311,7 +311,7 @@ export class ChatMessageDto extends Realm.Object<ChatMessageModel> {
 
   owner_id?: string;
 
-  static schema = {
+  static schema: Realm.ObjectSchema = {
     name: 'ChatMessage',
     primaryKey: '_id',
     properties: {
