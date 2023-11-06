@@ -1,5 +1,5 @@
 import { RegistryWidgetsType } from '@rjsf/utils';
-import HubaiTextWidget from './HubaiTextWidget';
+import HubaiTextWidget from './hubaiTextWidget';
 import HubaiCheckboxWidget from './hubaiCheckboxWidget';
 import HubaiSelectWidget from './hubaiSelectWidget';
 
