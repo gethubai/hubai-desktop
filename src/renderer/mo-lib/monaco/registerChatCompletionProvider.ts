@@ -1,3 +1,4 @@
+import { CHAT_LANGUAGE_ID } from '@hubai/core/esm/monaco/chat';
 import {
   languages,
   editor,
@@ -7,8 +8,6 @@ import {
 } from 'monaco-editor';
 import { IChatService } from 'renderer/features/chat/services/types';
 import { container } from 'tsyringe';
-
-export const CHAT_LANGUAGE_ID = 'ailang';
 
 let chatService: IChatService;
 export const getChatService = (): IChatService => {
