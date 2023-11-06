@@ -119,7 +119,7 @@
     "node-stream-zip": "^1.15.0",
     "process": "^0.11.10",
     "react": "^18.2.0",
-    "react-audio-voice-recorder": "^1.2.1",
+    "react-audio-voice-recorder": "^2.2.0",
     "react-dom": "^18.2.0",
     "react-h5-audio-player": "^3.8.6",
     "react-markdown": "^8.0.7",
