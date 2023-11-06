@@ -11,7 +11,7 @@
   "bugs": {
     "url": "https://github.com/gethubai/hubai-desktop/issues"
   },
-  "repository": "https://github.com/gethubai/hubai-releases",
+  "repository": "https://github.com/gethubai/hubai-desktop",
   "license": "MIT",
   "author": {
     "name": "Matheus Diniz",
@@ -275,7 +275,7 @@
     "publish": {
       "provider": "github",
       "owner": "gethubai",
-      "repo": "hubai-releases",
+      "repo": "hubai-desktop",
       "releaseType": "release"
     }
   },
