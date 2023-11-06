@@ -1,14 +1,15 @@
 name: Release new version
 on:
-  #release:
-   # types: [created]
-   # paths-ignore:
-   #   - "**.md"
-   #   - "**.yml"
-
-  push:
-    branches:
-      - main
+  release:
+    types: [created]
+    paths-ignore:
+      - "**.md"
+      - "**.yml"
+      - ".vscode/**"
+      - ".gitignore"
+      - ".gitattributes"
+      - "LICENSE"
+      - ".editorconfig"
 
 jobs:
   release:
@@ -16,7 +17,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [macos-latest, windows-latest, ubuntu-latest]
 
     steps:
       - name: Check out Git repository
