@@ -1,7 +1,7 @@
-build_cloud: MacBook-Pro-de-Matheus.local
+# build_cloud: MacBook-Pro-de-Matheus.local
 image:
 - Visual Studio 2019
-- macOS
+# - macOS
 
 environment:
   nodejs_version: "18"
