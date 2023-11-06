@@ -27,5 +27,6 @@ exports.default = async function notarizeMacos(context) {
     appleId: process.env.APPLE_ID,
     appleIdPassword: process.env.APPLE_ID_PASS,
     tool: 'notarytool',
+    teamId: process.env.APPLE_TEAM_ID,
   });
 };
