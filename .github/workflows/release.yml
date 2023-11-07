@@ -1,19 +1,19 @@
 name: Release new version
 on:
-  # release:
-  #   types: [created]
-  #   paths-ignore:
-  #     - "**.md"
-  #     - "**.yml"
-  #     - ".vscode/**"
-  #     - ".gitignore"
-  #     - ".gitattributes"
-  #     - "LICENSE"
-  #     - ".editorconfig"
+   release:
+     types: [created]
+     paths-ignore:
+       - "**.md"
+       - "**.yml"
+       - ".vscode/**"
+       - ".gitignore"
+       - ".gitattributes"
+       - "LICENSE"
+       - ".editorconfig"
 
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
 
 jobs:
   release:
