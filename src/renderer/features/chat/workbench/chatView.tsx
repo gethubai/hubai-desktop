@@ -293,7 +293,7 @@ function ChatWindow({
             </div>
           </Pane>
 
-          <Pane minSize={100} maxSize="80%">
+          <Pane minSize={100} maxSize="80%" style={{ overflowY: 'scroll' }}>
             <AuxiliaryBar />
           </Pane>
         </SplitPane>
