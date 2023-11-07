@@ -78,7 +78,7 @@ async function buildContext(
   };
 }
 
-ipcMain.on(
+ipcMain.handle(
   endpoints.sendTextPrompt,
   async (
     event,
@@ -95,17 +95,18 @@ ipcMain.on(
       const context = await buildContext(brain, settingsOverride);
       const result = await service.sendTextPrompt(prompt, context);
 
-      event.returnValue = result;
+      return result;
     } catch (err: any) {
       console.error(err);
-      event.returnValue = {
+
+      return {
         result: `Could not generate image: ${err.message}`,
       } as BrainPromptResponse;
     }
   }
 );
 
-ipcMain.on(
+ipcMain.handle(
   endpoints.transcribeAudio,
   async (
     event,
@@ -120,17 +121,17 @@ ipcMain.on(
       const context = await buildContext(brain, settingsOverride);
       const result = await service.transcribeAudio(prompt, context);
 
-      event.returnValue = result;
+      return result;
     } catch (err: any) {
       console.error(err);
-      event.returnValue = {
+      return {
         result: `Could not generate image: ${err.message}`,
       } as BrainPromptResponse;
     }
   }
 );
 
-ipcMain.on(
+ipcMain.handle(
   endpoints.generateImage,
   async (
     event,
@@ -145,10 +146,10 @@ ipcMain.on(
       const context = await buildContext(brain, settingsOverride);
       const result = await service.generateImage(prompts, context);
 
-      event.returnValue = result;
+      return result;
     } catch (err: any) {
       console.error(err);
-      event.returnValue = {
+      return {
         result: `Could not generate image: ${err.message}`,
       } as BrainPromptResponse;
     }

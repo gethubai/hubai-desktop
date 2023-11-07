@@ -27,7 +27,7 @@ export class ElectronBrainClient implements IBrainClient {
     if (brain.capabilities.includes(BrainCapability.CONVERSATION))
       this.conversation = {
         sendTextPrompt: async (prompts, options) => {
-          const result = window.electron.brain.sendTextPrompt(
+          const result = await window.electron.brain.sendTextPrompt(
             brain.id,
             prompts.map((p) => ({
               role: p.role,
@@ -49,7 +49,7 @@ export class ElectronBrainClient implements IBrainClient {
     if (brain.capabilities.includes(BrainCapability.VOICE_TRANSCRIPTION)) {
       this.voiceTranscription = {
         transcribeAudio: async (prompt, options) => {
-          const result = window.electron.brain.transcribeAudio(
+          const result = await window.electron.brain.transcribeAudio(
             brain.id,
             {
               audioFilePath: prompt.audioFilePath,
@@ -66,7 +66,7 @@ export class ElectronBrainClient implements IBrainClient {
     if (brain.capabilities.includes(BrainCapability.IMAGE_GENERATION)) {
       this.imageGeneration = {
         generateImage: async (prompts, options) => {
-          const result = window.electron.brain.generateImage(
+          const result = await window.electron.brain.generateImage(
             brain.id,
             prompts.map(
               (p) => ({

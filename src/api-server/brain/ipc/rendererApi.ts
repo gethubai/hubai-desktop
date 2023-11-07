@@ -30,8 +30,8 @@ const brainRendererApi = {
     brainId: string,
     prompts: TextBrainPrompt[],
     settingsOverride?: any
-  ): BrainPromptResponse {
-    return ipcRenderer.sendSync(
+  ): Promise<BrainPromptResponse> {
+    return ipcRenderer.invoke(
       endpoints.sendTextPrompt,
       brainId,
       prompts,
@@ -43,8 +43,8 @@ const brainRendererApi = {
     brainId: string,
     prompts: ImageGenerationBrainPrompt[],
     settingsOverride?: any
-  ): BrainPromptResponse {
-    return ipcRenderer.sendSync(
+  ): Promise<BrainPromptResponse> {
+    return ipcRenderer.invoke(
       endpoints.generateImage,
       brainId,
       prompts,
@@ -56,8 +56,8 @@ const brainRendererApi = {
     brainId: string,
     prompt: LocalAudioPrompt,
     settingsOverride?: any
-  ): BrainPromptResponse {
-    return ipcRenderer.sendSync(
+  ): Promise<BrainPromptResponse> {
+    return ipcRenderer.invoke(
       endpoints.transcribeAudio,
       brainId,
       prompt,
