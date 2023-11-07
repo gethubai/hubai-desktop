@@ -111,7 +111,7 @@ function ChatWindow({
         }
       })
       .catch((err) => {
-        console.log('err on getting micAccessStatus', err);
+        console.error('err on getting micAccessStatus', err);
       });
   }, []);
 
