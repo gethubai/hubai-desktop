@@ -24,6 +24,15 @@ export default function Markdown(props: any) {
             </code>
           );
         },
+        img({ node, className, children, ...props }) {
+          return (
+            <img
+              {...props}
+              className={className}
+              style={{ maxWidth: '100%' }}
+            />
+          );
+        },
       }}
     />
   );
