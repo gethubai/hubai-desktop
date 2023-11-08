@@ -1,12 +1,13 @@
 import Realm from 'realm';
-import { ILocalBrainDto, ILocalBrainRepository } from '../localBrainRepository';
+import { LocalBrainModel } from 'api-server/brain/domain/models/localBrain';
+import { ILocalBrainRepository } from '../localBrainRepository';
 import { LocalBrainDto } from './db';
 
 export class RealmLocalBrainRepository implements ILocalBrainRepository {
   constructor(private readonly database: Realm) {}
 
-  update = (brain: ILocalBrainDto): Promise<ILocalBrainDto> => {
-    return new Promise<ILocalBrainDto>((resolve, reject) => {
+  update = (brain: LocalBrainModel): Promise<LocalBrainModel> => {
+    return new Promise<LocalBrainModel>((resolve, reject) => {
       this.database.write(() => {
         const dto = this.database.objectForPrimaryKey(LocalBrainDto, brain.id);
 
@@ -19,18 +20,21 @@ export class RealmLocalBrainRepository implements ILocalBrainRepository {
         }
 
         dto.name = brain.name;
-        dto.displayName = brain.displayName;
+        dto.description = brain.description;
+        dto.title = brain.title;
         dto.version = brain.version;
-        dto.disabled = brain.disabled ?? false;
-        dto.updatedDateUtc = brain.updatedDateUtc;
+        dto.main = brain.main;
+        dto.capabilities = brain.capabilities;
+        dto.settingsMap = brain.settingsMap;
+        dto.updatedDate = brain.updatedDate;
         resolve(dto.values);
         return dto;
       });
     });
   };
 
-  add = async (brain: ILocalBrainDto): Promise<ILocalBrainDto> => {
-    let createdBrain: ILocalBrainDto | undefined;
+  add = async (brain: LocalBrainModel): Promise<LocalBrainModel> => {
+    let createdBrain: LocalBrainModel | undefined;
     this.database.write(() => {
       createdBrain = this.database.create(LocalBrainDto, brain).values;
     });
@@ -39,7 +43,6 @@ export class RealmLocalBrainRepository implements ILocalBrainRepository {
       throw new Error('Failed to create brain in local database');
     return createdBrain;
   };
-
   remove = async (id: string): Promise<void> => {
     return new Promise<void>((resolve, reject) => {
       let dto = this.database.objectForPrimaryKey(LocalBrainDto, id);
@@ -60,12 +63,12 @@ export class RealmLocalBrainRepository implements ILocalBrainRepository {
     });
   };
 
-  getBrains = async (): Promise<ILocalBrainDto[]> => {
+  getBrains = async (): Promise<LocalBrainModel[]> => {
     const brains = this.database.objects(LocalBrainDto);
     return brains.map((item) => item.values);
   };
 
-  getBrain = async (id: string): Promise<ILocalBrainDto | undefined> => {
+  getBrain = async (id: string): Promise<LocalBrainModel | undefined> => {
     const brain = this.database.objectForPrimaryKey(LocalBrainDto, id);
 
     return brain?.values;
@@ -73,12 +76,12 @@ export class RealmLocalBrainRepository implements ILocalBrainRepository {
 
   getBrainByName = async (
     name: string
-  ): Promise<ILocalBrainDto | undefined> => {
+  ): Promise<LocalBrainModel | undefined> => {
     const brain = this.database
       .objects(LocalBrainDto)
       .filtered(`name == $0`, name);
 
-    if (brain.length > 0) return brain[0].values;
+    if (brain.length > 0) return brain[0] as LocalBrainModel;
 
     return undefined;
   };
