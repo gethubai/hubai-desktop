@@ -120,6 +120,12 @@ export default class ChatWindowController
     }, fileType);
   };
 
+  public attachFile = (files: FileList): void => {
+    for (let i = 0; i < files.length; i++) {
+      this.chatWindowService.attachFile(files[i]);
+    }
+  };
+
   public removeAttachedFile = (fileId: string) => {
     this.chatWindowService.removeAttachedFile(fileId);
   };

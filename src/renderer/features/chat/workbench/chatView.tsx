@@ -19,6 +19,9 @@ import {
   SplitPane,
   Chat,
   Message,
+  useDragDropZone,
+  DragDropZone,
+  FileMosaic,
 } from '@hubai/core/esm/components';
 import { editor as monaco } from '@hubai/core/esm/monaco';
 import { IColors } from '@hubai/core';
@@ -29,7 +32,6 @@ import { ChatAction } from '@hubai/core/esm/components/chat/types';
 import { IChatWindowController } from '../controllers/type';
 import { IChatWindowState } from '../models/chatWindow';
 import BrainSelector from './components/brainSelector';
-import FileMosaic from './components/files-ui/fileMosaic';
 
 export interface IChatWindowProps
   extends IChatWindowController,
@@ -54,9 +56,11 @@ function ChatWindow({
   files,
   removeAttachedFile,
   users,
+  attachFile,
 }: IChatWindowProps) {
   const [micStatus, setMicStatus] = useState('idle');
   const chatInputRef = useRef<ChatInputApi>();
+  const { getDragProps, isDragging } = useDragDropZone({ onDrop: attachFile });
 
   const [splitPanePos, setSplitPanePos] = useState<string[] | number[]>([
     '75%',
@@ -142,7 +146,8 @@ function ChatWindow({
 
   const usersTyping = Object.values(users).filter((u) => u.isTyping);
   return (
-    <div style={{ position: 'relative', height: '100%' }}>
+    <div style={{ position: 'relative', height: '100%' }} {...getDragProps()}>
+      <DragDropZone dragOver={isDragging} />
       <div
         style={{
           display: 'flex',

@@ -23,6 +23,7 @@ export interface IChatWindowController
   getBrainChatSettings(brain: LocalBrainModel): any;
   AuxiliaryBarTabs: React.ComponentType;
   AuxiliaryBar: React.ComponentType;
+  attachFile(file: FileList): void;
   removeAttachedFile(fileId: string): void;
 }
 
