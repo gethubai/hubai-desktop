@@ -7,7 +7,13 @@ import {
   getEventPosition,
 } from '@hubai/core';
 import { ChatTree, ChatTreeItemProps } from 'renderer/components/chatTree';
-import { Menu, Toolbar, useContextViewEle } from '@hubai/core/esm/components';
+import {
+  Button,
+  Icon,
+  Menu,
+  Toolbar,
+  useContextViewEle,
+} from '@hubai/core/esm/components';
 import { IChatListController } from '../../controllers/type';
 import { IChatListState } from '../../services/chatListService';
 import { IChatItem } from '../../models/chat';
@@ -15,6 +21,7 @@ import { IChatItem } from '../../models/chat';
 export interface IChatListSidebarProps
   extends IChatListController,
     IChatListState {
+  onNewChatClick?: () => void;
   mapChatItem?: (chat: IChatItem) => Omit<ChatTreeItemProps, 'id'>;
 }
 
@@ -25,6 +32,7 @@ function ChatListSidebar({
   title,
   mapChatItem,
   onContextMenuClick,
+  onNewChatClick,
 }: IChatListSidebarProps) {
   const contextView = useContextViewEle();
 
@@ -80,6 +88,10 @@ function ChatListSidebar({
         toolbar={<Toolbar data={headerToolBar || []} />}
       />
       <Content>
+        <Button onClick={onNewChatClick}>
+          <Icon type="add" style={{ marginRight: 5 }} />
+           New Chat
+        </Button>
         <ChatTree data={data} />
       </Content>
     </div>

@@ -255,6 +255,10 @@ export default class ChatListController
     this.selectOrOpenChatWindow(item);
   };
 
+  public onNewChatClick = () => {
+    this.openNewChatWindow();
+  };
+
   public closeAllTabsWithId = (id: string) => {
     let tabGroup = this.editorService.getGroupIdByTab(id);
     while (tabGroup) {
