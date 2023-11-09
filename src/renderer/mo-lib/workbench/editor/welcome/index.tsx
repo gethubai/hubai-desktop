@@ -24,6 +24,18 @@ export default function Welcome() {
             );
           })}
         </ul>
+
+        <h3>First time here?</h3>
+        <a
+          onClick={() =>
+            window.open(
+              'https://www.hubai.app/blog/2023/10/21/how-to-get-started',
+              '_blank'
+            )
+          }
+        >
+          See how to install and use your first AI
+        </a>
       </div>
     </div>
   );
