@@ -33,6 +33,17 @@ export default function Markdown(props: any) {
             />
           );
         },
+        a({ node, href, className, children, ...props }) {
+          return (
+            <a
+              {...props}
+              className={className}
+              onClick={() => window.open(href, '_blank')}
+            >
+              {children}
+            </a>
+          );
+        },
       }}
     />
   );
