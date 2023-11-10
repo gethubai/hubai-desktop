@@ -87,6 +87,24 @@ export default class BrainController
 
   public onSaveSettings = (brain: LocalBrainViewModel, settings: any) => {
     this.emit(BrainEvent.onBrainSettingsUpdated, brain, settings);
+
+    const items = [
+      {
+        id: generateUniqueId(),
+        value: brain,
+        render: () => (
+          <div>
+            <p>Settings updated!</p>
+            <p>
+              The settings for {brain.displayName} has been successfully
+              updated!
+            </p>
+          </div>
+        ),
+      } as INotificationItem<any>,
+    ];
+    this.notificationService.add(items);
+    this.notificationService.toggleNotification();
   };
 
   public onContextMenuClick = (
