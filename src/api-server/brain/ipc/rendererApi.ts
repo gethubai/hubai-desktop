@@ -20,7 +20,7 @@ const brainRendererApi = {
     return ipcRenderer.sendSync(endpoints.uninstall, brain);
   },
   getInstalledBrains() {
-    return ipcRenderer.sendSync(endpoints.getAll);
+    return ipcRenderer.invoke(endpoints.getAll);
   },
   updateSettings(brainId: string, newSettings: any) {
     return ipcRenderer.sendSync(endpoints.updateSettings, brainId, newSettings);
