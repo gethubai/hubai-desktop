@@ -260,6 +260,7 @@ function ChatWindow({
                         id={id}
                         onAction={onChatAction}
                         onApiRef={setApiRef}
+                        monacoInputOptions={{ fixedOverflowWidgets: true }}
                       />
                       <Chat.Actions>
                         <Chat.Action
