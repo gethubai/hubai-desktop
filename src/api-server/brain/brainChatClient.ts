@@ -133,9 +133,10 @@ export default class BrainChatClient implements IBrainServer {
           context
         )
         .then((promptResult) => {
-          if (promptResult.validationResult?.success === false) {
+          if (promptResult.validationResult?.errors?.length) {
             session.sendMessage({
-              text: { body: promptResult.validationResult.getMessage() },
+              text: { body: promptResult.validationResult.errors.join('\n\n') },
+              isSystemMessage: true,
             });
           } else if (promptResult.result) {
             session.sendTranscription(message.id, {
@@ -148,8 +149,9 @@ export default class BrainChatClient implements IBrainServer {
 
           session.sendMessage({
             text: {
-              body: `An error occurred while transcribing message:\n ${err.message}`,
+              body: `Oops! Looks like the brain could not transcribe your message: \n\n ${err.message}`,
             },
+            isSystemMessage: true,
           });
         });
     }
@@ -158,6 +160,7 @@ export default class BrainChatClient implements IBrainServer {
       text: {
         body: 'This brain does not support audio transcriptions',
       },
+      isSystemMessage: true,
     });
 
     return Promise.resolve();
@@ -200,9 +203,10 @@ export default class BrainChatClient implements IBrainServer {
       return textService
         .sendTextPrompt(prompts, context)
         .then((promptResult) => {
-          if (promptResult.validationResult?.success === false) {
+          if (promptResult.validationResult?.errors?.length) {
             session.sendMessage({
-              text: { body: promptResult.validationResult.getMessage() },
+              text: { body: promptResult.validationResult.errors.join('\n\n') },
+              isSystemMessage: true,
             });
           } else if (promptResult.result) {
             session.sendMessage({ text: { body: promptResult.result } });
@@ -213,8 +217,9 @@ export default class BrainChatClient implements IBrainServer {
 
           session.sendMessage({
             text: {
-              body: `An error occurred while sending text prompt:\n ${err.message}`,
+              body: `Oops! Looks like the brain could not complete your request:\n\n ${err.message}`,
             },
+            isSystemMessage: true,
           });
         })
         .finally(async () => {
@@ -226,6 +231,7 @@ export default class BrainChatClient implements IBrainServer {
       text: {
         body: 'This brain does not support text prompts',
       },
+      isSystemMessage: true
     });
     return Promise.resolve();
   }
