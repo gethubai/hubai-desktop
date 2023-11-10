@@ -28,7 +28,7 @@ function LocalBrainWindow({
     <ScrollBar>
       <div style={{ marginTop: -20, marginLeft: 10, height: '100%' }}>
         <div id="content_container">
-          <h2>{brain.displayName}</h2>
+          <h2>{brain.displayName} v{brain.version}</h2>
           <span style={{ fontSize: 16 }}>{brain.description}</span>
         </div>
 
