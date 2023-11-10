@@ -1,6 +1,6 @@
 /* eslint-disable max-classes-per-file */
 export type ChatMessageSenderType = 'user' | 'brain';
-export type ChatMessageType = 'text' | 'image' | 'voice';
+export type ChatMessageType = 'text' | 'image' | 'voice' | 'system';
 
 export enum ChatMessageStatus {
   WAITING = 'waiting',

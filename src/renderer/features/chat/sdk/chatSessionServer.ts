@@ -141,6 +141,7 @@ export class ChatSessionServer implements IChatSessionServer, IDisposable {
     voice,
     hidden,
     attachments,
+    isSystemMessage
   }: SendMessage): Promise<void> => {
     const formData = new FormData();
 
@@ -150,6 +151,7 @@ export class ChatSessionServer implements IChatSessionServer, IDisposable {
       image,
       voice,
       hidden,
+      isSystemMessage,
       attachments,
     };
 

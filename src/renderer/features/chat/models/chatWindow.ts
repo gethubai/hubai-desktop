@@ -2,8 +2,7 @@ import { ViewVisibility } from '@hubai/core/esm/model/workbench/layout';
 import { LocalBrainModel } from 'api-server/brain/domain/models/localBrain';
 import { ChatUser } from 'api-server/chat/domain/models/chat';
 import { ChatContextUser } from 'api-server/chat/domain/models/chatContext';
-import { ISubMenuProps } from '@hubai/core/esm/components';
-import { ChatMessageViewModel } from '../workbench/components/chat/types';
+import { ChatMessageViewModel, ISubMenuProps } from '@hubai/core/esm/components';
 
 export type AttachedFile = {
   id: string;

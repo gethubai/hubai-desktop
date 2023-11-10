@@ -39,6 +39,8 @@ export type SendMessage = {
   brainsSettings?: IRecipientSettings;
 
   hidden?: boolean;
+
+  isSystemMessage?: boolean;
 };
 
 export interface IChatSessionServer {

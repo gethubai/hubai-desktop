@@ -45,6 +45,9 @@ export class SendMessageController implements Controller {
     let messageType: ChatMessageType = 'text';
     if (request.image) messageType = 'image';
     if (request.voice) messageType = 'voice';
+    if (request.isSystemMessage === true) {
+      messageType = 'system';
+    }
 
     const recipients = getMembersIdsForMessageType(
       chat,
@@ -121,5 +124,6 @@ export namespace SendMessageController {
     recipientSettings: IRecipientSettings;
     hidden?: boolean;
     files?: Express.Multer.File[];
+    isSystemMessage?: boolean;
   };
 }
