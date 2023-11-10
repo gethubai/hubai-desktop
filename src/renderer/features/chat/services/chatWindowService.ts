@@ -12,13 +12,14 @@ import {
   MessageUpdatedEvent,
 } from 'api-server/chat/chatTcpServer/events/serveSessionEvents';
 import { IDisposable } from '@hubai/core/esm/monaco/common';
+import { ChatMessageViewModel } from '@hubai/core/esm/components';
 import { ILocalUserService } from 'renderer/features/user/services/userService';
 import { IContactService } from 'renderer/features/contact/models/service';
 import generateUniqueId from 'renderer/common/uniqueIdGenerator';
+import { stripIndent } from 'renderer/common/stringUtils';
 import { prettifyFileSize } from 'renderer/common/fileUtils';
 import { ChatWindowStateModel, IChatWindowState } from '../models/chatWindow';
 import { type IChatClient, IChatSessionServer } from '../sdk/contracts';
-import { ChatMessageViewModel } from '../workbench/components/chat/types';
 
 export interface IChatWindowService
   extends Component<IChatWindowState>,
@@ -164,7 +165,7 @@ export class ChatWindowService
 
     return {
       id: message.id,
-      textContent: message.text?.body,
+      textContent: stripIndent(message.text?.body),
       voiceContent: message.voice
         ? {
             audioSrc: message.voice?.file,
