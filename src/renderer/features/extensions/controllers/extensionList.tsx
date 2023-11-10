@@ -49,7 +49,7 @@ export default class ExtensionListController
     const activityBar = {
       id,
       name: 'Extensions',
-      title: 'Extensions',
+      title: 'Installed extensions',
       icon: 'extensions',
       sortIndex: -1,
     } as IActivityBarItem;

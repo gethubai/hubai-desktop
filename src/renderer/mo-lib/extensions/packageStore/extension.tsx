@@ -29,7 +29,7 @@ export class PackageStoreExtension implements IExtension {
     const activityBar = {
       id: 'packageStore.sidebarPane',
       name: 'PackageStore',
-      title: 'Package Store',
+      title: 'Package Store - Download new brains and extensions',
       icon: 'cloud-download',
     };
 

@@ -48,7 +48,7 @@ export default class BrainController
     const activityBar = {
       id,
       name: 'Brains',
-      title: 'AI Brains',
+      title: 'Installed AI Brains',
       icon: 'octoface',
       sortIndex: -1,
     } as IActivityBarItem;
