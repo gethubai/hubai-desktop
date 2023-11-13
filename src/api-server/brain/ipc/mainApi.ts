@@ -100,7 +100,7 @@ ipcMain.handle(
       console.error(err);
 
       return {
-        result: `Could not generate image: ${err.message}`,
+        result: `Error sending text prompt: ${err.message}`,
       } as BrainPromptResponse;
     }
   }
@@ -125,7 +125,7 @@ ipcMain.handle(
     } catch (err: any) {
       console.error(err);
       return {
-        result: `Could not generate image: ${err.message}`,
+        result: `Error transcribing content: ${err.message}`,
       } as BrainPromptResponse;
     }
   }
@@ -150,7 +150,7 @@ ipcMain.handle(
     } catch (err: any) {
       console.error(err);
       return {
-        result: `Could not generate image: ${err.message}`,
+        result: `Error on generating image: ${err.message}`,
       } as BrainPromptResponse;
     }
   }
