@@ -66,6 +66,32 @@ class AppUpdater {
     autoUpdater.logger = log;
     autoUpdater.autoInstallOnAppQuit = true;
     autoUpdater.checkForUpdatesAndNotify();
+
+    autoUpdater.on(
+      'update-downloaded',
+      ({ version, releaseName, releaseNotes }) => {
+        const notes = typeof releaseNotes === 'string' ? releaseNotes : `Version ${version} is available`;
+        dialog
+          .showMessageBox({
+            type: 'info',
+            buttons: ['Restart', 'Update Later'],
+            title: 'Application Update',
+            message:
+              (process.platform === 'win32' ? notes : releaseName) ??
+              `Version ${version} is available}`,
+            detail:
+              'A new version has been downloaded. Restart the application to apply the updates.',
+          })
+          .then((returnValue) => {
+            if (returnValue.response === 0) autoUpdater.quitAndInstall();
+          });
+      }
+    );
+
+    autoUpdater.on('error', (message) => {
+      console.error('There was a problem updating the application');
+      console.error(message);
+    });
   }
 }
 
