@@ -1,13 +1,12 @@
 import Realm from 'realm';
-import { LocalBrainModel } from 'api-server/brain/domain/models/localBrain';
-import { ILocalBrainRepository } from '../localBrainRepository';
+import { ILocalBrainDto, ILocalBrainRepository } from '../localBrainRepository';
 import { LocalBrainDto } from './db';
 
 export class RealmLocalBrainRepository implements ILocalBrainRepository {
   constructor(private readonly database: Realm) {}
 
-  update = (brain: LocalBrainModel): Promise<LocalBrainModel> => {
-    return new Promise<LocalBrainModel>((resolve, reject) => {
+  update = (brain: ILocalBrainDto): Promise<ILocalBrainDto> => {
+    return new Promise<ILocalBrainDto>((resolve, reject) => {
       this.database.write(() => {
         const dto = this.database.objectForPrimaryKey(LocalBrainDto, brain.id);
 
@@ -29,8 +28,8 @@ export class RealmLocalBrainRepository implements ILocalBrainRepository {
     });
   };
 
-  add = async (brain: LocalBrainModel): Promise<LocalBrainModel> => {
-    let createdBrain: LocalBrainModel | undefined;
+  add = async (brain: ILocalBrainDto): Promise<ILocalBrainDto> => {
+    let createdBrain: ILocalBrainDto | undefined;
     this.database.write(() => {
       createdBrain = this.database.create(LocalBrainDto, brain).values;
     });
@@ -60,12 +59,12 @@ export class RealmLocalBrainRepository implements ILocalBrainRepository {
     });
   };
 
-  getBrains = async (): Promise<LocalBrainModel[]> => {
+  getBrains = async (): Promise<ILocalBrainDto[]> => {
     const brains = this.database.objects(LocalBrainDto);
     return brains.map((item) => item.values);
   };
 
-  getBrain = async (id: string): Promise<LocalBrainModel | undefined> => {
+  getBrain = async (id: string): Promise<ILocalBrainDto | undefined> => {
     const brain = this.database.objectForPrimaryKey(LocalBrainDto, id);
 
     return brain?.values;
@@ -73,12 +72,12 @@ export class RealmLocalBrainRepository implements ILocalBrainRepository {
 
   getBrainByName = async (
     name: string
-  ): Promise<LocalBrainModel | undefined> => {
+  ): Promise<ILocalBrainDto | undefined> => {
     const brain = this.database
       .objects(LocalBrainDto)
       .filtered(`name == $0`, name);
 
-    if (brain.length > 0) return brain[0] as LocalBrainModel;
+    if (brain.length > 0) return brain[0] as ILocalBrainDto;
 
     return undefined;
   };
