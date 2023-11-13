@@ -1,5 +1,5 @@
 import { DownloadProgress } from 'renderer/features/downloader/models';
-import { HubAIPackage } from './package';
+import { HubAIPackage, PackageVersion } from './package';
 
 export type PackageResult = {
   success: boolean;
@@ -23,6 +23,11 @@ export enum PackageEvents {
   PackageDownloaded = 'package-downloaded',
   PackageDownloadProgress = 'package-download-progress',
 }
+export type PackageVersionCompatibilityResult = {
+  isCompatible: boolean;
+  incompatibilityReason?: string;
+}
+
 export interface IPackageManagementService {
   startPackageDownload(
     hubaiPackage: HubAIPackage,
@@ -31,6 +36,7 @@ export interface IPackageManagementService {
   ): Promise<PackageDownloadResult>;
 
   isPackageInstalled(hubaiPackage: HubAIPackage): boolean;
+  isPackageVersionCompatible(version: PackageVersion): PackageVersionCompatibilityResult;
   isPendingRemovalPackage(name: string): boolean;
   getInstalledPackages(): HubAIPackage[];
   getInstalledPackage(name: string): HubAIPackage | undefined;

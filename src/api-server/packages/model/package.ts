@@ -6,6 +6,8 @@ export type LocalPackage = {
   displayName: string;
   description?: string;
   version: string;
+  /* Minimum Hubai version required for this extension to work */
+  minimumEngineVersion: string;
   main: string;
   icon?: string;
   iconUrl?: string;

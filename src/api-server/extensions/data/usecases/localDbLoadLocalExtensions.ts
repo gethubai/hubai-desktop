@@ -65,6 +65,7 @@ export default class LocalDbLoadLocalExtensions implements LoadLocalExtensions {
       icon: manifest.icon,
       publisher: manifest.publisher,
       name: extension.name.toLowerCase(),
+      minimumEngineVersion: manifest.minimumEngineVersion,
     } as LocalExtensionModel;
   };
 }

@@ -29,6 +29,7 @@ export default class LocalDbLoadLocalBrains implements LoadLocalBrains {
         main: manifest.entryPoint,
         settingsMap: manifest.settingsMap,
         repositoryUrl: manifest.repositoryUrl,
+        minimumEngineVersion: manifest.minimumEngineVersion,
       } as LocalBrainModel;
     });
   };

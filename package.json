@@ -128,6 +128,7 @@
     "reflect-metadata": "^0.1.13",
     "regexparam": "^2.0.1",
     "remark-gfm": "^4.0.0",
+    "semver": "^7.5.4",
     "styled-components": "^6.0.0",
     "tsyringe": "^4.8.0",
     "url": "^0.11.1"

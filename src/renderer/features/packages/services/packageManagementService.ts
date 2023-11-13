@@ -1,4 +1,5 @@
 import { inject, injectable, singleton } from 'tsyringe';
+import semver from 'semver';
 import { type IExtensionManagementService } from 'renderer/features/extensions/services/extensionManagement';
 import { type IBrainManagementService } from 'renderer/features/brain/services/brainManagement';
 import { IHttpClient } from 'renderer/http/httpClient';
@@ -9,7 +10,7 @@ import {
 import { type IDownloadManager } from 'renderer/features/downloader/downloadManager';
 import { EventEmitter } from '@hubai/core/esm/common/event';
 import { DownloadProgress } from 'renderer/features/downloader/models';
-import { HubAIPackage, PackageType } from '../models/package';
+import { HubAIPackage, PackageType, PackageVersion } from '../models/package';
 import {
   IPackageManagementService,
   PackageDownloadResult,
@@ -17,6 +18,7 @@ import {
   PackageInstallationResult,
   PackageResult,
   PackageUninstallationResult,
+  PackageVersionCompatibilityResult,
 } from '../models/managementService';
 import { ILocalPackageManagementService } from '../models/localPackageManagementService';
 
@@ -62,6 +64,20 @@ export class PackageManagementService implements IPackageManagementService {
 
   isPendingRemovalPackage(name: string): boolean {
     return this.pendingRemovalPackages.includes(name.toLowerCase());
+  }
+
+  isPackageVersionCompatible(
+    version: PackageVersion
+  ): PackageVersionCompatibilityResult {
+    let incompatibilityReason: string | undefined = undefined;
+    const currentAppVersion = window.electron.getAppVersion();
+    if (
+      !semver.satisfies(currentAppVersion, version.requiredEngineVersion)
+    ) {
+      incompatibilityReason = `This package requires at least version ${version.requiredEngineVersion} of HubAI. \n\n Your current version is ${currentAppVersion}. \n\n Update HubAI to install this package.`;
+    }
+
+    return { isCompatible: !incompatibilityReason, incompatibilityReason: incompatibilityReason };
   }
 
   startPackageDownload = async (

@@ -3,6 +3,7 @@ import {
   IPackageManagementService,
   PackageEvents,
 } from 'renderer/features/packages/models/managementService';
+import semver from 'semver';
 import { IDisposable } from '@hubai/core/esm/monaco/common';
 import { HubAIPackage } from 'renderer/features/packages/models/package';
 import { PackageInstallationState } from 'api-server/packages/model/packageInstallationState';
@@ -132,11 +133,15 @@ export class PackageController extends Controller implements IDisposable {
     } else {
       list.push(this.buttonStates.uninstall);
 
+      const latestPackageVersion = item.versions[0];
       if (
-        installedPackage.installedVersion?.toLowerCase() !==
-        item.versions[0].version.toLowerCase()
-      )
+        semver.gt(
+          latestPackageVersion.version,
+          installedPackage.installedVersion!
+        )
+      ) {
         list.push(this.buttonStates.update);
+      }
     }
 
     return list;
@@ -144,6 +149,17 @@ export class PackageController extends Controller implements IDisposable {
 
   onInstall = async () => {
     const { item, captchaToken } = this.packageService.getState();
+
+    const canUpdateOrInstall =
+      this.packageManagementService.isPackageVersionCompatible(
+        item.versions[0]
+      );
+    if (!canUpdateOrInstall.isCompatible) {
+      this.setError(
+        canUpdateOrInstall.incompatibilityReason ?? 'Version is not compatible'
+      );
+      return;
+    }
 
     this.clearErrors();
 
