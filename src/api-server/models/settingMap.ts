@@ -12,7 +12,7 @@ export interface ISettingMap {
 
   type: SettingType;
 
-  enumValues?: string[];
+  enumValues?: string[] | (() => string[]);
 
   defaultValue?: string;
 

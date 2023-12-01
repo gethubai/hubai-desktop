@@ -59,11 +59,19 @@ export function MapSettingToSchema(setting: ISettingMap): RJSFSchema {
     defaultValueParsed = defaultValue === 'true';
   }
 
+  function getEnumValues(): string[] | undefined {
+    if (typeof enumValues === 'function') {
+      return enumValues?.();
+    }
+
+    return enumValues && enumValues.length > 0 ? enumValues : undefined;
+  }
+
   const property = {
     type,
     title: displayName,
     default: defaultValueParsed,
-    enum: enumValues && enumValues.length > 0 ? enumValues : undefined,
+    enum: getEnumValues(),
     description,
     originalName: name,
   };
