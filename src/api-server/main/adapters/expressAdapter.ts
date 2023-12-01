@@ -13,13 +13,20 @@ export const adaptRoute = (controller: Controller) => {
       files: req.files,
       context: { userId: req.headers['user-id'] },
     };
-    const httpResponse = await controller.handle(request);
+    try {
+      const httpResponse = await controller.handle(request);
 
-    if (httpResponse.statusCode >= 200 && httpResponse.statusCode <= 299) {
-      res.status(httpResponse.statusCode).json(httpResponse.body);
-    } else {
-      res.status(httpResponse.statusCode).json({
-        error: httpResponse.body.message,
+      if (httpResponse.statusCode >= 200 && httpResponse.statusCode <= 299) {
+        res.status(httpResponse.statusCode).json(httpResponse.body);
+      } else {
+        res.status(httpResponse.statusCode).json({
+          error: httpResponse.body.message,
+        });
+      }
+    } catch (error: any) {
+      console.error('Request error: ', error);
+      res.status(500).json({
+        error: error?.message,
       });
     }
   };
