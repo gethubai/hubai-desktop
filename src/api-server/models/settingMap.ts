@@ -1,33 +1,9 @@
-export enum SettingType {
-  STRING = 'string',
-  NUMBER = 'number',
-  BOOLEAN = 'boolean',
-  INTEGER = 'integer',
-}
-
-export interface ISettingMap {
+export class SettingMap {
   name: string;
 
   displayName: string;
 
-  type: SettingType;
-
-  enumValues?: string[] | (() => string[]);
-
-  defaultValue?: string;
-
-  required: boolean;
-
-  description?: string;
-  isSecret?: boolean;
-}
-
-export class SettingMap implements ISettingMap {
-  name: string;
-
-  displayName: string;
-
-  type: SettingType;
+  type: string;
 
   enumValues?: string[];
 
@@ -66,18 +42,11 @@ export class SettingMap implements ISettingMap {
     // Name and title are required
   }
 
-  parseSettingType(typeString: string): SettingType {
-    switch (typeString) {
-      case 'string':
-        return SettingType.STRING;
-      case 'number':
-        return SettingType.NUMBER;
-      case 'boolean':
-        return SettingType.BOOLEAN;
-      case 'integer':
-        return SettingType.INTEGER;
-      default:
-        throw new Error(`Invalid SettingType: ${typeString}`);
+  parseSettingType(typeString: string): string {
+    if (!['string', 'number', 'boolean', 'integer'].includes(typeString)) {
+      throw new Error(`Invalid SettingType: ${typeString}`);
     }
+
+    return typeString;
   }
 }

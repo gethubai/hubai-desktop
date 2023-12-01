@@ -3,7 +3,7 @@ import validator from '@rjsf/validator-ajv8';
 import Form, { FormProps } from '@rjsf/core';
 import './style.scss';
 import { RJSFSchema, FieldTemplateProps } from '@rjsf/utils';
-import { ISettingMap } from 'api-server/models/settingMap';
+import { ISettingMap } from '@hubai/core';
 import { defaultWidgets } from './form-widgets';
 
 function CustomFieldTemplate(props: FieldTemplateProps) {
