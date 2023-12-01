@@ -9,6 +9,7 @@ import '@hubai/core/esm/style/mo.css';
 import './mo-lib/style/styles.scss';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import 'react-simple-keyboard/build/css/index.css';
 import InstanceService from 'mo/services/instanceService';
 import { BuiltInColorTheme } from 'mo/services/theme/colorThemeService';
 import debounce from 'lodash/debounce';
