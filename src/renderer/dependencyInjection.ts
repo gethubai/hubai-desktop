@@ -21,6 +21,7 @@ import type {
   IColorThemeService,
   ILocaleService,
   IBrainClientManager,
+  IToastService,
 } from '@hubai/core';
 
 import SidebarService from 'mo/services/workbench/sidebarService';
@@ -335,6 +336,8 @@ container.registerSingleton<IDownloadManager>(
   'IDownloadManager',
   ElectronDownloadManager
 );
+
+container.registerSingleton<IToastService>('IToastService', ToastService);
 
 /* Models */
 container.register<IChatState>(ChatStateModel, {
