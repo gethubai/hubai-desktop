@@ -12,6 +12,7 @@ import { ExtendsActivityBar } from './activityBar';
 import { defaultColorThemeExtension } from './themes/theme-defaults';
 import packageStoreExtension from './packageStore/extension';
 import { BrainChats } from './brainChats';
+import shortcutRegister from './shortcutRegister';
 
 // import { githubPlusExtension } from './themes/github-plus-theme-master';
 // import { webStormIntelliJExtension } from './themes/vscode-intellij-darcula-theme-master';
@@ -33,4 +34,5 @@ export const defaultExtensions = [
   // webStormIntelliJExtension,
   // githubPlusExtension,
   ExtendsFolderTree,
+  shortcutRegister,
 ];
