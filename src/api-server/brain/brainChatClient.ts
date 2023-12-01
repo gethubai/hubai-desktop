@@ -1,4 +1,7 @@
-import { ChatMessageModel } from 'api-server/chat/domain/models/chatMessage';
+import {
+  ChatMessageModel,
+  IRecipientSettings,
+} from 'api-server/chat/domain/models/chatMessage';
 import {
   IChatClient,
   IChatSessionServer,
@@ -16,6 +19,7 @@ import {
 } from '@hubai/brain-sdk';
 import { IBrainServer } from './brainServer';
 import { IBrainSettings } from './brainSettings';
+import { getCurrentUtcDate } from 'utils/dateUtils';
 
 export default class BrainChatClient implements IBrainServer {
   private chatClient!: IChatClient;
@@ -99,7 +103,7 @@ export default class BrainChatClient implements IBrainServer {
       conversationId: message.chat,
       senderId: message.senderId,
       settings,
-    } as IBrainPromptContext<any>;
+    } as IBrainPromptContext<IRecipientSettings>;
 
     if (message.messageType === 'text' && message.text?.body) {
       await this.replyWithTextPrompt(message, session, context);
@@ -179,25 +183,25 @@ export default class BrainChatClient implements IBrainServer {
 
       const messages = await session.messages();
 
-      const prompts = messages.messages
-        .filter((m) => m.messageType === 'text' && m.text?.body)
-        .map(
-          (m) =>
-            ({
-              role: m.senderId === message.senderId ? 'user' : 'brain',
-              message: m.text!.body,
-              attachments: m.attachments?.map(
-                (a) =>
-                  ({
-                    id: a.id,
-                    path: getMessageStoragePathFromUrl(a.file),
-                    mimeType: a.mimeType,
-                    originalFileName: a.originalFileName,
-                    size: a.size,
-                  } as FileAttachment)
-              ),
-            } as TextBrainPrompt)
+      const prompts: TextBrainPrompt[] = [];
+
+      if (context.settings?.instructions) {
+        prompts.push({
+          role: 'system',
+          message: context.settings.instructions,
+          sentAt: getCurrentUtcDate(),
+        });
+      }
+
+      if (context.settings?.ignorePreviousMessages) {
+        prompts.push(this.mapMessageToPrompt(message));
+      } else {
+        prompts.push(
+          ...messages.messages
+            .filter((m) => m.messageType === 'text' && m.text?.body)
+            .map(this.mapMessageToPrompt)
         );
+      }
 
       await session.sendTyping(true);
       return textService
@@ -231,9 +235,26 @@ export default class BrainChatClient implements IBrainServer {
       text: {
         body: 'This brain does not support text prompts',
       },
-      isSystemMessage: true
+      isSystemMessage: true,
     });
     return Promise.resolve();
+  }
+
+  private mapMessageToPrompt(m: ChatMessageModel): TextBrainPrompt {
+    return {
+      role: m.senderType === 'assistant' ? 'user' : m.senderType ?? 'user',
+      message: m.text!.body,
+      attachments: m.attachments?.map(
+        (a) =>
+          ({
+            id: a.id,
+            path: getMessageStoragePathFromUrl(a.file),
+            mimeType: a.mimeType,
+            originalFileName: a.originalFileName,
+            size: a.size,
+          } as FileAttachment)
+      ),
+    } as TextBrainPrompt;
   }
 
   public getBrain(): IBrainSettings {
