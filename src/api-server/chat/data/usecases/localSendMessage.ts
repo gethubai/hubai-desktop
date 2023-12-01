@@ -21,6 +21,7 @@ export default class LocalSendChatMessage implements SendMessage {
   async send(params: SendChatMessage.Params): Promise<SendChatMessage.Model> {
     const {
       senderId,
+      senderType,
       text,
       image,
       voice,
@@ -63,6 +64,7 @@ export default class LocalSendChatMessage implements SendMessage {
     const message = await this.repository.add({
       id,
       senderId,
+      senderType,
       text,
       image,
       voice,

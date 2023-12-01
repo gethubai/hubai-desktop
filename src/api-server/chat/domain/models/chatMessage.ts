@@ -1,6 +1,11 @@
+import { IChatUserSettings } from './chat';
+
 /* eslint-disable max-classes-per-file */
-export type ChatMessageSenderType = 'user' | 'brain';
-export type ChatMessageType = 'text' | 'image' | 'voice' | 'system';
+export type ChatMessageType =
+  | 'text'
+  | 'image'
+  | 'voice'
+  | 'system';
 
 export enum ChatMessageStatus {
   WAITING = 'waiting',
@@ -64,6 +69,7 @@ export type ChatMessageRecipient = {
 export type ChatMessageModel = {
   id: string;
   senderId: string;
+  senderType?: ChatMessageSenderType;
   recipients: ChatMessageRecipient[];
   sendDate: Date | string;
   text?: TextMessage;
@@ -77,9 +83,7 @@ export type ChatMessageModel = {
   chat: string;
 };
 
-export interface IRecipientSettings {
-  [settingId: string]: any;
-}
+export interface IRecipientSettings extends IChatUserSettings {}
 
 export class SendChatMessageModel {
   chatId: string;

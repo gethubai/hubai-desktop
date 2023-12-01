@@ -66,6 +66,7 @@ export class SendMessageController implements Controller {
     const addedMessage = await this.sendChatMessage.send({
       chatId: request.chatId,
       senderId,
+      senderType: chat.members.find((m) => m.id === senderId)?.memberType,
       text: request.text,
       image: request.image,
       voice: request.voice,

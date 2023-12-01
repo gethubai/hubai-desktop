@@ -10,8 +10,11 @@ export default class LocalCreateChat implements CreateChat {
 
     const isDirect = params.isDirect === undefined ? false : params.isDirect;
 
-    if (isDirect && members.length !== 2) {
-      throw new Error('Direct chat must have exactly 2 members');
+    if (
+      isDirect &&
+      members.filter((m) => m.memberType === 'brain').length !== 1
+    ) {
+      throw new Error('Direct chats can only have one brain');
     }
 
     const opt = {

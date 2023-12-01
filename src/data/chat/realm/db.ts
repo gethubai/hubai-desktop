@@ -10,6 +10,7 @@ import {
 import {
   ChatMessageModel,
   ChatMessageRecipient,
+  ChatMessageSenderType,
   ChatMessageStatus,
   ChatMessageType,
   ImageMessage,
@@ -289,6 +290,8 @@ export class ChatMessageDto extends Realm.Object<ChatMessageModel> {
 
   senderId!: string;
 
+  senderType: ChatMessageSenderType;
+
   recipients!: ChatMessageRecipient[];
 
   sendDate!: Date | string;
@@ -317,6 +320,7 @@ export class ChatMessageDto extends Realm.Object<ChatMessageModel> {
     properties: {
       _id: 'string',
       senderId: { type: 'string', indexed: true },
+      senderType: 'string',
       status: 'string',
       messageType: 'string',
       text: 'ChatTextMessage?',
@@ -335,6 +339,7 @@ export class ChatMessageDto extends Realm.Object<ChatMessageModel> {
     return {
       id: this._id,
       senderId: this.senderId,
+      senderType: this.senderType,
       recipients: this.recipients?.map((item) => (item as any).values),
       sendDate: this.sendDate,
       text: (this.text as any)?.values,
@@ -366,7 +371,7 @@ const config = {
     ChatVoiceMessageDto,
     ChatMessageAttachmentDto,
   ],
-  schemaVersion: 6,
+  schemaVersion: 7,
   // path: dbPath,
 };
 

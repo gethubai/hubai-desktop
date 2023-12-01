@@ -1,5 +1,6 @@
 import {
   ChatMessageModel,
+  ChatMessageSenderType,
   ChatMessageStatus,
   ChatMessageType,
   IRecipientSettings,
@@ -13,6 +14,7 @@ export namespace SendChatMessage {
   export type Params = {
     chatId: string;
     senderId: string;
+    senderType: ChatMessageSenderType;
     text?: TextMessage;
     image?: ImageMessage;
     voice?: VoiceMessage;
