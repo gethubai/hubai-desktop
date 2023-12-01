@@ -22,6 +22,9 @@ import type {
   ILocaleService,
   IBrainClientManager,
   IToastService,
+  IGlobalShortcutService,
+  IUserShortcutService,
+  IChatAssistantsManagement,
 } from '@hubai/core';
 
 import SidebarService from 'mo/services/workbench/sidebarService';
@@ -139,6 +142,10 @@ import { ContactService } from './features/contact/services/contactService';
 import { IChatClient } from './features/chat/sdk/contracts';
 import { ChatClient } from './features/chat/sdk/chatClient';
 import { BrainClientManager } from './features/brain/services/brainClientManager';
+import { ChatActorManagement } from './features/chat/services/chatActorManagement';
+import { ToastService } from 'mo/services/toastService';
+import { GlobalShortcutService } from 'mo/services/globalShortcutService';
+import { UserShortcutService } from 'mo/services/userShortcutService';
 
 container.registerSingleton<ISideBarController>(
   'ISidebarController',
@@ -229,6 +236,10 @@ container.registerSingleton<IStatusBarController>(
 );
 
 container.registerSingleton<IChatController>('IChatController', ChatController);
+container.registerSingleton<IChatAssistantsManagement>(
+  'IChatAssistantsManagement',
+  ChatActorManagement
+);
 container.registerSingleton<IBrainController>(
   'IBrainController',
   BrainController
@@ -338,6 +349,16 @@ container.registerSingleton<IDownloadManager>(
 );
 
 container.registerSingleton<IToastService>('IToastService', ToastService);
+
+container.registerSingleton<IGlobalShortcutService>(
+  'IGlobalShortcutService',
+  GlobalShortcutService
+);
+
+container.registerSingleton<IUserShortcutService>(
+  'IUserShortcutService',
+  UserShortcutService
+);
 
 /* Models */
 container.register<IChatState>(ChatStateModel, {

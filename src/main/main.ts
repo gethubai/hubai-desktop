@@ -40,6 +40,7 @@ import 'api-server/extensions/ipc/mainApi';
 import 'api-server/contact/ipc/mainApi';
 import '../api-server/authentication/ipc/mainApi';
 import '../api-server/user/ipc/mainApi';
+import { registerShortcutsHandlersForWindow } from './ipc/globalShortcutManager/mainApi';
 
 const isDebug =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
@@ -70,7 +71,10 @@ class AppUpdater {
     autoUpdater.on(
       'update-downloaded',
       ({ version, releaseName, releaseNotes }) => {
-        const notes = typeof releaseNotes === 'string' ? releaseNotes : `Version ${version} is available`;
+        const notes =
+          typeof releaseNotes === 'string'
+            ? releaseNotes
+            : `Version ${version} is available`;
         dialog
           .showMessageBox({
             type: 'info',
@@ -199,6 +203,8 @@ const createWindow = async () => {
     shell.openExternal(edata.url);
     return { action: 'deny' };
   });
+
+  registerShortcutsHandlersForWindow(mainWindow);
 
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line

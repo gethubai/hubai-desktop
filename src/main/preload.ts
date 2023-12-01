@@ -8,6 +8,7 @@ import userSettingsRendererApi from './ipc/userSettings/rendererApi';
 import mediaAccessRendererApi from './ipc/mediaAccess/rendererApi';
 import authRendererApi from '../api-server/authentication/ipc/rendererApi';
 import downloadRendererApi from './ipc/download/rendererApi';
+import globalShortcutApi from './ipc/globalShortcutManager/rendererApi';
 
 Object.defineProperty(window, 'isRenderer', { get: () => true });
 
@@ -19,7 +20,8 @@ export type Channels =
   | 'download-progress'
   | 'download-cancelled'
   | 'download-error'
-  | 'download-completed';
+  | 'download-completed'
+  | 'global-shortcut-pressed';
 
 const electronHandler = {
   restart: () => ipcRenderer.send('restart-app'),
@@ -48,6 +50,7 @@ const electronHandler = {
   currentUser: currentUserRendererApi,
   download: downloadRendererApi,
   contacts: contactRendererApi,
+  globalShortcut: globalShortcutApi,
   getAppVersion: () => ipcRenderer.sendSync('get-app-version'),
 };
 
