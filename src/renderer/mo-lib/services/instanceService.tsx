@@ -1,7 +1,27 @@
 import { ReactElement } from 'react';
 import { container } from 'tsyringe';
 import molecule from 'mo';
-import { ILocale, IExtension } from '@hubai/core';
+import {
+  ILocale,
+  IExtension,
+  AppContext,
+  AppContextServices,
+  ISidebarService,
+  IActivityBarService,
+  IMenuBarService,
+  IEditorService,
+  INotificationService,
+  IColorThemeService,
+  IProblemsService,
+  ISettingsService,
+  IExtensionService,
+  IAuxiliaryBarService,
+  ILayoutService,
+  IBrainClientManager,
+  IToastService,
+  IUserShortcutService,
+  IChatAssistantsManagement,
+} from '@hubai/core';
 import type { Controller } from '@hubai/core/esm/react';
 import { GlobalEvent } from '@hubai/core/esm/common/event';
 import { IConfigProps } from 'mo/provider/create';
@@ -57,6 +77,31 @@ export default class InstanceService
 
   public getConfig: () => IConfigProps = () => {
     return { ...this._config };
+  };
+
+  injectContext: () => void = () => {
+    const services = new AppContextServices(
+      container.resolve<ISidebarService>('ISidebarService'),
+      container.resolve<IActivityBarService>('IActivityBarService'),
+      container.resolve<IMenuBarService>('IMenuBarService'),
+      container.resolve<IEditorService>('IEditorService'),
+      container.resolve<INotificationService>('INotificationService'),
+      container.resolve<IColorThemeService>('IColorThemeService'),
+      container.resolve<IProblemsService>('IProblemsService'),
+      container.resolve<ISettingsService>('ISettingsService'),
+      container.resolve<IExtensionService>('IExtensionService'),
+      container.resolve<ILayoutService>('ILayoutService'),
+      container.resolve<IAuxiliaryBarService>('IAuxiliaryBarService'),
+      container.resolve<IBrainClientManager>('IBrainClientManager'),
+      container.resolve<IToastService>('IToastService'),
+      container.resolve<IUserShortcutService>('IUserShortcutService'),
+      container.resolve<IChatAssistantsManagement>('IChatAssistantsManagement')
+    );
+
+    const appContext = new AppContext(services);
+    container.register<AppContext>('AppContext', {
+      useValue: appContext,
+    });
   };
 
   public render = (workbench: ReactElement) => {

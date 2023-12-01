@@ -2,21 +2,10 @@ import { container, inject, injectable } from 'tsyringe';
 import { ErrorMsg } from '@hubai/core/esm/common/error';
 import {
   AppContext,
-  AppContextServices,
   IContribute,
   IContributeType,
   IExtension,
-  ISidebarService,
   type IExtensionService,
-  IActivityBarService,
-  IMenuBarService,
-  IEditorService,
-  INotificationService,
-  IProblemsService,
-  ISettingsService,
-  ILayoutService,
-  IAuxiliaryBarService,
-  IBrainClientManager,
 } from '@hubai/core';
 import { IColorTheme } from '@hubai/core/esm/model/colorTheme';
 import { type ILocaleService, ILocale } from '@hubai/core/esm/i18n';
@@ -37,6 +26,7 @@ import { type IChatService } from 'renderer/features/chat/services/types';
 class ExtensionService implements IExtensionService {
   private extensions: IExtension[] = [];
 
+  private appContext: AppContext | undefined;
   private _inactive: Function | undefined;
 
   /**
@@ -158,7 +148,7 @@ class ExtensionService implements IExtensionService {
   public activate(extensions: IExtension[]): void {
     if (extensions.length === 0) return;
 
-    const ctx = this.createContext();
+    const ctx = this.getContext();
     extensions?.forEach((extension: IExtension, index: number) => {
       // Ignore the inactive or invalid extension
       if (!extension || this.isInactive(extension)) return;
@@ -173,26 +163,15 @@ class ExtensionService implements IExtensionService {
     });
   }
 
-  private createContext(): AppContext {
-    const services = new AppContextServices(
-      container.resolve<ISidebarService>('ISidebarService'),
-      container.resolve<IActivityBarService>('IActivityBarService'),
-      container.resolve<IMenuBarService>('IMenuBarService'),
-      container.resolve<IEditorService>('IEditorService'),
-      container.resolve<INotificationService>('INotificationService'),
-      container.resolve<IColorThemeService>('IColorThemeService'),
-      container.resolve<IProblemsService>('IProblemsService'),
-      container.resolve<ISettingsService>('ISettingsService'),
-      container.resolve<IExtensionService>('IExtensionService'),
-      container.resolve<ILayoutService>('ILayoutService'),
-      container.resolve<IAuxiliaryBarService>('IAuxiliaryBarService'),
-      container.resolve<IBrainClientManager>('IBrainClientManager')
-    );
-    return new AppContext(services);
+  public getContext(): AppContext {
+    if (!this.appContext) {
+      this.appContext = container.resolve<AppContext>('AppContext');
+    }
+    return this.appContext;
   }
 
   public dispose(extensionId: UniqueId): void {
-    const ctx = this.createContext();
+    const ctx = this.getContext();
     const extIndex = this.extensions.findIndex(searchById(extensionId));
     if (extIndex > -1) {
       const extension: IExtension = this.extensions[extIndex];
@@ -202,7 +181,7 @@ class ExtensionService implements IExtensionService {
   }
 
   public disposeAll() {
-    const ctx = this.createContext();
+    const ctx = this.getContext();
     this.extensions.forEach((ext) => {
       ext.dispose?.(ctx);
     });

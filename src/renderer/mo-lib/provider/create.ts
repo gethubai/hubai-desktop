@@ -25,6 +25,7 @@ namespace standalone {
       return instance;
     }
     instance = new InstanceService(config);
+    instance.injectContext();
     return instance;
   }
 

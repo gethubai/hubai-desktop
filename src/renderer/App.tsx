@@ -16,6 +16,8 @@ import debounce from 'lodash/debounce';
 import loadExtensions from './features/extensions/extensionLoader';
 import { container } from 'tsyringe';
 import { IBrainManagementService } from './features/brain/services/brainManagement';
+import { AppContext } from '@hubai/core';
+import HubaiContext from '@hubai/core/esm/contexts/hubaiContext';
 
 const setStartupActivityBar = async () => {
   try {
@@ -37,6 +39,7 @@ const setStartupActivityBar = async () => {
 
 export default function App() {
   const [moInstance, setMoInstance] = useState<InstanceService | null>(null);
+  const [appContext, setAppContext] = useState<AppContext | null>(null);
 
   useEffect(() => {
     const loadAndCreate = async () => {
@@ -63,6 +66,7 @@ export default function App() {
         setStartupActivityBar();
       });
 
+      setAppContext(container.resolve<AppContext>('AppContext'));
       setMoInstance(instance);
     };
 
@@ -74,5 +78,27 @@ export default function App() {
     return null;
   }
 
+  return moInstance.render(
+    <>
+      <HubaiContext.Provider
+        value={{
+          services: appContext?.services!,
+          theme: {
+            getCurrent: () => appContext?.services.theme.getColorTheme()!,
+            getColorThemeMode: () =>
+              appContext?.services.theme.getColorThemeMode()!,
+          },
+          i18n: {
+            getCurrentLocale: () => mo.i18n.getCurrentLocale()!,
+            getLocales: () => mo.i18n.getLocales(),
+            localize: (key: string, defaultValue, ...args: string[]) =>
+              mo.i18n.localize(key, defaultValue, ...args),
+          },
+        }}
+      >
+        <Workbench />
         <ToastContainer />
+      </HubaiContext.Provider>
+    </>
+  );
 }
