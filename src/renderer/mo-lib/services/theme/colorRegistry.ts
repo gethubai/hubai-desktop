@@ -156,7 +156,18 @@ const defaultDark = {
   'chat.messageAudioBarPlayedColor': '#CCCCCC', // foreground
   'chat.inputSeparator': '#ffffff2e', // textSeparator.foreground
   'chat.inputBackground': '#252526', // workbenchBackground
-  'chat.inputBorder': '#ffffff2e', // textSeparator.foreground
+  'chat.inputBorder': '#ffffff2e', // textSeparator.foreground,
+
+  'sideBarSectionHeader.background': '#0000',
+  'sideBarSectionHeader.border': '#ccc3',
+  'sideBarTitle.foreground': '#BBBBBB',
+
+  'tab.activeBackground': '#1E1E1E',
+  'tab.activeForeground': '#fff',
+  'tab.border': '#252526',
+  'tab.inactiveBackground': '#2d2d2d',
+  'tab.inactiveForeground': '#ffffff80',
+  'tab.hoverBackground': '#2A2D2E',
 };
 
 const defaultHc = {
