@@ -55,6 +55,7 @@
         "tab.border": "#252526",
         "tab.inactiveBackground": "#2d2d2d",
         "tab.inactiveForeground": "#ffffff80",
+        "tab.hoverBackground": "#2A2D2E",
         "tree.indentGuidesStroke": "#585858"
     },
     "semanticHighlighting": true
