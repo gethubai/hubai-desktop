@@ -1,5 +1,9 @@
 /* eslint-disable promise/catch-or-return */
 import { Controller, connect } from '@hubai/core/esm/react';
+import { container } from 'tsyringe';
+import { IDisposable } from '@hubai/core/esm/monaco/common';
+import { Uri, editor as monaco } from '@hubai/core/esm/monaco';
+import { IChatAssistantsManagement } from '@hubai/core';
 import {
   ChatMemberType,
   ChatModel,
@@ -15,32 +19,22 @@ import {
   LocalBrainModel,
 } from 'api-server/brain/domain/models/localBrain';
 import { type ILocalUserService } from 'renderer/features/user/services/userService';
-import { container } from 'tsyringe';
 import { type IBrainManagementService } from 'renderer/features/brain/services/brainManagement';
-import React from 'react';
-import AuxiliaryBarTab from 'mo/workbench/auxiliaryBar/auxiliaryBarTab';
-import AuxiliaryBar from 'mo/workbench/auxiliaryBar/auxiliaryBar';
-import { IDisposable } from '@hubai/core/esm/monaco/common';
-import { Uri, editor as monaco } from '@hubai/core/esm/monaco';
 import { openFileSelector } from 'renderer/common/fileUtils';
 import { IChatWindowController } from './type';
 import { IChatWindowService } from '../services/chatWindowService';
 import { getTextMessageTypeForBrainCapability } from '../utils/messageUtils';
-import ChatAuxiliaryBarService from '../services/chatAuxiliaryBarService';
-import { ChatAuxiliaryBarController } from './chatAuxiliaryBarController';
 import { ChatBrainSettings } from '../workbench/chatBrainSettings';
+import { ChatAssistantService } from '../services/chatAssistantService';
 
 export default class ChatWindowController
   extends Controller
   implements IChatWindowController, IDisposable
 {
   private brainService: IBrainManagementService;
+  private readonly chatAssistantsManagement: IChatAssistantsManagement;
 
-  private chatAuxiliaryBarService!: ChatAuxiliaryBarService;
-
-  AuxiliaryBarTabs!: React.ComponentType;
-
-  AuxiliaryBar!: React.ComponentType;
+  public assistantService?: ChatAssistantService;
 
   constructor(
     private readonly chatWindowService: IChatWindowService,
@@ -51,50 +45,27 @@ export default class ChatWindowController
     this.brainService = container.resolve<IBrainManagementService>(
       'IBrainManagementService'
     );
+
+    this.chatAssistantsManagement =
+      container.resolve<IChatAssistantsManagement>('IChatAssistantsManagement');
   }
 
   public initView(): void {
-    this.chatAuxiliaryBarService = new ChatAuxiliaryBarService();
-    // TODO: Refactor this to allow extensions to add their own tabs
-    const controller = new ChatAuxiliaryBarController(
-      this.chatAuxiliaryBarService
+    const ChatBrainSettingsView = connect(
+      this.chatWindowService,
+      ChatBrainSettings
     );
 
-    this.AuxiliaryBar = connect(this.chatAuxiliaryBarService, AuxiliaryBar);
-
-    this.AuxiliaryBarTabs = connect(
-      this.chatAuxiliaryBarService,
-      AuxiliaryBarTab,
-      controller
-    );
-
-    this.chatAuxiliaryBarService.setMode('tabs');
-    this.chatAuxiliaryBarService.addAuxiliaryBar([
+    this.chatWindowService.addAuxiliaryBarTab(
       {
         key: 'chat-brain-settings',
         title: 'Brains Settings',
       },
-    ]);
-
-    this.chatAuxiliaryBarService.onTabClick(() => {
-      const tab = this.chatAuxiliaryBarService.getCurrentTab();
-
-      const ChatBrainSettingsView = connect(
-        this.chatWindowService,
-        ChatBrainSettings
-      );
-
-      if (tab) {
-        this.chatAuxiliaryBarService.setChildren(
-          <ChatBrainSettingsView
-            getBrainChatSettings={this.getBrainChatSettings}
-            onSettingChanged={this.onBrainChatSettingChanged}
-          />
-        );
-      }
-
-      this.chatWindowService.setAuxiliaryBarView(!tab);
-    });
+      <ChatBrainSettingsView
+        getBrainChatSettings={this.getBrainChatSettings}
+        onSettingChanged={this.onBrainChatSettingChanged}
+      />
+    );
 
     this.chatWindowService.setState({
       plusButtonActions: [
@@ -112,7 +83,36 @@ export default class ChatWindowController
         },
       ],
     });
+
+    this.initAssistant();
   }
+
+  public initAssistant = () => {
+    const { assistant: chatAssistant } = this.chatWindowService.getState();
+
+    if (!chatAssistant) {
+      return;
+    }
+
+    const assistant = this.chatAssistantsManagement
+      .getAssistants()
+      .find((a) => a.id === chatAssistant.id);
+
+    if (assistant) {
+      try {
+        this.assistantService = new ChatAssistantService(
+          this.chatWindowService,
+          assistant,
+          this.chat
+        );
+
+        this.assistantService.init();
+      } catch (e) {
+        console.error(`Could not init assistant: ${assistant.displayName} `, e);
+        this.chatWindowService.setState({ assistant: undefined });
+      }
+    }
+  };
 
   public openFileSelectorDialog = (fileType: string) => {
     openFileSelector((file) => {
@@ -142,7 +142,7 @@ export default class ChatWindowController
       .sendMessage({
         text: { body: message },
         attachments: files?.map((f) => f.file),
-        brainsSettings: model.recipientSettings,
+        //        brainsSettings: model.recipientSettings,
       })
       .finally(() => this.chatWindowService.setState({ files: [] }));
   };
@@ -287,5 +287,7 @@ export default class ChatWindowController
     if (monacoEditor && !monacoEditor.isDisposed()) {
       monacoEditor.dispose();
     }
+
+    this.assistantService?.dispose?.();
   }
 }

@@ -2,7 +2,10 @@ import { ViewVisibility } from '@hubai/core/esm/model/workbench/layout';
 import { LocalBrainModel } from 'api-server/brain/domain/models/localBrain';
 import { ChatUser } from 'api-server/chat/domain/models/chat';
 import { ChatContextUser } from 'api-server/chat/domain/models/chatContext';
-import { ChatMessageViewModel, ISubMenuProps } from '@hubai/core/esm/components';
+import {
+  ChatMessageViewModel,
+  ISubMenuProps,
+} from '@hubai/core/esm/components';
 
 export type AttachedFile = {
   id: string;
@@ -18,7 +21,10 @@ export interface IChatWindowState {
   users: Record<string, ChatContextUser>;
   availableBrains: LocalBrainModel[];
   selectedBrains: ChatUser[];
+  assistant?: ChatUser;
   auxiliaryBarView: ViewVisibility;
+  AuxiliaryBarTabs?: React.ComponentType;
+  AuxiliaryBar?: React.ComponentType;
   userId: string;
   isGroupChat: boolean;
   plusButtonActions?: ISubMenuProps[];
@@ -44,6 +50,12 @@ export class ChatWindowStateModel implements IChatWindowState {
 
   files: AttachedFile[];
 
+  AuxiliaryBarTabs?: React.ComponentType;
+
+  AuxiliaryBar?: React.ComponentType;
+
+  assistant?: ChatUser;
+
   constructor(
     id: string,
     userId: string,
@@ -52,7 +64,10 @@ export class ChatWindowStateModel implements IChatWindowState {
     selectedBrains: ChatUser[] = [],
     users: Record<string, ChatContextUser> | undefined = undefined,
     isGroupChat: boolean = false,
-    files: AttachedFile[] = []
+    files: AttachedFile[] = [],
+    AuxiliaryBarTabs?: React.ComponentType,
+    AuxiliaryBar?: React.ComponentType,
+    assistant?: ChatUser
   ) {
     this.id = id;
     this.userId = userId;
@@ -63,5 +78,8 @@ export class ChatWindowStateModel implements IChatWindowState {
     this.users = users || {};
     this.isGroupChat = isGroupChat;
     this.files = files;
+    this.AuxiliaryBarTabs = AuxiliaryBarTabs;
+    this.AuxiliaryBar = AuxiliaryBar;
+    this.assistant = assistant;
   }
 }

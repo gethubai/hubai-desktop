@@ -1,12 +1,22 @@
 /* eslint-disable react/no-unused-state */
 /* eslint-disable react/sort-comp */
 /* eslint-disable react/no-unused-class-component-methods */
-import { ChatMemberType, ChatModel } from 'api-server/chat/domain/models/chat';
-import { ChatMessageModel } from 'api-server/chat/domain/models/chatMessage';
+import React from 'react';
+import {
+  ChatMemberType,
+  ChatModel,
+  ChatUser,
+} from 'api-server/chat/domain/models/chat';
+import {
+  ChatMessageModel,
+  IRecipientSettings,
+} from 'api-server/chat/domain/models/chatMessage';
 import { container } from 'tsyringe';
 import { ChatMessagesContext } from 'api-server/chat/domain/models/chatContext';
 import { IBrainManagementService } from 'renderer/features/brain/services/brainManagement';
-import { Component } from '@hubai/core/esm/react';
+import { Component, connect } from '@hubai/core/esm/react';
+import AuxiliaryBarTab from 'mo/workbench/auxiliaryBar/auxiliaryBarTab';
+import AuxiliaryBar from 'mo/workbench/auxiliaryBar/auxiliaryBar';
 import {
   ChatMemberStatusChangedEvent,
   MessageUpdatedEvent,
@@ -20,6 +30,9 @@ import { stripIndent } from 'renderer/common/stringUtils';
 import { prettifyFileSize } from 'renderer/common/fileUtils';
 import { ChatWindowStateModel, IChatWindowState } from '../models/chatWindow';
 import { type IChatClient, IChatSessionServer } from '../sdk/contracts';
+import ChatAuxiliaryBarService from './chatAuxiliaryBarService';
+import { ChatAuxiliaryBarController } from '../controllers/chatAuxiliaryBarController';
+import { IAuxiliaryData } from '@hubai/core';
 
 export interface IChatWindowService
   extends Component<IChatWindowState>,
@@ -27,10 +40,16 @@ export interface IChatWindowService
   setMessages(messages: ChatMessageViewModel[]): void;
   setAuxiliaryBarView(view: boolean): void;
 
+  addAuxiliaryBarTab(
+    auxiliaryBar: IAuxiliaryData,
+    component: React.ReactNode
+  ): void;
   getSessionServer(): IChatSessionServer;
 
   attachFile(file: File): void;
   removeAttachedFile(fileId: string): void;
+
+  updateMemberSettings(user: ChatUser, settings: IRecipientSettings): void;
 }
 
 export class ChatWindowService
@@ -49,6 +68,8 @@ export class ChatWindowService
 
   private userService: ILocalUserService;
 
+  public chatAuxiliaryBarService!: ChatAuxiliaryBarService;
+
   constructor(private readonly chat: ChatModel) {
     super();
     this.brainService = container.resolve('IBrainManagementService');
@@ -62,10 +83,48 @@ export class ChatWindowService
       this.brainService.getPackages(),
       chat.members.filter((m) => m.memberType === ChatMemberType.brain),
       undefined,
-      !chat.isDirect
+      !chat.isDirect,
+      [],
+      undefined,
+      undefined,
+      chat.members.find((m) => m.memberType === ChatMemberType.assistant)
     );
     this.chatClient = container.resolve<IChatClient>('IChatClient');
     this.initServer();
+    this.initAuxiliaryBarView();
+  }
+
+  private initAuxiliaryBarView(): void {
+    this.chatAuxiliaryBarService = new ChatAuxiliaryBarService();
+    const controller = new ChatAuxiliaryBarController(
+      this.chatAuxiliaryBarService
+    );
+
+    this.state.AuxiliaryBar = connect(
+      this.chatAuxiliaryBarService,
+      AuxiliaryBar
+    );
+
+    this.state.AuxiliaryBarTabs = connect(
+      this.chatAuxiliaryBarService,
+      AuxiliaryBarTab,
+      controller
+    );
+
+    this.chatAuxiliaryBarService.setMode('tabs');
+
+    this.chatAuxiliaryBarService.onTabClick(() => {
+      const tab = this.chatAuxiliaryBarService.getCurrentTab();
+
+      this.setAuxiliaryBarView(!tab);
+    });
+  }
+
+  addAuxiliaryBarTab(
+    auxiliaryBar: IAuxiliaryData,
+    component: React.ReactNode
+  ): void {
+    this.chatAuxiliaryBarService.addTab(auxiliaryBar, component);
   }
 
   setAuxiliaryBarView(view: boolean): void {
@@ -96,6 +155,7 @@ export class ChatWindowService
       selectedBrains: members.filter(
         (m) => m.memberType === ChatMemberType.brain
       ),
+      assistant: members.find((m) => m.memberType === ChatMemberType.assistant),
     });
   }
 
@@ -129,6 +189,25 @@ export class ChatWindowService
         text: message.text,
         hidden: true,
       });
+    }
+  }
+
+  updateMemberSettings(user: ChatUser, settings: IRecipientSettings): void {
+    if (!user.settings) {
+      user.settings = {};
+    }
+
+    const originalInstructions = JSON.stringify(user.settings);
+
+    Object.assign(user.settings, settings);
+    const newSettingsJson = JSON.stringify(user.settings);
+
+    if (
+      Object.keys(user.settings).length &&
+      newSettingsJson !== originalInstructions
+    ) {
+      console.log('Member settings changed', { originalInstructions, newSettingsJson });
+      this.getSessionServer().addMember(user);
     }
   }
 

@@ -1,28 +1,31 @@
-import React, { useCallback, useMemo } from 'react';
-import {
-  LocalBrainModel,
-  LocalBrainSettingMap,
-} from 'api-server/brain/domain/models/localBrain';
-import SettingsMapForm, {
-  buildProperties,
-} from 'renderer/components/form/settingsMapForm';
+import React, { useCallback, useMemo, useState } from 'react';
 import { RJSFSchema } from '@rjsf/utils';
 import { IChangeEvent } from '@rjsf/core';
 import { Button } from '@hubai/core/esm/components';
+import { ISettingMap } from '@hubai/core';
+import SettingsMapForm, {
+  buildProperties,
+} from 'renderer/components/form/settingsMapForm';
 
 type ChatBrainSettingsFormProps = {
-  brain: LocalBrainModel;
+  formTitle?: string;
   currentSettings: any;
-  settingsMap?: LocalBrainSettingMap[];
+  settingsMap?: ISettingMap[];
   onFormChange?: (newSettings: any) => void;
+  onSubmit?: (settings: any) => void;
+  validator?: (settings: any) => string | undefined;
 };
 
 export function ChatBrainSettingsForm({
-  brain,
   currentSettings,
   settingsMap,
   onFormChange,
+  formTitle,
+  onSubmit,
+  validator,
 }: ChatBrainSettingsFormProps) {
+  const [error, setError] = useState<string | undefined>();
+
   const showSettings = useMemo(
     () => !!settingsMap && settingsMap.length > 0,
     [settingsMap]
@@ -32,19 +35,31 @@ export function ChatBrainSettingsForm({
     const chatSchemaResult = buildProperties(settingsMap);
 
     return {
-      title: `${brain.displayName} Settings`,
+      title: `${formTitle} Settings`,
       type: 'object',
       properties: chatSchemaResult?.properties,
       required: chatSchemaResult?.required,
     };
-  }, [settingsMap, brain.displayName]);
+  }, [settingsMap, formTitle]);
 
   const onChange = useCallback(
     (e: IChangeEvent) => onFormChange?.(e.formData),
     [onFormChange]
   );
 
-  const onSubmit = useCallback(() => {}, []);
+  const onSubmitCallback = useCallback(
+    (e: any) => {
+      const validatorError = validator?.(e);
+      setError(validatorError);
+
+      if (validatorError) {
+        return;
+      }
+
+      onSubmit?.(e);
+    },
+    [onSubmit, validator]
+  );
 
   return (
     <div>
@@ -54,16 +69,21 @@ export function ChatBrainSettingsForm({
             settingsMap={settingsMap}
             currentSettings={currentSettings}
             onChange={onChange}
-            onSubmit={onSubmit}
+            onSubmit={onSubmitCallback}
             schema={schema}
           >
-            <Button type="submit" style={{ display: 'none' }}>
+            <Button
+              type="submit"
+              style={{ display: onSubmit ? 'block' : 'none' }}
+            >
               Save
             </Button>
           </SettingsMapForm>
+
+          {error && <div style={{ color: 'red' }}>{error}</div>}
         </div>
       ) : (
-        <div>{brain.displayName} does not have any setting</div>
+        <div>{formTitle} does not have any setting</div>
       )}
     </div>
   );

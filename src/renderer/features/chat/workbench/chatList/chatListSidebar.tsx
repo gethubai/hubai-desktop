@@ -21,7 +21,7 @@ import { IChatItem } from '../../models/chat';
 export interface IChatListSidebarProps
   extends IChatListController,
     IChatListState {
-  onNewChatClick?: () => void;
+  onNewChatClick?: (option?: string) => void;
   mapChatItem?: (chat: IChatItem) => Omit<ChatTreeItemProps, 'id'>;
 }
 
@@ -33,6 +33,7 @@ function ChatListSidebar({
   mapChatItem,
   onContextMenuClick,
   onNewChatClick,
+  getCreateChatMenuItems,
 }: IChatListSidebarProps) {
   const contextView = useContextViewEle();
 
@@ -57,6 +58,29 @@ function ChatListSidebar({
       ));
     },
     [contextView, onContextMenuClick]
+  );
+
+  const onNewChat = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+
+      const menuItems = getCreateChatMenuItems?.() ?? [];
+      if (menuItems.length) {
+        contextView?.show(getEventPosition(e), () => (
+          <Menu
+            role="menu"
+            onClick={(_: any, item: component.IMenuItemProps) => {
+              contextView?.hide();
+              onNewChatClick?.(item.id as any);
+            }}
+            data={menuItems}
+          />
+        ));
+      } else {
+        onNewChatClick?.();
+      }
+    },
+    [contextView, onNewChatClick, getCreateChatMenuItems]
   );
 
   const data = useMemo(
@@ -88,9 +112,9 @@ function ChatListSidebar({
         toolbar={<Toolbar data={headerToolBar || []} />}
       />
       <Content>
-        <Button onClick={onNewChatClick}>
+        <Button onClick={onNewChat}>
           <Icon type="add" style={{ marginRight: 5 }} />
-           New Chat
+          New Chat
         </Button>
         <ChatTree data={data} />
       </Content>

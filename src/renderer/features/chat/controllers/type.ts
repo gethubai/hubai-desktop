@@ -6,6 +6,7 @@ import {
 import { Controller } from '@hubai/core';
 import { IDisposable } from '@hubai/core/esm/monaco/common';
 import { IChatItem } from '../models/chat';
+import { ISubMenuProps } from '@hubai/core/esm/components';
 
 export interface IChatController extends Partial<Controller> {
   onChatClick?: (item: IChatItem) => void;
@@ -21,8 +22,6 @@ export interface IChatWindowController
     capability: BrainCapability
   ) => void;
   getBrainChatSettings(brain: LocalBrainModel): any;
-  AuxiliaryBarTabs: React.ComponentType;
-  AuxiliaryBar: React.ComponentType;
   attachFile(file: FileList): void;
   removeAttachedFile(fileId: string): void;
 }
@@ -30,4 +29,5 @@ export interface IChatWindowController
 export interface IChatListController extends Partial<Controller> {
   onChatClick?: (item: IChatItem) => void;
   onContextMenuClick?: (menuId: string, item: IChatItem) => void;
+  getCreateChatMenuItems(): ISubMenuProps[];
 }

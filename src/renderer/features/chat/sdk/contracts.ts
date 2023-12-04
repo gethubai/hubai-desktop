@@ -36,8 +36,6 @@ export type SendMessage = {
 
   attachments?: File[];
 
-  brainsSettings?: IRecipientSettings;
-
   hidden?: boolean;
 
   isSystemMessage?: boolean;

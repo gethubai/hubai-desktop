@@ -13,6 +13,7 @@ export interface IChatUserSettings {
 export enum ChatMemberType {
   user = 'user',
   brain = 'brain',
+  assistant = 'assistant',
 }
 
 export enum ChatUserRole {

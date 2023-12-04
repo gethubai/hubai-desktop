@@ -8,6 +8,7 @@ import {
   type IColorThemeService,
   IColors,
   Controller,
+  IChatAssistantsManagement,
 } from '@hubai/core';
 import { container } from 'tsyringe';
 
@@ -30,6 +31,7 @@ import { IChatItem } from '../models/chat';
 import ChatWindowController from './chatWindowController';
 import { ChatWindowService } from '../services/chatWindowService';
 import ChatView from '../workbench/chatView';
+import { ISubMenuProps } from '@hubai/core/esm/components';
 
 const { connect } = react;
 
@@ -40,6 +42,7 @@ export type ChatListSettings = {
   createChatFactory?: () => CreateChat.Params;
   isDefaultSidebar?: boolean;
   mapChatItem?: (chat: IChatItem) => Omit<ChatTreeItemProps, 'id'>;
+  allowAssistants?: boolean;
 };
 
 export default class ChatListController
@@ -60,6 +63,8 @@ export default class ChatListController
 
   private readonly themeService: IColorThemeService;
 
+  private readonly chatAssistantService: IChatAssistantsManagement;
+
   private static chatColors: IColors;
 
   constructor(
@@ -74,6 +79,7 @@ export default class ChatListController
     this.localUserService = container.resolve('ILocalUserService');
     this.editorService = container.resolve('IEditorService');
     this.themeService = container.resolve('IColorThemeService');
+    this.chatAssistantService = container.resolve('IChatAssistantsManagement');
 
     this.setChatColors();
     this.chatListService = new ChatListService(
@@ -156,7 +162,7 @@ export default class ChatListController
     this.chatListService.setChats(chats);
   }
 
-  private async openNewChatWindow(): Promise<void> {
+  private async openNewChatWindow(assistantId?: string): Promise<void> {
     if (!this.listSettings.createChatFactory) {
       throw new Error('createChatFactory must be defined to create a chat');
     }
@@ -177,6 +183,13 @@ export default class ChatListController
         id: user.id,
         memberType: ChatMemberType.user,
       } as ChatUser);
+
+    if (assistantId) {
+      createOptions.members.push({
+        id: assistantId,
+        memberType: ChatMemberType.assistant,
+      });
+    }
 
     const result = await this.chatClient.newChat(createOptions);
 
@@ -255,8 +268,18 @@ export default class ChatListController
     this.selectOrOpenChatWindow(item);
   };
 
-  public onNewChatClick = () => {
-    this.openNewChatWindow();
+  public onNewChatClick = (menuId: string) => {
+    let assistantId = undefined;
+    if (
+      menuId &&
+      menuId !== 'newChat' &&
+      this.chatAssistantService.getAssistants().find((a) => a.id === menuId) !==
+        undefined
+    ) {
+      assistantId = menuId;
+    }
+
+    this.openNewChatWindow(assistantId);
   };
 
   public closeAllTabsWithId = (id: string) => {
@@ -265,6 +288,35 @@ export default class ChatListController
       this.editorService.closeTab(id, tabGroup);
       tabGroup = this.editorService.getGroupIdByTab(id);
     }
+  };
+
+  public getCreateChatMenuItems = (): ISubMenuProps[] => {
+    if (!this.listSettings.allowAssistants) return [];
+
+    const menu: ISubMenuProps[] = [
+      {
+        id: 'newChat',
+        name: 'New Chat',
+        icon: 'comment-discussion',
+      },
+    ];
+
+    const assistants = this.chatAssistantService.getAssistants();
+
+    if (assistants.length) {
+      menu.push({
+        id: 'createWithAssistant',
+        name: 'New Chat with Assistant',
+        icon: 'copilot',
+        data: assistants.map((assistant) => ({
+          id: assistant.id,
+          name: assistant.displayName,
+          icon: 'copilot',
+        })),
+      });
+    }
+
+    return menu;
   };
 
   public onContextMenuClick = (menuId: string, chat: IChatItem) => {

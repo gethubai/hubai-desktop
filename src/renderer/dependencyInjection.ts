@@ -142,7 +142,7 @@ import { ContactService } from './features/contact/services/contactService';
 import { IChatClient } from './features/chat/sdk/contracts';
 import { ChatClient } from './features/chat/sdk/chatClient';
 import { BrainClientManager } from './features/brain/services/brainClientManager';
-import { ChatActorManagement } from './features/chat/services/chatActorManagement';
+import { ChatAssistantsManagement } from './features/chat/services/chatAssistantManagement';
 import { ToastService } from 'mo/services/toastService';
 import { GlobalShortcutService } from 'mo/services/globalShortcutService';
 import { UserShortcutService } from 'mo/services/userShortcutService';
@@ -238,7 +238,7 @@ container.registerSingleton<IStatusBarController>(
 container.registerSingleton<IChatController>('IChatController', ChatController);
 container.registerSingleton<IChatAssistantsManagement>(
   'IChatAssistantsManagement',
-  ChatActorManagement
+  ChatAssistantsManagement
 );
 container.registerSingleton<IBrainController>(
   'IBrainController',

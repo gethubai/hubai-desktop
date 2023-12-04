@@ -39,6 +39,7 @@ export const BrainChats: IExtension = {
             ],
             isDirect: true,
           }),
+          allowAssistants: true,
         },
         {
           id: `brain-${brain.id}`,

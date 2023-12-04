@@ -54,7 +54,7 @@ export function ChatBrainSettings({
             style={{ marginBottom: 15 }}
           >
             <ChatBrainSettingsForm
-              brain={brain}
+              formTitle={brain.displayName}
               currentSettings={getBrainChatSettings(brain)}
               settingsMap={settingsMap}
               onFormChange={(formData) => debounceFn(brain, formData)}

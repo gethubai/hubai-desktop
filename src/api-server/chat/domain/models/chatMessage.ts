@@ -1,6 +1,7 @@
 import { IChatUserSettings } from './chat';
 
 /* eslint-disable max-classes-per-file */
+export type ChatMessageSenderType = 'user' | 'brain' | 'assistant';
 export type ChatMessageType =
   | 'text'
   | 'image'
