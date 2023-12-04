@@ -227,6 +227,5 @@ export class ChatSessionServer implements IChatSessionServer, IDisposable {
 
     this.listeners = null;
     this.client.removeSession(this);
-    this.client = null;
   };
 }
