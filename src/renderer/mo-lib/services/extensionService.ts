@@ -2,6 +2,7 @@ import { container, inject, injectable } from 'tsyringe';
 import { ErrorMsg } from '@hubai/core/esm/common/error';
 import {
   AppContext,
+  ExtensionContext,
   IContribute,
   IContributeType,
   IExtension,
@@ -21,6 +22,8 @@ import { registerAction2 } from 'mo/monaco/action';
 import { loadComponent } from 'renderer/common/dynamicModule';
 import { type IChatContribute } from '@hubai/core/esm/model/chat';
 import { type IChatService } from 'renderer/features/chat/services/types';
+import { ExtensionPackageSettingsService } from 'renderer/features/packages/services/packageSettingsService';
+import { IExtensionManagementService } from 'renderer/features/extensions/services/extensionManagement';
 
 @injectable()
 class ExtensionService implements IExtensionService {
@@ -148,13 +151,22 @@ class ExtensionService implements IExtensionService {
   public activate(extensions: IExtension[]): void {
     if (extensions.length === 0) return;
 
-    const ctx = this.getContext();
+    const appContext = this.getContext();
+    const packageManagement = container.resolve<IExtensionManagementService>(
+      'IExtensionManagementService'
+    );
+
     extensions?.forEach((extension: IExtension, index: number) => {
       // Ignore the inactive or invalid extension
       if (!extension || this.isInactive(extension)) return;
 
+      const extensionContext = new ExtensionContext(new ExtensionPackageSettingsService(
+        extension,
+        packageManagement
+      ));
+
       if (extension.activate) {
-        extension.activate(ctx);
+        extension.activate(appContext, extensionContext);
       }
 
       if (extension.contributes) {

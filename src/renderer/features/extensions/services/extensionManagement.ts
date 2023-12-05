@@ -135,7 +135,7 @@ export class ExtensionManagementService
     return settings.extension[extensionName];
   }
 
-  async saveExtensionSettings(
+  saveExtensionSettings(
     extension: LocalExtensionModel,
     newSettings: any
   ) {
