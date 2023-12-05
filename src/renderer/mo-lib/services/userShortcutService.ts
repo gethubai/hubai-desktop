@@ -3,7 +3,7 @@ import {
   IShortcutSubscription,
   IUserShortcut,
   IUserShortcutService,
-  type IGlobalShortcutService
+  type IGlobalShortcutService,
 } from '@hubai/core';
 import { EventEmitter } from '@hubai/core/esm/common/event';
 
@@ -25,7 +25,7 @@ export class UserShortcutService implements IUserShortcutService {
   update = async (shortcut: IUserShortcut): Promise<boolean> => {
     const { id } = shortcut;
 
-    const shortcutToUpdate = this.shortcuts.find((s) => s.id === id);
+    const shortcutToUpdate = this.get(id);
 
     if (!shortcutToUpdate) {
       console.error(`No shortcut found via id ${id}`);
@@ -88,7 +88,7 @@ export class UserShortcutService implements IUserShortcutService {
   ): Promise<IUserShortcut> => {
     let resultShortcut =
       typeof shortcut === 'string'
-        ? this.getShortcuts().find((f) => f.id === shortcut)
+        ? this.get(shortcut)
         : shortcut;
 
     if (!resultShortcut || !this.isRegistered(resultShortcut.accelerator)) {
@@ -98,6 +98,10 @@ export class UserShortcutService implements IUserShortcutService {
 
     return resultShortcut!;
   };
+
+  public get(shortcutId: string): IUserShortcut | undefined {
+    return this.getShortcuts().find((s) => s.id === shortcutId);
+  }
 
   public register = async (shortcut: IUserShortcut): Promise<boolean> => {
     const { accelerator } = shortcut;
@@ -141,7 +145,7 @@ export class UserShortcutService implements IUserShortcutService {
   };
 
   public unregister = async (id: string): Promise<boolean> => {
-    const shortcut = this.shortcuts.find((s) => s.id === id);
+    const shortcut = this.get(id);
 
     if (!shortcut) {
       console.error(`No shortcut found via id ${id}`);
@@ -193,7 +197,8 @@ export class UserShortcutService implements IUserShortcutService {
     shortcut: string | IUserShortcut,
     callback: () => void
   ): IShortcutSubscription => {
-    const shortcutId = typeof shortcut === 'string' ? shortcut : shortcut.accelerator;
+    const shortcutId =
+      typeof shortcut === 'string' ? shortcut : shortcut.accelerator;
     if (!this.handlers[shortcutId]) {
       throw new Error(`Shortcut ${shortcutId} is not registered`);
     }
