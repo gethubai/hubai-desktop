@@ -60,6 +60,10 @@ export class UserShortcutService implements IUserShortcutService {
         return false;
       }
 
+      if (!this.handlers[accelerator]) {
+        this.handlers[accelerator] = [];
+      }
+
       const registerResult = await this.globalShortcutService.register(
         accelerator,
         () => this.handlers[accelerator]?.forEach((h) => h())
@@ -75,6 +79,11 @@ export class UserShortcutService implements IUserShortcutService {
       shortcutToUpdate.accelerator = accelerator;
     }
 
+    console.log(
+      `Shortcut ${shortcut.id} (${shortcut.name}) has been updated`,
+      shortcutToUpdate
+    );
+
     shortcutToUpdate.name = shortcut.name;
 
     this.eventEmitter.emit('shortcut-updated', shortcutToUpdate);
@@ -87,9 +96,7 @@ export class UserShortcutService implements IUserShortcutService {
     defaultShortcut: IUserShortcut
   ): Promise<IUserShortcut> => {
     let resultShortcut =
-      typeof shortcut === 'string'
-        ? this.get(shortcut)
-        : shortcut;
+      typeof shortcut === 'string' ? this.get(shortcut) : shortcut;
 
     if (!resultShortcut || !this.isRegistered(resultShortcut.accelerator)) {
       await this.register(defaultShortcut);
@@ -197,8 +204,16 @@ export class UserShortcutService implements IUserShortcutService {
     shortcut: string | IUserShortcut,
     callback: () => void
   ): IShortcutSubscription => {
+    console.trace(`Shortcut ${shortcut} has been subscribed`);
+
     const shortcutId =
       typeof shortcut === 'string' ? shortcut : shortcut.accelerator;
+
+    console.log(
+      `ShortcutId: ${shortcutId} handlers: `,
+      JSON.stringify(this.handlers)
+    );
+
     if (!this.handlers[shortcutId]) {
       throw new Error(`Shortcut ${shortcutId} is not registered`);
     }

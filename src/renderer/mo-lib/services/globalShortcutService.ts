@@ -72,6 +72,8 @@ export class GlobalShortcutService implements IGlobalShortcutService {
           accelerator,
           enabled: true,
         });
+
+        console.log(`Global Shortcut ${accelerator} has been registered`);
       }
     }
 
@@ -93,12 +95,19 @@ export class GlobalShortcutService implements IGlobalShortcutService {
 
     return id;
   };
+
   unregister = async (acceleratorId: string): Promise<boolean> => {
     const res = await window.electron.globalShortcut.unregister(acceleratorId);
 
     if (res) {
       delete this.handlers[acceleratorId];
     }
+
+    // Remove from shortcuts
+    this.shortcuts.splice(
+      this.shortcuts.findIndex((s) => s.accelerator === acceleratorId),
+      1
+    );
 
     return true;
   };
