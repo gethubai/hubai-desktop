@@ -11,7 +11,7 @@ HubAI is a cross-platform desktop application that will give you a new way to in
 - Has a built-in package store that allows you to install a wide range of extensions and ChatBots built by the community.
 - Allows you to easily install and use chat prompts built by our community
 - Supports Windows, macOS, and Linux
-- 100% open source and free to use
+- 100% open source and free to use. No ADS. No tracking. No data collection.
 - We respect your privacy. All your chat history is encrypted and saved locally on your computer we don't store any messages on our servers.
 - Theme system that allows you to choose between Dark or Light mode (or any theme built by our community)
 - Auto update to the latest version
