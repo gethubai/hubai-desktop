@@ -45,3 +45,37 @@ Extensions allow you to extend HubAI by adding new functionalities like commands
 
 #### Resources
 - [How to create your first extension](https://www.hubai.app/docs/extensions/getting-started)
+
+# How to run the project
+
+## Requirements
+- [NodeJS 20+](https://nodejs.org/en/download)
+
+## Steps
+1. Clone the repository
+```bash
+git clone https://github.com/gethubai/hubai-desktop
+```
+
+2. Install dependencies
+```bash
+npm install
+```
+
+3. Run the `fix-realm`` npm script to fix the RealmJS dependency
+```bash
+npm run fix-realm
+```
+
+4. Add an `.env` file to the root of the project with the following content:
+```env
+AUTH0_DOMAIN=
+AUTH0_CLIENT_ID=
+AUTH0_AUDIENCE=
+APP_INSIGHTS_INSTRUMENTATION_KEY=
+```
+
+4. Run the project
+```bash
+npm start
+```
