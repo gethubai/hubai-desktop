@@ -62,12 +62,7 @@ git clone https://github.com/gethubai/hubai-desktop
 npm install
 ```
 
-3. Run the `fix-realm`` npm script to fix the RealmJS dependency
-```bash
-npm run fix-realm
-```
-
-4. Add an `.env` file to the root of the project with the following content:
+3. Add an `.env` file to the root of the project with the following content:
 ```env
 AUTH0_DOMAIN=
 AUTH0_CLIENT_ID=
