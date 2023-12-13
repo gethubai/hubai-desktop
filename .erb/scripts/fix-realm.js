@@ -8,10 +8,10 @@ import path from 'path';
 const realmPath = path.join(webpackPaths.appNodeModulesPath, 'realm');
 
 console.log('Applying Realm fix on path: ' + realmPath);
-execSync('npx prebuild-install --runtime napi', {
+/*execSync('npx prebuild-install --runtime napi', {
   cwd: realmPath,
   stdio: 'inherit',
-});
+}); */
 
-console.log('Realm fix has been applied!');
+console.log('Realm fix has been skipped!');
 //}
