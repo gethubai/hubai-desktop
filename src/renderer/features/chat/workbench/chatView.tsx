@@ -119,6 +119,30 @@ function ChatWindow({
       });
   }, []);
 
+  useEffect(() => {
+    const pasteHandler = (event: ClipboardEvent) => {
+      if (!event?.clipboardData?.items?.length) return;
+
+      // Access the clipboard data
+      const items = event.clipboardData.items;
+      const dataTransfer = new DataTransfer();
+      for (const item of items) {
+        if (item.type.startsWith('image')) {
+          const blob = item.getAsFile();
+          if (blob) dataTransfer.items.add(blob);
+        }
+      }
+
+      if (dataTransfer.files.length > 0) attachFile(dataTransfer.files);
+    };
+
+    // Attach the event listener
+    window.addEventListener('paste', pasteHandler);
+
+    // Clean up
+    return () => window.removeEventListener('paste', pasteHandler);
+  }, []);
+
   const sendMessage = useCallback(() => {
     const value = chatInputRef.current?.getValue();
     if (!value || value?.trim().length === 0) return;
