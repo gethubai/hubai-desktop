@@ -12,7 +12,7 @@ import {
 } from 'api-server/chat/chatTcpServer/events/serveSessionEvents';
 import { MqttClientEventEmitter } from 'api-server/chat/chatTcpServer/mqtt/pubsub/clientEventEmitter';
 import { MqttServerEventSubscriber } from 'api-server/chat/chatTcpServer/mqtt/pubsub/serverEventSubscriber';
-import { connect } from 'mqtt';
+import mqtt from 'mqtt';
 import {
   ChatClientUser,
   ChatListFilters,
@@ -80,7 +80,7 @@ export class ChatClient implements IChatClient {
   };
 
   initMqtt = async (): Promise<void> => {
-    const client = connect(`ws://localhost:${ServerPort}`, {
+    const client = mqtt.connect(`ws://localhost:${ServerPort}`, {
       username: this.user.id,
       password: this.user.accessToken,
     });

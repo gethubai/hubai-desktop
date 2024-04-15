@@ -24,19 +24,7 @@ const configuration: webpack.Configuration = {
 
   /* Temp workaround to fix https://github.com/mqttjs/MQTT.js/issues/1233 */
   module: {
-    rules: [
-      {
-        test: /\.[jt]s$/,
-        include: path.resolve(__dirname, '../../', 'node_modules', 'mqtt'),
-        use: {
-          loader: 'string-replace-loader',
-          options: {
-            search: /const IS_BROWSER =.*\n/,
-            replace: 'const IS_BROWSER = false;\n',
-          },
-        },
-      },
-    ],
+    rules: [],
   },
   entry: {
     main: path.join(webpackPaths.srcMainPath, 'main.ts'),
