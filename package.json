@@ -232,7 +232,7 @@
         ]
       },
       "notarize": {
-        "tool": "notarytool"
+        "teamId": "5KNK52N242"
       },
       "type": "distribution",
       "hardenedRuntime": true,
