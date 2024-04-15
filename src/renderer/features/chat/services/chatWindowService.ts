@@ -300,7 +300,7 @@ export class ChatWindowService
       file.path && // Files from clipboard doesn't have a path
       files?.findIndex((f) => f.file.path === file.path) !== -1
     ) {
-      console.error('File already exists!');
+      console.log('File already exists!');
       return;
     }
 
