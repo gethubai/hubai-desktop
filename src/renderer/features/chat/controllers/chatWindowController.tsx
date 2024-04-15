@@ -121,8 +121,8 @@ export default class ChatWindowController
   };
 
   public attachFile = (files: FileList): void => {
-    for (let i = 0; i < files.length; i++) {
-      this.chatWindowService.attachFile(files[i]);
+    for (const file of files) {
+      this.chatWindowService.attachFile(file);
     }
   };
 

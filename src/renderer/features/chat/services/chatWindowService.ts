@@ -296,6 +296,14 @@ export class ChatWindowService
   attachFile(file: File): void {
     const { files } = this.state;
 
+    if (
+      file.path && // Files from clipboard doesn't have a path
+      files?.findIndex((f) => f.file.path === file.path) !== -1
+    ) {
+      console.error('File already exists!');
+      return;
+    }
+
     let previewUrl = '';
 
     if (file.type.startsWith('image')) {
