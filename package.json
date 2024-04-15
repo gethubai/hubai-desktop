@@ -223,7 +223,6 @@
       "package.json",
       "!**/node_modules/realm/react-native"
     ],
-    "afterSign": ".erb/scripts/notarize.js",
     "mac": {
       "target": {
         "target": "default",
@@ -231,6 +230,9 @@
           "arm64",
           "x64"
         ]
+      },
+      "notarize": {
+        "tool": "notarytool"
       },
       "type": "distribution",
       "hardenedRuntime": true,
