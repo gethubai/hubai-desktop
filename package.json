@@ -188,7 +188,7 @@
     "jest-environment-jsdom": "^29.5.0",
     "mini-css-extract-plugin": "^2.7.6",
     "monaco-editor-webpack-plugin": "^7.1.0",
-    "node-abi": "^3.45.0",
+    "node-abi": "^3.62.0",
     "prettier": "^3.2.5",
     "react-refresh": "^0.14.2",
     "react-syntax-highlighter": "^15.5.0",
