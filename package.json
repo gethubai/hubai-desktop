@@ -195,7 +195,7 @@
     "react-test-renderer": "^18.3.0",
     "rimraf": "^5.0.1",
     "sass": "^1.62.1",
-    "sass-loader": "^13.3.1",
+    "sass-loader": "^14.2.1",
     "string-replace-loader": "^3.1.0",
     "style-loader": "^3.3.3",
     "terser-webpack-plugin": "^5.3.9",
