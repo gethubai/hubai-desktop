@@ -130,7 +130,7 @@
     "regexparam": "^2.0.1",
     "remark-gfm": "^4.0.0",
     "semver": "^7.6.0",
-    "styled-components": "^6.0.0",
+    "styled-components": "^6.1.8",
     "tsyringe": "^4.8.0",
     "url": "^0.11.1"
   },
