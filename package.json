@@ -95,7 +95,7 @@
   "dependencies": {
     "@dtinsight/dt-utils": "^1.1.2",
     "@hcaptcha/react-hcaptcha": "^1.8.1",
-    "@hubai/brain-sdk": "^1.0.8",
+    "@hubai/brain-sdk": "^1.0.9",
     "@hubai/core": "^0.0.29",
     "@rjsf/core": "^5.8.2",
     "@rjsf/utils": "^5.18.2",
