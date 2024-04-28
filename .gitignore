@@ -33,3 +33,6 @@ chatdb.*
 env-variables.json
 
 src/devExtensions/*/*
+
+# Ignore .env file containing credentials, API keys, secrets, etc.
+.env
