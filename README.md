@@ -62,13 +62,7 @@ git clone https://github.com/gethubai/hubai-desktop
 npm install
 ```
 
-3. Add an `.env` file to the root of the project with the following content:
-```env
-AUTH0_DOMAIN=
-AUTH0_CLIENT_ID=
-AUTH0_AUDIENCE=
-APP_INSIGHTS_INSTRUMENTATION_KEY=
-```
+3. Copy `.env.example` to `.env` in the root of the project and replace the appropriate values.
 
 4. Run the project
 ```bash
