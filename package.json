@@ -109,7 +109,7 @@
     "electron-debug": "^4.0.0",
     "electron-dl": "^4.0.0",
     "electron-log": "^5.1.2",
-    "electron-store": "^8.2.0",
+    "electron-store": "^9.0.0",
     "electron-updater": "^6.1.8",
     "lodash": "^4.17.21",
     "monaco-editor": "^0.48.0",
