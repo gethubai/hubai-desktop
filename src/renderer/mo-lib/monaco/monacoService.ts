@@ -5,8 +5,10 @@ import {
   IStandaloneEditorConstructionOptions,
   StandaloneEditor,
 } from 'monaco-editor/esm/vs/editor/standalone/browser/standaloneCodeEditor';
-import { StandaloneTextModelService } from 'monaco-editor/esm/vs/editor/standalone/browser/standaloneServices';
-import { StandaloneLayoutService } from 'monaco-editor/esm/vs/editor/standalone/browser/standaloneLayoutService';
+import {
+  SimpleEditorModelResolverService,
+  SimpleLayoutService,
+} from 'monaco-editor/esm/vs/editor/standalone/browser/simpleServices';
 import { ITextModelService } from 'monaco-editor/esm/vs/editor/common/services/resolverService';
 
 import {
@@ -20,7 +22,7 @@ import { ICommandService } from 'monaco-editor/esm/vs/platform/commands/common/c
 import { IContextKeyService } from 'monaco-editor/esm/vs/platform/contextkey/common/contextkey';
 import { IKeybindingService } from 'monaco-editor/esm/vs/platform/keybinding/common/keybinding';
 import { IContextViewService } from 'monaco-editor/esm/vs/platform/contextview/browser/contextView';
-import { IStandaloneThemeService } from 'monaco-editor/esm/vs/editor/standalone/browser/standaloneThemeService';
+import { IStandaloneThemeService } from 'monaco-editor/esm/vs/editor/standalone/common/standaloneThemeService';
 import { INotificationService } from 'monaco-editor/esm/vs/platform/notification/common/notification';
 import { IConfigurationService } from 'monaco-editor/esm/vs/platform/configuration/common/configuration';
 import { IAccessibilityService } from 'monaco-editor/esm/vs/platform/accessibility/common/accessibility';
@@ -30,17 +32,15 @@ import { QuickInputService } from 'monaco-editor/esm/vs/platform/quickinput/brow
 import { IQuickInputService } from 'monaco-editor/esm/vs/platform/quickinput/common/quickInput';
 import { ILayoutService } from 'monaco-editor/esm/vs/platform/layout/browser/layoutService';
 import { ServiceCollection } from 'monaco-editor/esm/vs/platform/instantiation/common/serviceCollection';
+import { IModeService } from 'monaco-editor/esm/vs/editor/common/services/modeService.js';
 import { IModelService } from 'monaco-editor/esm/vs/editor/common/services/modelService.js';
 import { IMonacoService } from '@hubai/core/esm/monaco/monacoService';
-import { createDecorator } from 'monaco-editor/esm/vs/platform/instantiation/common/instantiation';
-
-const IModeService = createDecorator('modeService');
 
 @injectable()
 class MonacoService implements IMonacoService {
   private _services: ServiceCollection;
 
-  private simpleTextModelService: StandaloneTextModelService | null =
+  private simpleEditorModelResolverService: SimpleEditorModelResolverService | null =
     null;
 
   private _container!: HTMLElement | null;
@@ -87,9 +87,9 @@ class MonacoService implements IMonacoService {
 
     this.mergeEditorServices(overrides);
     if (!services.has(ITextModelService)) {
-      this.simpleTextModelService =
-        new StandaloneTextModelService(StaticServices.modelService.get());
-      services.set(ITextModelService, this.simpleTextModelService);
+      this.simpleEditorModelResolverService =
+        new SimpleEditorModelResolverService(StaticServices.modelService.get());
+      services.set(ITextModelService, this.simpleEditorModelResolverService);
     }
 
     const standaloneEditor = new StandaloneEditor(
@@ -110,6 +110,10 @@ class MonacoService implements IMonacoService {
       services.get(IModeService)
     );
 
+    if (this.simpleEditorModelResolverService) {
+      this.simpleEditorModelResolverService.setEditor(standaloneEditor);
+    }
+
     return standaloneEditor;
   }
 
@@ -129,7 +133,10 @@ class MonacoService implements IMonacoService {
 
     const quickInputService =
       instantiationService.createInstance(QuickInputService);
-    const layoutService = new StandaloneLayoutService(StaticServices.codeEditorService.get(ICodeEditorService));
+    const layoutService = new SimpleLayoutService(
+      StaticServices.codeEditorService.get(ICodeEditorService),
+      this.container
+    );
 
     // Override layoutService
     services.set(ILayoutService, layoutService);

@@ -6,7 +6,7 @@ import { CancellationToken } from 'monaco-editor/esm/vs/base/common/cancellation
 import { IQuickInputService } from 'monaco-editor/esm/vs/platform/quickinput/common/quickInput';
 
 import { ICommandQuickPick } from 'monaco-editor/esm/vs/platform/quickinput/browser/commandsQuickAccess';
-import { AbstractEditorCommandsQuickAccessProvider } from 'monaco-editor/esm/vs/editor/contrib/quickAccess/browser/commandsQuickAccess';
+import { AbstractEditorCommandsQuickAccessProvider } from 'monaco-editor/esm/vs/editor/contrib/quickAccess/commandsQuickAccess';
 import {
   IInstantiationService,
   ServicesAccessor,

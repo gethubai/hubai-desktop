@@ -5,7 +5,7 @@ import 'monaco-editor/esm/vs/language/json/monaco.contribution';
 // import 'monaco-editor/esm/vs/basic-languages/monaco.contribution';
 
 import 'monaco-editor/esm/vs/editor/editor.all';
-// import 'monaco-editor/esm/vs/editor/standalone/browser/accessibilityHelp/accessibilityHelp';
+import 'monaco-editor/esm/vs/editor/standalone/browser/accessibilityHelp/accessibilityHelp';
 import 'monaco-editor/esm/vs/editor/standalone/browser/iPadShowKeyboard/iPadShowKeyboard';
 import 'monaco-editor/esm/vs/editor/standalone/browser/inspectTokens/inspectTokens';
 import 'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneHelpQuickAccess';
