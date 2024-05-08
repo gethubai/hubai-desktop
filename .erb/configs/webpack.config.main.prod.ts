@@ -17,6 +17,19 @@ const { sentryWebpackPlugin } = require("@sentry/webpack-plugin");
 
 checkNodeEnv('production');
 deleteSourceMaps();
+
+const addSentryWebpackPlugin = 
+  process.env.SENTRY_UPLOAD_SOURCE_MAPS
+    ? []
+    : [
+        sentryWebpackPlugin({
+          authToken: process.env.SENTRY_AUTH_TOKEN,
+          org: process.env.SENTRY_ORG,
+          project: process.env.SENTRY_PROJECT,
+          url: process.env.SENTRY_URL,
+        })
+    ];
+
 const configuration: webpack.Configuration = {
   devtool: 'source-map',
 
@@ -79,12 +92,7 @@ const configuration: webpack.Configuration = {
     new webpack.DefinePlugin({
       'process.type': '"browser"',
     }),
-    sentryWebpackPlugin({
-      authToken: process.env.SENTRY_AUTH_TOKEN,
-      org: "hubai",
-      project: "desktop-client",
-      url: "https://sentry.hubai.dev",
-    }),
+    ...addSentryWebpackPlugin,
   ],
 
   /**

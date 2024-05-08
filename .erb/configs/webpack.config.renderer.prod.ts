@@ -18,12 +18,24 @@ import checkNodeEnv from '../scripts/check-node-env';
 import deleteSourceMaps from '../scripts/delete-source-maps';
 
 const moduleFederationConfig = require('./moduleFederation');
+const { sentryWebpackPlugin } = require("@sentry/webpack-plugin");
 
 const { ModuleFederationPlugin } = webpack.container;
-const { sentryWebpackPlugin } = require("@sentry/webpack-plugin");
 
 checkNodeEnv('production');
 deleteSourceMaps();
+
+const addSentryWebpackPlugin = 
+  process.env.SENTRY_UPLOAD_SOURCE_MAPS
+    ? []
+    : [
+        sentryWebpackPlugin({
+          authToken: process.env.SENTRY_AUTH_TOKEN,
+          org: process.env.SENTRY_ORG,
+          project: process.env.SENTRY_PROJECT_RENDERER,
+          url: process.env.SENTRY_URL,
+        })
+    ];
 
 const configuration: webpack.Configuration = {
   devtool: 'source-map',
@@ -116,6 +128,7 @@ const configuration: webpack.Configuration = {
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'production',
       DEBUG_PROD: false,
+      SENTRY_UPLOAD_SOURCE_MAPS: true,
       SENTRY_DSN: 'https://f72acd92be18c86fecad211563bc096e@sentry.hubai.dev/3',
     }),
 
@@ -154,12 +167,7 @@ const configuration: webpack.Configuration = {
     new webpack.DefinePlugin({
       'process.type': '"renderer"',
     }),
-    sentryWebpackPlugin({
-      authToken: process.env.SENTRY_AUTH_TOKEN,
-      org: "hubai",
-      project: "desktop-client-renderer",
-      url: "https://sentry.hubai.dev",
-    }),
+    ...addSentryWebpackPlugin,
   ],
 };
 
