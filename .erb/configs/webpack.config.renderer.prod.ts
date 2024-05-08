@@ -34,6 +34,7 @@ const addSentryWebpackPlugin =
           org: process.env.SENTRY_ORG,
           project: process.env.SENTRY_PROJECT_RENDERER,
           url: process.env.SENTRY_URL,
+          telemetry: false,
         })
     ];
 
