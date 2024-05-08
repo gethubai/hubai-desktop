@@ -26,7 +26,7 @@ checkNodeEnv('production');
 deleteSourceMaps();
 
 const addSentryWebpackPlugin = 
-  process.env.SENTRY_UPLOAD_SOURCE_MAPS
+  process.env.SENTRY_NO_SOURCE_MAPS
     ? []
     : [
         sentryWebpackPlugin({
