@@ -36,3 +36,6 @@ src/devExtensions/*/*
 
 # Ignore .env file containing credentials, API keys, secrets, etc.
 .env
+
+# Sentry Config File
+.env.sentry-build-plugin

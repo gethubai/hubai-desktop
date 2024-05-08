@@ -8,6 +8,7 @@
  * When running `npm run build` or `npm run build:main`, this file is compiled to
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
+import * as Sentry from '@sentry/electron/main';
 import path from 'path';
 import '../data/realm/app';
 import { app, BrowserWindow, shell, ipcMain, protocol, dialog } from 'electron';
@@ -42,8 +43,22 @@ import '../api-server/authentication/ipc/mainApi';
 import '../api-server/user/ipc/mainApi';
 import { registerShortcutsHandlersForWindow } from './ipc/globalShortcutManager/mainApi';
 
-const isDebug =
-  process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
+const isDevelopment = process.env.NODE_ENV === 'development'
+
+// If app.setPath('userData', '/path/to/data') is to be used, move Sentry.init to after path is set
+if (!isDevelopment && process.env.SENTRY_DSN) {
+  try {
+    Sentry.init({
+      dsn: process.env.SENTRY_DSN,
+      environment: process.env.NODE_ENV,
+      enableTracing: false, // performance tracing
+    });
+  } catch (error) {
+    console.error('Failed to initialize Sentry', error);
+  }
+}
+
+const isDebug = isDevelopment || process.env.DEBUG_PROD === 'true';
 
 protocol.registerSchemesAsPrivileged([
   {

@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/electron/renderer';
 import 'reflect-metadata';
 import React, { useEffect, useState } from 'react';
 import './App.css';
@@ -18,6 +19,27 @@ import { container } from 'tsyringe';
 import { IBrainManagementService } from './features/brain/services/brainManagement';
 import { AppContext } from '@hubai/core';
 import HubaiContext from '@hubai/core/esm/contexts/hubaiContext';
+
+const isDevelopment = process.env.NODE_ENV === 'development'
+
+if (!isDevelopment && process.env.SENTRY_DSN_RENDERER) {
+  try {
+    Sentry.init({
+      dsn: process.env.SENTRY_DSN_RENDERER,
+      environment: process.env.NODE_ENV,
+      enableTracing: false, // performance tracing
+      integrations: [
+        Sentry.breadcrumbsIntegration({
+          console: false, // disable console breadcrumbs
+          xhr: false, // disable xhr breadcrumbs
+          fetch: false, // disable fetch breadcrumbs
+        }),
+      ],
+    });
+  } catch (error) {
+    console.error('Failed to initialize Sentry', error);
+  }
+}
 
 const setStartupActivityBar = async () => {
   try {

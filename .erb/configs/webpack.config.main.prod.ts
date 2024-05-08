@@ -13,8 +13,24 @@ import webpackPaths from './webpack.paths';
 import checkNodeEnv from '../scripts/check-node-env';
 import deleteSourceMaps from '../scripts/delete-source-maps';
 
+const { sentryWebpackPlugin } = require("@sentry/webpack-plugin");
+
 checkNodeEnv('production');
 deleteSourceMaps();
+
+const addSentryWebpackPlugin = 
+  process.env.SENTRY_NO_SOURCE_MAPS
+    ? []
+    : [
+        sentryWebpackPlugin({
+          authToken: process.env.SENTRY_AUTH_TOKEN,
+          org: process.env.SENTRY_ORG,
+          project: process.env.SENTRY_PROJECT,
+          url: process.env.SENTRY_URL,
+          telemetry: false,
+        })
+    ];
+
 const configuration: webpack.Configuration = {
   devtool: 'source-map',
 
@@ -76,6 +92,7 @@ const configuration: webpack.Configuration = {
     new webpack.DefinePlugin({
       'process.type': '"browser"',
     }),
+    ...addSentryWebpackPlugin,
   ],
 
   /**
