@@ -2,6 +2,13 @@
 
 HubAI is a cross-platform desktop application that will give you a new way to interact with any AI. It's your personal gateway to an expansive world of AI functionalities, right from your computer. Experience the thrill of creating, customizing, and engaging with diverse AIs, and join a vibrant community of AI enthusiasts and innovators.
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=gethubai_hubai-desktop&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=gethubai_hubai-desktop)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=gethubai_hubai-desktop&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=gethubai_hubai-desktop)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=gethubai_hubai-desktop&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=gethubai_hubai-desktop)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=gethubai_hubai-desktop&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=gethubai_hubai-desktop)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=gethubai_hubai-desktop&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=gethubai_hubai-desktop)
+
+
 ## Links
 - [Website](https://hubai.app)
 - [Documentation](https://hubai.app/docs/intro)
