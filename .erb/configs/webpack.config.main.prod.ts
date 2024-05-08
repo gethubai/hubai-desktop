@@ -13,6 +13,8 @@ import webpackPaths from './webpack.paths';
 import checkNodeEnv from '../scripts/check-node-env';
 import deleteSourceMaps from '../scripts/delete-source-maps';
 
+const { sentryWebpackPlugin } = require("@sentry/webpack-plugin");
+
 checkNodeEnv('production');
 deleteSourceMaps();
 const configuration: webpack.Configuration = {
@@ -72,9 +74,16 @@ const configuration: webpack.Configuration = {
       NODE_ENV: 'production',
       DEBUG_PROD: false,
       START_MINIMIZED: false,
+      SENTRY_DSN: 'https://943a044a6bdffb4832916a07ad7c1af5@sentry.hubai.dev/2',
     }),
     new webpack.DefinePlugin({
       'process.type': '"browser"',
+    }),
+    sentryWebpackPlugin({
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      org: "hubai",
+      project: "desktop-client",
+      url: "https://sentry.hubai.dev",
     }),
   ],
 
