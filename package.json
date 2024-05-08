@@ -44,7 +44,8 @@
     "start:main": "cross-env NODE_ENV=development env-cmd electronmon -r ts-node/register/transpile-only -r tsconfig-paths/register .",
     "start:preload": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.preload.dev.ts",
     "start:renderer": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
-    "test": "jest"
+    "test": "jest",
+    "prepare": "husky install"
   },
   "browserslist": [],
   "prettier": {
@@ -188,9 +189,11 @@
     "eslint-plugin-react-hooks": "^4.6.2",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.6.0",
+    "husky": "^9.0.11",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.5.0",
     "jest-environment-jsdom": "^29.5.0",
+    "lint-staged": "^15.2.2",
     "mini-css-extract-plugin": "^2.9.0",
     "monaco-editor-webpack-plugin": "^7.1.0",
     "node-abi": "^3.62.0",
@@ -301,5 +304,8 @@
       "src/main/**"
     ],
     "logLevel": "quiet"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": "eslint --cache --fix"
   }
 }
