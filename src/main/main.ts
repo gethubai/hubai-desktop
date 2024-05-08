@@ -51,6 +51,7 @@ if (!isDevelopment && process.env.SENTRY_DSN) {
     Sentry.init({
       dsn: process.env.SENTRY_DSN,
       environment: process.env.NODE_ENV,
+      enableTracing: false, // performance tracing
     });
   } catch (error) {
     console.error('Failed to initialize Sentry', error);

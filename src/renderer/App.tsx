@@ -27,6 +27,14 @@ if (!isDevelopment && process.env.SENTRY_DSN_RENDERER) {
     Sentry.init({
       dsn: process.env.SENTRY_DSN_RENDERER,
       environment: process.env.NODE_ENV,
+      enableTracing: false, // performance tracing
+      integrations: [
+        Sentry.breadcrumbsIntegration({
+          console: false, // disable console breadcrumbs
+          xhr: false, // disable xhr breadcrumbs
+          fetch: false, // disable fetch breadcrumbs
+        }),
+      ],
     });
   } catch (error) {
     console.error('Failed to initialize Sentry', error);
