@@ -87,7 +87,6 @@ const configuration: webpack.Configuration = {
       NODE_ENV: 'production',
       DEBUG_PROD: false,
       START_MINIMIZED: false,
-      SENTRY_DSN: 'https://943a044a6bdffb4832916a07ad7c1af5@sentry.hubai.dev/2',
     }),
     new webpack.DefinePlugin({
       'process.type': '"browser"',

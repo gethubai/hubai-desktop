@@ -128,8 +128,6 @@ const configuration: webpack.Configuration = {
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'production',
       DEBUG_PROD: false,
-      SENTRY_UPLOAD_SOURCE_MAPS: true,
-      SENTRY_DSN: 'https://f72acd92be18c86fecad211563bc096e@sentry.hubai.dev/3',
     }),
 
     new Dotenv({

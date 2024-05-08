@@ -22,8 +22,15 @@ import HubaiContext from '@hubai/core/esm/contexts/hubaiContext';
 
 const isDevelopment = process.env.NODE_ENV === 'development'
 
-if (!isDevelopment) {
-  Sentry.init( { dsn: process.env.SENTRY_DSN } );
+if (!isDevelopment && process.env.SENTRY_DSN_RENDERER) {
+  try {
+    Sentry.init({
+      dsn: process.env.SENTRY_DSN_RENDERER,
+      environment: process.env.NODE_ENV,
+    });
+  } catch (error) {
+    console.error('Failed to initialize Sentry', error);
+  }
 }
 
 const setStartupActivityBar = async () => {

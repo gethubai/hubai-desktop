@@ -46,8 +46,15 @@ import { registerShortcutsHandlersForWindow } from './ipc/globalShortcutManager/
 const isDevelopment = process.env.NODE_ENV === 'development'
 
 // If app.setPath('userData', '/path/to/data') is to be used, move Sentry.init to after path is set
-if (!isDevelopment) {
-  Sentry.init( { dsn: process.env.SENTRY_DSN } );
+if (!isDevelopment && process.env.SENTRY_DSN) {
+  try {
+    Sentry.init({
+      dsn: process.env.SENTRY_DSN,
+      environment: process.env.NODE_ENV,
+    });
+  } catch (error) {
+    console.error('Failed to initialize Sentry', error);
+  }
 }
 
 const isDebug = isDevelopment || process.env.DEBUG_PROD === 'true';
