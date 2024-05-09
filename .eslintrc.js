@@ -1,5 +1,9 @@
 module.exports = {
-  extends: 'erb',
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'erb',
+  ],
   plugins: ['@typescript-eslint'],
   rules: {
     // A temporary hack related to IDE not resolving correct package.json
@@ -28,11 +32,18 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'no-underscore-dangle': 'off',
     'react/require-default-props': 'off',
+    'no-bitwise': 'off',
+    'prettier/prettier': [
+      'error',
+      {
+        trailingComma: 'es5',
+      },
+    ],
   },
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: 'module',
-    project: './tsconfig.json',
+    project: './tsconfig.eslint.json',
     tsconfigRootDir: __dirname,
     createDefaultProgram: true,
   },
