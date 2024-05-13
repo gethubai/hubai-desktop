@@ -202,7 +202,7 @@
     "react-syntax-highlighter": "^15.5.0",
     "react-test-renderer": "^18.3.1",
     "rimraf": "^5.0.1",
-    "sass": "^1.77.0",
+    "sass": "^1.77.1",
     "sass-loader": "^14.2.1",
     "string-replace-loader": "^3.1.0",
     "style-loader": "^4.0.0",
