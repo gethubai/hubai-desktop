@@ -148,7 +148,7 @@
     "@testing-library/react": "^15.0.7",
     "@types/dotenv-webpack": "^7.0.7",
     "@types/jest": "^29.5.12",
-    "@types/lodash": "^4.17.1",
+    "@types/lodash": "^4.17.4",
     "@types/multer": "^1.4.11",
     "@types/node": "20.12.12",
     "@types/react": "^18.3.2",
