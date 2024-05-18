@@ -79,12 +79,14 @@ export function MapSettingToSchema(setting: ISettingMap): RJSFSchema {
   return property;
 }
 
-export function buildProperties(settingsMap?: ISettingMap[]) {
+export function buildProperties(settingsMap?: ISettingMap[]): {
+  properties: any;
+  required: string[] | undefined;
+} {
   const required: string[] = [];
-
-  if (!settingsMap) return;
-
   const properties = {} as any;
+
+  if (!settingsMap) return { properties, required };
 
   settingsMap.forEach((setting) => {
     const { name } = setting;
