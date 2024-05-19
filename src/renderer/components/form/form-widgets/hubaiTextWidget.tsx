@@ -12,18 +12,19 @@ export default function HubaiTextWidget({
 }: WidgetProps) {
   let inputType = 'text'; // default to text input
 
-  switch (schema.type) {
-    case 'integer':
-      inputType = 'number';
-      break;
-    case 'number':
-      inputType = 'text'; // Use text input to allow floating points, validate manually
-      break;
-    default:
-      if (schema.isSecret) {
-        inputType = 'password';
-      }
-      break;
+  if (schema.isSecret) {
+    inputType = 'password';
+  } else {
+    switch (schema.type) {
+      case 'integer':
+        inputType = 'number';
+        break;
+      case 'number':
+        inputType = 'text'; // Use text input to allow floating points, validate manually
+        break;
+      default:
+        break;
+    }
   }
 
   const handleChange = useCallback(
