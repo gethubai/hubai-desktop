@@ -25,21 +25,49 @@ export class SettingMap {
     description?: string,
     isSecret?: boolean
   ) {
+    if (!name || name.length < 1) {
+      throw new Error('Name is required');
+    }
+
+    if (!displayName || displayName.length < 1) {
+      throw new Error('Display Name is required');
+    }
+
     this.name = name;
     this.displayName = displayName;
     this.type = this.parseSettingType(type);
-    this.defaultValue = defaultValue;
-    this.enumValues = enumValues;
+    this.enumValues = [];
     this.required = required === undefined ? false : required;
     this.description = description;
     this.isSecret = isSecret;
 
-    // TODO: Apply validation:
-    // If the type is enum, the enumValues must be set
-    // If the type is not enum, the enumValues must not be set
-    // If the type is number or integer, the defaultValue must be a number
-    // If the type is boolean, the defaultValue must be a boolean
-    // Name and title are required
+    switch (this.type) {
+      case 'boolean':
+        if (typeof defaultValue !== 'boolean') {
+          throw new Error(
+            `Invalid default value for boolean setting: ${this.name}`
+          );
+        }
+        break;
+      case 'number':
+      case 'integer':
+        if (typeof defaultValue !== 'number') {
+          throw new Error(
+            `Invalid default value for number setting: ${this.name}`
+          );
+        }
+        break;
+      case 'enum':
+        if (!Array.isArray(enumValues) || enumValues.length === 0) {
+          throw new Error(`Invalid enumValues for enum setting: ${this.name}`);
+        }
+        this.enumValues = enumValues;
+        break;
+      default:
+        break;
+    }
+
+    this.defaultValue = defaultValue;
   }
 
   parseSettingType(typeString: string): string {
