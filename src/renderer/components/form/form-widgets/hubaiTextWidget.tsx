@@ -19,7 +19,7 @@ export default function HubaiTextWidget({
   }
 
   const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const inputValue = e.target.value;
 
       if (schema.type === 'number' && Number.isNaN(Number(inputValue))) {
@@ -44,8 +44,8 @@ export default function HubaiTextWidget({
       type={inputType}
       id={id}
       value={value}
-      defaultValue={defaultValue}
-      onChange={handleChange as any}
+      defaultValue={defaultValue?.toString()}
+      onChange={handleChange}
       placeholder={placeholder}
     />
   );
