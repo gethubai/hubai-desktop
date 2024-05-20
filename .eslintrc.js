@@ -35,6 +35,7 @@ module.exports = {
     'no-bitwise': 'off',
     'no-console': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    'no-await-in-loop': 'off',
     'prettier/prettier': [
       'error',
       {
