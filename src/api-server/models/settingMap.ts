@@ -43,7 +43,7 @@ export class SettingMap {
 
     switch (this.type) {
       case 'boolean':
-        if (typeof defaultValue !== 'boolean') {
+        if (defaultValue !== undefined && typeof defaultValue !== 'boolean') {
           throw new Error(
             `Invalid default value for boolean setting: ${this.name}`
           );
@@ -51,7 +51,7 @@ export class SettingMap {
         break;
       case 'number':
       case 'integer':
-        if (typeof defaultValue !== 'number') {
+        if (defaultValue !== undefined && typeof defaultValue !== 'number') {
           throw new Error(
             `Invalid default value for number setting: ${this.name}`
           );
