@@ -11,7 +11,12 @@ ipcMain.on(
   async (event, { url, filename, showBadge, showProgressBar, overwrite }) => {
     const win = BrowserWindow.getFocusedWindow();
 
-    await download(win!, url, {
+    if (!win) {
+      console.error('No focused window found');
+      return;
+    }
+
+    await download(win, url, {
       showBadge,
       showProgressBar,
       overwrite,

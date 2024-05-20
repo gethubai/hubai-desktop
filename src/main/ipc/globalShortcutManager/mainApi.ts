@@ -5,7 +5,7 @@ export const registerShortcutsHandlersForWindow = (window: BrowserWindow) => {
   ipcMain.handle(endpoints.register, async (event, acceleratorId) => {
     try {
       const result = globalShortcut.register(acceleratorId, () => {
-        console.log(acceleratorId + ' has been pressed');
+        console.log(`${acceleratorId} has been pressed`);
         window.webContents.send('global-shortcut-pressed', acceleratorId);
       });
 
