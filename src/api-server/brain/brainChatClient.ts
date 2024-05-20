@@ -17,9 +17,9 @@ import {
   ITextBrainService,
   TextBrainPrompt,
 } from '@hubai/brain-sdk';
+import { getCurrentUtcDate } from 'utils/dateUtils';
 import { IBrainServer } from './brainServer';
 import { IBrainSettings } from './brainSettings';
-import { getCurrentUtcDate } from 'utils/dateUtils';
 
 export default class BrainChatClient implements IBrainServer {
   private chatClient!: IChatClient;
@@ -64,6 +64,7 @@ export default class BrainChatClient implements IBrainServer {
   async joinChats(chats: ChatModel[]) {
     chats.forEach(async (chat) => {
       const session = this.chatClient.session(chat.id);
+      if (!session) return;
       if (session.isWatching) return;
 
       await session.watch();
@@ -243,7 +244,7 @@ export default class BrainChatClient implements IBrainServer {
   private mapMessageToPrompt(m: ChatMessageModel): TextBrainPrompt {
     return {
       role: m.senderType === 'assistant' ? 'user' : m.senderType ?? 'user',
-      message: m.text!.body,
+      message: m.text?.body,
       attachments: m.attachments?.map(
         (a) =>
           ({
@@ -252,7 +253,7 @@ export default class BrainChatClient implements IBrainServer {
             mimeType: a.mimeType,
             originalFileName: a.originalFileName,
             size: a.size,
-          } as FileAttachment)
+          }) as FileAttachment
       ),
     } as TextBrainPrompt;
   }

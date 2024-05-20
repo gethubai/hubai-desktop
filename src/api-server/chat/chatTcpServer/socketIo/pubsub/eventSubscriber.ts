@@ -9,7 +9,7 @@ import { EventNames, EventsMap, IEvent } from '../../pubsub/models/event';
 
 export class SocketIoEventSubscriber<
   TEventMap extends EventsMap,
-  TSocket extends Socket<TEventMap, any>
+  TSocket extends Socket<TEventMap, any>,
 > implements IEventSubscriber<TEventMap>
 {
   constructor(
@@ -36,7 +36,7 @@ export class SocketIoEventSubscriber<
     this.socket.on(parsedName, listener as any);
 
     return {
-      name: parsedName,
+      name: parsedName?.toString(),
       unsubscribe: () => this.unsubscribe(parsedName, listener as any),
     };
   }

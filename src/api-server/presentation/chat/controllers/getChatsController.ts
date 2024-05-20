@@ -4,11 +4,16 @@ import { HttpResponse } from '../../../main/protocols/http';
 import { ok, unauthorized } from '../../helpers';
 import { IRequest } from '../../../main/protocols/requestContext';
 
+export type GetChatsControllerRequest = IRequest & {
+  userId?: string | string[];
+  isDirect?: boolean;
+};
+
 export class GetChatsController implements Controller {
   constructor(private readonly chatList: LoadChatList) {}
 
   handle = async (
-    request: GetChatsController.Request
+    request: GetChatsControllerRequest
   ): Promise<HttpResponse> => {
     if (!request.context.userId) return unauthorized();
 
@@ -27,12 +32,5 @@ export class GetChatsController implements Controller {
       isDirect: request.isDirect,
     });
     return ok(chats);
-  };
-}
-
-export namespace GetChatsController {
-  export type Request = IRequest & {
-    userId?: string | string[];
-    isDirect?: boolean;
   };
 }

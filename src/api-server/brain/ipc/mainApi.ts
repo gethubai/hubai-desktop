@@ -18,7 +18,7 @@ import endpoints from './endpoints';
 import { LocalBrainModel } from '../domain/models/localBrain';
 import { IBrainServer } from '../brainServer';
 
-ipcMain.handle(endpoints.getAll, async (event) => {
+ipcMain.handle(endpoints.getAll, async () => {
   const getBrainsUseCase = await makeLoadLocalBrains();
   const brains = await getBrainsUseCase.getBrains();
   return brains;

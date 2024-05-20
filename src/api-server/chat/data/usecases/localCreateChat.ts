@@ -27,6 +27,6 @@ export default class LocalCreateChat implements CreateChat {
       isDirect,
     };
 
-    return await this.repository.add(opt);
+    return this.repository.add(opt);
   }
 }

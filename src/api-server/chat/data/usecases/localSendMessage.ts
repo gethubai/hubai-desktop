@@ -1,11 +1,11 @@
-/* eslint-disable no-await-in-loop */
 import {
   ChatMessageRecipient,
   ChatMessageStatus,
   MessageAttachment,
 } from 'api-server/chat/domain/models/chatMessage';
 import {
-  SendChatMessage,
+  SendChatMessageParams,
+  SendChatMessageModel,
   SendMessage,
 } from 'api-server/chat/domain/usecases/sendChatMessage';
 import generateUniqueId from 'renderer/common/uniqueIdGenerator';
@@ -18,7 +18,7 @@ export default class LocalSendChatMessage implements SendMessage {
     private readonly saveChatFile: SaveFileChat
   ) {}
 
-  async send(params: SendChatMessage.Params): Promise<SendChatMessage.Model> {
+  async send(params: SendChatMessageParams): Promise<SendChatMessageModel> {
     const {
       senderId,
       senderType,
@@ -73,7 +73,7 @@ export default class LocalSendChatMessage implements SendMessage {
       sendDate: new Date().toISOString(),
       recipients: recipients.map(
         (r) =>
-          ({ id: r, status: ChatMessageStatus.WAITING } as ChatMessageRecipient)
+          ({ id: r, status: ChatMessageStatus.WAITING }) as ChatMessageRecipient
       ),
       status: ChatMessageStatus.SENT,
       attachments,

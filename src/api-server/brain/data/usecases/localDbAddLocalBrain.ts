@@ -1,6 +1,9 @@
 import { getBrainAvatarUrl } from 'api-server/brain/const';
 import { LocalBrainModel } from 'api-server/brain/domain/models/localBrain';
-import { AddLocalBrain } from 'api-server/brain/domain/usecases/addLocalBrain';
+import {
+  AddLocalBrain,
+  AddLocalBrainParams,
+} from 'api-server/brain/domain/usecases/addLocalBrain';
 import { AddOrUpdateContact } from 'api-server/contact/domain/usecases/addOrUpdateContact';
 import {
   ILocalBrainDto,
@@ -14,7 +17,7 @@ export default class LocalDbAddLocalBrain implements AddLocalBrain {
     private readonly addOrUpdateContact: AddOrUpdateContact
   ) {}
 
-  add = async (brain: AddLocalBrain.Params): Promise<LocalBrainModel> => {
+  add = async (brain: AddLocalBrainParams): Promise<LocalBrainModel> => {
     // throw error if brain name contains any character other than letters, numbers, and underscores
     if (!/^[a-zA-Z0-9_]+$/.test(brain.name)) {
       throw new Error(

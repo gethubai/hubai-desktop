@@ -5,11 +5,16 @@ import { Controller } from '../../../main/protocols/controller';
 import { HttpResponse } from '../../../main/protocols/http';
 import { badRequest, ok } from '../../helpers';
 
+export type UpdateChatMemberStatusControllerRequest = IRequest & {
+  chatId: string;
+  isTyping?: boolean;
+};
+
 export class UpdateChatMemberStatusController implements Controller {
   constructor(private readonly chatRepository: IChatRepository) {}
 
   handle = async (
-    request: UpdateChatMemberStatusController.Request
+    request: UpdateChatMemberStatusControllerRequest
   ): Promise<HttpResponse> => {
     const chat = await this.chatRepository.get(request.chatId);
     const { userId } = request.context;
@@ -23,12 +28,5 @@ export class UpdateChatMemberStatusController implements Controller {
     });
 
     return ok('');
-  };
-}
-
-export namespace UpdateChatMemberStatusController {
-  export type Request = IRequest & {
-    chatId: string;
-    isTyping?: boolean;
   };
 }

@@ -1,14 +1,12 @@
+export type RemoveLocalBrainParams = {
+  id: string;
+};
+
+export type RemoveLocalBrainModel = {
+  success: boolean;
+  error?: string;
+};
+
 export interface RemoveLocalBrain {
-  remove: (params: RemoveLocalBrain.Params) => Promise<RemoveLocalBrain.Model>;
-}
-
-export namespace RemoveLocalBrain {
-  export type Params = {
-    id: string;
-  };
-
-  export type Model = {
-    success: boolean;
-    error?: string;
-  };
+  remove: (params: RemoveLocalBrainParams) => Promise<RemoveLocalBrainModel>;
 }

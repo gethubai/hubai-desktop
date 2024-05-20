@@ -8,8 +8,5 @@ export interface EventEmitter<Events extends EventsMap> {
   ): void;
 }
 
-export interface IServerEventEmitter
-  extends EventEmitter<ServerToClientEvents> {}
-
-export interface IClientEventEmitter
-  extends EventEmitter<ClientToServerEvents> {}
+export type IServerEventEmitter = EventEmitter<ServerToClientEvents>;
+export type IClientEventEmitter = EventEmitter<ClientToServerEvents>;

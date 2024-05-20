@@ -1,9 +1,7 @@
 import { LocalExtensionModel } from '../models/localExtension';
 
-export interface LoadLocalExtensions {
-  getExtensions: () => Promise<LoadLocalExtensions.Model[]>;
-}
+export type LoadLocalExtensionsModel = LocalExtensionModel;
 
-export namespace LoadLocalExtensions {
-  export type Model = LocalExtensionModel;
+export interface LoadLocalExtensions {
+  getExtensions: () => Promise<LoadLocalExtensionsModel[]>;
 }

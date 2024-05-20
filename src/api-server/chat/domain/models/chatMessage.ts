@@ -1,12 +1,16 @@
-import { IChatUserSettings } from './chat';
+export interface IChatUserSettings {
+  /** If true, the full chat history won't be sent to the brain  */
+  ignorePreviousMessages?: boolean;
+
+  /** Custom instructions for this brain */
+  instructions?: string;
+
+  [settingId: string]: any;
+}
 
 /* eslint-disable max-classes-per-file */
 export type ChatMessageSenderType = 'user' | 'brain' | 'assistant';
-export type ChatMessageType =
-  | 'text'
-  | 'image'
-  | 'voice'
-  | 'system';
+export type ChatMessageType = 'text' | 'image' | 'voice' | 'system';
 
 export enum ChatMessageStatus {
   WAITING = 'waiting',
@@ -84,7 +88,7 @@ export type ChatMessageModel = {
   chat: string;
 };
 
-export interface IRecipientSettings extends IChatUserSettings {}
+export type IRecipientSettings = IChatUserSettings;
 
 export class SendChatMessageModel {
   chatId: string;
@@ -101,7 +105,7 @@ export class SendChatMessageModel {
 
   status: ChatMessageStatus;
 
-  recipientSettings?: IRecipientSettings;
+  recipientSettings?: IChatUserSettings;
 
   constructor(chatId: string, senderId: string) {
     this.chatId = chatId;

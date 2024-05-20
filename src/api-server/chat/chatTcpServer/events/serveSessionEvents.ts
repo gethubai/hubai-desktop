@@ -4,86 +4,74 @@ import {
 } from 'api-server/chat/domain/models/chat';
 import { ChatMessageModel } from 'api-server/chat/domain/models/chatMessage';
 
-export namespace MessageUpdatedEvent {
-  export const Name = ':user/chat/:chatId/message/updated';
+export const MessageUpdatedEventName = ':user/chat/:chatId/message/updated';
+export type MessageUpdatedEventParams = {
+  prevMessage?: ChatMessageModel;
+  message: ChatMessageModel;
+};
+export type MessageUpdatedEventEmitter = (
+  params: MessageUpdatedEventParams
+) => void;
 
-  export type Params = {
-    prevMessage?: ChatMessageModel;
-    message: ChatMessageModel;
-  };
+export const MessageReceivedEventName = ':user/chat/:chatId/message/onReceived';
+export type MessageReceivedEventParams = ChatMessageModel;
+export type MessageReceivedEventCallback = () => void;
+export type MessageReceivedEventEmitter = (
+  params: MessageReceivedEventParams
+) => void;
 
-  export type Emitter = (params: Params) => void;
-}
+export const MessageReceivedNotificationEventName =
+  ':user/notification/:user/message/onReceived';
+export type MessageReceivedNotificationEventParams = ChatMessageModel;
+export type MessageReceivedNotificationEventCallback = () => void;
+export type MessageReceivedNotificationEventEmitter = (
+  params: MessageReceivedNotificationEventParams
+) => void;
 
-export namespace MessageReceivedEvent {
-  export const Name = ':user/chat/:chatId/message/onReceived';
-  export type Params = ChatMessageModel;
+export const MessageTranscribedEventName =
+  ':user/chat/:chatId/message/onTranscribed';
+export type MessageTranscribedEventParams = ChatMessageModel;
+export type MessageTranscribedEventEmitter = (
+  params: MessageTranscribedEventParams
+) => void;
 
-  export type Callback = () => void;
-  export type Emitter = (params: Params) => void;
-}
+export const MessageSentEventName = ':user/chat/:chatId/message/onSent';
+export type MessageSentEventParams = ChatMessageModel;
+export type MessageSentEventEmitter = (params: MessageSentEventParams) => void;
 
-export namespace MessageReceivedNotificationEvent {
-  export const Name = ':user/notification/:user/message/onReceived';
-  export type Params = ChatMessageModel;
+export const ChatUpdatedEventName = ':user/chat/:chatId/onUpdate';
+export type ChatUpdatedEventParams = ChatModel;
+export type ChatUpdatedEventCallback = () => void;
+export type ChatUpdatedEventEmitter = (params: ChatUpdatedEventParams) => void;
 
-  export type Callback = () => void;
-  export type Emitter = (params: Params) => void;
-}
+export const LeftChatEventName = ':user/chat/onLeft';
+export type LeftChatEventParams = ChatModel;
+export type LeftChatEventCallback = () => void;
+export type LeftChatEventEmitter = (params: LeftChatEventParams) => void;
 
-export namespace MessageTranscribedEvent {
-  export const Name = ':user/chat/:chatId/message/onTranscribed';
-  export type Params = ChatMessageModel;
+export const JoinChatEventName = ':user/chat/onJoined';
+export type JoinChatEventParams = ChatModel;
+export type JoinChatEventCallback = () => void;
+export type JoinChatEventEmitter = (params: JoinChatEventParams) => void;
 
-  export type Emitter = (params: Params) => void;
-}
-
-export namespace MessageSentEvent {
-  export const Name = ':user/chat/:chatId/message/onSent';
-  export type Params = ChatMessageModel;
-
-  export type Emitter = (params: Params) => void;
-}
-
-export namespace ChatUpdatedEvent {
-  export const Name = ':user/chat/:chatId/onUpdate';
-  export type Params = ChatModel;
-
-  export type Callback = () => void;
-  export type Emitter = (params: Params) => void;
-}
-
-export namespace LeftChatEvent {
-  export const Name = ':user/chat/onLeft';
-  export type Params = ChatModel;
-
-  export type Callback = () => void;
-  export type Emitter = (params: Params) => void;
-}
-
-export namespace JoinChatEvent {
-  export const Name = ':user/chat/onJoined';
-  export type Params = ChatModel;
-
-  export type Callback = () => void;
-  export type Emitter = (params: Params) => void;
-}
-
-export namespace ChatMemberStatusChangedEvent {
-  export const Name = ':user/chat/:chatId/statusChanged';
-  export type Params = { userId: string; status: ChatMemberStatus };
-
-  export type Callback = () => void;
-  export type Emitter = (params: Params) => void;
-}
+export const ChatMemberStatusChangedEventName =
+  ':user/chat/:chatId/statusChanged';
+export type ChatMemberStatusChangedEventParams = {
+  userId: string;
+  status: ChatMemberStatus;
+};
+export type ChatMemberStatusChangedEventCallback = () => void;
+export type ChatMemberStatusChangedEventEmitter = (
+  params: ChatMemberStatusChangedEventParams
+) => void;
 
 export interface SessionServerToClientEvents {
-  [MessageUpdatedEvent.Name]: MessageUpdatedEvent.Emitter;
-  [MessageReceivedEvent.Name]: MessageReceivedEvent.Emitter;
-  [MessageSentEvent.Name]: MessageSentEvent.Emitter;
-  [MessageTranscribedEvent.Name]: MessageTranscribedEvent.Emitter;
-  [ChatUpdatedEvent.Name]: ChatUpdatedEvent.Emitter;
-  [LeftChatEvent.Name]: LeftChatEvent.Emitter;
-  [JoinChatEvent.Name]: JoinChatEvent.Emitter;
-  [ChatMemberStatusChangedEvent.Name]: ChatMemberStatusChangedEvent.Emitter;
+  [MessageUpdatedEventName]: MessageUpdatedEventEmitter;
+  [MessageReceivedEventName]: MessageReceivedEventEmitter;
+  [MessageSentEventName]: MessageSentEventEmitter;
+  [MessageTranscribedEventName]: MessageTranscribedEventEmitter;
+  [ChatUpdatedEventName]: ChatUpdatedEventEmitter;
+  [LeftChatEventName]: LeftChatEventEmitter;
+  [JoinChatEventName]: JoinChatEventEmitter;
+  [ChatMemberStatusChangedEventName]: ChatMemberStatusChangedEventEmitter;
 }

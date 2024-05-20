@@ -1,5 +1,3 @@
-/* eslint-disable no-await-in-loop */
-/* eslint-disable no-restricted-syntax */
 import url from 'url';
 import IsDevelopment from 'utils/isDevelopment';
 import { IBrainServer } from './brainServer';
@@ -13,7 +11,7 @@ export async function loadLocalBrains() {
   const getBrainsUseCase = await makeLoadLocalBrains();
   const brains = await getBrainsUseCase.getBrains();
 
-  for (const brain of brains) {
+  brains.forEach(async (brain) => {
     try {
       const brainPath = getBrainMainPath(brain);
       const brainURL = IsDevelopment()
@@ -40,5 +38,5 @@ export async function loadLocalBrains() {
     } catch (e) {
       console.error('Error on loading brain module: ', e);
     }
-  }
+  });
 }

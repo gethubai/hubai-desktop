@@ -7,6 +7,11 @@ import { HttpResponse } from '../../../main/protocols/http';
 import { badRequest, ok } from '../../helpers';
 import { IRequest } from '../../../main/protocols/requestContext';
 
+export type AddChatMemberControllerRequest = IRequest & {
+  chatId: string;
+  member: ChatUser;
+};
+
 export class AddChatMemberController implements Controller {
   constructor(
     private readonly chatRepository: IChatRepository,
@@ -14,7 +19,7 @@ export class AddChatMemberController implements Controller {
   ) {}
 
   handle = async (
-    request: AddChatMemberController.Request
+    request: AddChatMemberControllerRequest
   ): Promise<HttpResponse> => {
     const chat = await this.chatRepository.get(request.chatId);
     if (!chat) return badRequest(new Error('Chat not found'));
@@ -37,12 +42,5 @@ export class AddChatMemberController implements Controller {
     chatServer.notifyJoinedChat(chat, request.member.id);
 
     return ok(chat);
-  };
-}
-
-export namespace AddChatMemberController {
-  export type Request = IRequest & {
-    chatId: string;
-    member: ChatUser;
   };
 }

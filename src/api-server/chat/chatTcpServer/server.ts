@@ -1,6 +1,9 @@
 import { ChatMemberStatus, ChatModel } from '../domain/models/chat';
-import { ChatCreatedEvent } from './events';
-import { MessagesReceivedAckEvent } from './events/clientSessionEvents';
+import { ChatCreatedEventName } from './events';
+import {
+  MessagesReceivedAckEventName,
+  MessagesReceivedAckEventParams,
+} from './events/clientSessionEvents';
 import {
   ChatMessageModel,
   ChatMessageStatus,
@@ -8,12 +11,12 @@ import {
 import makeUpdateMessageStatus from '../factories/usecases/updateMessageStatusFactory';
 import { IServerEventEmitter } from './pubsub/models/eventEmitter';
 import {
-  ChatUpdatedEvent,
-  JoinChatEvent,
-  LeftChatEvent,
-  MessageReceivedEvent,
-  MessageUpdatedEvent,
-  ChatMemberStatusChangedEvent,
+  ChatUpdatedEventName,
+  JoinChatEventName,
+  LeftChatEventName,
+  MessageReceivedEventName,
+  MessageUpdatedEventName,
+  ChatMemberStatusChangedEventName,
 } from './events/serveSessionEvents';
 import { IChatTransport } from './models/chatTransport';
 import { IChatServerClient } from './models/chatServerClient';
@@ -40,8 +43,8 @@ class ChatServer {
     this.onChatClientConnected(client);
 
     client.subscriber.subscribe(
-      MessagesReceivedAckEvent.Name,
-      async (event: MessagesReceivedAckEvent.Params) => {
+      MessagesReceivedAckEventName,
+      async (event: MessagesReceivedAckEventParams) => {
         const { messages } = event;
 
         const messageIds = messages.map((message) => message.id);
@@ -55,7 +58,7 @@ class ChatServer {
 
           this.eventEmitter.publish(
             {
-              name: MessageUpdatedEvent.Name,
+              name: MessageUpdatedEventName,
               chatId: message.chat,
             },
             { prevMessage: message, message: updatedMessage }
@@ -91,7 +94,7 @@ class ChatServer {
     message.recipients.forEach((recipient) => {
       this.eventEmitter.publish(
         {
-          name: MessageUpdatedEvent.Name,
+          name: MessageUpdatedEventName,
           chatId: message.chat,
           user: recipient.id,
         },
@@ -112,7 +115,7 @@ class ChatServer {
   ): void {
     this.eventEmitter.publish(
       {
-        name: MessageReceivedEvent.Name,
+        name: MessageReceivedEventName,
         chatId: message.chat,
         user: recipientId,
       },
@@ -123,7 +126,7 @@ class ChatServer {
   public notifyChatCreated(chat: ChatModel): void {
     chat.members.forEach((member) => {
       this.eventEmitter.publish(
-        { name: ChatCreatedEvent.Name, user: member.id },
+        { name: ChatCreatedEventName, user: member.id },
         chat
       );
     });
@@ -137,7 +140,7 @@ class ChatServer {
     chat.members.forEach((member) => {
       this.eventEmitter.publish(
         {
-          name: ChatMemberStatusChangedEvent.Name,
+          name: ChatMemberStatusChangedEventName,
           user: member.id,
           chatId: chat.id,
         },
@@ -149,18 +152,18 @@ class ChatServer {
   public notifyChatUpdated(chat: ChatModel): void {
     chat.members.forEach((member) => {
       this.eventEmitter.publish(
-        { name: ChatUpdatedEvent.Name, chatId: chat.id, user: member.id },
+        { name: ChatUpdatedEventName, chatId: chat.id, user: member.id },
         chat
       );
     });
   }
 
   public notifyLeftChat(chat: ChatModel, userId: string): void {
-    this.eventEmitter.publish({ name: LeftChatEvent.Name, user: userId }, chat);
+    this.eventEmitter.publish({ name: LeftChatEventName, user: userId }, chat);
   }
 
   public notifyJoinedChat(chat: ChatModel, userId: string): void {
-    this.eventEmitter.publish({ name: JoinChatEvent.Name, user: userId }, chat);
+    this.eventEmitter.publish({ name: JoinChatEventName, user: userId }, chat);
   }
 }
 

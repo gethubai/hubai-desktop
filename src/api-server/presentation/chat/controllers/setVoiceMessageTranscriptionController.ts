@@ -5,13 +5,18 @@ import { HttpResponse } from '../../../main/protocols/http';
 import { badRequest, ok } from '../../helpers';
 import { IRequest } from '../../../main/protocols/requestContext';
 
+export type SetVoiceMessageTranscriptionControllerRequest = IRequest & {
+  messageId: string;
+  transcription: string;
+};
+
 export class SetVoiceMessageTranscriptionController implements Controller {
   constructor(
     private readonly setMessageTranscription: SetVoiceMessageTranscription
   ) {}
 
   handle = async (
-    request: SetVoiceMessageTranscriptionController.Request
+    request: SetVoiceMessageTranscriptionControllerRequest
   ): Promise<HttpResponse> => {
     if (!request.transcription || !request.messageId) {
       return badRequest(
@@ -28,12 +33,5 @@ export class SetVoiceMessageTranscriptionController implements Controller {
     chatServer.notifyMessageUpdated(result, { ...result, text: undefined });
 
     return ok({ id: result.id });
-  };
-}
-
-export namespace SetVoiceMessageTranscriptionController {
-  export type Request = IRequest & {
-    messageId: string;
-    transcription: string;
   };
 }

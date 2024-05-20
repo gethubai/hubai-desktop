@@ -1,14 +1,8 @@
-import { ChatMessageModel, ChatMessageType } from './chatMessage';
-
-export interface IChatUserSettings {
-  /** If true, the full chat history won't be sent to the brain  */
-  ignorePreviousMessages?: boolean;
-
-  /** Custom instructions for this brain */
-  instructions?: string;
-
-  [settingId: string]: any;
-}
+import {
+  ChatMessageModel,
+  ChatMessageType,
+  IChatUserSettings,
+} from './chatMessage';
 
 export enum ChatMemberType {
   user = 'user',
