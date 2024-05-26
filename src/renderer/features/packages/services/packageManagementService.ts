@@ -69,15 +69,16 @@ export class PackageManagementService implements IPackageManagementService {
   isPackageVersionCompatible(
     version: PackageVersion
   ): PackageVersionCompatibilityResult {
-    let incompatibilityReason: string | undefined = undefined;
+    let incompatibilityReason: string | undefined;
     const currentAppVersion = window.electron.getAppVersion();
-    if (
-      !semver.satisfies(currentAppVersion, version.requiredEngineVersion)
-    ) {
+    if (!semver.satisfies(currentAppVersion, version.requiredEngineVersion)) {
       incompatibilityReason = `This package requires at least version ${version.requiredEngineVersion} of HubAI. \n\n Your current version is ${currentAppVersion}. \n\n Update HubAI to install this package.`;
     }
 
-    return { isCompatible: !incompatibilityReason, incompatibilityReason: incompatibilityReason };
+    return {
+      isCompatible: !incompatibilityReason,
+      incompatibilityReason,
+    };
   }
 
   startPackageDownload = async (
@@ -104,6 +105,13 @@ export class PackageManagementService implements IPackageManagementService {
             };
           }
 
+          let downloadResult: PackageDownloadResult = {
+            success: false,
+            error: new Error(
+              'A unexpected error ocurred while donwloading package'
+            ),
+          };
+
           this.downloadManager.downloadFile(downloadUrl.result.downloadLink, {
             filename: `${hubaiPackage.name}-${downloadUrl.result.version}.hext`,
             showBadge: true,
@@ -119,7 +127,7 @@ export class PackageManagementService implements IPackageManagementService {
             onCancel: () => {
               console.warn('PACKAGE download cancelled', hubaiPackage);
 
-              const downloadResult = {
+              downloadResult = {
                 success: false,
                 error: new Error('Download cancelled'),
               };
@@ -133,7 +141,7 @@ export class PackageManagementService implements IPackageManagementService {
             },
 
             onError: (error) => {
-              const downloadResult = {
+              downloadResult = {
                 success: false,
                 error,
               };
@@ -151,11 +159,12 @@ export class PackageManagementService implements IPackageManagementService {
               resolve(downloadResult);
             },
             onCompleted: (file) => {
-              const downloadResult = {
+              downloadResult = {
                 success: true,
                 downloadPath: file.path,
                 fileSize: file.fileSize,
                 fileMimeType: file.mimeType,
+                error: undefined,
               };
 
               this.eventEmitter.emit(
@@ -167,6 +176,8 @@ export class PackageManagementService implements IPackageManagementService {
               resolve(downloadResult);
             },
           });
+
+          return downloadResult;
         })
         .catch((error) => {
           console.log('PACKAGE download error', error, hubaiPackage);

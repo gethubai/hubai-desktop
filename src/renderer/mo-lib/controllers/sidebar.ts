@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import React from 'react';
 import { inject, injectable } from 'tsyringe';
 import { type ISidebarService, Controller } from '@hubai/core';
 
-export interface ISideBarController extends Partial<Controller> {}
+export type ISideBarController = Partial<Controller>;
 
 @injectable()
 export class SidebarController
@@ -17,5 +18,6 @@ export class SidebarController
 
   public initView() {}
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public readonly onClick = (event: React.MouseEvent) => {};
 }

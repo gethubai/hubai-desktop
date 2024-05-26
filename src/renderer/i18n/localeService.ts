@@ -15,6 +15,7 @@ export const DEFAULT_LOCALE_ID = `${APP_PREFIX}.defaultLocaleId`;
 export class LocaleService extends Component implements ILocaleService {
   state = {};
 
+  // eslint-disable-next-line no-template-curly-in-string
   private static LOCALIZE_REPLACED_WORD = '${i}';
 
   private _locales = new Map<string, ILocale>();
@@ -49,7 +50,7 @@ export class LocaleService extends Component implements ILocaleService {
   }
 
   public getLocale(id: string | null): ILocale | undefined {
-    if (!id) return;
+    if (!id) return undefined;
     return this._locales.get(id);
   }
 
@@ -117,7 +118,7 @@ export class LocaleService extends Component implements ILocaleService {
 
   public localize(
     sourceKey: string,
-    defaultValue: string = '',
+    defaultValue: string,
     ...args: string[]
   ): string {
     let result = defaultValue;

@@ -52,7 +52,9 @@ export function registerChatCompletionProvider() {
     provideCompletionItems(
       model: editor.ITextModel,
       position: Position,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       context: languages.CompletionContext,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       token: CancellationToken
     ): languages.ProviderResult<languages.CompletionList> {
       // get editor content before the pointer

@@ -6,6 +6,7 @@ import {
   ChatMessageViewModel,
   ISubMenuProps,
 } from '@hubai/core/esm/components';
+import React from 'react';
 
 export type AttachedFile = {
   id: string;
@@ -59,15 +60,15 @@ export class ChatWindowStateModel implements IChatWindowState {
   constructor(
     id: string,
     userId: string,
+    AuxiliaryBarTabs?: React.ComponentType,
+    AuxiliaryBar?: React.ComponentType,
+    assistant?: ChatUser,
     messages: ChatMessageViewModel[] = [],
     availableBrains: LocalBrainModel[] = [],
     selectedBrains: ChatUser[] = [],
     users: Record<string, ChatContextUser> | undefined = undefined,
-    isGroupChat: boolean = false,
-    files: AttachedFile[] = [],
-    AuxiliaryBarTabs?: React.ComponentType,
-    AuxiliaryBar?: React.ComponentType,
-    assistant?: ChatUser
+    isGroupChat = false,
+    files: AttachedFile[] = []
   ) {
     this.id = id;
     this.userId = userId;

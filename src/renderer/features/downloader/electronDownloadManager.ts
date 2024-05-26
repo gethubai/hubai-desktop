@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { injectable, singleton } from 'tsyringe';
 import { DownloadOptions, IDownloadManager } from './downloadManager';
 import { DownloadCompleted, DownloadProgress } from './models';

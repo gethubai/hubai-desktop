@@ -45,6 +45,7 @@ class MonacoService implements IMonacoService {
 
   private _container!: HTMLElement | null;
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor() {}
 
   public initWorkspace(container: HTMLElement) {
@@ -67,14 +68,15 @@ class MonacoService implements IMonacoService {
   private mergeEditorServices(overrides?: IEditorOverrideServices) {
     if (overrides) {
       const { services } = this;
-      for (const serviceId in overrides) {
+
+      Array.from(overrides).forEach((serviceId: any) => {
         if (serviceId) {
           const service = services.get(serviceId);
           if (service && overrides[serviceId]) {
             services.set(serviceId, overrides[serviceId]);
           }
         }
-      }
+      });
     }
   }
 

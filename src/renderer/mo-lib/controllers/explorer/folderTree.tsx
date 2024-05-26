@@ -119,29 +119,34 @@ class FolderTreeController extends Controller implements IFolderTreeController {
       NEW_FOLDER_COMMAND_ID,
       OPEN_TO_SIDE_COMMAND_ID,
     } = this.builtinService.getConstants();
+
+    if (!treeNode) {
+      return;
+    }
+
     switch (menuId) {
       case RENAME_COMMAND_ID: {
-        const { id: nodeId } = treeNode!;
+        const { id: nodeId } = treeNode;
         this.onRename(nodeId);
         break;
       }
       case DELETE_COMMAND_ID: {
-        const { id: nodeId } = treeNode!;
+        const { id: nodeId } = treeNode;
         this.onDelete(nodeId);
         break;
       }
       case NEW_FILE_COMMAND_ID: {
-        const { id } = treeNode!;
+        const { id } = treeNode;
         this.createTreeNode(FileTypes.File, id);
         break;
       }
       case NEW_FOLDER_COMMAND_ID: {
-        const { id } = treeNode!;
+        const { id } = treeNode;
         this.createTreeNode(FileTypes.Folder, id);
         break;
       }
       case OPEN_TO_SIDE_COMMAND_ID: {
-        this.onSelectFile(treeNode!);
+        this.onSelectFile(treeNode);
         break;
       }
       default: {
@@ -199,7 +204,7 @@ class FolderTreeController extends Controller implements IFolderTreeController {
         ...this.folderTreeService.getLoadedKeys(),
         treeNode.id.toString(),
       ]);
-      return new Promise<void>((resolve, reject) => {
+      return new Promise<void>((resolve) => {
         const callback = (node: IFolderTreeNodeProps) => {
           this.folderTreeService.update(node);
           resolve();

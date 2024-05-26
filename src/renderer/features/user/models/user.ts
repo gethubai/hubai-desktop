@@ -5,9 +5,9 @@ export interface ILocalUser {
 }
 
 export class LocalUserModel implements ILocalUser {
-  id: string = '';
+  id = '';
 
-  name: string = '';
+  name = '';
 
   defaultBrains: string[] = [];
 

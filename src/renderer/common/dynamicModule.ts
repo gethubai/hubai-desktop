@@ -6,13 +6,15 @@ interface Container {
   get(module: string): () => any;
 }
 
-declare const __webpack_init_sharing__: (shareScope: string) => Promise<void>;
-declare const __webpack_share_scopes__: { default: string };
+declare const __webpackInitSharing__: (shareScope: string) => Promise<void>;
+declare const __webpackShareScopes__: { default: string };
 
 function loadModule(url: string) {
   try {
     return import(/* webpackIgnore:true */ url);
-  } catch (e) {}
+  } catch (e) {
+    /* empty */
+  }
   return null;
 }
 
@@ -23,10 +25,10 @@ export function loadComponent(
 ) {
   return async () => {
     // eslint-disable-next-line no-undef
-    await __webpack_init_sharing__('default');
+    await __webpackInitSharing__('default');
     const container: Container = await loadModule(remoteUrl);
     // eslint-disable-next-line no-undef
-    await container.init(__webpack_share_scopes__.default);
+    await container.init(__webpackShareScopes__.default);
     const factory = await container.get(module);
     const Module = factory();
     return Module;
@@ -47,7 +49,7 @@ export const useFederatedComponent = (
   React.useEffect(() => {
     if (Component) setComponent(null);
     // Only recalculate when key changes
-  }, [key]);
+  }, [Component, key]);
 
   React.useEffect(() => {
     if (!Component) {
@@ -56,7 +58,7 @@ export const useFederatedComponent = (
       setComponent(Comp);
     }
     // key includes all dependencies (scope/module)
-  }, [Component, key]);
+  }, [Component, key, module, remoteUrl, scope]);
 
   return { Component };
 };

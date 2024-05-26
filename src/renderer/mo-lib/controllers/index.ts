@@ -8,6 +8,7 @@ export * from './problems';
 export * from './settings';
 export * from './statusBar';
 export * from './layout';
+// eslint-disable-next-line import/no-cycle
 export * from './explorer/explorer';
 export * from './explorer/folderTree';
 export * from './explorer/editorTree';

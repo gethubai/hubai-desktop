@@ -1,4 +1,4 @@
-import React from 'react';
+/* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 import { getBEMElement, prefixClaName } from '@hubai/core/esm/common/className';
 import { IPanel, IPanelItem } from '@hubai/core/esm/model/workbench/panel';
 import { Tabs } from '@hubai/core/esm/components/tabs';

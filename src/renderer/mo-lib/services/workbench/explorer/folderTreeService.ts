@@ -150,6 +150,7 @@ class FolderTreeService
    */
   private getRootFolderById(id: UniqueId) {
     const stateData = this.state.folderTree?.data || [];
+    // eslint-disable-next-line no-plusplus
     for (let index = 0; index < stateData.length; index++) {
       const folder = stateData[index];
       const treeInstance = new TreeViewUtil<IFolderTreeNodeProps>(folder);
@@ -249,6 +250,7 @@ class FolderTreeService
 
     if (currentIndex.node.fileType === FileTypes.File) {
       data.location =
+        // eslint-disable-next-line no-useless-escape
         currentIndex.node.location?.replace(/[^\/]+$/, `${data.name}`) || '';
 
       const parentNode = tree!.getNode(currentIndex.parent!)!;

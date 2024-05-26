@@ -12,15 +12,14 @@ import { getBuiltInColors } from './colorRegistry';
  */
 export function convertToCSSVars(colors: object) {
   let cssVars = '';
-  for (const id in colors) {
-    if (id) {
-      const color = colors[id];
-      if (color) {
-        const colorName = id.replace('.', '-');
-        cssVars += `--${colorName}: ${color}; \n`;
-      }
+
+  Object.keys(colors).forEach((id) => {
+    const color = colors[id as keyof typeof colors];
+    if (color) {
+      const colorName = id.replace('.', '-');
+      cssVars += `--${colorName}: ${color}; \n`;
     }
-  }
+  });
 
   return `
         :root {
@@ -91,22 +90,20 @@ export function getThemeData(
   const builtInColors = getBuiltInColors(theme);
   const colors = perfectColors(Object.assign(builtInColors, theme.colors));
 
-  const convertColors = {};
-  for (const colorId in colors) {
-    if (colorId) {
-      const colorHex: any = colors[colorId];
-      if (colorHex && typeof colorHex === 'object') {
-        convertColors[colorId] = colorHex.toString();
-      } else if (typeof colorHex === 'string') {
-        convertColors[colorId] = colorHex;
-      }
+  const convertColors: any = {};
+  Object.keys(colors).forEach((colorId) => {
+    const colorHex: any = colors[colorId];
+    if (colorHex && typeof colorHex === 'object') {
+      convertColors[colorId] = colorHex.toString();
+    } else if (typeof colorHex === 'string') {
+      convertColors[colorId] = colorHex;
     }
-  }
+  });
 
   const tokens = theme.tokenColors;
   const rules: MonacoEditor.ITokenThemeRule[] = [];
 
-  const updateRules = (s, token) => {
+  const updateRules = (s: any, token: any) => {
     const index = rules.findIndex((r) => r.token === s);
     if (index >= 0) {
       Object.assign(rules[index], {

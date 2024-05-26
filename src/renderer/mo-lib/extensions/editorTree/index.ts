@@ -1,10 +1,11 @@
 import { IExtension } from '@hubai/core';
+// eslint-disable-next-line import/no-cycle
 import molecule from 'mo';
 
 const ExtendsEditorTree: IExtension = {
   id: 'ExtendsEditorTree',
   name: 'Extends Editor Tree',
-  dispose() {},
+
   activate() {
     molecule.editorTree.onSelect((tabId, groupId) => {
       molecule.editor.setActive(groupId, tabId);
@@ -29,5 +30,8 @@ const ExtendsEditorTree: IExtension = {
       }
     });
   },
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  dispose() {},
 };
 export default ExtendsEditorTree;

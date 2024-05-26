@@ -97,7 +97,7 @@ class EditorTreeController extends Controller implements IEditorTreeController {
 
     switch (menu.id) {
       case EDITOR_MENU_CLOSE:
-        this.onClose(file?.id!, groupId);
+        this.onClose(file?.id, groupId);
         break;
 
       case EDITOR_MENU_CLOSE_OTHERS:
@@ -118,8 +118,10 @@ class EditorTreeController extends Controller implements IEditorTreeController {
     }
   };
 
-  public onClose = (tabId: UniqueId, groupId: UniqueId) => {
-    this.emit(EditorTreeEvent.onClose, tabId, groupId);
+  public onClose = (tabId: UniqueId | undefined, groupId: UniqueId) => {
+    if (tabId) {
+      this.emit(EditorTreeEvent.onClose, tabId, groupId);
+    }
   };
 
   public onSelect = (tabId: UniqueId, groupId: UniqueId) => {

@@ -30,13 +30,15 @@ class ExtensionService implements IExtensionService {
   private extensions: IExtension[] = [];
 
   private appContext: AppContext | undefined;
+
+  // eslint-disable-next-line @typescript-eslint/ban-types
   private _inactive: Function | undefined;
 
   /**
    * TODO: This property is used for marking the extensions were loaded
    * we are going to refactor this logic after redesign the Molecule lifecycle.
    */
-  private _isLoaded: boolean = false;
+  private _isLoaded = false;
 
   constructor(
     @inject('IColorThemeService')
@@ -144,7 +146,7 @@ class ExtensionService implements IExtensionService {
     return registerAction2(ActionClass);
   }
 
-  public executeCommand(id, ...args) {
+  public executeCommand(id: any, ...args: any[]) {
     this.monacoService.commandService.executeCommand(id, ...args);
   }
 
@@ -156,14 +158,14 @@ class ExtensionService implements IExtensionService {
       'IExtensionManagementService'
     );
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     extensions?.forEach((extension: IExtension, index: number) => {
       // Ignore the inactive or invalid extension
       if (!extension || this.isInactive(extension)) return;
 
-      const extensionContext = new ExtensionContext(new ExtensionPackageSettingsService(
-        extension,
-        packageManagement
-      ));
+      const extensionContext = new ExtensionContext(
+        new ExtensionPackageSettingsService(extension, packageManagement)
+      );
 
       if (extension.activate) {
         extension.activate(appContext, extensionContext);

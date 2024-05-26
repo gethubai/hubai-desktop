@@ -1,6 +1,7 @@
 /* eslint-disable promise/catch-or-return */
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
+// import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { component, localize } from '@hubai/core';
 import { Icon, Tooltip } from '@hubai/core/esm/components';
 import Markdown from 'renderer/components/markdown';
@@ -9,12 +10,12 @@ import { PackageState } from '../services/packageService';
 
 const { Button } = component;
 
-export type Props = PackageController & PackageState & {};
+export type Props = PackageController & PackageState;
 
 function PackageView({ item, actionButtons, error, onCaptchaToken }: Props) {
   const [content, setContent] = useState('Loading content...');
   const [onVerifyCallback, setOnVerifyCallback] = useState<() => void>();
-  const captchaRef = useRef(null);
+  const captchaRef = useRef<HCaptcha>(null);
 
   const onCaptchaVerify = useCallback(
     (token: string) => {
@@ -56,11 +57,10 @@ function PackageView({ item, actionButtons, error, onCaptchaToken }: Props) {
   return (
     <div className="package-container">
       <HCaptcha
-        sitekey={process.env.HCAPTCHA_SITE_KEY}
+        sitekey={process.env.HCAPTCHA_SITE_KEY ?? ''}
         onVerify={onCaptchaVerify}
         ref={captchaRef}
         size="invisible"
-        host="hubai.app"
       />
       <div className="package-header">
         <div className="package-icon">

@@ -1,10 +1,11 @@
 import { IExtension } from '@hubai/core';
+// eslint-disable-next-line import/no-cycle
 import molecule from 'mo';
 
 const ExtendsEditor: IExtension = {
   id: 'ExtendsEditor',
   name: 'Extends Editor',
-  dispose() {},
+
   activate() {
     molecule.editor.onCloseTab((tabId, groupId) => {
       if (tabId !== undefined && groupId !== undefined) {
@@ -36,6 +37,9 @@ const ExtendsEditor: IExtension = {
       }
     });
   },
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  dispose() {},
 };
 
 export default ExtendsEditor;

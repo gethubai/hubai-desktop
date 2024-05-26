@@ -1,8 +1,9 @@
 import SettingsMapForm from 'renderer/components/form/settingsMapForm';
 import { Button } from '@hubai/core/esm/components';
+import { ScrollBar } from '@hubai/core/esm/components/scrollBar';
+import { ISettingMap } from '@hubai/core';
 import { IBrainController } from '../controllers/type';
 import { IBrainState, LocalBrainViewModel } from '../models/brain';
-import { ScrollBar } from '@hubai/core/esm/components/scrollBar';
 
 export interface ILocalBrainWindowProps extends IBrainController, IBrainState {
   brain: LocalBrainViewModel;
@@ -28,7 +29,9 @@ function LocalBrainWindow({
     <ScrollBar>
       <div style={{ marginTop: -20, marginLeft: 10, height: '100%' }}>
         <div id="content_container">
-          <h2>{brain.displayName} v{brain.version}</h2>
+          <h2>
+            {brain.displayName} v{brain.version}
+          </h2>
           <span style={{ fontSize: 16 }}>{brain.description}</span>
         </div>
 
@@ -36,7 +39,7 @@ function LocalBrainWindow({
           <div id="settings_container" style={{ marginTop: 20 }}>
             <SettingsMapForm
               title="Brain Settings"
-              settingsMap={settingsMap}
+              settingsMap={settingsMap as ISettingMap[]}
               currentSettings={currentSettings}
               onSubmit={onSubmit}
             >

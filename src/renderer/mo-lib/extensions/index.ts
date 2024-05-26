@@ -1,5 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 
+// eslint-disable-next-line import/no-cycle
 import ExtendsFolderTree from './folderTree';
 // import { ExtendsActivityBar } from './activityBar';
 import ExtendsPanel from './panel';

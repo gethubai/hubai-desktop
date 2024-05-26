@@ -34,7 +34,7 @@ function BrainSidebar({
       <Content>
         <LocalPackageTree
           packages={brains}
-          onContextMenuClick={onContextMenuClick! as any}
+          onContextMenuClick={onContextMenuClick as any}
           onClick={onBrainClick as any}
           contextMenu={contextMenu}
         />

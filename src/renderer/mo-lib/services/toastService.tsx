@@ -29,7 +29,7 @@ export class ToastService implements IToastService {
   promise<TData = unknown, TError = unknown, TPending = unknown>(
     promise: Promise<TData> | (() => Promise<TData>),
     { pending, error, success }: ToastPromiseParams<TData, TError, TPending>,
-    options?: ToastOptions<{}> | undefined
+    options?: ToastOptions<unknown> | undefined
   ): Promise<TData> {
     return toast.promise(
       promise,
@@ -44,42 +44,47 @@ export class ToastService implements IToastService {
   ): string {
     return toast.success(
       content as any,
-      this.mergeWithDefaultOptions(options)
+      this.mergeWithDefaultOptions(options) as any
     ) as string;
   }
+
   info<TData = unknown>(
     content: ToastContent<TData>,
     options?: ToastOptions<TData> | undefined
   ): string {
     return toast.info(
       content as any,
-      this.mergeWithDefaultOptions(options)
+      this.mergeWithDefaultOptions(options) as any
     ) as string;
   }
+
   warn<TData = unknown>(
     content: ToastContent<TData>,
     options?: ToastOptions<TData> | undefined
   ): string {
     return toast.warn(
       content as any,
-      this.mergeWithDefaultOptions(options)
+      this.mergeWithDefaultOptions(options) as any
     ) as string;
   }
+
   error<TData = unknown>(
     content: ToastContent<TData>,
     options?: ToastOptions<TData> | undefined
   ): string {
     return toast.error(
       content as any,
-      this.mergeWithDefaultOptions(options)
+      this.mergeWithDefaultOptions(options) as any
     ) as string;
   }
+
   update<TData = unknown>(
     toastId: string,
     options: UpdateOptions<TData>
   ): void {
     toast.update(toastId, options as any);
   }
+
   mergeWithDefaultOptions<TData = unknown>(
     options?: ToastOptions<TData>
   ): toas.ToastOptions {
@@ -87,11 +92,13 @@ export class ToastService implements IToastService {
       ...(options || {}),
       theme: this.themeService.getColorThemeMode(),
       pauseOnFocusLoss: false,
-    } as ToastOptions;
+    } as toas.ToastOptions;
   }
+
   dismiss(toastId?: string | undefined): void {
     toast.dismiss(toastId);
   }
+
   isActive(toastId: string): boolean {
     return toast.isActive(toastId);
   }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { IExtension, IContributeType } from '@hubai/core';
 
 const en = require('./locales/en.json');

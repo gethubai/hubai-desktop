@@ -81,7 +81,7 @@ export class SelectLocaleAction extends Action2 {
 
       quickPick.activeItems = [picks[autoFocusIndex]];
       quickPick.canSelectMany = false;
-      quickPick.onDidAccept((_) => {
+      quickPick.onDidAccept(() => {
         const item = quickPick.activeItems[0];
         if (item) {
           onSelect(item, true);

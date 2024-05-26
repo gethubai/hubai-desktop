@@ -7,7 +7,7 @@ export function openFileSelectorInt(
   changeInput?.(fileInput);
 
   // register the change event to capture the selected files
-  fileInput.addEventListener('change', function () {
+  fileInput.addEventListener('change', () => {
     const { files } = fileInput;
     // perform the operation you want on the selected files
     // e.g., print the name of the first selected file
@@ -23,7 +23,7 @@ export function openFileSelectorInt(
 export function openFileSelector(
   onSelect: (file: File) => void,
   acceptFileTypes: string,
-  multiple: boolean = false
+  multiple = false
 ) {
   return openFileSelectorInt((fileInput: HTMLInputElement) => {
     fileInput.setAttribute('type', 'file');
@@ -34,7 +34,7 @@ export function openFileSelector(
 
 export function openImageFileSelector(
   onSelect: (file: File) => void,
-  multiple: boolean = false
+  multiple = false
 ) {
   return openFileSelector(onSelect, 'image/*', multiple);
 }

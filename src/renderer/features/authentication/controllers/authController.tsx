@@ -8,7 +8,7 @@ import { inject, injectable } from 'tsyringe';
 import { constants } from 'mo/services/builtinService/const';
 import { type IAuthService } from '../services/authService';
 
-export interface IAuthController extends Partial<Controller> {}
+export type IAuthController = Partial<Controller>;
 
 const contextMenuActions = {
   ACTION_SIGN_IN: 'auth.action.login',

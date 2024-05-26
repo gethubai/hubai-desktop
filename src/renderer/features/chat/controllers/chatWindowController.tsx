@@ -32,6 +32,7 @@ export default class ChatWindowController
   implements IChatWindowController, IDisposable
 {
   private brainService: IBrainManagementService;
+
   private readonly chatAssistantsManagement: IChatAssistantsManagement;
 
   public assistantService?: ChatAssistantService;
@@ -121,9 +122,9 @@ export default class ChatWindowController
   };
 
   public attachFile = (files: FileList): void => {
-    for (const file of files) {
+    Array.from(files).forEach((file) => {
       this.chatWindowService.attachFile(file);
-    }
+    });
   };
 
   public removeAttachedFile = (fileId: string) => {
@@ -253,6 +254,10 @@ export default class ChatWindowController
     message: SendChatMessageModel
   ): IRecipientSettings => {
     const settings: IRecipientSettings = {};
+    if (message) {
+      // workaround to bypass linting error
+      /* empty */
+    }
     // settings[message.to] = this.getBrainChatSettingsById(message.to);
 
     // TODO: Refactor this

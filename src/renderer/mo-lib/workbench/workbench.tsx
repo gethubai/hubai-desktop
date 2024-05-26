@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 import React, { useEffect, useCallback, useMemo } from 'react';
 import { container } from 'tsyringe';
 
@@ -109,7 +110,7 @@ export function WorkbenchView(props: IWorkbench & ILayout & ILayoutController) {
   useEffect(() => {
     // call onWorkbenchDidMount after the first render
     onWorkbenchDidMount?.();
-  }, []);
+  }, [onWorkbenchDidMount]);
 
   return (
     <div id={ID_APP} className={appClassName} tabIndex={0}>

@@ -22,6 +22,7 @@ class LayoutService extends Component<ILayout> implements ILayoutService {
     this.state = container.resolve(LayoutModel);
   }
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
   public onWorkbenchDidMount(callback: Function): void {
     this.subscribe(LayoutEvents.OnWorkbenchDidMount, callback);
   }

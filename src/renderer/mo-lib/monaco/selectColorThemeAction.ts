@@ -14,6 +14,26 @@ import { constants } from 'mo/services/builtinService/const';
 import { IColorThemeService } from '@hubai/core/esm/services';
 import { container } from 'tsyringe';
 
+function toEntries(
+  themes: Array<IColorTheme>,
+  label?: string
+): QuickPickInput<IColorTheme>[] {
+  const toEntry = (theme: IColorTheme): IColorTheme => ({
+    id: theme.id,
+    label: theme.label,
+    description: theme.description,
+  });
+  const sorter = (t1: IColorTheme, t2: IColorTheme) =>
+    t1.label?.localeCompare(t2.label);
+  const entries: QuickPickInput<IColorTheme>[] = themes
+    .map(toEntry)
+    .sort(sorter);
+  if (entries.length > 0 && label) {
+    entries.unshift({ type: 'separator', label });
+  }
+  return entries;
+}
+
 // eslint-disable-next-line import/prefer-default-export
 export class SelectColorThemeAction extends Action2 {
   static readonly ID = constants.ACTION_SELECT_THEME;
@@ -46,7 +66,6 @@ export class SelectColorThemeAction extends Action2 {
     const quickInputService = accessor.get(IQuickInputService);
     const themes = this.colorThemeService.getThemes();
     const currentTheme = this.colorThemeService.getColorTheme();
-
     const picks: QuickPickInput<IColorTheme>[] = [...toEntries(themes)];
 
     let selectThemeTimeout: number | undefined;
@@ -78,7 +97,8 @@ export class SelectColorThemeAction extends Action2 {
       );
       quickPick.activeItems = [picks[autoFocusIndex]];
       quickPick.canSelectMany = false;
-      quickPick.onDidAccept((_) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      quickPick.onDidAccept((_: any) => {
         const theme = quickPick.activeItems[0];
         if (theme) {
           selectTheme(theme, true);
@@ -88,7 +108,10 @@ export class SelectColorThemeAction extends Action2 {
         resolve();
       });
 
-      quickPick.onDidChangeActive((themes) => selectTheme(themes[0], false));
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      quickPick.onDidChangeActive((themes: IColorTheme[]) =>
+        selectTheme(themes[0], false)
+      );
       quickPick.onDidHide(() => {
         if (!isCompleted) {
           selectTheme(currentTheme, true);
@@ -99,24 +122,4 @@ export class SelectColorThemeAction extends Action2 {
       quickPick.show();
     });
   }
-}
-
-function toEntries(
-  themes: Array<IColorTheme>,
-  label?: string
-): QuickPickInput<IColorTheme>[] {
-  const toEntry = (theme: IColorTheme): IColorTheme => ({
-    id: theme.id,
-    label: theme.label,
-    description: theme.description,
-  });
-  const sorter = (t1: IColorTheme, t2: IColorTheme) =>
-    t1.label?.localeCompare(t2.label);
-  const entries: QuickPickInput<IColorTheme>[] = themes
-    .map(toEntry)
-    .sort(sorter);
-  if (entries.length > 0 && label) {
-    entries.unshift({ type: 'separator', label });
-  }
-  return entries;
 }

@@ -9,36 +9,41 @@ export default function Markdown(props: any) {
       {...props}
       remarkPlugins={[remarkGfm]}
       components={{
-        code({ node, inline, className, children, ...props }) {
+        code({ className, children }) {
           const match = /language-(\w+)/.exec(className || '');
-          return !inline && match ? (
-            <SyntaxHighlighter
-              {...props}
-              children={String(children).replace(/\n$/, '')}
-              language={match[1]}
-              PreTag="div"
-            />
+          return match ? (
+            <SyntaxHighlighter {...props} language={match[1]} PreTag="div">
+              {String(children).replace(/\n$/, '')}
+            </SyntaxHighlighter>
           ) : (
             <code {...props} className={className}>
               {children}
             </code>
           );
         },
-        img({ node, className, children, ...props }) {
+        img({ className }) {
           return (
             <img
               {...props}
+              alt=""
               className={className}
               style={{ maxWidth: '100%' }}
             />
           );
         },
-        a({ node, href, className, children, ...props }) {
+        a({ href, className, children }) {
           return (
             <a
               {...props}
               className={className}
+              role="button"
+              tabIndex={0}
               onClick={() => window.open(href, '_blank')}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  window.open(href, '_blank');
+                }
+              }}
             >
               {children}
             </a>

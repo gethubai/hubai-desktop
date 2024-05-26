@@ -7,7 +7,7 @@ export enum ExtensionEvent {
   onExtensionInstalled = 'extension.onInstalled',
 }
 
-export type LocalExtensionViewModel = LocalExtensionModel & {};
+export type LocalExtensionViewModel = LocalExtensionModel & object;
 
 export interface IExtensionListState {
   extensions: LocalExtensionViewModel[];

@@ -1,4 +1,5 @@
 import { BuiltInEditorTabDataType, IEditorTab, IExtension } from '@hubai/core';
+// eslint-disable-next-line import/no-cycle
 import molecule from 'mo';
 
 const ExtendsFolderTree: IExtension = {
@@ -56,6 +57,8 @@ const ExtendsFolderTree: IExtension = {
       molecule.folderTree.setExpandKeys(expandKeys);
     });
   },
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   dispose() {},
 };
 

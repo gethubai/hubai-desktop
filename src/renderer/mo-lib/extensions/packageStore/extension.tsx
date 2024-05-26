@@ -7,9 +7,9 @@ import './views/styles.scss';
 const { connect } = react;
 
 export class PackageStoreExtension implements IExtension {
-  id: string = 'packageStore';
+  id = 'packageStore';
 
-  name: string = 'PackageStore';
+  name = 'PackageStore';
 
   activate(context: AppContext): void {
     const service = new PackageStoreService();

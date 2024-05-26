@@ -1,6 +1,7 @@
 import { MonacoEditor } from '@hubai/core/esm/components/monaco';
 import { Tabs } from '@hubai/core/esm/components/tabs';
-import { IEditorGroup, IEditorOptions, IEditorController } from '@hubai/core';
+import { IEditorController } from 'mo/controllers';
+import { IEditorGroup, IEditorOptions } from '@hubai/core';
 import React, { memo, useEffect } from 'react';
 import { Menu } from '@hubai/core/esm/components/menu';
 import { useContextView } from '@hubai/core/esm/components/contextView';
@@ -43,9 +44,9 @@ export function EditorGroup(props: IEditorGroupProps & IEditorController) {
 
   const contextView = useContextView();
 
-  const handleTabContextMenu = (e: React.MouseEvent, tabItem) => {
-    const handleOnMenuClick = (e: React.MouseEvent, item) => {
-      onClickContextMenu?.(e, item, tabItem);
+  const handleTabContextMenu = (e: React.MouseEvent, tabItem: any) => {
+    const handleOnMenuClick = (event: React.MouseEvent, item: any) => {
+      onClickContextMenu?.(event, item, tabItem);
       contextView.hide();
     };
 
@@ -60,12 +61,25 @@ export function EditorGroup(props: IEditorGroupProps & IEditorController) {
     };
   });
 
+  const renderPane = (renderTab: any) => {
+    if (typeof renderTab.renderPane === 'function') {
+      return renderTab.renderPane(
+        {
+          ...renderTab.data,
+        },
+        renderTab,
+        group
+      );
+    }
+
+    return renderTab.renderPane;
+  };
+
   return (
     <div className={groupClassName}>
       <div className={groupHeaderClassName}>
         <div className={groupTabsClassName}>
           <Tabs
-            editable
             type="card"
             data={data}
             onMoveTab={onMoveTab}
@@ -87,17 +101,7 @@ export function EditorGroup(props: IEditorGroupProps & IEditorController) {
         {
           // Default we use monaco editor, but also you can customize by renderPanel() function or a react element
           tab?.renderPane ? (
-            typeof tab.renderPane === 'function' ? (
-              tab.renderPane(
-                {
-                  ...tab.data,
-                },
-                tab,
-                group
-              )
-            ) : (
-              tab.renderPane
-            )
+            renderPane(tab)
           ) : (
             <MonacoEditor
               options={{
@@ -111,9 +115,9 @@ export function EditorGroup(props: IEditorGroupProps & IEditorController) {
                 // This assignment will trigger moleculeCtx update, and subNodes update
                 onUpdateEditorIns?.(editorInstance, id!);
               }}
-              onChangeEditorProps={(preProps, props) => {
+              onChangeEditorProps={(preProps, newProps) => {
                 // Listener event for Editor property update
-                onChangeEditorProps?.(preProps, props);
+                onChangeEditorProps?.(preProps, newProps);
               }}
             />
           )

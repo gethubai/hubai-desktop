@@ -1,4 +1,5 @@
-import React, { memo } from 'react';
+/* eslint-disable jsx-a11y/aria-role */
+import { memo } from 'react';
 import {
   Breadcrumb,
   IBreadcrumbItemProps,

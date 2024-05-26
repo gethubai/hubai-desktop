@@ -28,7 +28,7 @@ const BrainSelector: React.FC<BrainSelectorProps> = ({
 }) => {
   const handleBrainChange = (brainId: string, capability: BrainCapability) => {
     const selectedBrain = availableBrains.find((b) => b.id === brainId);
-    onCapabilityBrainChanged(selectedBrain!, capability);
+    onCapabilityBrainChanged(selectedBrain as LocalBrainModel, capability);
   };
 
   // group the brains by type
@@ -43,7 +43,7 @@ const BrainSelector: React.FC<BrainSelectorProps> = ({
   const getCapabilityViewModel = (
     capability: string
   ): { name: string; icon: string } => {
-    const capabilities = {
+    const capabilities: any = {
       [BrainCapability.CONVERSATION]: { name: 'Conversation', icon: 'comment' },
       [BrainCapability.IMAGE_RECOGNITION]: {
         name: 'Image Recognition',
@@ -94,7 +94,10 @@ const BrainSelector: React.FC<BrainSelectorProps> = ({
             <Select
               value={selectedBrain?.id ?? ''}
               onSelect={(e, option) =>
-                handleBrainChange(option?.value!, capability as BrainCapability)
+                handleBrainChange(
+                  option?.value ?? '',
+                  capability as BrainCapability
+                )
               }
               placeholder={`${capabilityModel.name} Brain`}
             >

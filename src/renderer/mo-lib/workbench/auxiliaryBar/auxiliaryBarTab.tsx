@@ -15,6 +15,7 @@ export default function AuxiliaryBarTab({
   return (
     <ul className={tabsClassName}>
       {data?.map((item) => (
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events
         <li
           key={item.key}
           className={classNames(

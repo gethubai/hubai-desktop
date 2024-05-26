@@ -68,7 +68,9 @@ class StatusBarController extends Controller implements IStatusBarController {
     const { STATUS_BAR_HIDE_ID } = this.builtinService.getConstants();
     switch (menuId) {
       case STATUS_BAR_HIDE_ID:
-        this.menuBarController.updateStatusBar();
+        this.menuBarController.updateStatusBar?.();
+        break;
+      default:
         break;
     }
   };

@@ -2,7 +2,7 @@ import React from 'react';
 import { classNames } from '@hubai/core/esm/common/className';
 import { IActivityBarItem } from '@hubai/core/esm/model/workbench/activityBar';
 import { IMenuItemProps, Menu } from '@hubai/core/esm/components/menu';
-import { IActivityBarController } from '@hubai/core';
+import { IActivityBarController } from 'mo/controllers';
 
 import { Icon, Tooltip, useContextViewEle } from '@hubai/core/esm/components';
 import { KeybindingHelper } from '@hubai/core/esm/services/keybinding';
@@ -33,6 +33,7 @@ export function ActivityBarItem(
 
   const renderContextMenu = () => (
     <Menu
+      // eslint-disable-next-line no-use-before-define
       onClick={onClickMenuItem}
       role="menu"
       data={contextMenu.map((menu) => {
@@ -60,7 +61,7 @@ export function ActivityBarItem(
     contextView?.hide();
   };
 
-  const onClickItem = function (event) {
+  const onClickItem = (event: any) => {
     if (onClick) {
       onClick(props.id, props);
     }
@@ -76,16 +77,17 @@ export function ActivityBarItem(
   );
 
   return (
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events
     <li
-      id={id.toString()}
-      onClick={onClickItem}
+      data-id={data.id}
       className={classNames(
         className,
         itemClassName,
         checked ? itemCheckedClassName : '',
         disabled ? itemDisabledClassName : ''
       )}
-      data-id={data.id}
+      id={id.toString()}
+      onClick={onClickItem}
     >
       <Tooltip overlay={title} key={id} placement="right">
         {content}

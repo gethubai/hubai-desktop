@@ -4,7 +4,8 @@ import { Button, Input, Option, Select } from '@hubai/core/esm/components';
 import { ExtensionManagementService } from '../services/extensionManagement';
 import './styles.scss';
 
-export type InstallLocalExtensionWindowProps = ExtensionManagementService & {};
+export type InstallLocalExtensionWindowProps = ExtensionManagementService &
+  object;
 export function InstallLocalExtensionWindow({
   installPackage,
 }: InstallLocalExtensionWindowProps) {

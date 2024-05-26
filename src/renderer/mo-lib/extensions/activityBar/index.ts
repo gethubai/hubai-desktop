@@ -1,5 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import { AppContext, IExtension } from '@hubai/core';
+/* eslint-disable-next-line import/no-cycle */
 import molecule from 'mo';
 import { CommandQuickSideBarViewAction } from 'mo/monaco/quickToggleSideBarAction';
 
@@ -28,5 +29,6 @@ export const ExtendsActivityBar: IExtension = {
     });
   },
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   dispose() {},
 };
