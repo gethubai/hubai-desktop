@@ -36,6 +36,7 @@ module.exports = {
     'no-console': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     'no-await-in-loop': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off',
     'prettier/prettier': [
       'error',
       {
