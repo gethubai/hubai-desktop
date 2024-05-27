@@ -40,6 +40,19 @@ jobs:
         run: |
           npm run postinstall
 
+      - name: Set macOS certificate for code signing
+        if: matrix.os == 'macos-latest'
+        env:
+          CSC_LINK: ${{ secrets.APPLE_CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.APPLE_CSC_KEY_PASSWORD }}
+          CSC_INSTALLER_LINK: ${{ secrets.APPLE_CSC_INSTALLER_LINK }}
+          CSC_INSTALLER_KEY_PASSWORD: ${{ secrets.APPLE_CSC_INSTALLER_KEY_PASSWORD }}
+        run: |
+          echo "CSC_LINK=${{ secrets.APPLE_CSC_LINK }}" >> $GITHUB_ENV
+          echo "CSC_KEY_PASSWORD=${{ secrets.APPLE_CSC_KEY_PASSWORD }}" >> $GITHUB_ENV
+          echo "CSC_INSTALLER_LINK=${{ secrets.APPLE_CSC_INSTALLER_LINK }}" >> $GITHUB_ENV
+          echo "CSC_INSTALLER_KEY_PASSWORD=${{ secrets.APPLE_CSC_INSTALLER_KEY_PASSWORD }}" >> $GITHUB_ENV
+
       - name: npm release
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -47,10 +60,6 @@ jobs:
           AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
           AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
           APP_INSIGHTS_INSTRUMENTATION_KEY: ${{ secrets.APP_INSIGHTS_INSTRUMENTATION_KEY }}
-          CSC_LINK: ${{ matrix.os == 'macos-latest' && secrets.APPLE_CSC_LINK || '' }}
-          CSC_KEY_PASSWORD: ${{ matrix.os == 'macos-latest' && secrets.APPLE_CSC_KEY_PASSWORD || '' }}
-          CSC_INSTALLER_LINK: ${{ matrix.os == 'macos-latest' && secrets.APPLE_CSC_INSTALLER_LINK || '' }}
-          CSC_INSTALLER_KEY_PASSWORD: ${{ matrix.os == 'macos-latest' && secrets.APPLE_CSC_INSTALLER_KEY_PASSWORD || '' }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_ID_PASS: ${{ secrets.APPLE_ID_PASSWORD }}
           APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
