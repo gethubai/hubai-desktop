@@ -2,6 +2,8 @@
   "extends": "./tsconfig.json",
   "include": [
     "src/**/*",
-    ".eslintrc.js"
+    ".eslintrc.js",
+    ".erb/**/*",
+    "assets/assets.d.ts",
   ]
 }
