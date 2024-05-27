@@ -59,6 +59,8 @@ export function MapSettingToSchema(setting: ISettingMap): RJSFSchema {
     defaultValueParsed = defaultValue === 'true';
   }
 
+  const isSecret = !!setting.isSecret;
+
   function getEnumValues(): string[] | undefined {
     if (typeof enumValues === 'function') {
       return enumValues?.();
@@ -74,6 +76,7 @@ export function MapSettingToSchema(setting: ISettingMap): RJSFSchema {
     enum: getEnumValues(),
     description,
     originalName: name,
+    isSecret,
   };
 
   return property;
