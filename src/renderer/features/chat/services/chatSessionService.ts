@@ -9,10 +9,12 @@ import {
   SendChatMessageOptions,
 } from '@hubai/core';
 import { ISubMenuProps } from '@hubai/core/esm/components';
-import { IChatWindowService } from './chatWindowService';
-import { IChatSessionServer, SendMessage } from '../sdk/contracts';
 import { container } from 'tsyringe';
 import { ChatMessageModel } from 'api-server/chat/domain/models/chatMessage';
+import React from 'react';
+import { MessageUpdatedEventParams } from 'api-server/chat/chatTcpServer/events/serveSessionEvents';
+import { IChatWindowService } from './chatWindowService';
+import { IChatSessionServer, SendMessage } from '../sdk/contracts';
 
 export class ChatSessionService implements IChatSessionService {
   private readonly brainClientManager: IBrainClientManager;
@@ -25,6 +27,7 @@ export class ChatSessionService implements IChatSessionService {
       'IBrainClientManager'
     );
   }
+
   changeMemberSettings(memberId: string, settings: ChatMemberSetting): void {
     const member = this.getMembers().find((m) => m.id === memberId);
 
@@ -114,7 +117,9 @@ export class ChatSessionService implements IChatSessionService {
   }
 
   onMessageUpdated(callback: (message: ChatMessage) => void): void {
-    throw new Error('Method not implemented.');
+    this.sessionServer.onMessageUpdated((message) => {
+      callback(this.mapUpdatedMessageToChatMessage(message));
+    });
   }
 
   addAuxiliaryBar(
@@ -125,10 +130,31 @@ export class ChatSessionService implements IChatSessionService {
   }
 
   addPlusButtonAction(action: ISubMenuProps): void {
+    if (action) {
+      // workaround for linting
+      /* empty */
+    }
     throw new Error('Method not implemented.');
   }
 
   mapModelToChatMessage(message: ChatMessageModel): ChatMessage {
+    return {
+      id: message.id,
+      senderId: message.senderId,
+      recipients: message.recipients.map((r) => r.id),
+      sendDate: message.sendDate,
+      text: message.text?.body,
+      audio: message.voice?.file,
+      attachments: message.attachments,
+      hidden: message.hidden,
+      isSystemMessage: message.messageType === 'system',
+    };
+  }
+
+  mapUpdatedMessageToChatMessage(
+    messageUpdated: MessageUpdatedEventParams
+  ): ChatMessage {
+    const { message } = messageUpdated;
     return {
       id: message.id,
       senderId: message.senderId,

@@ -6,11 +6,21 @@ import { Controller } from '../../../main/protocols/controller';
 import { HttpResponse } from '../../../main/protocols/http';
 import { ok } from '../../helpers';
 
+export type CreateChatControllerRequest = IRequest & {
+  name: string;
+  members: {
+    id: string;
+    memberType: string;
+    handleMessageTypes?: string[];
+  }[];
+  isDirect?: boolean;
+};
+
 export class CreateChatController implements Controller {
   constructor(private readonly createChat: CreateChat) {}
 
   handle = async (
-    request: CreateChatController.Request
+    request: CreateChatControllerRequest
   ): Promise<HttpResponse> => {
     // TODO: Check if the user has permission?
     const chat = await this.createChat.create({
@@ -23,17 +33,5 @@ export class CreateChatController implements Controller {
     // I'm not sure if this should be here or not... maybe it should be in the usecase?
     chatServer.notifyChatCreated(chat);
     return ok(chat);
-  };
-}
-
-export namespace CreateChatController {
-  export type Request = IRequest & {
-    name: string;
-    members: {
-      id: string;
-      memberType: string;
-      handleMessageTypes?: string[];
-    }[];
-    isDirect?: boolean;
   };
 }

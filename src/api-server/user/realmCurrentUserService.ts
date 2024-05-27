@@ -11,11 +11,15 @@ export class RealmCurrentUserService implements ICurrentUserService {
       await this.authClient.attemptCachedLogin();
     }
 
+    if (!app.currentUser) {
+      throw new Error('User is not logged in');
+    }
+
     return {
-      id: app.currentUser!.id,
+      id: app.currentUser.id,
       profile: {
-        name: app.currentUser!.profile?.name ?? 'You',
-        email: app.currentUser!.profile?.email,
+        name: app.currentUser.profile?.name ?? 'You',
+        email: app.currentUser.profile?.email,
       },
     };
   }

@@ -10,7 +10,9 @@ import { EventEmitter } from '@hubai/core/esm/common/event';
 @injectable()
 export class UserShortcutService implements IUserShortcutService {
   private readonly shortcuts: IUserShortcut[];
+
   private readonly handlers: Record<string, Array<() => void>>;
+
   private readonly eventEmitter: EventEmitter;
 
   constructor(
@@ -164,9 +166,8 @@ export class UserShortcutService implements IUserShortcutService {
     const isRegistered = this.isRegistered(accelerator);
 
     if (isRegistered) {
-      const unregistrationResult = await this.globalShortcutService.unregister(
-        accelerator
-      );
+      const unregistrationResult =
+        await this.globalShortcutService.unregister(accelerator);
 
       if (!unregistrationResult) {
         console.error(

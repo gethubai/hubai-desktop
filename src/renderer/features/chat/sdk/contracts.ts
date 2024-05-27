@@ -1,7 +1,7 @@
 import {
-  ChatMemberStatusChangedEvent,
-  MessageReceivedEvent,
-  MessageUpdatedEvent,
+  ChatMemberStatusChangedEventParams,
+  MessageReceivedEventParams,
+  MessageUpdatedEventParams,
 } from 'api-server/chat/chatTcpServer/events/serveSessionEvents';
 import {
   ChatMemberType,
@@ -16,8 +16,8 @@ import {
   TextMessage,
   VoiceMessage,
 } from 'api-server/chat/domain/models/chatMessage';
-import { ChatCreatedEvent } from 'api-server/chat/chatTcpServer/events';
-import { CreateChat } from 'api-server/chat/domain/usecases/createChat';
+import { ChatCreatedEventParams } from 'api-server/chat/chatTcpServer/events';
+import { CreateChatParams } from 'api-server/chat/domain/usecases/createChat';
 import { IServerEventSubscriber } from 'api-server/chat/chatTcpServer/pubsub/models/eventSubscriber';
 
 export type ChatClientUser = {
@@ -44,13 +44,11 @@ export type SendMessage = {
 export interface IChatSessionServer {
   watch(): Promise<void>;
   unwatch(): void;
-  onMessageUpdated(listener: (data: MessageUpdatedEvent.Params) => void): void;
+  onMessageUpdated(listener: (data: MessageUpdatedEventParams) => void): void;
   onChatUpdated(listener: (data: ChatModel) => void): void;
-  onMessageReceived(
-    listener: (data: MessageReceivedEvent.Params) => void
-  ): void;
+  onMessageReceived(listener: (data: MessageReceivedEventParams) => void): void;
   onMemberStatusChanged(
-    listener: (data: ChatMemberStatusChangedEvent.Params) => void
+    listener: (data: ChatMemberStatusChangedEventParams) => void
   ): void;
   sendMessage(options: SendMessage): Promise<void>;
   sendAudio(audio: RawVoiceMessage): Promise<VoiceMessage>;
@@ -92,11 +90,11 @@ export interface IChatClient {
   getSubscriber(): IServerEventSubscriber;
   session(sessionId: string): IChatSessionServer;
   removeSession(session: IChatSessionServer): void;
-  onChatCreated(listener: (params: ChatCreatedEvent.Params) => void): void;
+  onChatCreated(listener: (params: ChatCreatedEventParams) => void): void;
   onChatUpdated(listener: (chat: ChatModel) => void): void;
   onJoinedChat(listener: (chat: ChatModel) => void): void;
   onLeftChat(listener: (chat: ChatModel) => void): void;
-  newChat(options: CreateChat.Params): Promise<ChatModel>;
+  newChat(options: CreateChatParams): Promise<ChatModel>;
   removeChat(id: string): Promise<void>;
 
   chats(filters?: ChatListFilters): Promise<ChatModel[]>;

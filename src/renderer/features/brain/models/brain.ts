@@ -7,7 +7,7 @@ export enum BrainEvent {
   onBrainUninstalled = 'brain.onUninstalled',
 }
 
-export type LocalBrainViewModel = LocalBrainModel & {};
+export type LocalBrainViewModel = LocalBrainModel & object;
 
 export interface IBrainState {
   brains: LocalBrainViewModel[];

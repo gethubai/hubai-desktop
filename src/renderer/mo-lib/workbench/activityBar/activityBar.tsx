@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-expressions */
 import React, { useCallback, useMemo } from 'react';
 
+import { IActivityBarController } from 'mo/controllers';
 import {
   IActivityBar,
-  IActivityBarController,
   IActivityBarItem,
   IActivityMenuItemProps,
   type UniqueId,
@@ -83,6 +83,7 @@ export function ActivityBar(props: IActivityBar & IActivityBarController) {
   };
 
   const renderContextMenu = () => (
+    // eslint-disable-next-line no-use-before-define
     <Menu role="menu" onClick={onClickMenuItem} data={contextMenu} />
   );
 
@@ -93,11 +94,11 @@ export function ActivityBar(props: IActivityBar & IActivityBarController) {
       onContextMenuClick?.(e, item);
       contextView?.hide();
     },
-    [contextMenu, onContextMenuClick, contextView]
+    [onContextMenuClick, contextView]
   );
 
   const handleRightClick = useCallback(
-    (e) => {
+    (e: any) => {
       e.preventDefault();
       e.stopPropagation();
       if (!contextView) return;

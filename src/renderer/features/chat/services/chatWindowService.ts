@@ -18,8 +18,8 @@ import { Component, connect } from '@hubai/core/esm/react';
 import AuxiliaryBarTab from 'mo/workbench/auxiliaryBar/auxiliaryBarTab';
 import AuxiliaryBar from 'mo/workbench/auxiliaryBar/auxiliaryBar';
 import {
-  ChatMemberStatusChangedEvent,
-  MessageUpdatedEvent,
+  ChatMemberStatusChangedEventParams,
+  MessageUpdatedEventParams,
 } from 'api-server/chat/chatTcpServer/events/serveSessionEvents';
 import { IDisposable } from '@hubai/core/esm/monaco/common';
 import { ChatMessageViewModel } from '@hubai/core/esm/components';
@@ -28,11 +28,11 @@ import { IContactService } from 'renderer/features/contact/models/service';
 import generateUniqueId from 'renderer/common/uniqueIdGenerator';
 import { stripIndent } from 'renderer/common/stringUtils';
 import { prettifyFileSize } from 'renderer/common/fileUtils';
+import { IAuxiliaryData } from '@hubai/core';
 import { ChatWindowStateModel, IChatWindowState } from '../models/chatWindow';
 import { type IChatClient, IChatSessionServer } from '../sdk/contracts';
 import ChatAuxiliaryBarService from './chatAuxiliaryBarService';
 import { ChatAuxiliaryBarController } from '../controllers/chatAuxiliaryBarController';
-import { IAuxiliaryData } from '@hubai/core';
 
 export interface IChatWindowService
   extends Component<IChatWindowState>,
@@ -77,17 +77,17 @@ export class ChatWindowService
       container.resolve<ILocalUserService>('ILocalUserService');
     this.contactService = container.resolve('IContactService');
     this.state = new ChatWindowStateModel(
-      chat.id,
-      this.userService.getUser().id,
-      [],
-      this.brainService.getPackages(),
-      chat.members.filter((m) => m.memberType === ChatMemberType.brain),
-      undefined,
-      !chat.isDirect,
-      [],
-      undefined,
-      undefined,
-      chat.members.find((m) => m.memberType === ChatMemberType.assistant)
+      chat.id, // id
+      this.userService.getUser().id, // userId
+      undefined, // AuxiliaryBarTabs
+      undefined, // AuxiliaryBar
+      chat.members.find((m) => m.memberType === ChatMemberType.assistant), // assistant
+      [], // messages
+      this.brainService.getPackages(), // availableBrains
+      chat.members.filter((m) => m.memberType === ChatMemberType.brain), // selectedBrains
+      undefined, // users
+      !chat.isDirect, // isGroupChat
+      [] // files
     );
     this.chatClient = container.resolve<IChatClient>('IChatClient');
     this.initServer();
@@ -174,7 +174,7 @@ export class ChatWindowService
   async onMessageUpdated({
     prevMessage,
     message,
-  }: MessageUpdatedEvent.Params): Promise<void> {
+  }: MessageUpdatedEventParams): Promise<void> {
     this.updateMessage(message);
 
     // message transcribed
@@ -206,7 +206,10 @@ export class ChatWindowService
       Object.keys(user.settings).length &&
       newSettingsJson !== originalInstructions
     ) {
-      console.log('Member settings changed', { originalInstructions, newSettingsJson });
+      console.log('Member settings changed', {
+        originalInstructions,
+        newSettingsJson,
+      });
       this.getSessionServer().addMember(user);
     }
   }
@@ -214,7 +217,7 @@ export class ChatWindowService
   onMemberStatusChanged({
     userId,
     status,
-  }: ChatMemberStatusChangedEvent.Params): void {
+  }: ChatMemberStatusChangedEventParams): void {
     const { users } = this.state;
 
     if (!users[userId]) {
@@ -260,7 +263,7 @@ export class ChatWindowService
         size: prettifyFileSize(a.size),
         mimeType: a.mimeType,
       })),
-      sentAt: message.sendDate,
+      sentAt: new Date(message.sendDate),
       senderDisplayName: sender.name,
       messageType: isSelf ? 'request' : 'response',
       status: message.status,
@@ -336,8 +339,8 @@ export class ChatWindowService
   }
 
   dispose(): void {
-    this.state = null;
+    this.state = {} as IChatWindowState;
     this.chatSessionServer.dispose();
-    this.chatSessionServer = null;
+    this.chatSessionServer = {} as IChatSessionServer;
   }
 }

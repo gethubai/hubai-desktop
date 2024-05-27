@@ -1,24 +1,25 @@
 import { ChatMessageModel } from 'api-server/chat/domain/models/chatMessage';
 
-export namespace MessagesReceivedAckEvent {
-  export const Name = 'chat/?/message/receivedAck';
-  export type Params = {
-    messages: ChatMessageModel[];
-  };
-  export type Emitter = (params: Params) => void;
-}
+export const MessagesReceivedAckEventName = 'chat/?/message/receivedAck';
+export type MessagesReceivedAckEventParams = {
+  messages: ChatMessageModel[];
+};
+export type MessagesReceivedAckEventEmitter = (
+  params: MessagesReceivedAckEventParams
+) => void;
 
-export namespace TranscribeVoiceMessageEvent {
-  export const Name = 'chat/?/message/transcribeVoice';
-  export type Params = {
-    message: ChatMessageModel;
-    transcription: string;
-  };
-  export type Callback = () => void;
-  export type Emitter = (params: Params, callback?: Callback) => void;
-}
+export const TranscribeVoiceMessageEventName = 'chat/?/message/transcribeVoice';
+export type TranscribeVoiceMessageEventParams = {
+  message: ChatMessageModel;
+  transcription: string;
+};
+export type TranscribeVoiceMessageEventCallback = () => void;
+export type TranscribeVoiceMessageEventEmitter = (
+  params: TranscribeVoiceMessageEventParams,
+  callback?: TranscribeVoiceMessageEventCallback
+) => void;
 
 export interface SessionClientToServerEvents {
-  [MessagesReceivedAckEvent.Name]: MessagesReceivedAckEvent.Emitter;
-  [TranscribeVoiceMessageEvent.Name]: TranscribeVoiceMessageEvent.Emitter;
+  [MessagesReceivedAckEventName]: MessagesReceivedAckEventEmitter;
+  [TranscribeVoiceMessageEventName]: TranscribeVoiceMessageEventEmitter;
 }

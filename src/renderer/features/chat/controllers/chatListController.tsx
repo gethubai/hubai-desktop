@@ -12,7 +12,7 @@ import {
 } from '@hubai/core';
 import { container } from 'tsyringe';
 
-import { CreateChat } from 'api-server/chat/domain/usecases/createChat';
+import { CreateChatParams } from 'api-server/chat/domain/usecases/createChat';
 import { ILocalUserService } from 'renderer/features/user/services/userService';
 import {
   ChatMemberType,
@@ -23,6 +23,7 @@ import { IDisposable } from '@hubai/core/esm/monaco';
 import { getThemeData } from 'mo/services/theme/helper';
 import { ChatTreeItemProps } from 'renderer/components/chatTree';
 
+import { ISubMenuProps } from '@hubai/core/esm/components';
 import { ChatListService } from '../services/chatListService';
 import { IChatListController } from './type';
 import { ChatListFilters, IChatClient } from '../sdk/contracts';
@@ -31,7 +32,6 @@ import { IChatItem } from '../models/chat';
 import ChatWindowController from './chatWindowController';
 import { ChatWindowService } from '../services/chatWindowService';
 import ChatView from '../workbench/chatView';
-import { ISubMenuProps } from '@hubai/core/esm/components';
 
 const { connect } = react;
 
@@ -39,7 +39,7 @@ export type ChatListSettings = {
   chatMemberId?: string;
   onlyDirectMessages?: boolean;
   onlyGroupMessages?: boolean;
-  createChatFactory?: () => CreateChat.Params;
+  createChatFactory?: () => CreateChatParams;
   isDefaultSidebar?: boolean;
   mapChatItem?: (chat: IChatItem) => Omit<ChatTreeItemProps, 'id'>;
   allowAssistants?: boolean;
@@ -170,7 +170,7 @@ export default class ChatListController
     const user = this.localUserService.getUser();
 
     // TODO: Get default brains from settings
-    const createOptions: CreateChat.Params = {
+    const createOptions: CreateChatParams = {
       ...this.listSettings.createChatFactory?.(),
       initiator: user.id,
     };
@@ -203,7 +203,7 @@ export default class ChatListController
 
   private async selectOrOpenChatWindow(chat: IChatItem): Promise<void> {
     let renderPane;
-    let disposables: IDisposable[];
+    let disposables: IDisposable[] = [];
     if (!this.editorService.isOpened(chat.id)) {
       const chatInstance = await this.chatClient.chat(chat.id.toString());
 
@@ -269,7 +269,7 @@ export default class ChatListController
   };
 
   public onNewChatClick = (menuId: string) => {
-    let assistantId = undefined;
+    let assistantId;
     if (
       menuId &&
       menuId !== 'newChat' &&

@@ -1,17 +1,15 @@
 import { ChatMessageModel, ChatMessageStatus } from '../models/chatMessage';
 
+// Id of the message
+export type UpdateMessageStatusParams = {
+  messageIds: string[];
+  newStatus: ChatMessageStatus;
+};
+
+export type UpdateMessageStatusModel = ChatMessageModel[];
+
 export interface UpdateMessageStatus {
   update: (
-    params: UpdateMessageStatus.Params
-  ) => Promise<UpdateMessageStatus.Model>;
-}
-
-export namespace UpdateMessageStatus {
-  // Id of the message
-  export type Params = {
-    messageIds: string[];
-    newStatus: ChatMessageStatus;
-  };
-
-  export type Model = ChatMessageModel[];
+    params: UpdateMessageStatusParams
+  ) => Promise<UpdateMessageStatusModel>;
 }

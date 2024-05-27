@@ -24,6 +24,18 @@ import { Controller } from '../../../main/protocols/controller';
 import { HttpResponse } from '../../../main/protocols/http';
 import { badRequest, ok } from '../../helpers';
 
+export type SendMessageControllerRequest = IRequest & {
+  chatId: string;
+  text?: TextMessage;
+  image?: ImageMessage;
+  voice?: VoiceMessage;
+  attachments?: RawMessageAttachment[];
+  recipientSettings: IRecipientSettings;
+  hidden?: boolean;
+  files?: Express.Multer.File[];
+  isSystemMessage?: boolean;
+};
+
 export class SendMessageController implements Controller {
   constructor(
     private readonly chatRepository: IChatRepository,
@@ -32,7 +44,7 @@ export class SendMessageController implements Controller {
   ) {}
 
   handle = async (
-    request: SendMessageController.Request
+    request: SendMessageControllerRequest
   ): Promise<HttpResponse> => {
     const chat = await this.chatRepository.get(request.chatId);
     const senderId = request.context.userId;
@@ -112,19 +124,5 @@ export class SendMessageController implements Controller {
       };
 
     return lastActivity;
-  };
-}
-
-export namespace SendMessageController {
-  export type Request = IRequest & {
-    chatId: string;
-    text?: TextMessage;
-    image?: ImageMessage;
-    voice?: VoiceMessage;
-    attachments?: RawMessageAttachment[];
-    recipientSettings: IRecipientSettings;
-    hidden?: boolean;
-    files?: Express.Multer.File[];
-    isSystemMessage?: boolean;
   };
 }

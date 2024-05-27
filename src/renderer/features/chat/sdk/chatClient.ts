@@ -1,14 +1,14 @@
 import { ChatModel } from 'api-server/chat/domain/models/chat';
-import { ChatCreatedEvent } from 'api-server/chat/chatTcpServer/events';
+import { ChatCreatedEventName } from 'api-server/chat/chatTcpServer/events';
 import { ChatServerConfigs, ServerPort } from 'api-server/consts';
-import { CreateChat } from 'api-server/chat/domain/usecases/createChat';
+import { CreateChatParams } from 'api-server/chat/domain/usecases/createChat';
 import { IServerEventSubscriber } from 'api-server/chat/chatTcpServer/pubsub/models/eventSubscriber';
 import { IClientEventEmitter } from 'api-server/chat/chatTcpServer/pubsub/models/eventEmitter';
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import {
-  ChatUpdatedEvent,
-  JoinChatEvent,
-  LeftChatEvent,
+  ChatUpdatedEventName,
+  JoinChatEventName,
+  LeftChatEventName,
 } from 'api-server/chat/chatTcpServer/events/serveSessionEvents';
 import { MqttClientEventEmitter } from 'api-server/chat/chatTcpServer/mqtt/pubsub/clientEventEmitter';
 import { MqttServerEventSubscriber } from 'api-server/chat/chatTcpServer/mqtt/pubsub/serverEventSubscriber';
@@ -55,26 +55,26 @@ export class ChatClient implements IChatClient {
     this.httpClient.defaults.headers.common['User-Id'] = this.user.id;
     this.initMqtt();
 
-    this.subscriber.subscribeToUserEvent(ChatCreatedEvent.Name, (params) => {
-      this.callListeners(ChatCreatedEvent.Name, params);
+    this.subscriber.subscribeToUserEvent(ChatCreatedEventName, (params) => {
+      this.callListeners(ChatCreatedEventName, params);
     });
 
-    this.subscriber.subscribeToUserEvent(JoinChatEvent.Name, (params) => {
-      this.callListeners(JoinChatEvent.Name, params);
+    this.subscriber.subscribeToUserEvent(JoinChatEventName, (params) => {
+      this.callListeners(JoinChatEventName, params);
     });
 
-    this.subscriber.subscribeToUserEvent(LeftChatEvent.Name, (params) => {
-      this.callListeners(LeftChatEvent.Name, params);
+    this.subscriber.subscribeToUserEvent(LeftChatEventName, (params) => {
+      this.callListeners(LeftChatEventName, params);
     });
 
     this.subscriber.subscribe(
       {
-        name: ChatUpdatedEvent.Name,
+        name: ChatUpdatedEventName,
         user: this.user.id,
         chatId: '+', // wildcard to match all chats
       },
       (params) => {
-        this.callListeners(ChatUpdatedEvent.Name, params);
+        this.callListeners(ChatUpdatedEventName, params);
       }
     );
   };
@@ -124,22 +124,22 @@ export class ChatClient implements IChatClient {
   };
 
   onChatCreated = (listener: (params: ChatModel) => void): void => {
-    this.addListener(ChatCreatedEvent.Name, listener);
+    this.addListener(ChatCreatedEventName, listener);
   };
 
   onChatUpdated(listener: (params: ChatModel) => void): void {
-    this.addListener(ChatUpdatedEvent.Name, listener);
+    this.addListener(ChatUpdatedEventName, listener);
   }
 
   onJoinedChat = (listener: (params: ChatModel) => void): void => {
-    this.addListener(JoinChatEvent.Name, listener);
+    this.addListener(JoinChatEventName, listener);
   };
 
   onLeftChat = (listener: (chat: ChatModel) => void): void => {
-    this.addListener(LeftChatEvent.Name, listener);
+    this.addListener(LeftChatEventName, listener);
   };
 
-  newChat = (options: CreateChat.Params): Promise<ChatModel> => {
+  newChat = (options: CreateChatParams): Promise<ChatModel> => {
     return this.post<ChatModel>(`/chats`, {
       name: options.name,
       members: options.members,

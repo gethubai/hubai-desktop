@@ -1,4 +1,4 @@
-/* eslint global-require: off, no-console: off, promise/always-return: off */
+/* eslint global-require: off */
 
 /**
  * This module executes inside of electron's main process. You can start
@@ -11,7 +11,15 @@
 import * as Sentry from '@sentry/electron/main';
 import path from 'path';
 import '../data/realm/app';
-import { app, BrowserWindow, shell, ipcMain, protocol, dialog } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  shell,
+  ipcMain,
+  protocol,
+  dialog,
+  net,
+} from 'electron';
 import { autoUpdater } from 'electron-updater';
 import contextMenu from 'electron-context-menu';
 
@@ -43,7 +51,7 @@ import '../api-server/authentication/ipc/mainApi';
 import '../api-server/user/ipc/mainApi';
 import { registerShortcutsHandlersForWindow } from './ipc/globalShortcutManager/mainApi';
 
-const isDevelopment = process.env.NODE_ENV === 'development'
+const isDevelopment = process.env.NODE_ENV === 'development';
 
 // If app.setPath('userData', '/path/to/data') is to be used, move Sentry.init to after path is set
 if (!isDevelopment && process.env.SENTRY_DSN) {
@@ -90,6 +98,7 @@ class AppUpdater {
           typeof releaseNotes === 'string'
             ? releaseNotes
             : `Version ${version} is available`;
+
         dialog
           .showMessageBox({
             type: 'info',
@@ -103,6 +112,9 @@ class AppUpdater {
           })
           .then((returnValue) => {
             if (returnValue.response === 0) autoUpdater.quitAndInstall();
+          })
+          .catch((error) => {
+            console.error('Error occurred during update:', error);
           });
       }
     );
@@ -239,15 +251,10 @@ app.on('window-all-closed', () => {
 });
 
 /* Prevents opening external links inside the application */
-app.on('web-contents-created', (createEvent, contents) => {
+app.on('web-contents-created', (_, contents) => {
   contents.on('will-attach-webview', (attachEvent) => {
     console.log("Blocked by 'will-attach-webview'");
     attachEvent.preventDefault();
-  });
-
-  contents.on('new-window', (newEvent) => {
-    console.log("Blocked by 'new-window'", newEvent);
-    newEvent.preventDefault();
   });
 
   contents.on('will-navigate', (newEvent) => {
@@ -277,31 +284,32 @@ console.log('path:', {
   exe: app.getPath('exe'),
 });
 
+const showTelemetryDialog = async () => {
+  const result = await dialog.showMessageBox({
+    type: 'question',
+    buttons: ['Yes, please', 'No, thanks'],
+    defaultId: 0,
+    cancelId: 1,
+    title: 'Collect Anonymous Telemetry Data',
+    message: 'Help Improve Our App!',
+    detail:
+      'We’d like to collect anonymous telemetry data to better understand how our app is used and identify areas for improvement.\n This data is entirely anonymous, strictly used for improvement purposes, and does not include any personal or sensitive information.',
+  });
+
+  if (result.response === 0) {
+    console.log('User agreed to send telemetry data');
+    userSettingsStorage.setSetting('sendTelemetryData', true);
+  } else {
+    console.log('User declined to send telemetry data');
+    userSettingsStorage.setSetting('sendTelemetryData', false);
+  }
+};
+
 const startInstrumentation = async () => {
-  let canSendTelemetryData = userSettingsStorage.get('sendTelemetryData');
+  const canSendTelemetryData = userSettingsStorage.get('sendTelemetryData');
 
   if (canSendTelemetryData === undefined) {
-    const options = {
-      type: 'question',
-      buttons: ['Yes, please', 'No, thanks'],
-      defaultId: 0,
-      cancelId: 1,
-      title: 'Collect Anonymous Telemetry Data',
-      message: 'Help Improve Our App!',
-      detail:
-        'We’d like to collect anonymous telemetry data to better understand how our app is used and identify areas for improvement.\n This data is entirely anonymous, strictly used for improvement purposes, and does not include any personal or sensitive information.',
-    };
-
-    const result = await dialog.showMessageBox(null, options);
-
-    canSendTelemetryData = result.response === 0;
-    userSettingsStorage.setSetting('sendTelemetryData', canSendTelemetryData);
-
-    if (canSendTelemetryData) {
-      console.log('User agreed to send telemetry data');
-    } else {
-      console.log('User declined to send telemetry data');
-    }
+    showTelemetryDialog();
   }
 
   if (
@@ -347,31 +355,35 @@ app
     const { startServer } = await require('../api-server/server');
     startServer();
 
-    protocol.registerFileProtocol('msg', (request, callback) => {
+    protocol.handle('msg', (request) => {
       const relativePath =
-        request.url.substr(6); /* all urls start with 'msg://' */
+        request.url.substring(6); /* all urls start with 'msg://' */
       const filePath = getMessageStoragePath(relativePath);
+
       try {
         const decodedUrl = decodeURI(filePath); // Decodes the url if it is encoded
-        return callback(decodedUrl);
+
+        return net.fetch(decodedUrl);
       } catch (error) {
         // Handle the error as needed
         console.error('ERROR on msg protocol: ', error);
+        return new Response(null, { status: 404 });
       }
     });
 
-    protocol.registerFileProtocol('plugins', (request, callback) => {
+    protocol.handle('plugins', (request) => {
       const extensionRelativePath =
-        request.url.substr(10); /* all urls start with 'plugins://' */
-
+        request.url.substring(10); /* all urls start with 'plugins://' */
       const pluginUrl = getPackagesStoragePath(extensionRelativePath);
 
       try {
         const decodedUrl = decodeURI(pluginUrl); // Decodes the url if it is encoded
-        return callback(decodedUrl);
+
+        return net.fetch(decodedUrl);
       } catch (error) {
         // Handle the error as needed
         console.error('ERROR on plugins protocol: ', error);
+        return new Response(null, { status: 404 });
       }
     });
 

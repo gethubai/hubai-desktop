@@ -22,7 +22,7 @@ export function registerAction2(Ctor: { new (): Action2 }): IDisposable {
   disposables.add(
     CommandsRegistry.registerCommand({
       id: command.id,
-      handler: (accessor, ...args) => action.run(accessor, ...args),
+      handler: (accessor: any, ...args: any[]) => action.run(accessor, ...args),
       description,
     })
   );
@@ -52,7 +52,7 @@ export function registerAction2(Ctor: { new (): Action2 }): IDisposable {
 
   // keybinding
   if (Array.isArray(keybinding)) {
-    for (const item of keybinding) {
+    Array.from(keybinding).forEach((item) => {
       KeybindingsRegistry.registerKeybindingRule({
         ...item,
         id: command.id,
@@ -60,7 +60,7 @@ export function registerAction2(Ctor: { new (): Action2 }): IDisposable {
           ? ContextKeyExpr.and(command.precondition, item.when)
           : item.when,
       });
-    }
+    });
   } else if (keybinding) {
     KeybindingsRegistry.registerKeybindingRule({
       ...keybinding,

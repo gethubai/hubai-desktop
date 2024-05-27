@@ -39,7 +39,7 @@ export class MenuBarController
 {
   private _focusinEle: HTMLElement | null = null;
 
-  private _automation = {};
+  private _automation: Record<string, () => void> = {};
 
   constructor(
     @inject('IActivityBarService')
@@ -107,7 +107,7 @@ export class MenuBarController
   }
 
   public updateFocusinEle = (ele: HTMLElement | null) => {
-    if (ele?.id == ID_APP) return;
+    if (ele?.id === ID_APP) return;
     this._focusinEle = ele;
   };
 
@@ -224,18 +224,21 @@ export class MenuBarController
     data: IMenuBarItem[],
     id: string
   ): IMenuBarItem | null => {
-    let item: IMenuBarItem;
-    for (item of data) {
+    Array.from(data).some((item) => {
       if (item.id === id) {
         return { ...item };
       }
+
       if (Array.isArray(item.data) && item.data.length > 0) {
         const itemData = this.getMenuBarItem(item.data, id);
         if (itemData) {
           return itemData;
         }
       }
-    }
+
+      return null;
+    });
+
     return null;
   };
 

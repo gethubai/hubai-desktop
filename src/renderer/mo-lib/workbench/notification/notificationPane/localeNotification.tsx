@@ -6,6 +6,7 @@ interface ILocaleNotificationProps {
   locale: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function LocaleNotification({ locale }: ILocaleNotificationProps) {
   const buttonRef = useRef<HTMLButtonElement>(null);
 

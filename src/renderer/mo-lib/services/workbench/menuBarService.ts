@@ -95,6 +95,7 @@ class MenuBarService extends Component<IMenuBar> implements IMenuBarService {
 
     const parentMenu = path.reduce(
       (pre, cur) => {
+        // eslint-disable-next-line @typescript-eslint/no-shadow
         const { data } = pre;
         return data[cur];
       },

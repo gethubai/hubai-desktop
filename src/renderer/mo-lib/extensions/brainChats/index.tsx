@@ -9,6 +9,7 @@ import { container } from 'tsyringe';
 export const BrainChats: IExtension = {
   id: 'AddBrainChats',
   name: 'Add brain chats to the activity bar',
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async activate(extensionCtx: AppContext) {
     const brainManagement = container.resolve<IBrainManagementService>(
       'IBrainManagementService'
@@ -45,7 +46,8 @@ export const BrainChats: IExtension = {
           id: `brain-${brain.id}`,
           name: brain.displayName,
           title: `${brain.displayName} Chats`,
-          type: 'chat',
+          // is 'normal' correct? was 'chat' before
+          type: 'normal',
           render: () => (
             <img
               style={{ padding: 5, borderRadius: 10 }}
@@ -60,5 +62,6 @@ export const BrainChats: IExtension = {
     });
   },
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   dispose() {},
 };

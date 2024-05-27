@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
 import { Toolbar } from '@hubai/core/esm/components/toolbar';
 import { classNames, prefixClaName } from '@hubai/core/esm/common/className';
@@ -7,6 +8,7 @@ import type { SearchValues } from '@hubai/core/esm/components/search';
 import { ISearchProps } from '@hubai/core/esm/model/workbench/search';
 import { localize } from '@hubai/core/esm/i18n/localize';
 import { type ISearchController } from 'mo/controllers';
+import { ITreeNodeItemProps } from '@hubai/core/esm/components';
 import SearchTree from './searchTree';
 import {
   deleteSearchValueClassName,
@@ -36,7 +38,8 @@ function SearchPanel({
   onChange,
   toggleMode,
 }: ISearchPaneToolBar) {
-  const onClick = (e, item) => {};
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  const onClick = (e: any, item: any) => {};
 
   const handleSearchChange = (values: SearchValues = []) => {
     const [searchVal, replaceVal] = values;
@@ -49,7 +52,11 @@ function SearchPanel({
     toggleMode?.(status);
   };
 
-  const renderTitle = (node, _, isLeaf) => {
+  const renderTitle = (
+    node: { name?: '' | undefined },
+    _: any,
+    isLeaf: any
+  ) => {
     const { name = '' } = node;
     if (!isLeaf) {
       return name;
@@ -82,6 +89,7 @@ function SearchPanel({
   };
 
   const handleSearch = (values: SearchValues = []) => {
+    // eslint-disable-next-line @typescript-eslint/no-shadow
     const [value, replaceVal] = values;
     validateValue?.(value || '', (err) => {
       if (err) {
@@ -95,7 +103,7 @@ function SearchPanel({
     });
   };
 
-  const handleTreeSelect = (item) => {
+  const handleTreeSelect = (item: ITreeNodeItemProps<any>) => {
     if (item.isLeaf) {
       onResultClick?.(item, result);
     }
@@ -118,13 +126,15 @@ function SearchPanel({
           onButtonClick={handleToggleButton}
         />
         {value && result.length === 0 ? (
-          <div className={emptyTextValueClassName}>
-            未找到结果，请重新修改您的搜索条件
-          </div>
+          <div className={emptyTextValueClassName}>No results found</div>
         ) : (
           <SearchTree
             data={result}
-            renderTitle={renderTitle}
+            renderTitle={(
+              node: ITreeNodeItemProps<any>,
+              _: number,
+              isLeaf: boolean
+            ) => renderTitle(node as any, _, isLeaf)}
             onSelect={handleTreeSelect}
           />
         )}

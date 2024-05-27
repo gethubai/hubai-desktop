@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/electron/renderer';
 import 'reflect-metadata';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import './dependencyInjection';
 import './settings/electronSettingsStore';
@@ -14,13 +14,13 @@ import 'react-simple-keyboard/build/css/index.css';
 import InstanceService from 'mo/services/instanceService';
 import { BuiltInColorTheme } from 'mo/services/theme/colorThemeService';
 import debounce from 'lodash/debounce';
-import loadExtensions from './features/extensions/extensionLoader';
 import { container } from 'tsyringe';
-import { IBrainManagementService } from './features/brain/services/brainManagement';
 import { AppContext } from '@hubai/core';
 import HubaiContext from '@hubai/core/esm/contexts/hubaiContext';
+import { IBrainManagementService } from './features/brain/services/brainManagement';
+import loadExtensions from './features/extensions/extensionLoader';
 
-const isDevelopment = process.env.NODE_ENV === 'development'
+const isDevelopment = process.env.NODE_ENV === 'development';
 
 if (!isDevelopment && process.env.SENTRY_DSN_RENDERER) {
   try {
@@ -79,7 +79,11 @@ export default function App() {
         mo.colorTheme.setTheme(currentTheme);
 
         const updateSettingsWhenThemeIsChanged = debounce((prev, next) => {
-          mo.settings.update({ colorTheme: next.id });
+          mo.settings.update({
+            colorTheme: next.id,
+            extension: {},
+            brain: {},
+          });
           mo.settings.saveSettings();
         }, 600);
 
@@ -95,32 +99,30 @@ export default function App() {
     loadAndCreate();
   }, []);
 
-  if (!moInstance) {
+  if (!appContext || !moInstance) {
     // You could return some loading state here
     return null;
   }
 
-  return moInstance.render(
-    <>
-      <HubaiContext.Provider
-        value={{
-          services: appContext?.services!,
-          theme: {
-            getCurrent: () => appContext?.services.theme.getColorTheme()!,
-            getColorThemeMode: () =>
-              appContext?.services.theme.getColorThemeMode()!,
-          },
-          i18n: {
-            getCurrentLocale: () => mo.i18n.getCurrentLocale()!,
-            getLocales: () => mo.i18n.getLocales(),
-            localize: (key: string, defaultValue, ...args: string[]) =>
-              mo.i18n.localize(key, defaultValue, ...args),
-          },
-        }}
-      >
-        <Workbench />
-        <ToastContainer />
-      </HubaiContext.Provider>
-    </>
+  // eslint-disable-next-line react/jsx-no-constructed-context-values
+  const providerProps = {
+    services: appContext.services!,
+    theme: {
+      getCurrent: () => appContext.services.theme.getColorTheme()!,
+      getColorThemeMode: () => appContext.services.theme.getColorThemeMode()!,
+    },
+    i18n: {
+      getCurrentLocale: () => mo.i18n.getCurrentLocale()!,
+      getLocales: () => mo.i18n.getLocales(),
+      localize: (key: string, defaultValue: any, ...args: string[]) =>
+        mo.i18n.localize(key, defaultValue, ...args),
+    },
+  };
+
+  return moInstance?.render?.(
+    <HubaiContext.Provider value={providerProps}>
+      <Workbench />
+      <ToastContainer />
+    </HubaiContext.Provider>
   );
 }

@@ -16,7 +16,7 @@ import { QuickCreateFile } from 'mo/monaco/quickCreateFile';
 import { SelectLocaleAction } from 'renderer/i18n/selectLocaleAction';
 import type { IBuiltinService } from 'mo/services/builtinService';
 
-export interface IExtensionController extends Partial<Controller> {}
+export type IExtensionController = Partial<Controller>;
 
 @injectable()
 export class ExtensionController

@@ -1,16 +1,14 @@
+export type RemoveLocalExtensionParams = {
+  id: string;
+};
+
+export type RemoveLocalExtensionModel = {
+  success: boolean;
+  error?: string;
+};
+
 export interface RemoveLocalExtension {
   remove: (
-    params: RemoveLocalExtension.Params
-  ) => Promise<RemoveLocalExtension.Model>;
-}
-
-export namespace RemoveLocalExtension {
-  export type Params = {
-    id: string;
-  };
-
-  export type Model = {
-    success: boolean;
-    error?: string;
-  };
+    params: RemoveLocalExtensionParams
+  ) => Promise<RemoveLocalExtensionModel>;
 }

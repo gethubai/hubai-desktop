@@ -137,9 +137,9 @@ class EditorService extends Component<IEditor> implements IEditorService {
           updatedTab = Object.assign(tabData, tab);
         }
         if (group.activeTab === tab.id) {
-          isString(editorValue) &&
-            !tabData?.renderPane &&
+          if (isString(editorValue) && !tabData?.renderPane) {
             this.setGroupEditorValue(group, editorValue);
+          }
           updatedTab = Object.assign(group.tab ?? {}, tab);
         }
         this.updateGroup(groupId, group);
@@ -157,9 +157,9 @@ class EditorService extends Component<IEditor> implements IEditorService {
         }
 
         if (group.activeTab === tab.id) {
-          isString(editorValue) &&
-            !tabData?.renderPane &&
+          if (isString(editorValue) && !tabData?.renderPane) {
             this.setGroupEditorValue(group, editorValue);
+          }
           updatedTab = Object.assign(group.tab ?? {}, tab);
         }
       });
@@ -215,7 +215,9 @@ class EditorService extends Component<IEditor> implements IEditorService {
         () => {
           const isOpened = this.isOpened(tabId);
           // the model of closed tab should be disposed after closing
-          !isOpened && this.disposeModel(tab);
+          if (!isOpened) {
+            this.disposeModel(tab);
+          }
           this.explorerService.forceUpdate();
         }
       );
@@ -245,7 +247,9 @@ class EditorService extends Component<IEditor> implements IEditorService {
       },
       () => {
         const isOpened = this.isOpened(tabId);
-        !isOpened && this.disposeModel(tab);
+        if (!isOpened) {
+          this.disposeModel(tab);
+        }
         this.explorerService.forceUpdate();
       }
     );

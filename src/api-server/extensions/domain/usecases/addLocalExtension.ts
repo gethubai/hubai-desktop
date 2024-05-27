@@ -4,27 +4,24 @@ import {
   LocalExtensionModel,
 } from '../models/localExtension';
 
-export interface AddLocalExtension {
-  add: (
-    Extension: AddLocalExtension.Params
-  ) => Promise<AddLocalExtension.Model>;
-}
+export type AddLocalExtensionParams = {
+  name: string;
+  displayName: string;
+  version: string;
+  extensionKind?: IExtensionType[];
+  contributes?: IContribute;
+  settingsMap?: LocalExtensionSettingMap[];
+  main: string;
+  icon?: string;
+  iconUrl?: string;
+  description?: string;
+  publisher?: string;
+  path?: string;
+  remoteUrl?: string;
+};
 
-export namespace AddLocalExtension {
-  export type Params = {
-    name: string;
-    displayName: string;
-    version: string;
-    extensionKind?: IExtensionType[];
-    contributes?: IContribute;
-    settingsMap?: LocalExtensionSettingMap[];
-    main: string;
-    icon?: string;
-    iconUrl?: string;
-    description?: string;
-    publisher?: string;
-    path?: string;
-    remoteUrl?: string;
-  };
-  export type Model = LocalExtensionModel;
+export type AddLocalExtensionModel = LocalExtensionModel;
+
+export interface AddLocalExtension {
+  add: (Extension: AddLocalExtensionParams) => Promise<AddLocalExtensionModel>;
 }

@@ -6,6 +6,10 @@ import { Controller } from '../../../main/protocols/controller';
 import { HttpResponse } from '../../../main/protocols/http';
 import { badRequest, noContent, ok } from '../../helpers';
 
+export type QueryChatMessagesControllerRequest = IRequest & {
+  chatId: string;
+};
+
 export class QueryChatMessagesController implements Controller {
   constructor(
     private readonly chatRepository: IChatRepository,
@@ -13,7 +17,7 @@ export class QueryChatMessagesController implements Controller {
   ) {}
 
   handle = async (
-    request: QueryChatMessagesController.Request
+    request: QueryChatMessagesControllerRequest
   ): Promise<HttpResponse> => {
     const chat = await this.chatRepository.get(request.chatId);
     if (!chat) return badRequest(new Error('Chat not found'));
@@ -26,11 +30,5 @@ export class QueryChatMessagesController implements Controller {
     if (chatMessages && chatMessages.length > 0) return ok(chatMessages[0]);
 
     return noContent();
-  };
-}
-
-export namespace QueryChatMessagesController {
-  export type Request = IRequest & {
-    chatId: string;
   };
 }

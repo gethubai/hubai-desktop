@@ -1,7 +1,7 @@
 import { AppContext, Controller, ShortcutEditor, component } from '@hubai/core';
+import generateUniqueId from 'renderer/common/uniqueIdGenerator';
 import ShortcutRegisterService from '../services/shortcutRegisterService';
 import { IShortcutItem } from '../models/sidebarState';
-import generateUniqueId from 'renderer/common/uniqueIdGenerator';
 
 export class ShortcutRegisterController extends Controller {
   constructor(
@@ -60,6 +60,8 @@ export class ShortcutRegisterController extends Controller {
     switch (item.id) {
       case 'remove':
         this.service.removeShortcut(selected);
+        break;
+      default:
         break;
     }
   };

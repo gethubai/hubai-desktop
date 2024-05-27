@@ -6,7 +6,7 @@ import { PackageFilterState } from '../services/packageFilterService';
 
 export type Props = PackageTreeProps &
   PackageFilterController &
-  PackageFilterState & {};
+  PackageFilterState;
 
 export function FilterablePackageTree({
   search,

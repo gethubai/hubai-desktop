@@ -62,16 +62,19 @@ export function MenuBar(props: IMenuBar & IMenuBarController) {
     />
   );
 
-  const handleSaveFocusinEle = useCallback((e: FocusEvent) => {
-    updateFocusinEle?.(e.target as HTMLElement | null);
-  }, []);
+  const handleSaveFocusinEle = useCallback(
+    (e: FocusEvent) => {
+      updateFocusinEle?.(e.target as HTMLElement | null);
+    },
+    [updateFocusinEle]
+  );
 
   useEffect(() => {
     document.body.addEventListener('focusin', handleSaveFocusinEle);
     return () => {
       document.body.removeEventListener('focusin', handleSaveFocusinEle);
     };
-  }, []);
+  }, [handleSaveFocusinEle]);
 
   if (mode === MenuBarMode.horizontal) {
     return (

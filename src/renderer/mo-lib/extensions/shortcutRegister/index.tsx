@@ -1,11 +1,12 @@
 import { AppContext, IExtension } from '@hubai/core';
+import { connect } from '@hubai/core/esm/react';
 import ShortcutRegisterService from './services/shortcutRegisterService';
 import { ShortcutRegisterController } from './controllers/shortcutRegisterController';
-import { connect } from '@hubai/core/esm/react';
 import Sidebar from './views/sidebar';
 
 export class ShortcutRegister implements IExtension {
   id = 'shortcutRegister';
+
   name = 'Shortcut Register';
 
   activate(context: AppContext): void {

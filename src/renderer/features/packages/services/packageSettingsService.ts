@@ -7,6 +7,7 @@ export class ExtensionPackageSettingsService
   implements IPackageSettingsService
 {
   private eventEmitter: EventEmitter;
+
   constructor(
     private readonly extension: IExtension,
     private readonly extensionManagementService: IExtensionManagementService
@@ -14,8 +15,8 @@ export class ExtensionPackageSettingsService
     this.eventEmitter = new EventEmitter();
 
     this.extensionManagementService.onPackageSettingsUpdated(
-      (extension, settings) => {
-        if (extension.id === this.extension.id) {
+      (extension_, settings) => {
+        if (extension_.id === this.extension.id) {
           this.eventEmitter.emit('settingsUpdated', settings);
         }
       }

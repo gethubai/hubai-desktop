@@ -18,7 +18,7 @@ export const getParsedEventName = (ev: string, params: any): string => {
 
 export function getEventName<
   TEventMap extends EventsMap,
-  Ev extends EventNames<TEventMap>
+  Ev extends EventNames<TEventMap>,
 >(ev: Ev | IEvent<Ev>): { name: Ev; parsedName: Ev; params: any } {
   let eventName: string;
   let eventNameParams: any;
@@ -27,7 +27,7 @@ export function getEventName<
     eventName = ev;
   } else {
     const { name, ...params } = ev as IEvent<Ev>;
-    eventName = name;
+    eventName = name?.toString();
     eventNameParams = params;
   }
 

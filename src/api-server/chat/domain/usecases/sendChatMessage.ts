@@ -10,25 +10,23 @@ import {
   VoiceMessage,
 } from '../models/chatMessage';
 
-export namespace SendChatMessage {
-  export type Params = {
-    chatId: string;
-    senderId: string;
-    senderType: ChatMessageSenderType;
-    text?: TextMessage;
-    image?: ImageMessage;
-    voice?: VoiceMessage;
-    attachments?: RawMessageAttachment[];
-    messageType: ChatMessageType;
-    status: ChatMessageStatus;
-    recipientSettings?: IRecipientSettings;
-    recipients: string[];
-    hidden?: boolean;
-  };
+export type SendChatMessageParams = {
+  chatId: string;
+  senderId: string;
+  senderType?: ChatMessageSenderType;
+  text?: TextMessage;
+  image?: ImageMessage;
+  voice?: VoiceMessage;
+  attachments?: RawMessageAttachment[];
+  messageType: ChatMessageType;
+  status: ChatMessageStatus;
+  recipientSettings?: IRecipientSettings;
+  recipients: string[];
+  hidden?: boolean;
+};
 
-  export type Model = ChatMessageModel;
-}
+export type SendChatMessageModel = ChatMessageModel;
 
 export interface SendMessage {
-  send: (params: SendChatMessage.Params) => Promise<SendChatMessage.Model>;
+  send: (params: SendChatMessageParams) => Promise<SendChatMessageModel>;
 }

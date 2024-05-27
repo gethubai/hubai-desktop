@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import Tree, { ITreeProps } from '@hubai/core/esm/components/tree';
 import { treeContentClassName } from './base';
 
-export interface SearchTreeProps extends ITreeProps {}
+export type SearchTreeProps = ITreeProps;
 
 function SearchTree(props: SearchTreeProps) {
   const { data = [], onSelect, renderTitle } = props;

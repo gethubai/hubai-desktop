@@ -27,7 +27,6 @@ export interface IServerEventSubscriber
   ): void;
 }
 
-export interface IClientEventSubscriber
-  extends IEventSubscriber<
-    ClientToServerEvents & SessionClientToServerEvents
-  > {}
+export type IClientEventSubscriber = IEventSubscriber<
+  ClientToServerEvents & SessionClientToServerEvents
+>;

@@ -92,9 +92,9 @@ class EditorController extends Controller implements IEditorController {
     tabItem?: IEditorTab<any>
   ) => {
     const menuId = item?.id;
-    const tabId = tabItem?.id!;
+    const tabId = tabItem?.id;
     const { current } = this.editorService.getState();
-    const groupId = current?.id!;
+    const groupId = current?.id;
 
     const {
       EDITOR_MENU_CLOSE,
@@ -110,7 +110,7 @@ class EditorController extends Controller implements IEditorController {
         break;
       }
       case EDITOR_MENU_CLOSE_OTHERS: {
-        this.onCloseOther(tabItem!, groupId);
+        this.onCloseOther(tabItem, groupId);
         break;
       }
       case EDITOR_MENU_CLOSE_ALL: {
@@ -118,21 +118,25 @@ class EditorController extends Controller implements IEditorController {
         break;
       }
       case EDITOR_MENU_CLOSE_TO_RIGHT: {
-        this.onCloseToRight(tabItem!, groupId);
+        this.onCloseToRight(tabItem, groupId);
         break;
       }
       case EDITOR_MENU_CLOSE_TO_LEFT: {
-        this.onCloseToLeft(tabItem!, groupId);
+        this.onCloseToLeft(tabItem, groupId);
         break;
       }
       default: {
-        this.emit(EditorEvent.onActionsClick, menuId, current);
+        if (menuId) {
+          this.emit(EditorEvent.onActionsClick, menuId, current);
+        }
       }
     }
   };
 
-  public onCloseAll = (groupId: UniqueId) => {
-    this.emit(EditorEvent.OnCloseAll, groupId);
+  public onCloseAll = (groupId?: UniqueId) => {
+    if (groupId) {
+      this.emit(EditorEvent.OnCloseAll, groupId);
+    }
   };
 
   public onCloseTab = (tabId?: UniqueId, groupId?: UniqueId) => {
@@ -141,16 +145,22 @@ class EditorController extends Controller implements IEditorController {
     }
   };
 
-  public onCloseToRight = (tabItem: IEditorTab, groupId: UniqueId) => {
-    this.emit(EditorEvent.OnCloseToRight, tabItem, groupId);
+  public onCloseToRight = (tabItem?: IEditorTab, groupId?: UniqueId) => {
+    if (tabItem && groupId) {
+      this.emit(EditorEvent.OnCloseToRight, tabItem, groupId);
+    }
   };
 
-  public onCloseToLeft = (tabItem: IEditorTab, groupId: UniqueId) => {
-    this.emit(EditorEvent.OnCloseToLeft, tabItem, groupId);
+  public onCloseToLeft = (tabItem?: IEditorTab, groupId?: UniqueId) => {
+    if (tabItem && groupId) {
+      this.emit(EditorEvent.OnCloseToLeft, tabItem, groupId);
+    }
   };
 
-  public onCloseOther = (tabItem: IEditorTab, groupId: UniqueId) => {
-    this.emit(EditorEvent.OnCloseOther, tabItem, groupId);
+  public onCloseOther = (tabItem?: IEditorTab, groupId?: UniqueId) => {
+    if (tabItem && groupId) {
+      this.emit(EditorEvent.OnCloseOther, tabItem, groupId);
+    }
   };
 
   public onMoveTab = (updateTabs: IEditorTab<any>[], groupId: UniqueId) => {
@@ -192,9 +202,9 @@ class EditorController extends Controller implements IEditorController {
 
     this.openTab(
       editorInstance,
-      tab!.id!.toString(),
-      tab?.data?.value!,
-      tab?.data?.language!
+      tab?.id?.toString(),
+      tab?.data?.value,
+      tab?.data?.language
     );
   };
 
@@ -210,7 +220,7 @@ class EditorController extends Controller implements IEditorController {
 
     switch (action.id) {
       case EDITOR_MENU_CLOSE_ALL: {
-        this.onCloseAll(current.id!);
+        this.onCloseAll(current.id);
         break;
       }
       case EDITOR_MENU_SHOW_OPENEDITORS: {
@@ -242,7 +252,7 @@ class EditorController extends Controller implements IEditorController {
   ) {
     if (!editorInstance) return;
 
-    editorInstance.onDidChangeModelContent((event: any) => {
+    editorInstance.onDidChangeModelContent(() => {
       const { current } = this.editorService.getState();
       const tab = current?.tab;
       if (!tab) return;
@@ -265,7 +275,7 @@ class EditorController extends Controller implements IEditorController {
 
     editorInstance.onDidFocusEditorText(() => {
       const group = this.editorService.getGroupById(groupId);
-      if (group?.tab!.id) {
+      if (group?.tab?.id) {
         this.editorService.setActive(groupId, group.tab.id);
         this.updateEditorLineColumnInfo(editorInstance);
       }
@@ -302,7 +312,7 @@ class EditorController extends Controller implements IEditorController {
       const editorInstance = current?.editorInstance;
 
       this.editorStates.set(prevProps.path, editorInstance?.saveViewState());
-      this.openTab(editorInstance, path!, options?.value!, options?.language!);
+      this.openTab(editorInstance, path, options?.value, options?.language);
     }
   };
 
@@ -314,10 +324,12 @@ class EditorController extends Controller implements IEditorController {
    */
   private openTab(
     editorInstance: MonacoEditor.IStandaloneCodeEditor,
-    path: string,
-    value: string,
-    language: string
+    path: string | undefined,
+    value: string | undefined,
+    language: string | undefined
   ) {
+    if (!path || !value || !language) return;
+
     let model = MonacoEditor.getModel(Uri.parse(path));
     if (!model) {
       model = MonacoEditor.createModel(value, language, Uri.parse(path));

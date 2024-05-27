@@ -7,7 +7,7 @@ import { PackageStoreState } from '../models/packageStoreState';
 
 const { Toolbar, Collapse } = component;
 
-export type Props = PackageStoreController & PackageStoreState & {};
+export type Props = PackageStoreController & PackageStoreState;
 
 function Sidebar({
   headerToolBar,

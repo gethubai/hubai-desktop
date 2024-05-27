@@ -21,7 +21,9 @@ export class AuxiliaryController
     super();
   }
 
-  public initView = () => {};
+  public initView = () => {
+    /* empty */
+  };
 
   public onClick = (key: UniqueId) => {
     this.auxiliaryService.setActive(

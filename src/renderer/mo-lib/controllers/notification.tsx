@@ -48,6 +48,7 @@ class NotificationController
     this.notificationService.toggleNotification();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public onClick = (e: React.MouseEvent, item: IStatusBarItem) => {
     this.toggleNotifications();
   };

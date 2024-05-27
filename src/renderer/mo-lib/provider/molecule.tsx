@@ -1,7 +1,8 @@
 import React, { useLayoutEffect } from 'react';
-import create, { IConfigProps } from './create';
+// eslint-disable-next-line import/no-cycle
+import { create, IConfigProps } from './create';
 
-export default function Provider({
+export function Provider({
   defaultLocale,
   extensions,
   children,
@@ -13,7 +14,7 @@ export default function Provider({
     });
 
     instance.render(children);
-  }, []);
+  }, [children, defaultLocale, extensions]);
 
   return children;
 }

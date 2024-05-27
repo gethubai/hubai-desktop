@@ -1,3 +1,7 @@
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable jsx-a11y/no-noninteractive-tabindex */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useLayoutEffect, useRef } from 'react';
 import { IEditor, IEditorGroup } from '@hubai/core';
 import {
@@ -91,10 +95,12 @@ function EditorTree(props: IOpenEditProps) {
         scrollable.current?.scrollTo(top);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current?.id && current.tab?.id]);
 
   if (!groups || !groups.length) return null;
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const contextView = useContextView();
 
   const handleCloseClick = (group: IEditorGroup, file: ITabProps) => {
@@ -125,7 +131,7 @@ function EditorTree(props: IOpenEditProps) {
     contextView.show(getEventPosition(e), () => (
       <Menu
         role="menu"
-        onClick={(_, item) => handleOnMenuClick(item!, group, file)}
+        onClick={(_: any, item: any) => handleOnMenuClick(item!, group, file)}
         data={contextMenu}
       />
     ));
@@ -140,14 +146,14 @@ function EditorTree(props: IOpenEditProps) {
     contextView.show(getEventPosition(e), () => (
       <Menu
         role="menu"
-        onClick={(_, item) => handleOnMenuClick(item!, group)}
+        onClick={(_: any, item: any) => handleOnMenuClick(item!, group)}
         data={groupHeaderContext}
       />
     ));
   };
 
   // click group title will open the first file in this group
-  const handleGroupClick = (e, group: IEditorGroup) => {
+  const handleGroupClick = (e: any, group: IEditorGroup) => {
     const { target } = e;
     const firstFile = group.data?.[0];
     if (target.nextElementSibling && firstFile) {

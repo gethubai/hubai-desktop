@@ -11,14 +11,14 @@ import { ShortcutRegisterState } from '../models/sidebarState';
 
 const { Toolbar, Collapse, Menu, useContextViewEle, TreeView } = component;
 
-export type Props = ShortcutRegisterController & ShortcutRegisterState & {};
+export type Props = ShortcutRegisterController & ShortcutRegisterState;
 
 function Sidebar({
   shortcuts,
   error,
   headerToolBar,
   onContextMenuClick,
-  selectOrOpenWindow: selectOrOpenWindow,
+  selectOrOpenWindow,
 }: Props) {
   const contextView = useContextViewEle();
   const collapseItems = shortcuts?.map(
@@ -30,7 +30,7 @@ function Sidebar({
         fileType: 'File',
         icon: 'record-keys',
         isLeaf: true,
-      } as component.ICollapseItem)
+      }) as component.ICollapseItem
   );
 
   const openContextMenu = useCallback(

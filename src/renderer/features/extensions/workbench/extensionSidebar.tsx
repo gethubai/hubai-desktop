@@ -37,7 +37,9 @@ function ExtensionSidebar({
       <Content>
         <LocalPackageTree
           packages={extensions}
-          onContextMenuClick={onContextMenuClick!}
+          onContextMenuClick={(item, selected) => {
+            onContextMenuClick?.(item, selected);
+          }}
           onClick={onExtensionClick}
           contextMenu={contextMenu}
         />

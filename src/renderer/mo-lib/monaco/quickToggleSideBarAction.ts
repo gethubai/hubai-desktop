@@ -56,7 +56,7 @@ export class CommandQuickSideBarViewAction extends Action2 {
     this.sideBarService = container.resolve<ISidebarService>('ISidebarService');
   }
 
-  run(accessor: ServicesAccessor, ...args) {
+  run(accessor: ServicesAccessor, ...args: any[]) {
     const sidebarId = args[0];
     const { selected } = this.activityBarService.getState();
 
@@ -69,6 +69,8 @@ export class CommandQuickSideBarViewAction extends Action2 {
       icon: hidden ? '' : 'check',
     });
 
-    hidden && (this._preActivityBar = selected);
+    if (hidden) {
+      this._preActivityBar = selected;
+    }
   }
 }

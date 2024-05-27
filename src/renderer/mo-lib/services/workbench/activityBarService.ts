@@ -59,6 +59,7 @@ class ActivityBarService
     }
 
     // The smaller the sort number is, the more front the order is
+    // eslint-disable-next-line @typescript-eslint/no-shadow
     next.sort((pre, next) => {
       const preIndex = pre.sortIndex || Number.MAX_SAFE_INTEGER;
       const nextIndex = next.sortIndex || Number.MAX_SAFE_INTEGER;

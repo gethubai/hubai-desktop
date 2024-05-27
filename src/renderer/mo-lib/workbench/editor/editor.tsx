@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import SplitPane from '@hubai/core/esm/components/split';
 import Pane from '@hubai/core/esm/components/split/pane';
-import { IEditor, IEditorGroup } from '@hubai/core/esm/model';
+import { IEditor, IEditorGroup, IEditorTab } from '@hubai/core/esm/model';
 
 import type { UniqueId } from '@hubai/core/esm/common/types';
 import { ILayout } from '@hubai/core/esm/model/workbench/layout';
@@ -35,14 +35,18 @@ export function Editor(
 
   const getEvents = (groupId: UniqueId) => {
     return {
-      onMoveTab: (tabs) => onMoveTab?.(tabs, groupId),
-      onCloseTab: (tabKey) => onCloseTab?.(tabKey, groupId),
-      onSelectTab: (tabKey) => onSelectTab?.(tabKey, groupId),
+      onMoveTab: (tabs: IEditorTab<any>[]) => onMoveTab?.(tabs, groupId),
+      onCloseTab: (tabKey: UniqueId) => onCloseTab?.(tabKey, groupId),
+      onSelectTab: (tabKey: UniqueId) => onSelectTab?.(tabKey, groupId),
       onClickActions,
       onUpdateEditorIns,
       onChangeEditorProps,
       onClickContextMenu,
     };
+  };
+
+  const getGroupPaneKey = (index: number, id: UniqueId) => {
+    return `group-${index}-${id}`;
   };
 
   const renderGroups = () => {
@@ -65,7 +69,7 @@ export function Editor(
           onChange={onPaneSizeChange!}
         >
           {groups.map((g: IEditorGroup, index: number) => (
-            <Pane key={`group-${index}${g.id}`} minSize="220px">
+            <Pane key={getGroupPaneKey(index, g.id)} minSize="220px">
               <EditorGroup
                 editorOptions={editorOptions}
                 currentGroup={current!}

@@ -37,6 +37,7 @@ export class QuickAccessSettings extends Action2 {
       container.resolve<ISettingsService>('ISettingsService');
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   run(accessor: ServicesAccessor) {
     this.settingsService.openSettingsInEditor();
   }

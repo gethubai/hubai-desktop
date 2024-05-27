@@ -1,3 +1,5 @@
+/* eslint-disable import/no-cycle */
+
 import { ReactElement } from 'react';
 import { container } from 'tsyringe';
 import molecule from 'mo';
@@ -143,7 +145,7 @@ export default class InstanceService
       ];
 
       // resolve all controllers, and call `initView` to inject initial values into services
-      Object.keys(controllers).forEach((key) => {
+      Object.keys(controllers).forEach((key: any) => {
         const module = controllers[key];
         const controller = container.resolve<Controller>(module);
         controller.initView?.();
@@ -154,7 +156,9 @@ export default class InstanceService
 
       this.emit(InstanceHookKind.afterLoad);
       molecule.layout.onWorkbenchDidMount(() => {
-        molecule.monacoService.initWorkspace(molecule.layout.container!);
+        if (molecule.layout.container) {
+          molecule.monacoService.initWorkspace(molecule.layout.container);
+        }
       });
       this.rendered = true;
     }

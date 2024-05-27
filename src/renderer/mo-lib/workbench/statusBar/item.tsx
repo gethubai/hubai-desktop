@@ -11,6 +11,7 @@ export function StatusItem(props: IStatusBarItem & IStatusBarController) {
     onClick,
     id,
     name,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     data,
     render,
     style,

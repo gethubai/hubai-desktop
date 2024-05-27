@@ -1,13 +1,19 @@
-import { SaveLocalBrainSettings } from 'api-server/brain/domain/usecases/saveLocalBrainSettings';
+import {
+  SaveLocalBrainSettingsParams,
+  SaveLocalBrainSettingsResult,
+  SaveLocalBrainSettings,
+} from 'api-server/brain/domain/usecases/saveLocalBrainSettings';
 
 export default class ElectronSaveLocalBrainSettings
   implements SaveLocalBrainSettings
 {
-  constructor() {}
+  constructor() {
+    /* empty */
+  }
 
   save = async (
-    params: SaveLocalBrainSettings.Params
-  ): Promise<SaveLocalBrainSettings.Result> => {
+    params: SaveLocalBrainSettingsParams
+  ): Promise<SaveLocalBrainSettingsResult> => {
     const save = await window.electron.brain.updateSettings(
       params.brainId,
       params.newSettings

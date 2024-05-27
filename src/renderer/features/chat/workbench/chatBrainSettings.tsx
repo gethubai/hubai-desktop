@@ -5,6 +5,7 @@ import {
   LocalBrainModel,
 } from 'api-server/brain/domain/models/localBrain';
 import { ChatUser } from 'api-server/chat/domain/models/chat';
+import { ISettingMap } from '@hubai/core';
 import { ChatBrainSettingsForm } from './components/chatBrainSettingsForm';
 
 type ChatBrainSettingsProps = {
@@ -43,8 +44,9 @@ export function ChatBrainSettings({
       {uniqueSelectedBrains.length === 0 && <div>No brain selected</div>}
 
       {uniqueSelectedBrains.map((chatBrain) => {
-        const brain = availableBrains.find((b) => b.id === chatBrain.id)!;
-        const settingsMap = brain.settingsMap?.filter(
+        const brain = availableBrains.find((b) => b.id === chatBrain.id);
+
+        const settingsMap = brain?.settingsMap?.filter(
           (e) => e.scope === BrainSettingScope.CHAT_OVERRIDABLE
         );
 
@@ -54,10 +56,10 @@ export function ChatBrainSettings({
             style={{ marginBottom: 15 }}
           >
             <ChatBrainSettingsForm
-              formTitle={brain.displayName}
-              currentSettings={getBrainChatSettings(brain)}
-              settingsMap={settingsMap}
-              onFormChange={(formData) => debounceFn(brain, formData)}
+              formTitle={brain?.displayName}
+              currentSettings={getBrainChatSettings(brain as any)}
+              settingsMap={settingsMap as ISettingMap[]}
+              onFormChange={(formData) => debounceFn(brain as any, formData)}
             />
           </div>
         );

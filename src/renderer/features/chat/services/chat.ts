@@ -3,7 +3,7 @@
 import { container, inject, injectable } from 'tsyringe';
 
 import { ChatMemberType, ChatModel } from 'api-server/chat/domain/models/chat';
-import { CreateChat } from 'api-server/chat/domain/usecases/createChat';
+import { CreateChatParams } from 'api-server/chat/domain/usecases/createChat';
 import { Component } from '@hubai/core/esm/react';
 import { type ILocalUserService } from 'renderer/features/user/services/userService';
 import { IChatCommandCompletion } from '@hubai/core/esm/model/chat';
@@ -36,7 +36,9 @@ export class ChatService extends Component<IChatState> implements IChatService {
     this.chatCommands = { ...this.chatCommands, ...commands };
   };
 
-  private async initCommands(): Promise<void> {}
+  private async initCommands(): Promise<void> {
+    /* empty */
+  }
 
   private async initServer(): Promise<void> {
     const user = this.localUserService.getUser();
@@ -47,7 +49,7 @@ export class ChatService extends Component<IChatState> implements IChatService {
     });
   }
 
-  async createChat(options: CreateChat.Params): Promise<ChatModel | undefined> {
+  async createChat(options: CreateChatParams): Promise<ChatModel | undefined> {
     return this.chatClient.newChat(options);
   }
 

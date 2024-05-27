@@ -1,17 +1,15 @@
 import { ChatMessageModel } from '../models/chatMessage';
 
+// Id of the message
+export type SetVoiceMessageTranscriptionParams = {
+  messageId: string;
+  transcription: string;
+};
+
+export type SetVoiceMessageTranscriptionModel = ChatMessageModel;
+
 export interface SetVoiceMessageTranscription {
   setTranscription: (
-    params: SetVoiceMessageTranscription.Params
-  ) => Promise<SetVoiceMessageTranscription.Model>;
-}
-
-export namespace SetVoiceMessageTranscription {
-  // Id of the message
-  export type Params = {
-    messageId: string;
-    transcription: string;
-  };
-
-  export type Model = ChatMessageModel;
+    params: SetVoiceMessageTranscriptionParams
+  ) => Promise<SetVoiceMessageTranscriptionModel>;
 }

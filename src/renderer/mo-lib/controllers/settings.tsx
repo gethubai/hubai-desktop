@@ -13,7 +13,7 @@ import { ILocale, type ILocaleService } from '@hubai/core/esm/i18n';
 import LocaleNotification from 'mo/workbench/notification/notificationPane/localeNotification';
 import { type IBuiltinService } from 'mo/services/builtinService';
 
-export interface ISettingsController extends Partial<Controller> {}
+export type ISettingsController = Partial<Controller>;
 
 @injectable()
 export class SettingsController
@@ -60,7 +60,8 @@ export class SettingsController
     const notify = {
       id: SETTING_ID!,
       value: next,
-      render(value) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      render(value: any) {
         /* istanbul ignore next */
         return <LocaleNotification key={next.id} locale={next.name} />;
       },

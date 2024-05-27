@@ -140,6 +140,7 @@ class ExplorerService extends Component<IExplorer> implements IExplorerService {
       return;
     }
     const newActions = headerToolBar.contextMenu?.concat() || [];
+    // eslint-disable-next-line @typescript-eslint/no-shadow
     workInProgressActions.forEach((action) => {
       const index = newActions.findIndex(searchById(action.id));
       if (index !== -1) {

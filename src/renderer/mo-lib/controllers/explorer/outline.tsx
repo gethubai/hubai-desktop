@@ -3,7 +3,7 @@ import { inject, injectable } from 'tsyringe';
 import { type IExplorerService, Controller } from '@hubai/core';
 import { type IBuiltinService } from 'mo/services/builtinService';
 
-export interface IOutlineController extends Partial<Controller> {}
+export type IOutlineController = Partial<Controller>;
 
 @injectable()
 export class OutlineController
@@ -25,5 +25,6 @@ export class OutlineController
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
   public readonly onClick = (event: React.MouseEvent) => {};
 }

@@ -42,8 +42,8 @@ type SettingsMapFormProps = Omit<
   'onSubmit' | 'schema' | 'validator'
 > & {
   settingsMap?: ISettingMap[];
-  currentSettings: any;
-  onSubmit: (e: any) => void;
+  currentSettings: unknown;
+  onSubmit: (e: unknown) => void;
   children?: React.ReactNode;
   title?: string;
   schema?: RJSFSchema;
@@ -82,12 +82,14 @@ export function MapSettingToSchema(setting: ISettingMap): RJSFSchema {
   return property;
 }
 
-export function buildProperties(settingsMap?: ISettingMap[]) {
+export function buildProperties(settingsMap?: ISettingMap[]): {
+  properties: Record<string, RJSFSchema>;
+  required: string[];
+} {
   const required: string[] = [];
+  const properties: Record<string, RJSFSchema> = {};
 
-  if (!settingsMap) return;
-
-  const properties = {} as any;
+  if (!settingsMap) return { properties, required };
 
   settingsMap.forEach((setting) => {
     const { name } = setting;
@@ -127,6 +129,7 @@ function SettingsMapForm({
   );
 
   const onSubmitInternal = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (e: any) => {
       onSubmit?.(e.formData);
     },

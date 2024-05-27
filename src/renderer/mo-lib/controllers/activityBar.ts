@@ -98,7 +98,7 @@ class ActivityBarController
     switch (contextMenuId) {
       // activityBar contextMenu
       case CONTEXT_MENU_MENU: {
-        this.menuBarController.updateMenuBar!();
+        this.menuBarController.updateMenuBar?.();
         this.activityBarService.toggleContextMenuChecked(contextMenuId);
         break;
       }
@@ -109,7 +109,7 @@ class ActivityBarController
         break;
       }
       case CONTEXT_MENU_HIDE: {
-        this.menuBarController.updateActivityBar!();
+        this.menuBarController.updateActivityBar?.();
         break;
       }
       // manage button contextMenu

@@ -1,9 +1,7 @@
 import { LocalBrainModel } from '../models/localBrain';
 
-export interface LoadLocalBrains {
-  getBrains: () => Promise<LoadLocalBrains.Model[]>;
-}
+export type LoadLocalBrainsModel = LocalBrainModel;
 
-export namespace LoadLocalBrains {
-  export type Model = LocalBrainModel;
+export interface LoadLocalBrains {
+  getBrains: () => Promise<LoadLocalBrainsModel[]>;
 }

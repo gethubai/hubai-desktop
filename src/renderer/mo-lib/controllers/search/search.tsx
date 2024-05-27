@@ -80,7 +80,7 @@ class SearchController extends Controller implements ISearchController {
     const { isRegex } = this.searchService.getState();
     if (isRegex) {
       try {
-        new RegExp(value);
+        RegExp(value);
         return callback();
       } catch (e) {
         if (e instanceof Error) {
@@ -91,8 +91,8 @@ class SearchController extends Controller implements ISearchController {
     return callback();
   };
 
-  public getSearchIndex = (text: string, queryVal: string = '') => {
-    let searchIndex: number = -1;
+  public getSearchIndex = (text: string, queryVal = '') => {
+    let searchIndex = -1;
     const { isCaseSensitive, isWholeWords, isRegex } =
       this.searchService.getState();
     const onlyCaseSensitiveMatch = isCaseSensitive;
@@ -189,11 +189,11 @@ class SearchController extends Controller implements ISearchController {
     this.searchService.toggleMode(status);
   };
 
-  public onChange = (value: string = '', replaceValue: string = '') => {
+  public onChange = (value = '', replaceValue = '') => {
     this.emit(SearchEvent.onChange, value, replaceValue);
   };
 
-  public onSearch = (value: string = '', replaceValue: string = '') => {
+  public onSearch = (value = '', replaceValue = '') => {
     const { isRegex, isCaseSensitive, isWholeWords, preserveCase } =
       this.searchService.getState();
 

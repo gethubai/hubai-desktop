@@ -124,7 +124,7 @@ class SettingsService extends GlobalEvent implements ISettingsService {
     return this.toJSONString(this.flatObject(obj));
   }
 
-  public toJSONString(obj: object, space: number = 4): string {
+  public toJSONString(obj: object, space = 4): string {
     try {
       return JSON.stringify(obj, null, space);
     } catch (e) {

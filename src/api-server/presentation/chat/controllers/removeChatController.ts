@@ -4,11 +4,15 @@ import { Controller } from '../../../main/protocols/controller';
 import { HttpResponse } from '../../../main/protocols/http';
 import { badRequest, ok } from '../../helpers';
 
+export type RemoveChatControllerRequest = IRequest & {
+  chatId: string;
+};
+
 export class RemoveChatController implements Controller {
   constructor(private readonly removeChat: RemoveChat) {}
 
   handle = async (
-    request: RemoveChatController.Request
+    request: RemoveChatControllerRequest
   ): Promise<HttpResponse> => {
     // TODO: Check if the user has permission
     const result = await this.removeChat.execute({
@@ -18,11 +22,5 @@ export class RemoveChatController implements Controller {
     if (result.success) return ok(result);
 
     return badRequest(new Error(result.error));
-  };
-}
-
-export namespace RemoveChatController {
-  export type Request = IRequest & {
-    chatId: string;
   };
 }

@@ -5,7 +5,7 @@ export interface IAuthState {
 export class AuthStateModel implements IAuthState {
   isLoggedIn: boolean;
 
-  constructor(isLoggedIn: boolean = false) {
+  constructor(isLoggedIn = false) {
     this.isLoggedIn = isLoggedIn;
   }
 }

@@ -1,8 +1,6 @@
 import { ChatModel } from 'api-server/chat/domain/models/chat';
-import {
-  IChatAssistant,
-  IChatAssistantController,
-} from '@hubai/core';
+import { IChatAssistant, IChatAssistantController } from '@hubai/core';
+import React from 'react';
 import { ChatBrainSettingsForm } from '../workbench/components/chatBrainSettingsForm';
 import { IChatWindowService } from './chatWindowService';
 import { ChatSessionService } from './chatSessionService';
@@ -37,7 +35,7 @@ export class ChatAssistantService {
           settingsMap={this.assistant.settingsMap}
           currentSettings={getAssistantSettings()}
           validator={this.controller?.validateSettings}
-          onSubmit={this.onUpdateSettings.bind(this)}
+          onSubmit={(settings) => this.onUpdateSettings(settings)}
         />
       );
     }

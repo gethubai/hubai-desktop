@@ -1,39 +1,36 @@
 import { ChatModel } from 'api-server/chat/domain/models/chat';
 import {
-  ChatMemberStatusChangedEvent,
-  ChatUpdatedEvent,
-  JoinChatEvent,
-  LeftChatEvent,
-  MessageReceivedEvent,
-  MessageSentEvent,
-  MessageTranscribedEvent,
-  MessageUpdatedEvent,
+  MessageUpdatedEventName,
   SessionServerToClientEvents,
+  MessageReceivedEventName,
+  MessageSentEventName,
+  MessageTranscribedEventName,
+  ChatUpdatedEventName,
+  LeftChatEventName,
+  JoinChatEventName,
+  ChatMemberStatusChangedEventName,
 } from './serveSessionEvents';
 
-export namespace ChatCreatedEvent {
-  export const Name = 'user/:user/chat/created';
-  export type Params = ChatModel;
-
-  export type Emitter = (params: Params) => void;
-}
+export const ChatCreatedEventName = 'user/:user/chat/created';
+export type ChatCreatedEventParams = ChatModel;
+export type ChatCreatedEventEmitter = (params: ChatCreatedEventParams) => void;
 
 export interface ServerToClientEvents extends SessionServerToClientEvents {
-  [ChatCreatedEvent.Name]: ChatCreatedEvent.Emitter;
+  [ChatCreatedEventName]: ChatCreatedEventEmitter;
 }
 
 type KeysEnum<T> = { [P in keyof Required<T>]: true };
 
 const serverToClientEventsKeys: KeysEnum<ServerToClientEvents> = {
-  [ChatCreatedEvent.Name]: true,
-  [MessageUpdatedEvent.Name]: true,
-  [MessageReceivedEvent.Name]: true,
-  [MessageSentEvent.Name]: true,
-  [MessageTranscribedEvent.Name]: true,
-  [ChatUpdatedEvent.Name]: true,
-  [LeftChatEvent.Name]: true,
-  [JoinChatEvent.Name]: true,
-  [ChatMemberStatusChangedEvent.Name]: true,
+  [ChatCreatedEventName]: true,
+  [MessageUpdatedEventName]: true,
+  [MessageReceivedEventName]: true,
+  [MessageSentEventName]: true,
+  [MessageTranscribedEventName]: true,
+  [ChatUpdatedEventName]: true,
+  [LeftChatEventName]: true,
+  [JoinChatEventName]: true,
+  [ChatMemberStatusChangedEventName]: true,
 };
 
 export const ServerToClientEventsName = Object.keys(serverToClientEventsKeys);

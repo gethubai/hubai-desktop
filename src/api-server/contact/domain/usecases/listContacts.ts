@@ -1,11 +1,8 @@
 import { Contact } from '../models/contact';
 
+export type ListContactsParams = object;
+export type ListContactsModel = Contact[];
+
 export interface ListContacts {
-  execute: (params?: ListContacts.Params) => Promise<ListContacts.Model>;
-}
-
-export namespace ListContacts {
-  export type Params = {};
-
-  export type Model = Contact[];
+  execute: (params?: ListContactsParams) => Promise<ListContactsModel>;
 }

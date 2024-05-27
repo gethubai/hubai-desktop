@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import { IExtension } from '@hubai/core';
 import InstanceService from 'mo/services/instanceService';
 
@@ -14,36 +15,23 @@ export interface IConfigProps {
   defaultLocale?: string;
 }
 
-namespace standalone {
-  let instance: InstanceService | null = null;
+let instance: InstanceService | null = null;
 
-  /**
-   * Create an instance
-   */
-  export function create(config: IConfigProps) {
-    if (instance) {
-      return instance;
-    }
-    instance = new InstanceService(config);
-    instance.injectContext();
+/**
+ * Create an instance
+ */
+export function create(config: IConfigProps) {
+  if (instance) {
     return instance;
   }
-
-  /**
-   * Do NOT call it in production, ONLY used for test cases
-   */
-  export function clearInstance() {
-    instance = null;
-  }
-}
-
-export default function create(config: IConfigProps) {
-  return standalone.create(config);
+  instance = new InstanceService(config);
+  instance.injectContext();
+  return instance;
 }
 
 /**
  * Do NOT call it in production, ONLY used for test cases
  */
 export function clearInstance() {
-  standalone.clearInstance();
+  instance = null;
 }

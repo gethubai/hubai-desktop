@@ -111,12 +111,15 @@ export class GlobalShortcutService implements IGlobalShortcutService {
 
     return true;
   };
+
   isRegistered = (accelerator: string): boolean => {
     return this.shortcuts.some((s) => s.accelerator === accelerator);
   };
+
   getRegistered = (): IGlobalShortcut[] => {
     return this.shortcuts;
   };
+
   unregisterAll = (): void => {
     // TODO: Implement
     throw new Error('Method not implemented.');

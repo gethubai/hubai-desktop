@@ -26,7 +26,7 @@ export enum PackageEvents {
 export type PackageVersionCompatibilityResult = {
   isCompatible: boolean;
   incompatibilityReason?: string;
-}
+};
 
 export interface IPackageManagementService {
   startPackageDownload(
@@ -36,7 +36,9 @@ export interface IPackageManagementService {
   ): Promise<PackageDownloadResult>;
 
   isPackageInstalled(hubaiPackage: HubAIPackage): boolean;
-  isPackageVersionCompatible(version: PackageVersion): PackageVersionCompatibilityResult;
+  isPackageVersionCompatible(
+    version: PackageVersion
+  ): PackageVersionCompatibilityResult;
   isPendingRemovalPackage(name: string): boolean;
   getInstalledPackages(): HubAIPackage[];
   getInstalledPackage(name: string): HubAIPackage | undefined;

@@ -1,7 +1,8 @@
 import { IExtension } from '@hubai/core';
+// eslint-disable-next-line import/no-cycle
 import molecule from 'mo';
 
-const removePanel = function (panel) {
+const removePanel = (panel: any) => {
   molecule.explorer.removePanel(panel.id);
 };
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 export function isBlobWebAPI(uri: unknown): uri is Blob {
   return (
     typeof window !== 'undefined' && 'Blob' in window && uri instanceof Blob

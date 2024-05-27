@@ -1,13 +1,15 @@
 import { IUserShortcutService, react } from '@hubai/core';
+import { container } from 'tsyringe';
 import { IShortcutItem, ShortcutRegisterState } from '../models/sidebarState';
 import { IShortcutStorage, ShortcutLocalStorage } from './shortcutStorages';
-import { container } from 'tsyringe';
 
 const { Component } = react;
 
 export default class ShortcutRegisterService extends Component<ShortcutRegisterState> {
   protected state: ShortcutRegisterState;
+
   public storage: IShortcutStorage;
+
   private readonly userShortcutService: IUserShortcutService;
 
   constructor() {
@@ -41,12 +43,12 @@ export default class ShortcutRegisterService extends Component<ShortcutRegisterS
       this.update(shortcut);
     });
 
-    for (const shortcut of shortcuts) {
-      const registered = await this.userShortcutService.register(shortcut);
+    Array.from(shortcuts).forEach((shortcut) => {
+      const registered = this.userShortcutService.register(shortcut);
       if (!registered) {
         this.storage.remove(shortcut.id);
       }
-    }
+    });
   };
 
   addShortcut = (session: IShortcutItem): void => {

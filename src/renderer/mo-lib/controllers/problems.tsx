@@ -53,6 +53,7 @@ export class ProblemsController
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public onClick = (e: React.MouseEvent, item: IStatusBarItem) => {
     this.showHideProblems();
   };
@@ -62,7 +63,9 @@ export class ProblemsController
       this.builtinService.getModules();
 
     if (statusProblems) {
-      statusProblems.render = (item) => <ProblemsStatusBarView {...item} />;
+      statusProblems.render = (item: any) => (
+        <ProblemsStatusBarView {...item} />
+      );
       statusProblems.onClick = this.onClick;
 
       this.statusBarService.add(statusProblems, Float.left);

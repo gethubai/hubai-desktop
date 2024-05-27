@@ -6,6 +6,11 @@ import { HttpResponse } from '../../../main/protocols/http';
 import { badRequest, ok } from '../../helpers';
 import { IRequest } from '../../../main/protocols/requestContext';
 
+export type RemoveChatMemberControllerRequest = IRequest & {
+  chatId: string;
+  memberId: string;
+};
+
 export class RemoveChatMemberController implements Controller {
   constructor(
     private readonly chatRepository: IChatRepository,
@@ -13,7 +18,7 @@ export class RemoveChatMemberController implements Controller {
   ) {}
 
   handle = async (
-    request: RemoveChatMemberController.Request
+    request: RemoveChatMemberControllerRequest
   ): Promise<HttpResponse> => {
     const chat = await this.chatRepository.get(request.chatId);
 
@@ -30,12 +35,5 @@ export class RemoveChatMemberController implements Controller {
     chatServer.notifyLeftChat(chat, request.memberId);
 
     return ok(updated);
-  };
-}
-
-export namespace RemoveChatMemberController {
-  export type Request = IRequest & {
-    chatId: string;
-    memberId: string;
   };
 }

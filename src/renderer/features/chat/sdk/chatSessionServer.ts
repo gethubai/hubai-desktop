@@ -1,10 +1,14 @@
 import {
-  ChatMemberStatusChangedEvent,
-  ChatUpdatedEvent,
-  MessageReceivedEvent,
-  MessageSentEvent,
-  MessageTranscribedEvent,
-  MessageUpdatedEvent,
+  ChatMemberStatusChangedEventName,
+  ChatUpdatedEventName,
+  MessageReceivedEventName,
+  MessageSentEventName,
+  MessageTranscribedEventName,
+  MessageUpdatedEventName,
+  ChatMemberStatusChangedEventParams,
+  ChatUpdatedEventParams,
+  MessageReceivedEventParams,
+  MessageUpdatedEventParams,
 } from 'api-server/chat/chatTcpServer/events/serveSessionEvents';
 import { ChatUser } from 'api-server/chat/domain/models/chat';
 import { ChatMessagesContext } from 'api-server/chat/domain/models/chatContext';
@@ -28,7 +32,10 @@ export class ChatSessionServer implements IChatSessionServer, IDisposable {
 
   eventSubscriptions: ISubscription[];
 
-  constructor(public readonly id: string, private client: IChatClient) {
+  constructor(
+    public readonly id: string,
+    private client: IChatClient
+  ) {
     this.listeners = {};
     this.isWatching = false;
     this.eventSubscriptions = [];
@@ -54,12 +61,12 @@ export class ChatSessionServer implements IChatSessionServer, IDisposable {
     };
 
     this.eventSubscriptions = [
-      addEventSubscription(MessageReceivedEvent.Name),
-      addEventSubscription(MessageUpdatedEvent.Name),
-      addEventSubscription(MessageTranscribedEvent.Name),
-      addEventSubscription(MessageSentEvent.Name),
-      addEventSubscription(ChatUpdatedEvent.Name),
-      addEventSubscription(ChatMemberStatusChangedEvent.Name),
+      addEventSubscription(MessageReceivedEventName),
+      addEventSubscription(MessageUpdatedEventName),
+      addEventSubscription(MessageTranscribedEventName),
+      addEventSubscription(MessageSentEventName),
+      addEventSubscription(ChatUpdatedEventName),
+      addEventSubscription(ChatMemberStatusChangedEventName),
     ];
 
     return Promise.resolve();
@@ -78,25 +85,25 @@ export class ChatSessionServer implements IChatSessionServer, IDisposable {
   };
 
   onMessageUpdated = (
-    listener: (data: MessageUpdatedEvent.Params) => void
+    listener: (data: MessageUpdatedEventParams) => void
   ): void => {
-    this.addListener(MessageUpdatedEvent.Name, listener);
+    this.addListener(MessageUpdatedEventName, listener);
   };
 
-  onChatUpdated = (listener: (data: ChatUpdatedEvent.Params) => void): void => {
-    this.addListener(ChatUpdatedEvent.Name, listener);
+  onChatUpdated = (listener: (data: ChatUpdatedEventParams) => void): void => {
+    this.addListener(ChatUpdatedEventName, listener);
   };
 
   onMessageReceived = (
-    listener: (data: MessageReceivedEvent.Params) => void
+    listener: (data: MessageReceivedEventParams) => void
   ): void => {
-    this.addListener(MessageReceivedEvent.Name, listener);
+    this.addListener(MessageReceivedEventName, listener);
   };
 
   onMemberStatusChanged = (
-    listener: (data: ChatMemberStatusChangedEvent.Params) => void
+    listener: (data: ChatMemberStatusChangedEventParams) => void
   ): void => {
-    this.addListener(ChatMemberStatusChangedEvent.Name, listener);
+    this.addListener(ChatMemberStatusChangedEventName, listener);
   };
 
   sendAudio = async (audio: RawVoiceMessage): Promise<VoiceMessage> => {
@@ -141,7 +148,7 @@ export class ChatSessionServer implements IChatSessionServer, IDisposable {
     voice,
     hidden,
     attachments,
-    isSystemMessage
+    isSystemMessage,
   }: SendMessage): Promise<void> => {
     const formData = new FormData();
 
@@ -225,7 +232,7 @@ export class ChatSessionServer implements IChatSessionServer, IDisposable {
   dispose = () => {
     if (this.isWatching) this.unwatch();
 
-    this.listeners = null;
+    this.listeners = {};
     this.client.removeSession(this);
   };
 }

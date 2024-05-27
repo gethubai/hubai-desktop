@@ -136,7 +136,7 @@ export const modules = {
       config: {
         grow: 2,
       },
-    } as IExplorerPanelItem),
+    }) as IExplorerPanelItem,
 
   builtInExplorerHeaderToolbar: () =>
     ({
@@ -147,7 +147,7 @@ export const modules = {
       ),
       icon: 'ellipsis',
       contextMenu: [],
-    } as IActionBarItemProps),
+    }) as IActionBarItemProps,
 
   builtInExplorerEditorPanel: () =>
     ({
@@ -195,7 +195,7 @@ export const modules = {
       config: {
         grow: 0,
       },
-    } as IExplorerPanelItem),
+    }) as IExplorerPanelItem,
 
   builtInExplorerOutlinePanel: () =>
     ({
@@ -213,14 +213,14 @@ export const modules = {
           icon: 'ellipsis',
         },
       ],
-    } as IExplorerPanelItem),
+    }) as IExplorerPanelItem,
 
   BuiltInEditorOptions: () =>
     ({
       renderWhitespace: 'none',
       tabSize: 4,
       fontSize: 12,
-    } as IEditorOptions),
+    }) as IEditorOptions,
 
   builtInEditorInitialActions: () =>
     [
@@ -305,7 +305,7 @@ export const modules = {
         language: 'json',
         value: '',
       },
-    } as IEditorTab<{ language: string; value: string }>),
+    }) as IEditorTab<{ language: string; value: string }>,
 
   builtInStatusProblems: () =>
     ({
@@ -317,7 +317,7 @@ export const modules = {
         infos: 0,
       },
       name: 'Problems',
-    } as IStatusBarItem),
+    }) as IStatusBarItem,
 
   builtInPanelProblems: () => null,
   /* ({
@@ -334,21 +334,21 @@ export const modules = {
       id: constants.NOTIFICATION_CLEAR_ALL_ID,
       title: 'Clear All Notifications',
       icon: 'clear-all',
-    } as IActionBarItemProps),
+    }) as IActionBarItemProps,
 
   NOTIFICATION_HIDE: () =>
     ({
       id: constants.NOTIFICATION_HIDE_ID,
       title: 'Hide Notifications',
       icon: 'chevron-down',
-    } as IActionBarItemProps),
+    }) as IActionBarItemProps,
 
   builtInNotification: () =>
     ({
       id: constants.NOTIFICATION_MODEL_ID,
       name: constants.NOTIFICATION_MODEL_NAME,
       sortIndex: 1,
-    } as IStatusBarItem),
+    }) as IStatusBarItem,
 
   STATUS_EDITOR_INFO: () => ({
     id: 'MoEditorInfo',
@@ -364,7 +364,7 @@ export const modules = {
     ({
       id: constants.STATUS_BAR_HIDE_ID,
       name: 'Hide Status Bar',
-    } as IMenuItemProps),
+    }) as IMenuItemProps,
 
   builtInSearchActivityItem: () =>
     ({
@@ -373,7 +373,7 @@ export const modules = {
       title: localize(constants.SEARCH_ACTIVITY_ITEM, 'Search'),
       sortIndex: 2,
       icon: 'search',
-    } as IActivityBarItem),
+    }) as IActivityBarItem,
 
   builtInHeaderToolbar: () =>
     [
@@ -466,7 +466,7 @@ export const modules = {
       id: constants.PANEL_TOOLBOX_RESIZE,
       title: localize(constants.PANEL_TOOLBOX_RESIZE, 'Maximize Panel Size'),
       icon: 'chevron-up',
-    } as IActionBarItemProps),
+    }) as IActionBarItemProps,
 
   builtInPanelToolboxReStore: () =>
     ({
@@ -476,14 +476,14 @@ export const modules = {
         'Restore Panel Siz'
       ),
       icon: 'chevron-down',
-    } as IActionBarItemProps),
+    }) as IActionBarItemProps,
 
   builtInPanelToolbox: () =>
     ({
       id: constants.PANEL_TOOLBOX_CLOSE,
       title: localize(constants.PANEL_TOOLBOX_CLOSE, 'Close Panel'),
       icon: 'close',
-    } as IActionBarItemProps),
+    }) as IActionBarItemProps,
 
   builtInMenuBarData: () =>
     [
@@ -596,7 +596,7 @@ export const modules = {
           },
         ],
       },
-      /*{
+      /* {
         id: 'Run',
         name: localize('menu.run', 'Run'),
         data: [

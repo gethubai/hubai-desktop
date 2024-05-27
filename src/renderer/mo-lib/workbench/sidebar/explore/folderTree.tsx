@@ -1,7 +1,11 @@
 /* eslint-disable react/function-component-definition */
 import 'reflect-metadata';
 import React, { memo, useRef, useEffect, useLayoutEffect } from 'react';
-import { type IFolderTree, type IFolderTreeNodeProps } from '@hubai/core';
+import {
+  UniqueId,
+  type IFolderTree,
+  type IFolderTreeNodeProps,
+} from '@hubai/core';
 import { select, getEventPosition } from '@hubai/core/esm/common/dom';
 import Tree, { type ITreeProps } from '@hubai/core/esm/components/tree';
 import { type IMenuItemProps, Menu } from '@hubai/core/esm/components/menu';
@@ -21,7 +25,7 @@ export interface IFolderTreeProps extends IFolderTreeController, IFolderTree {
   panel: ICollapseItem;
 }
 
-const detectHasEditableStatus = (data) => {
+const detectHasEditableStatus = (data: any) => {
   const stack = [...data];
   let res = false;
   while (stack.length) {
@@ -45,19 +49,21 @@ const Input = React.forwardRef(
     props: React.DetailedHTMLProps<
       React.InputHTMLAttributes<HTMLInputElement>,
       HTMLInputElement
-    >,
-    ref: React.LegacyRef<HTMLInputElement>
+    >
   ) => {
     const inputRef = useRef<HTMLInputElement>(null);
     useLayoutEffect(() => {
       if (inputRef.current) {
+        // eslint-disable-next-line react/prop-types
         const ext = ((props.defaultValue || '') as string).lastIndexOf('.');
         inputRef.current.selectionStart = 0;
         inputRef.current.selectionEnd =
           // if period at position of 0, then this period means hidden file
+          // eslint-disable-next-line react/prop-types
           ext > 0 ? ext : ((props.defaultValue || '') as string).length;
       }
-    }, []);
+      // eslint-disable-next-line react/prop-types
+    }, [props.defaultValue]);
     return <input {...props} ref={inputRef} />;
   }
 );
@@ -96,13 +102,15 @@ const FolderTree: React.FunctionComponent<IFolderTreeProps> = (props) => {
   // to detect current tree whether is editable
   const hasEditable = detectHasEditableStatus(data);
 
-  const onClickMenuItem = (e, item) => {
+  const onClickMenuItem = (_: any, item: any) => {
     onClickContextMenu?.(item);
     contextMenu.current?.hide();
   };
 
   // init context menu
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const initContextMenu = () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     return useContextMenu({
       anchor: select(`.${folderTreeClassName}`),
       render: () => (
@@ -117,25 +125,26 @@ const FolderTree: React.FunctionComponent<IFolderTreeProps> = (props) => {
 
   const handleMenuClick = (
     item: IMenuItemProps,
-    data: IFolderTreeNodeProps
+    eventData: IFolderTreeNodeProps
   ) => {
-    onClickContextMenu?.(item, data);
+    onClickContextMenu?.(item, eventData);
     contextView?.hide();
   };
 
-  const handleRightClick: ITreeProps['onRightClick'] = (event, data) => {
+  const handleRightClick: ITreeProps['onRightClick'] = (event, eventData) => {
     if ((event.target as HTMLElement).nodeName !== 'INPUT') {
       event.preventDefault();
-      const menuItems = onRightClick?.(data) || [];
+      const menuItems = onRightClick?.(eventData) || [];
 
-      menuItems.length &&
-        contextView?.show(getEventPosition(event), () => (
-          <Menu
-            role="menu"
-            onClick={(_, item) => handleMenuClick(item!, data)}
-            data={menuItems}
-          />
-        ));
+      if (!menuItems.length) return;
+
+      contextView?.show(getEventPosition(event), () => (
+        <Menu
+          role="menu"
+          onClick={(_: any, item: any) => handleMenuClick(item, eventData)}
+          data={menuItems}
+        />
+      ));
     }
   };
 
@@ -177,7 +186,7 @@ const FolderTree: React.FunctionComponent<IFolderTreeProps> = (props) => {
 
     return isEditable ? (
       <Input
-        role="input"
+        role="textbox"
         className={folderTreeInputClassName}
         type="text"
         defaultValue={name}
@@ -189,7 +198,7 @@ const FolderTree: React.FunctionComponent<IFolderTreeProps> = (props) => {
         onClick={(e) => e.stopPropagation()}
       />
     ) : (
-      name!
+      name?.toString()
     );
   };
 
@@ -197,7 +206,7 @@ const FolderTree: React.FunctionComponent<IFolderTreeProps> = (props) => {
     onSelectFile?.();
   };
 
-  const handleDropTree = (source, target) => {
+  const handleDropTree = (source: any, target: any) => {
     onDropTree?.(source, target);
   };
 
@@ -212,13 +221,11 @@ const FolderTree: React.FunctionComponent<IFolderTreeProps> = (props) => {
     return () => {
       contextMenu.current?.dispose();
     };
-  }, [data.length]);
+  }, [data.length, folderPanelContextMenu.length, initContextMenu]);
 
   const welcomePage = (
     <div data-content={panel.id}>
-      {entry ? (
-        <>{entry}</>
-      ) : (
+      {entry || (
         <div style={{ padding: '10px 5px' }}>
           you have not yet opened a folder
           <Button onClick={handleAddRootFolder}>Add Folder</Button>
@@ -247,9 +254,11 @@ const FolderTree: React.FunctionComponent<IFolderTreeProps> = (props) => {
           onSelect={onSelectFile}
           onTreeClick={handleTreeClick}
           onRightClick={handleRightClick}
-          renderTitle={renderTitle}
+          renderTitle={renderTitle as any}
           onLoadData={onLoadData}
-          onExpand={onExpandKeys}
+          onExpand={(keys) => {
+            onExpandKeys?.(keys as UniqueId[]);
+          }}
           {...restProps}
         />
       </div>

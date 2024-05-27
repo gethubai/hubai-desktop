@@ -1,9 +1,7 @@
-import { AuxiliaryModel, IAuxiliaryData } from '@hubai/core';
+import { IAuxiliaryData } from '@hubai/core';
 import AuxiliaryBarService from 'mo/services/workbench/auxiliaryBarService';
-
-export class ChatAuxiliaryBarModel extends AuxiliaryModel {
-  tabs: Record<string, React.ReactNode[]> = {};
-}
+import React from 'react';
+import { ChatAuxiliaryBarModel } from '../models/chatAuxiliaryBarModel';
 
 class ChatAuxiliaryBarService extends AuxiliaryBarService {
   constructor() {
@@ -17,9 +15,10 @@ class ChatAuxiliaryBarService extends AuxiliaryBarService {
       if (tab && tabs[tab?.key]) {
         this.setChildren(
           <>
-            {tabs[tab.key].map((c, i) => (
-              <div key={`tab-content-${i}`}>{c}</div>
-            ))}
+            {tabs[tab.key].map((c, i) => {
+              const key = `tab-content-${i}`;
+              return <div key={key}>{c}</div>;
+            })}
           </>
         );
       }

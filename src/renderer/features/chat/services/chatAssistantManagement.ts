@@ -1,7 +1,4 @@
-import {
-  IChatAssistant,
-  IChatAssistantsManagement,
-} from '@hubai/core';
+import { IChatAssistant, IChatAssistantsManagement } from '@hubai/core';
 
 export class ChatAssistantsManagement implements IChatAssistantsManagement {
   private readonly actors: IChatAssistant[] = [];
@@ -22,5 +19,3 @@ export class ChatAssistantsManagement implements IChatAssistantsManagement {
     }
   }
 }
-
-

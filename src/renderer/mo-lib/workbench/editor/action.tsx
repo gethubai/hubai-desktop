@@ -1,12 +1,11 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useRef, memo } from 'react';
 import { Icon } from '@hubai/core/esm/components/icon';
 import { Menu } from '@hubai/core/esm/components/menu';
 import { DropDown, DropDownRef } from '@hubai/core/esm/components/dropdown';
-import {
-  IEditorActionsProps,
-  IEditorAction,
-  IEditorController,
-} from '@hubai/core';
+import { IEditorController } from 'mo/controllers';
+import { IEditorActionsProps, IEditorAction } from '@hubai/core';
 import { classNames } from '@hubai/core/esm/common/className';
 import Tooltip from '@hubai/core/esm/components/tooltip';
 import {
@@ -51,12 +50,12 @@ function EditorAction(props: IEditorActionProps & IEditorController) {
 
   const childRef = useRef<DropDownRef>(null);
 
-  const handleOnMenuClick = (_, item) => {
+  const handleOnMenuClick = (_: any, item: IEditorActionsProps) => {
     onClickActions(item);
     childRef.current?.dispose();
   };
 
-  const handleActionsClick = (action) => {
+  const handleActionsClick = (action: IEditorActionsProps) => {
     onClickActions(action);
   };
 
@@ -74,6 +73,18 @@ function EditorAction(props: IEditorActionProps & IEditorController) {
       </span>
     );
 
+  const getActionIcon = (action: IEditorActionsProps) => {
+    if (action.icon) {
+      return typeof action.icon === 'string' ? (
+        <Icon type={action.icon} />
+      ) : (
+        action.icon
+      );
+    }
+
+    return action.name;
+  };
+
   return (
     <div className={groupActionsClassName}>
       {isActiveGroup &&
@@ -86,15 +97,7 @@ function EditorAction(props: IEditorActionProps & IEditorController) {
                 action.disabled && groupActionItemDisabledClassName
               )}
             >
-              {action.icon ? (
-                typeof action.icon === 'string' ? (
-                  <Icon type={action.icon} />
-                ) : (
-                  action.icon
-                )
-              ) : (
-                action.name
-              )}
+              {getActionIcon(action)}
             </div>
           </Tooltip>
         ))}

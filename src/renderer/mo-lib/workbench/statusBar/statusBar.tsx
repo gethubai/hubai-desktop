@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
-import { IStatusBar, IStatusBarController, IStatusBarItem } from '@hubai/core';
+import { IStatusBarController } from 'mo/controllers';
+import { IStatusBar, IStatusBarItem } from '@hubai/core';
 import {
   IMenuItemProps,
   Menu,
@@ -31,13 +32,14 @@ function StatusBar(props: IStatusBar & IStatusBarController) {
       onContextMenuClick?.(e, item);
       contextViewMenu?.dispose();
     },
-    [contextMenu]
+    [contextViewMenu, onContextMenuClick]
   );
   const renderContextMenu = () => (
     <Menu role="menu" onClick={onClickMenuItem} data={contextMenu} />
   );
   useEffect(() => {
     if (contextMenu.length > 0) {
+      // eslint-disable-next-line react-hooks/rules-of-hooks, react-hooks/exhaustive-deps
       contextViewMenu = useContextMenu({
         anchor: select(`#${ID_STATUS_BAR}`),
         render: renderContextMenu,

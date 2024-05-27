@@ -135,10 +135,7 @@ export class ExtensionManagementService
     return settings.extension[extensionName];
   }
 
-  saveExtensionSettings(
-    extension: LocalExtensionModel,
-    newSettings: any
-  ) {
+  saveExtensionSettings(extension: LocalExtensionModel, newSettings: any) {
     const currentSettings = this.settingsService.getSettings();
     currentSettings.extension[extension.name] = newSettings;
     this.settingsService.applySettings(currentSettings);
@@ -188,9 +185,13 @@ export class ExtensionManagementService
         });
     });
 
-    const current = this.settingsService.getSettings().extension;
+    const currentSettings = this.settingsService.getSettings();
+    const current = currentSettings.extension;
     if (!isEqual(current, extensionSettings)) {
-      this.settingsService.update({ extension: extensionSettings });
+      this.settingsService.update({
+        extension: extensionSettings,
+        brain: currentSettings.brain,
+      });
       this.settingsService.saveSettings();
     }
   }

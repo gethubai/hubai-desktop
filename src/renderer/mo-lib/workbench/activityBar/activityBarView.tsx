@@ -1,6 +1,7 @@
 import { Controller, connect } from '@hubai/core/esm/react';
 import { container } from 'tsyringe';
-import { IActivityBarController, type IActivityBarService } from '@hubai/core';
+import { IActivityBarController } from 'mo/controllers';
+import { type IActivityBarService } from '@hubai/core';
 import ActivityBar from './activityBar';
 
 const activityBarService = container.resolve<IActivityBarService>(

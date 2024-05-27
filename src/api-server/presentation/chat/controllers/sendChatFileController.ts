@@ -4,11 +4,17 @@ import { Controller } from '../../../main/protocols/controller';
 import { HttpResponse } from '../../../main/protocols/http';
 import { ok } from '../../helpers';
 
+export type SendChatFileControllerRequest = IRequest & {
+  /* data: Uint8Array;
+    mimeType: string; */
+  file: { buffer: Buffer; mimetype: string };
+};
+
 export class SendChatFileController implements Controller {
   constructor(private readonly saveChatFile: SaveFileChat) {}
 
   handle = async (
-    request: SendChatFileController.Request
+    request: SendChatFileControllerRequest
   ): Promise<HttpResponse> => {
     // TODO: Validate fileSize?
     const result = await this.saveChatFile.saveFile({
@@ -17,13 +23,5 @@ export class SendChatFileController implements Controller {
     });
 
     return ok(result);
-  };
-}
-
-export namespace SendChatFileController {
-  export type Request = IRequest & {
-    /* data: Uint8Array;
-    mimeType: string; */
-    file: { buffer: Buffer; mimetype: string };
   };
 }

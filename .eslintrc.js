@@ -33,6 +33,10 @@ module.exports = {
     'no-underscore-dangle': 'off',
     'react/require-default-props': 'off',
     'no-bitwise': 'off',
+    'no-console': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+    'no-await-in-loop': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off',
     'prettier/prettier': [
       'error',
       {

@@ -113,6 +113,8 @@ class PanelService extends Component<IPanel> implements IPanelService {
       ) {
         return value;
       }
+
+      return undefined;
     });
   }
 

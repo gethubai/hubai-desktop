@@ -123,6 +123,7 @@ class ProblemsService extends Component<IProblems> implements IProblemsService {
     this.subscribe(ProblemsEvent.onSelect, callback);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private updateStatusBar<T>(): void {
     const { data = [] } = this.state;
     const markersData = this.getProblemsMarkers(data);

@@ -10,7 +10,7 @@ import { EventNames, EventsMap, IEvent } from '../../pubsub/models/event';
 export class MqttEventSubscriber<TEventMap extends EventsMap>
   implements IEventSubscriber<TEventMap>
 {
-  private subscriptions: Record<string, Function> = {};
+  private subscriptions: Record<string, (...args: any[]) => any> = {};
 
   constructor(
     private readonly client: MqttClient,
@@ -76,15 +76,12 @@ export class MqttEventSubscriber<TEventMap extends EventsMap>
     this.subscriptions[parsedName as string] = listener;
 
     return {
-      name: parsedName,
-      unsubscribe: () => this.unsubscribe(parsedName, listener),
+      name: parsedName?.toString(),
+      unsubscribe: () => this.unsubscribe(parsedName),
     };
   }
 
-  unsubscribe<Ev extends EventNames<TEventMap>>(
-    ev: Ev | IEvent<Ev>,
-    listener: (...args: Parameters<TEventMap[Ev]>) => void
-  ): void {
+  unsubscribe<Ev extends EventNames<TEventMap>>(ev: Ev | IEvent<Ev>): void {
     const { parsedName } = getEventName<TEventMap, Ev>(ev);
 
     this.client.unsubscribe(parsedName as string);

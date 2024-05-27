@@ -96,12 +96,13 @@ export class CommandQuickAccessProvider extends AbstractEditorCommandsQuickAcces
   }
 
   protected getGlobalCommandPicks(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     disposables: DisposableStore
   ): ICommandQuickPick[] {
     const globalCommandPicks: ICommandQuickPick[] = [];
     const globalCommandsMenu = MenuRegistry.getMenuItems(MenuId.CommandPalette);
 
-    for (const menu of globalCommandsMenu) {
+    Array.from(globalCommandsMenu).forEach((menu: any) => {
       // Label
       let label =
         (typeof menu.command.title === 'string'
@@ -128,19 +129,21 @@ export class CommandQuickAccessProvider extends AbstractEditorCommandsQuickAcces
         typeof menu.command.category !== 'string'
           ? menu.command.category.original
           : undefined;
-      const commandAlias =
-        aliasLabel && category
-          ? aliasCategory
-            ? `${aliasCategory}: ${aliasLabel}`
-            : `${category}: ${aliasLabel}`
-          : aliasLabel;
+
+      let commandAlias = aliasLabel;
+
+      if (aliasLabel && category) {
+        commandAlias = aliasCategory
+          ? `${aliasCategory}: ${aliasLabel}`
+          : `${category}: ${aliasLabel}`;
+      }
 
       globalCommandPicks.push({
         commandId: menu.command.id,
         commandAlias,
         label: stripIcons(label),
       });
-    }
+    });
 
     return globalCommandPicks;
   }

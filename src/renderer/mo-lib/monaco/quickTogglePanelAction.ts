@@ -44,6 +44,7 @@ export class QuickTogglePanelAction extends Action2 {
     this.menuBarService = container.resolve<IMenuBarService>('IMenuBarService');
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   run(accessor: ServicesAccessor) {
     const hidden = this.layoutService.togglePanelVisibility();
     this.menuBarService.update(QuickTogglePanelAction.ID, {

@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unused-prop-types */
+
 import { container } from 'tsyringe';
 import { IActionBarItemProps } from '@hubai/core/esm/components';
 import { Component } from '@hubai/core/esm/react';
@@ -51,13 +53,16 @@ export class ChatListService extends Component<IChatListState> {
   }
 
   getContactsDictionary(): Record<string, Contact> {
-    return this.contactService.list().reduce((acc, obj) => {
-      acc[obj.id] = obj;
-      return acc;
-    }, {} as Record<string, Contact>);
+    return this.contactService.list().reduce(
+      (acc, obj) => {
+        acc[obj.id] = obj;
+        return acc;
+      },
+      {} as Record<string, Contact>
+    );
   }
 
-  formatNames(names?: string[], andText: string = 'and'): string {
+  formatNames(names?: string[], andText = 'and'): string {
     if (!names) return '';
     const { length } = names;
 

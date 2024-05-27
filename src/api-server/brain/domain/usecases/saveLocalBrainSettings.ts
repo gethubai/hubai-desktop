@@ -1,17 +1,15 @@
+export type SaveLocalBrainSettingsParams = {
+  brainId: string;
+  newSettings?: any;
+};
+
+export type SaveLocalBrainSettingsResult = {
+  success: boolean;
+  errors?: string[];
+};
+
 export interface SaveLocalBrainSettings {
   save: (
-    params: SaveLocalBrainSettings.Params
-  ) => Promise<SaveLocalBrainSettings.Result>;
-}
-
-export namespace SaveLocalBrainSettings {
-  export type Params = {
-    brainId: string;
-    newSettings?: any;
-  };
-
-  export type Result = {
-    success: boolean;
-    errors?: string[];
-  };
+    params: SaveLocalBrainSettingsParams
+  ) => Promise<SaveLocalBrainSettingsResult>;
 }

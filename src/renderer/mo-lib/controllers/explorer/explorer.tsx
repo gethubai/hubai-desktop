@@ -2,6 +2,7 @@ import React from 'react';
 import { Controller } from '@hubai/core/esm/react/controller';
 import { inject, injectable } from 'tsyringe';
 import { ControllerObject, connect } from '@hubai/core/esm/react';
+// eslint-disable-next-line import/no-cycle
 import { Explorer, FolderTree } from 'mo/workbench/sidebar/explore';
 import { IMenuItemProps } from '@hubai/core/esm/components/menu';
 import {
@@ -22,12 +23,12 @@ export interface IExplorerController extends Partial<Controller> {
     e: React.MouseEvent,
     item?: IMenuItemProps
   ) => void;
-  onCollapseChange?: (keys) => void;
+  onCollapseChange?: (keys: any) => void;
   onToolbarClick?: (
     item: IActionBarItemProps,
     panel: IExplorerPanelItem
   ) => void;
-  onClick?: (event, item) => void;
+  onClick?: (event: any, item: any) => void;
 }
 
 @injectable()
@@ -113,7 +114,7 @@ class ExplorerController extends Controller implements IExplorerController {
     }
   };
 
-  public readonly onCollapseChange = (keys) => {
+  public readonly onCollapseChange = (keys: any) => {
     this.emit(ExplorerEvent.onCollapseChange, keys);
   };
 

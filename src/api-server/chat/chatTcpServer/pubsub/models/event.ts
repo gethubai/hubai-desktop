@@ -12,7 +12,7 @@ export declare type EventNames<Map extends EventsMap> = keyof Map &
 
 export declare type EventParams<
   Map extends EventsMap,
-  Ev extends EventNames<Map>
+  Ev extends EventNames<Map>,
 > = Parameters<Map[Ev]>;
 
 export interface IEventNameParams {

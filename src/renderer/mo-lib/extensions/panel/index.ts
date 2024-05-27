@@ -1,9 +1,11 @@
 import { AppContext, IExtension } from '@hubai/core';
+// eslint-disable-next-line import/no-cycle
 import molecule from 'mo';
 
 const ExtendsPanel: IExtension = {
   id: 'ExtendsPanel',
   name: 'Extends Panel',
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   activate(context: AppContext) {
     molecule.panel.onTabClose((key) => {
       const { data = [], current } = molecule.panel.getState();
@@ -19,6 +21,8 @@ const ExtendsPanel: IExtension = {
       molecule.panel.remove(key);
     });
   },
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   dispose() {},
 };
 

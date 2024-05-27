@@ -17,25 +17,24 @@ import webpackPaths from './webpack.paths';
 import checkNodeEnv from '../scripts/check-node-env';
 import deleteSourceMaps from '../scripts/delete-source-maps';
 
+const { sentryWebpackPlugin } = require('@sentry/webpack-plugin');
 const moduleFederationConfig = require('./moduleFederation');
-const { sentryWebpackPlugin } = require("@sentry/webpack-plugin");
 
 const { ModuleFederationPlugin } = webpack.container;
 
 checkNodeEnv('production');
 deleteSourceMaps();
 
-const addSentryWebpackPlugin = 
-  process.env.SENTRY_NO_SOURCE_MAPS
-    ? []
-    : [
-        sentryWebpackPlugin({
-          authToken: process.env.SENTRY_AUTH_TOKEN,
-          org: process.env.SENTRY_ORG,
-          project: process.env.SENTRY_PROJECT_RENDERER,
-          url: process.env.SENTRY_URL,
-          telemetry: false,
-        })
+const addSentryWebpackPlugin = process.env.SENTRY_NO_SOURCE_MAPS
+  ? []
+  : [
+      sentryWebpackPlugin({
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+        org: process.env.SENTRY_ORG,
+        project: process.env.SENTRY_PROJECT_RENDERER,
+        url: process.env.SENTRY_URL,
+        telemetry: false,
+      }),
     ];
 
 const configuration: webpack.Configuration = {

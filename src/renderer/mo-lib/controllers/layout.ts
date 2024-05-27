@@ -16,6 +16,7 @@ export class LayoutController extends Controller implements ILayoutController {
     super();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   public initView() {}
 
   public onPaneSizeChange = (splitPanePos: number[]) => {

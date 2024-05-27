@@ -23,7 +23,6 @@ import {
   DragDropZone,
   FileMosaic,
 } from '@hubai/core/esm/components';
-import { editor as monaco } from '@hubai/core/esm/monaco';
 import { IColors } from '@hubai/core';
 import Markdown from 'renderer/components/markdown';
 import { DropDownRef } from '@hubai/core/esm/components/dropdown';
@@ -79,7 +78,7 @@ function ChatWindow({
   const childRef = useRef<DropDownRef>(null);
 
   const handlePlusButtonClick = () => {
-    childRef.current!.dispose();
+    childRef.current?.dispose();
   };
 
   const plusButtonMenu = (
@@ -97,22 +96,26 @@ function ChatWindow({
     return [contentPanePos[0], 0];
   };
 
+  const checkMicAccess = (status: any) => {
+    setMicStatus(status);
+
+    if (status === 'granted') {
+      window.electron.mediaAccess
+        .askForMicrophoneAccess()
+        .then((requestAccessStatus) => {
+          setMicStatus(`${status}, granted: ${requestAccessStatus}`);
+        })
+        .catch((err) => {
+          console.error('err on askForMicrophoneAccess', err);
+        });
+    }
+  };
+
   useEffect(() => {
     window.electron.mediaAccess
       .getMicrophoneAccessStatus()
       .then((status) => {
-        setMicStatus(status);
-
-        if (status !== 'granted') {
-          window.electron.mediaAccess
-            .askForMicrophoneAccess()
-            .then((requestAccessStatus) => {
-              setMicStatus(`${status}, granted: ${requestAccessStatus}`);
-            })
-            .catch((err) => {
-              console.error('err on askForMicrophoneAccess', err);
-            });
-        }
+        checkMicAccess(status);
       })
       .catch((err) => {
         console.error('err on getting micAccessStatus', err);
@@ -124,14 +127,15 @@ function ChatWindow({
       if (!event?.clipboardData?.items?.length) return;
 
       // Access the clipboard data
-      const items = event.clipboardData.items;
+      const { items } = event.clipboardData;
       const dataTransfer = new DataTransfer();
-      for (const item of items) {
+
+      Array.from(items).forEach((item) => {
         if (item.type.startsWith('image')) {
           const blob = item.getAsFile();
           if (blob) dataTransfer.items.add(blob);
         }
-      }
+      });
 
       if (dataTransfer.files.length > 0) attachFile(dataTransfer.files);
     };
@@ -141,7 +145,7 @@ function ChatWindow({
 
     // Clean up
     return () => window.removeEventListener('paste', pasteHandler);
-  }, []);
+  }, [attachFile]);
 
   const sendMessage = useCallback(() => {
     const value = chatInputRef.current?.getValue();
@@ -152,7 +156,7 @@ function ChatWindow({
   }, [chatInputRef, onSendTextMessage]);
 
   const onChatAction = useCallback(
-    (action: ChatAction, _: monaco.ICodeEditor) => {
+    (action: ChatAction) => {
       if (action === ChatAction.sendMessage) {
         sendMessage();
       }
@@ -198,7 +202,9 @@ function ChatWindow({
                 <BrainSelector
                   availableBrains={availableBrains}
                   selectedBrains={selectedBrains}
-                  onCapabilityBrainChanged={onCapabilityBrainChanged!}
+                  onCapabilityBrainChanged={(brain, capability) =>
+                    onCapabilityBrainChanged?.(brain, capability)
+                  }
                 />
               )}
               <div className="chat-container">
@@ -246,9 +252,7 @@ function ChatWindow({
                             )}
 
                             {!!message.attachments?.length && (
-                              <Message.Attachments
-                                data={message.attachments!}
-                              />
+                              <Message.Attachments data={message.attachments} />
                             )}
                           </Message.Content>
                         </Message.Root>
@@ -324,10 +328,10 @@ function ChatWindow({
           </Pane>
 
           <Pane minSize={100} maxSize="80%" style={{ overflowY: 'scroll' }}>
-            <AuxiliaryBar />
+            {AuxiliaryBar && <AuxiliaryBar />}
           </Pane>
         </SplitPane>
-        <AuxiliaryBarTabs />
+        {AuxiliaryBarTabs && <AuxiliaryBarTabs />}
       </div>
       MicStatus: {micStatus}
     </div>

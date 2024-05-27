@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { memo } from 'react';
 import { getBEMElement, prefixClaName } from '@hubai/core/esm/common/className';
 import TreeView from '@hubai/core/esm/components/tree';
