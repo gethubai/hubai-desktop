@@ -116,7 +116,7 @@
     "electron-updater": "^6.1.8",
     "lodash": "^4.17.21",
     "monaco-editor": "^0.31.0",
-    "mqtt": "^5.6.1",
+    "mqtt": "^5.7.0",
     "multer": "^1.4.5-lts.1",
     "node-stream-zip": "^1.15.0",
     "process": "^0.11.10",
