@@ -22,12 +22,12 @@ export class PackageController extends Controller implements IDisposable {
       install: {
         text: 'Install',
         action: this.onInstall,
-        hasCaptcha: true,
+        hasCaptcha: false,
       },
       update: {
         text: 'Update',
         action: this.onInstall,
-        hasCaptcha: true,
+        hasCaptcha: false,
       },
       uninstall: {
         text: 'Uninstall',
@@ -41,6 +41,7 @@ export class PackageController extends Controller implements IDisposable {
       },
       installing: {
         text: 'Installing',
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         action: () => {},
         disabled: true,
       },
