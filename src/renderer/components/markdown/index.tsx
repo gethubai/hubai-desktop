@@ -29,7 +29,11 @@ export default function Markdown(props: any) {
             <img
               {...props}
               className={className}
-              style={{ maxWidth: '100%' }}
+              style={{
+                maxWidth: '100%',
+                maxHeight: '100%',
+                objectFit: 'contain',
+              }}
             />
           );
         },

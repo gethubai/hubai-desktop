@@ -97,6 +97,7 @@
     flex: 1;
     flex-direction: row;
     padding-left: 14px;
+    max-width: 100%;
 
     .content {
       scrollbar-width: thin;
@@ -107,6 +108,10 @@
 
       max-width: 65%;
       min-width: 65%;
+
+      code {
+        text-wrap: wrap;
+      }
     }
   }
 
