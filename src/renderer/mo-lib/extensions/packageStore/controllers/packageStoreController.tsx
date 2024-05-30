@@ -3,6 +3,7 @@ import {
   Controller,
   IEditorTab,
   INotificationItem,
+  IToastService,
   component,
   localize,
 } from '@hubai/core';
@@ -26,6 +27,8 @@ export class PackageStoreController extends Controller {
 
   private readonly packageManagementService: IPackageManagementService;
 
+  private readonly toastService: IToastService;
+
   constructor(
     private readonly appContext: AppContext,
     private readonly packageStoreService: PackageStoreService
@@ -33,6 +36,7 @@ export class PackageStoreController extends Controller {
     super();
     this.packageManagementService =
       container.resolve<IPackageManagementService>('IPackageManagementService');
+    this.toastService = container.resolve<IToastService>('IToastService');
   }
 
   initView(): void {
@@ -197,7 +201,8 @@ export class PackageStoreController extends Controller {
 
     const controller = new PackageController(
       service,
-      this.packageManagementService
+      this.packageManagementService,
+      this.toastService
     );
 
     const PackageViewConnected = connect(service, PackageView, controller);

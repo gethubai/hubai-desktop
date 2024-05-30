@@ -1,4 +1,4 @@
-import { Controller } from '@hubai/core';
+import { Controller, type IToastService } from '@hubai/core';
 import {
   IPackageManagementService,
   PackageEvents,
@@ -14,7 +14,8 @@ export class PackageController extends Controller implements IDisposable {
 
   constructor(
     private readonly packageService: PackageService,
-    private readonly packageManagementService: IPackageManagementService
+    private readonly packageManagementService: IPackageManagementService,
+    private readonly toastService: IToastService
   ) {
     super();
 
@@ -174,6 +175,10 @@ export class PackageController extends Controller implements IDisposable {
       this.updateActionButton();
 
       this.setError(result.error!);
+    } else {
+      this.toastService.success(
+        'Package has been successfully installed. Reload the application to use it.'
+      );
     }
   };
 
@@ -195,6 +200,10 @@ export class PackageController extends Controller implements IDisposable {
     const result = await this.packageManagementService.uninstallPackage(item);
     if (!result.success) {
       this.setError(result.error!);
+    } else {
+      this.toastService.success(
+        `Package ${item.displayName} has been successfully uninstalled`
+      );
     }
   };
 }
