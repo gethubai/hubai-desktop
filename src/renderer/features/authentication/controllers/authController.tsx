@@ -6,9 +6,13 @@ import {
 } from '@hubai/core';
 import { inject, injectable } from 'tsyringe';
 import { constants } from 'mo/services/builtinService/const';
+import {
+  type ITelemetryService,
+  TelemetryEvents,
+} from 'renderer/common/telemetry';
 import { type IAuthService } from '../services/authService';
 
-export interface IAuthController extends Partial<Controller> {}
+export type IAuthController = Partial<Controller>;
 
 const contextMenuActions = {
   ACTION_SIGN_IN: 'auth.action.login',
@@ -24,7 +28,9 @@ export default class AuthController
     @inject('IAuthService')
     private readonly authService: IAuthService,
     @inject('IActivityBarService')
-    private activityBarService: IActivityBarService
+    private activityBarService: IActivityBarService,
+    @inject('ITelemetryService')
+    private readonly telemetryService: ITelemetryService
   ) {
     super();
   }
@@ -43,10 +49,12 @@ export default class AuthController
     });
 
     window.electron.ipcRenderer.on('logged-out', () => {
+      this.telemetryService.log(TelemetryEvents.AUTH_SIGN_OUT);
       window.electron.restart();
     });
 
     window.electron.ipcRenderer.on('logged-in', () => {
+      this.telemetryService.log(TelemetryEvents.AUTH_SIGN_IN);
       window.electron.restart();
     });
   }

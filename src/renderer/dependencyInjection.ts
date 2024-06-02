@@ -91,6 +91,9 @@ import StatusBarController, {
   IStatusBarController,
 } from 'mo/controllers/statusBar';
 import { registerChatCompletionProvider } from 'mo/monaco/registerChatCompletionProvider';
+import { ToastService } from 'mo/services/toastService';
+import { GlobalShortcutService } from 'mo/services/globalShortcutService';
+import { UserShortcutService } from 'mo/services/userShortcutService';
 import { ChatStateModel, IChatState } from './features/chat/models/chat';
 import { BrainStateModel, IBrainState } from './features/brain/models/brain';
 import { ChatService } from './features/chat/services/chat';
@@ -143,9 +146,8 @@ import { IChatClient } from './features/chat/sdk/contracts';
 import { ChatClient } from './features/chat/sdk/chatClient';
 import { BrainClientManager } from './features/brain/services/brainClientManager';
 import { ChatAssistantsManagement } from './features/chat/services/chatAssistantManagement';
-import { ToastService } from 'mo/services/toastService';
-import { GlobalShortcutService } from 'mo/services/globalShortcutService';
-import { UserShortcutService } from 'mo/services/userShortcutService';
+import { type ITelemetryService } from './common/telemetry';
+import { AptaBaseTelemetryService } from './diagnostics/aptabaseTelemetryService';
 
 container.registerSingleton<ISideBarController>(
   'ISidebarController',
@@ -383,5 +385,10 @@ container.register<IAuthState>('IAuthState', {
 });
 
 registerChatCompletionProvider();
+
+container.registerSingleton<ITelemetryService>(
+  'ITelemetryService',
+  AptaBaseTelemetryService
+);
 
 console.log('Services have been registered');

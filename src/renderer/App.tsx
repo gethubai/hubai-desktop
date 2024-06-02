@@ -14,13 +14,18 @@ import 'react-simple-keyboard/build/css/index.css';
 import InstanceService from 'mo/services/instanceService';
 import { BuiltInColorTheme } from 'mo/services/theme/colorThemeService';
 import debounce from 'lodash/debounce';
-import loadExtensions from './features/extensions/extensionLoader';
 import { container } from 'tsyringe';
-import { IBrainManagementService } from './features/brain/services/brainManagement';
 import { AppContext } from '@hubai/core';
 import HubaiContext from '@hubai/core/esm/contexts/hubaiContext';
+import { IBrainManagementService } from './features/brain/services/brainManagement';
+import loadExtensions from './features/extensions/extensionLoader';
+import {
+  ITelemetryService,
+  TelemetryEvents,
+  TelemetryLevel,
+} from './common/telemetry';
 
-const isDevelopment = process.env.NODE_ENV === 'development'
+const isDevelopment = process.env.NODE_ENV === 'development';
 
 if (!isDevelopment && process.env.SENTRY_DSN_RENDERER) {
   try {
@@ -59,12 +64,32 @@ const setStartupActivityBar = async () => {
   }
 };
 
+const startTelemetry = async () => {
+  try {
+    const telemetryService =
+      container.resolve<ITelemetryService>('ITelemetryService');
+
+    const settings = mo.settings.getSettings();
+
+    telemetryService.setLevel(
+      settings.sendTelemetryData === true
+        ? TelemetryLevel.USAGE
+        : TelemetryLevel.ERROR // Only send error data
+    );
+
+    telemetryService.log(TelemetryEvents.APP_STARTED);
+  } catch (error) {
+    console.error('Failed to start telemetry', error);
+  }
+};
+
 export default function App() {
   const [moInstance, setMoInstance] = useState<InstanceService | null>(null);
   const [appContext, setAppContext] = useState<AppContext | null>(null);
 
   useEffect(() => {
     const loadAndCreate = async () => {
+      startTelemetry();
       const extensions = await loadExtensions();
       const instance = create({ extensions });
 
@@ -101,26 +126,24 @@ export default function App() {
   }
 
   return moInstance.render(
-    <>
-      <HubaiContext.Provider
-        value={{
-          services: appContext?.services!,
-          theme: {
-            getCurrent: () => appContext?.services.theme.getColorTheme()!,
-            getColorThemeMode: () =>
-              appContext?.services.theme.getColorThemeMode()!,
-          },
-          i18n: {
-            getCurrentLocale: () => mo.i18n.getCurrentLocale()!,
-            getLocales: () => mo.i18n.getLocales(),
-            localize: (key: string, defaultValue, ...args: string[]) =>
-              mo.i18n.localize(key, defaultValue, ...args),
-          },
-        }}
-      >
-        <Workbench />
-        <ToastContainer />
-      </HubaiContext.Provider>
-    </>
+    <HubaiContext.Provider
+      value={{
+        services: appContext?.services!,
+        theme: {
+          getCurrent: () => appContext?.services.theme.getColorTheme()!,
+          getColorThemeMode: () =>
+            appContext?.services.theme.getColorThemeMode()!,
+        },
+        i18n: {
+          getCurrentLocale: () => mo.i18n.getCurrentLocale()!,
+          getLocales: () => mo.i18n.getLocales(),
+          localize: (key: string, defaultValue, ...args: string[]) =>
+            mo.i18n.localize(key, defaultValue, ...args),
+        },
+      }}
+    >
+      <Workbench />
+      <ToastContainer />
+    </HubaiContext.Provider>
   );
 }
