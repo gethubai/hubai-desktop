@@ -14,6 +14,7 @@ import '../data/realm/app';
 import { app, BrowserWindow, shell, ipcMain, protocol, dialog } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import contextMenu from 'electron-context-menu';
+import { initialize } from '@aptabase/electron/main';
 
 import log from 'electron-log';
 import {
@@ -45,6 +46,10 @@ import { registerShortcutsHandlersForWindow } from './ipc/globalShortcutManager/
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
+if (process.env.APTABASE_APP_KEY) {
+  initialize(process.env.APTABASE_APP_KEY);
+}
+
 // If app.setPath('userData', '/path/to/data') is to be used, move Sentry.init to after path is set
 if (!isDevelopment && process.env.SENTRY_DSN) {
   try {
@@ -63,6 +68,10 @@ const isDebug = isDevelopment || process.env.DEBUG_PROD === 'true';
 protocol.registerSchemesAsPrivileged([
   {
     scheme: 'msg',
+    privileges: { supportFetchAPI: true, stream: true },
+  },
+  {
+    scheme: 'aptabase-ipc',
     privileges: { supportFetchAPI: true, stream: true },
   },
 ]);
