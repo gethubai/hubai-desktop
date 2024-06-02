@@ -43,7 +43,7 @@ import '../api-server/authentication/ipc/mainApi';
 import '../api-server/user/ipc/mainApi';
 import { registerShortcutsHandlersForWindow } from './ipc/globalShortcutManager/mainApi';
 
-const isDevelopment = process.env.NODE_ENV === 'development'
+const isDevelopment = process.env.NODE_ENV === 'development';
 
 // If app.setPath('userData', '/path/to/data') is to be used, move Sentry.init to after path is set
 if (!isDevelopment && process.env.SENTRY_DSN) {
@@ -302,28 +302,6 @@ const startInstrumentation = async () => {
     } else {
       console.log('User declined to send telemetry data');
     }
-  }
-
-  if (
-    process.env.APP_INSIGHTS_INSTRUMENTATION_KEY &&
-    canSendTelemetryData === true
-  ) {
-    const appInsights = require('applicationinsights');
-    appInsights
-      .setup(process.env.APP_INSIGHTS_INSTRUMENTATION_KEY)
-      .setAutoDependencyCorrelation(true)
-      .setAutoCollectRequests(true)
-      .setAutoCollectPerformance(true)
-      .setAutoCollectExceptions(true)
-      .setAutoCollectDependencies(true)
-      .setAutoCollectConsole(true, true)
-      .setUseDiskRetryCaching(true);
-
-    appInsights.start();
-    console.log(
-      'Instrumentation has been started',
-      appInsights.defaultClient.context.tags
-    );
   }
 };
 
