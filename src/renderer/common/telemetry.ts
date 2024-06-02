@@ -30,7 +30,7 @@ export enum TelemetryEvents {
 export interface ITelemetryData {
   from?: string;
   target?: string;
-  [key: string]: any;
+  [key: string]: string | number | boolean;
 }
 
 export interface ITelemetryService {

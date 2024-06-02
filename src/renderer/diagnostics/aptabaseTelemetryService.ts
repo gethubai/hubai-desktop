@@ -1,7 +1,7 @@
 import { trackEvent } from '@aptabase/electron/renderer';
 import {
-  ITelemetryData,
-  ITelemetryService,
+  type ITelemetryData,
+  type ITelemetryService,
   TelemetryLevel,
 } from 'renderer/common/telemetry';
 
@@ -19,18 +19,11 @@ export class AptaBaseTelemetryService implements ITelemetryService {
   }
 
   log(event: string, data?: ITelemetryData): void {
-    if (this._telemetryLevel !== TelemetryLevel.USAGE) {
-      return;
-    }
-
-    trackEvent(event, data);
+    if (this.telemetryLevel >= TelemetryLevel.USAGE) trackEvent(event, data);
   }
 
   error(errorEventName: string, data?: ITelemetryData): void {
-    if (this._telemetryLevel === TelemetryLevel.NONE) {
-      return;
-    }
-
-    trackEvent(errorEventName, data);
+    if (this.telemetryLevel >= TelemetryLevel.CRASH)
+      trackEvent(errorEventName, data);
   }
 }
