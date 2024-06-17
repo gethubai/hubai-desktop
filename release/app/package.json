@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "aedes": "^0.51.1",
-    "realm": "^12.9.0",
+    "realm": "^12.10.0",
     "websocket-stream": "^5.5.2",
     "ws": "^8.17.0"
   }
