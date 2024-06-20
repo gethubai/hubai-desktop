@@ -141,7 +141,7 @@
     "@electron/notarize": "^2.3.2",
     "@electron/rebuild": "^3.6.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.13",
-    "@sentry/webpack-plugin": "^2.16.1",
+    "@sentry/webpack-plugin": "^2.19.0",
     "@svgr/webpack": "^8.0.1",
     "@teamsupercell/typings-for-css-modules-loader": "^2.5.2",
     "@testing-library/jest-dom": "^6.4.5",
