@@ -14,6 +14,7 @@ import '../data/realm/app';
 import { app, BrowserWindow, shell, ipcMain, protocol, dialog } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import contextMenu from 'electron-context-menu';
+import { initialize } from '@aptabase/electron/main';
 
 import log from 'electron-log';
 import {
@@ -43,7 +44,11 @@ import '../api-server/authentication/ipc/mainApi';
 import '../api-server/user/ipc/mainApi';
 import { registerShortcutsHandlersForWindow } from './ipc/globalShortcutManager/mainApi';
 
-const isDevelopment = process.env.NODE_ENV === 'development'
+const isDevelopment = process.env.NODE_ENV === 'development';
+
+if (process.env.APTABASE_APP_KEY) {
+  initialize(process.env.APTABASE_APP_KEY);
+}
 
 // If app.setPath('userData', '/path/to/data') is to be used, move Sentry.init to after path is set
 if (!isDevelopment && process.env.SENTRY_DSN) {
@@ -63,6 +68,10 @@ const isDebug = isDevelopment || process.env.DEBUG_PROD === 'true';
 protocol.registerSchemesAsPrivileged([
   {
     scheme: 'msg',
+    privileges: { supportFetchAPI: true, stream: true },
+  },
+  {
+    scheme: 'aptabase-ipc',
     privileges: { supportFetchAPI: true, stream: true },
   },
 ]);
@@ -302,28 +311,6 @@ const startInstrumentation = async () => {
     } else {
       console.log('User declined to send telemetry data');
     }
-  }
-
-  if (
-    process.env.APP_INSIGHTS_INSTRUMENTATION_KEY &&
-    canSendTelemetryData === true
-  ) {
-    const appInsights = require('applicationinsights');
-    appInsights
-      .setup(process.env.APP_INSIGHTS_INSTRUMENTATION_KEY)
-      .setAutoDependencyCorrelation(true)
-      .setAutoCollectRequests(true)
-      .setAutoCollectPerformance(true)
-      .setAutoCollectExceptions(true)
-      .setAutoCollectDependencies(true)
-      .setAutoCollectConsole(true, true)
-      .setUseDiskRetryCaching(true);
-
-    appInsights.start();
-    console.log(
-      'Instrumentation has been started',
-      appInsights.defaultClient.context.tags
-    );
   }
 };
 

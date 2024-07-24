@@ -12,6 +12,10 @@ import { IMenuItemProps } from '@hubai/core/esm/components';
 import { connect } from '@hubai/core/esm/react';
 import { container } from 'tsyringe';
 import { IPackageManagementService } from 'renderer/features/packages/models/managementService';
+import {
+  TelemetryEvents,
+  type ITelemetryService,
+} from 'renderer/common/telemetry';
 import PackageStoreService from '../services/packageStoreService';
 import { PackageStoreItem } from '../models/packageStoreItem';
 import PackageView from '../views/package';
@@ -29,6 +33,8 @@ export class PackageStoreController extends Controller {
 
   private readonly toastService: IToastService;
 
+  private readonly telemetryService: ITelemetryService;
+
   constructor(
     private readonly appContext: AppContext,
     private readonly packageStoreService: PackageStoreService
@@ -37,6 +43,8 @@ export class PackageStoreController extends Controller {
     this.packageManagementService =
       container.resolve<IPackageManagementService>('IPackageManagementService');
     this.toastService = container.resolve<IToastService>('IToastService');
+    this.telemetryService =
+      container.resolve<ITelemetryService>('ITelemetryService');
   }
 
   initView(): void {
@@ -180,6 +188,11 @@ export class PackageStoreController extends Controller {
   };
 
   private onPackageSelect = (item: PackageStoreItem) => {
+    this.telemetryService.log(TelemetryEvents.PACKAGE_STORE_PACKAGE_SELECTED, {
+      packageName: item.name,
+      packageType: item.packageType,
+      isInstalled: item.installed,
+    });
     this.openEditorTab(item);
   };
 
