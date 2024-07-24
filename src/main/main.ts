@@ -48,6 +48,11 @@ const isDevelopment = process.env.NODE_ENV === 'development';
 
 if (process.env.APTABASE_APP_KEY) {
   initialize(process.env.APTABASE_APP_KEY);
+  console.log('Aptabase Telemetry initialized');
+} else {
+  console.warn(
+    'No APTABASE_APP_KEY found in environment variables. Telemetry will not be sent.'
+  );
 }
 
 // If app.setPath('userData', '/path/to/data') is to be used, move Sentry.init to after path is set
@@ -72,7 +77,12 @@ protocol.registerSchemesAsPrivileged([
   },
   {
     scheme: 'aptabase-ipc',
-    privileges: { supportFetchAPI: true, stream: true },
+    privileges: {
+      bypassCSP: true,
+      corsEnabled: true,
+      supportFetchAPI: true,
+      secure: true,
+    },
   },
 ]);
 
