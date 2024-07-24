@@ -65,6 +65,7 @@ jobs:
           echo "SENTRY_ORG=${{ secrets.SENTRY_ORG }}" >> .env
           echo "SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }}" >> .env
           echo "SENTRY_PROJECT_RENDERER=${{ secrets.SENTRY_PROJECT_RENDERER }}" >> .env
+          echo "SENTRY_URL=${{ secrets.SENTRY_URL }}" >> .env
       - name: npm release
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -82,5 +83,6 @@ jobs:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
           SENTRY_PROJECT_RENDERER: ${{ secrets.SENTRY_PROJECT_RENDERER }}
+          SENTRY_URL: ${{ secrets.SENTRY_URL }}
         run: |
           npm run release
